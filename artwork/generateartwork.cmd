@@ -9,7 +9,7 @@ goto :eof
 :exportidwithsizetopng
 SET EXPORT_ID=%1
 SET EXPORT_ID=%EXPORT_ID%_%2
-inkscape.exe --file=qtlogosmall.svg --export-id=%EXPORT_ID% --export-id-only --export-png=%EXPORT_ID%.png --export-background-opacity=0
+inkscape.exe --file=artwork.svg --export-id=%EXPORT_ID% --export-id-only --export-png=%EXPORT_ID%.png --export-background-opacity=0
 pngout %EXPORT_ID%.png /c6
 optipng -quiet -o7 -zw32k %EXPORT_ID%.png
 goto :eof
