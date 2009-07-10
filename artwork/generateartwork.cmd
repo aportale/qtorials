@@ -3,7 +3,7 @@ for %%i in (qt_small qt_big cc-by-nc-sa_small cc-by-nc-sa_big cc-by-nc-nd_small 
 goto :eof
 
 :exportidtopng
-for %%j in (1280x720 640x480 480x360 424x320) do call :exportidwithsizetopng %1 %%j
+for %%j in (1280x720 640x480 640x360 480x360 424x320) do call :exportidwithsizetopng %1 %%j
 goto :eof
 
 :exportidwithsizetopng

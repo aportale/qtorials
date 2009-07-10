@@ -16,7 +16,7 @@
    id="svg4095"
    sodipodi:version="0.32"
    inkscape:version="0.46"
-   sodipodi:docname="qtlogosmall.svg"
+   sodipodi:docname="artwork.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs2474">
@@ -171,8 +171,29 @@
            sodipodi:role="line">640 x 480</tspan></text>
     </g>
     <g
-       id="border_480x360"
+       id="border_640x360"
        transform="translate(1952,0)">
+      <rect
+         y="-0.066861615"
+         x="-0.066861637"
+         height="360.13373"
+         width="640.13367"
+         style="opacity:1;fill:none;stroke:#000000;stroke-width:0.86627674"
+         id="rect2563" />
+      <text
+         id="text2565"
+         y="-16.874352"
+         x="0"
+         style="font-size:71.6268158px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           id="tspan2567"
+           y="-16.874352"
+           x="0"
+           sodipodi:role="line">640 x 360</tspan></text>
+    </g>
+    <g
+       id="border_480x360"
+       transform="translate(2608,0)">
       <rect
          y="0"
          x="0"
@@ -193,7 +214,7 @@
     </g>
     <g
        id="border_424x320"
-       transform="translate(2448,0)">
+       transform="translate(3104,0)">
       <rect
          y="0"
          x="0"
@@ -256,8 +277,28 @@
          transform="matrix(0.4945369,0,0,0.4945369,592,52.483234)" />
     </g>
     <g
-       id="qt_small_480x360"
+       style="display:inline"
+       id="qt_small_640x360"
        transform="translate(1952,0)">
+      <rect
+         y="0"
+         x="0"
+         height="360"
+         width="640"
+         style="fill:none;stroke:none"
+         id="rect2571" />
+      <use
+         height="720"
+         width="1280"
+         id="use2573"
+         xlink:href="#qt"
+         y="0"
+         x="0"
+         transform="matrix(0.4945369,0,0,0.4945369,592,-62.516766)" />
+    </g>
+    <g
+       id="qt_small_480x360"
+       transform="translate(2608,0)">
       <rect
          y="0"
          x="0"
@@ -276,7 +317,7 @@
     </g>
     <g
        id="qt_small_424x320"
-       transform="translate(2448,0)">
+       transform="translate(3104,0)">
       <rect
          y="0"
          x="0"
@@ -297,7 +338,8 @@
   <g
      inkscape:groupmode="layer"
      id="qt_big"
-     inkscape:label="qt_big">
+     inkscape:label="qt_big"
+     style="display:inline">
     <g
        id="qt_big_1280x720">
       <use
@@ -336,8 +378,27 @@
          id="rect2773" />
     </g>
     <g
-       id="qt_big_480x360"
+       id="qt_big_640x360"
        transform="translate(1952,0)">
+      <use
+         height="720"
+         width="1280"
+         id="use2577"
+         xlink:href="#qt"
+         y="0"
+         x="0"
+         transform="matrix(1.8545134,0,0,1.8040529,264,-1249.1029)" />
+      <rect
+         y="0"
+         x="0"
+         height="360"
+         width="640"
+         style="fill:none;stroke:none"
+         id="rect2579" />
+    </g>
+    <g
+       id="qt_big_480x360"
+       transform="translate(2608,0)">
       <use
          x="0"
          y="0"
@@ -356,7 +417,7 @@
     </g>
     <g
        id="qt_big_424x320"
-       transform="translate(2448,0)">
+       transform="translate(3104,0)">
       <use
          height="720"
          width="1280"
@@ -417,8 +478,28 @@
          x="0" />
     </g>
     <g
-       id="cc-by-nc-sa_small_480x360"
+       style="display:inline"
+       id="cc-by-nc-sa_small_640x360"
        transform="translate(1952,0)">
+      <rect
+         y="0"
+         x="0"
+         height="360"
+         width="640"
+         style="fill:none;stroke:none"
+         id="rect2583" />
+      <use
+         transform="matrix(1.0600329,0,0,1.1356224,-102.72368,-557.98804)"
+         height="720"
+         width="1280"
+         id="use2585"
+         xlink:href="#cc-by-nc-sa"
+         y="0"
+         x="0" />
+    </g>
+    <g
+       id="cc-by-nc-sa_small_480x360"
+       transform="translate(2608,0)">
       <rect
          y="0"
          x="0"
@@ -437,7 +518,7 @@
     </g>
     <g
        id="cc-by-nc-sa_small_424x320"
-       transform="translate(2448,0)">
+       transform="translate(3104,0)">
       <rect
          y="0"
          x="0"
@@ -498,8 +579,28 @@
          transform="matrix(2.2525699,0,0,2.2712432,-68.287829,-1515.9749)" />
     </g>
     <g
-       id="cc-by-nc-sa_big_480x360"
+       style="display:inline"
+       id="cc-by-nc-sa_big_640x360"
        transform="translate(1952,0)">
+      <rect
+         y="0"
+         x="0"
+         height="360"
+         width="640"
+         style="fill:none;stroke:none"
+         id="rect2589" />
+      <use
+         id="use2591"
+         xlink:href="#cc-by-nc-sa"
+         y="0"
+         x="0"
+         width="1280"
+         height="720"
+         transform="matrix(2.2525699,0,0,2.2712432,-68.287829,-1579.9748)" />
+    </g>
+    <g
+       id="cc-by-nc-sa_big_480x360"
+       transform="translate(2608,0)">
       <rect
          y="0"
          x="0"
@@ -518,7 +619,7 @@
     </g>
     <g
        id="cc-by-nc-sa_big_424x320"
-       transform="translate(2448,0)">
+       transform="translate(3104,0)">
       <rect
          y="0"
          x="0"
@@ -579,8 +680,28 @@
          x="0" />
     </g>
     <g
-       id="cc-by-nc-nd_small_480x360"
+       style="display:inline"
+       id="cc-by-nc-nd_small_640x360"
        transform="translate(1952,0)">
+      <rect
+         y="0"
+         x="0"
+         height="360"
+         width="640"
+         style="fill:none;stroke:none"
+         id="rect2595" />
+      <use
+         transform="matrix(1.0600243,0,0,1.1356224,-306.24738,-557.98804)"
+         height="720"
+         width="1280"
+         id="use2597"
+         xlink:href="#cc-by-nc-nd"
+         y="0"
+         x="0" />
+    </g>
+    <g
+       id="cc-by-nc-nd_small_480x360"
+       transform="translate(2608,0)">
       <rect
          y="0"
          x="0"
@@ -599,7 +720,7 @@
     </g>
     <g
        id="cc-by-nc-nd_small_424x320"
-       transform="translate(2448,0)"
+       transform="translate(3104,0)"
        style="display:inline">
       <rect
          y="0"
@@ -661,8 +782,28 @@
          transform="matrix(2.2525699,0,0,2.2712432,-500.78125,-1515.9749)" />
     </g>
     <g
-       id="cc-by-nc-nd_big_480x360"
+       style="display:inline"
+       id="cc-by-nc-nd_big_640x360"
        transform="translate(1952,0)">
+      <rect
+         y="0"
+         x="0"
+         height="360"
+         width="640"
+         style="fill:none;stroke:none"
+         id="rect2601" />
+      <use
+         id="use2603"
+         xlink:href="#cc-by-nc-nd"
+         y="0"
+         x="0"
+         width="1280"
+         height="720"
+         transform="matrix(2.2525516,0,0,2.2712432,-500.77569,-1579.9748)" />
+    </g>
+    <g
+       id="cc-by-nc-nd_big_480x360"
+       transform="translate(2608,0)">
       <rect
          y="0"
          x="0"
@@ -681,7 +822,7 @@
     </g>
     <g
        id="cc-by-nc-nd_big_424x320"
-       transform="translate(2448,0)">
+       transform="translate(3104,0)">
       <rect
          y="0"
          x="0"
@@ -728,8 +869,21 @@
          transform="matrix(6.4,0,0,4.8,-3676.4,-3747.2)" />
     </g>
     <g
+       style="display:inline"
+       id="oldstyle_640x360"
+       transform="translate(1942,-16)">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#oldstyle"
+         id="use2607"
+         height="480"
+         width="640"
+         transform="matrix(6.4,0,0,3.6,-3676.4,-2806.4)" />
+    </g>
+    <g
        id="oldstyle_480x360"
-       transform="translate(1952,0)">
+       transform="translate(2608,0)">
       <use
          x="0"
          y="0"
@@ -741,7 +895,7 @@
     </g>
     <g
        id="oldstyle_424x320"
-       transform="matrix(4.24,0,0,3.2,684.16,-2406.4)">
+       transform="matrix(4.24,0,0,3.2,1340.16,-2406.4)">
       <use
          x="0"
          y="0"
@@ -756,7 +910,8 @@
      inkscape:groupmode="layer"
      id="originals"
      inkscape:label="originals"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        id="oldstyle"
        style="fill:url(#radialGradient3659);stroke:none"
