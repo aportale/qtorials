@@ -1,0 +1,47 @@
+#qtorials {
+background-color:#EFF3F2;
+border:1px solid #E0E8E5;
+color:black;
+margin:0 auto;
+width:600px;
+font-family: verdana, sans-serif;
+padding: 0 15px;
+}
+#qtorials > li > ul {
+font-size: 0.8em;
+background-color:#fff;
+padding: 0;
+}
+#qtorials li ul li ul {
+padding: 4px 0 4px 0;
+}
+#qtorials a img {
+border: 0 none;
+padding: 0 10px 0 0;
+float: left;
+clear: both;
+}
+#qtorials li, #qtorials li li {
+list-style-type: none;
+}
+#qtorials h3 {
+margin: 2px 0;
+}
+#qtorials h2 {
+clear: both;
+margin: 20px 0 0 0;
+}
+#qtorials > li > p {
+margin: 5px 0 5px 0;
+}
+#qtorials > li > ul > li {
+clear: both;
+border-top: 10px solid #EFF3F2;
+}
+#qtorials > li > ul > li > ul > li {
+display: inline;
+padding-right: 15px;
+}
+#qtorials > li > ul > li > p {
+margin: 4px 0 4px 0;
+}
