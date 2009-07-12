@@ -68,41 +68,21 @@ public:
 
     static void paintMode3(QPainter &p, const QSize &size)
     {
-        p.scale(size.width(), size.height());
-
-        const qreal gradientWidth = qreal(1) / 12;
-        QLinearGradient gradient(QPoint(), QPoint(0, 1));
-
-        gradient.setColorAt(0, Qt::black);
-        gradient.setColorAt(1, Qt::red);
-        p.fillRect(QRectF(0 * gradientWidth, 0, gradientWidth, 1), gradient);
-        gradient.setColorAt(1, Qt::green);
-        p.fillRect(QRectF(2 * gradientWidth, 0, gradientWidth, 1), gradient);
-        gradient.setColorAt(1, Qt::blue);
-        p.fillRect(QRectF(4 * gradientWidth, 0, gradientWidth, 1), gradient);
-        gradient.setColorAt(1, Qt::white);
-        p.fillRect(QRectF(6 * gradientWidth, 0, 3*gradientWidth, 1), gradient);
-
-        gradient.setColorAt(1, Qt::black);
-        gradient.setColorAt(0, Qt::red);
-        p.fillRect(QRectF(1 * gradientWidth, 0, gradientWidth, 1), gradient);
-        gradient.setColorAt(0, Qt::green);
-        p.fillRect(QRectF(3 * gradientWidth, 0, gradientWidth, 1), gradient);
-        gradient.setColorAt(0, Qt::blue);
-        p.fillRect(QRectF(5 * gradientWidth, 0, gradientWidth, 1), gradient);
-        gradient.setColorAt(0, Qt::white);
-        p.fillRect(QRectF(9 * gradientWidth, 0, 3*gradientWidth, 1), gradient);
-
-        p.resetMatrix();
-        p.setOpacity(0.1);
-
-        const int stripeThickness = 5;
-        const int stripeEveryNth = 4;
-        const int stripesCount = size.height() / (stripeEveryNth * stripeThickness);
-        const QBrush brush(qRgb(128, 128, 128));
-        for (int i = 0; i < stripesCount; i++)
-            p.fillRect(0, stripeThickness * i * stripeEveryNth,
-                size.width(), stripeThickness, brush);
+        static const int gradientColumns = 6;
+        static const int gradientRows = 16;
+        QImage gradients(gradientColumns, gradientRows, QImage::Format_RGB32);
+        for (int row = 0; row < gradientRows; ++row) {
+            uchar *scanLine = gradients.scanLine(row);
+            memset(scanLine, row * 17, gradientColumns * sizeof(QRgb));
+            QRgb *pixel = reinterpret_cast<QRgb*>(scanLine);
+            for (int i = 0; i < 3; i++)
+                pixel[i] &= (0xff000000 | (0xff << (i * 8)));
+        }
+        QRect leftRect(QPoint(), size);
+        leftRect.setWidth(leftRect.width() / 2);
+        p.drawImage(leftRect, gradients);
+        const QRect rightRect = leftRect.translated(leftRect.width(), 0);
+        p.drawImage(rightRect, gradients.mirrored(false, true));
     }
 
     static void paintMode4(QPainter &p, const QSize &size)
