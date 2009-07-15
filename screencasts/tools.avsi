@@ -62,3 +62,30 @@ function fittedClipHeight(int outerClipWidth, int outerClipHeight, int fittedCli
     innerOuterHeightRatio = float(outerClipHeight) / fittedClipOriginalHeight
     return int(fittedClipOriginalHeight * (innerOuterWidthRatio > innerOuterHeightRatio ? innerOuterHeightRatio : innerOuterWidthRatio))
 }
+
+function fittedClip(clip theClip, int outerClipWidth, int outerClipHeight)
+{
+    fittedClipWidth = fittedClipWidth(outerClipWidth, outerClipHeight, theClip.Width, theClip.Height)
+    fittedClipWidth = (fittedClipWidth % 2 == 1) ? fittedClipWidth - 1 : fittedClipWidth
+    fittedClipHeight = fittedClipHeight(outerClipWidth, outerClipHeight, theClip.Width, theClip.Height)
+    fittedClipHeight = (fittedClipHeight % 2 == 1) ? fittedClipHeight - 1 : fittedClipHeight
+    borderLeft = (outerClipWidth - fittedClipWidth) / 2
+    borderTop = (outerClipHeight - fittedClipHeight) / 2
+    borderRight = outerClipWidth - borderLeft - fittedClipWidth
+    borderBottom = outerClipHeight - borderTop - fittedClipHeight
+    theClip.LanczosResize(fittedClipWidth, fittedClipHeight).addBorders(borderLeft, borderTop, borderRight, borderBottom)
+}
+
+function CroppedFittedClip(clip theClip, int left, int top, int width, int height)
+{
+    theClip.Crop(left, top, width, height).fittedClip(gClipWidth, gClipHeight)
+}
+
+function qtLogoSmall(clip)
+{
+    clipSizeString = String(clip.Width) + "x" + String(clip.Height)
+    qtLogo = ImageReader("..\artwork\qt_small_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
+    qtLogoMask = qtLogo.showalpha
+    return clip.Overlay(qtlogo, 0, 0, qtlogomask, 0.6)
+}
+
