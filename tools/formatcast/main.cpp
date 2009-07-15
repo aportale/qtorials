@@ -53,19 +53,27 @@ int main(int argc, char *argv[])
 
     QString avsLine;
     QString hmtlLines;
+    QStringList narrationLines;
     bool changedAvsFunction = false;
     do {
         avsLine = avsTs.readLine();
         if (avsLine.trimmed().startsWith(narrationMarker)) {
             if (changedAvsFunction) {
-                htmlTs << QLatin1String("<hr/>");
+                htmlTs << QLatin1String("<hr/>\n");
                 changedAvsFunction = false;
             }
             const int markerEnd =
                 avsLine.indexOf(narrationMarker) + narrationMarker.length();
-            htmlTs << QLatin1String("<p>") +
-                avsLine.mid(markerEnd) + QLatin1String("</p>\n");
-        } else if (avsLine.trimmed().startsWith(typingMarker)) {
+            narrationLines << avsLine.mid(markerEnd);
+        } else {
+            if (!narrationLines.isEmpty()) {
+                htmlTs << QLatin1String("<p>\n");
+                htmlTs << narrationLines.join(QLatin1String("\n<br/>\n"));
+                htmlTs << QLatin1String("\n</p>\n");
+                narrationLines.clear();
+            }
+        }
+        if (avsLine.trimmed().startsWith(typingMarker)) {
             const int markerEnd =
                 avsLine.indexOf(typingMarker) + typingMarker.length();
             au3Ts << "_ArrayAdd($snippetsArray, '" << avsLine.mid(markerEnd) << "')" << endl;
