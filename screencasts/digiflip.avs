@@ -1,3 +1,6 @@
+# Webcasting Ariya's digiflip example
+# http://labs.trolltech.com/blogs/2009/07/15/digital-clock-in-a-phone/
+
 Import("tools.avsi")
 
 global gClipWidth = 480
