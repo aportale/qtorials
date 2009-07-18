@@ -3,6 +3,7 @@ global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
 global qTitleTextSize = 25
+global gDetailsTransitionFrames = 15
 
 function trimAudio(clip audioClip, float startSecond, float endSecond)
 {
@@ -89,3 +90,40 @@ function qtLogoSmall(clip)
     return clip.Overlay(qtlogo, 0, 0, qtlogomask, 0.6)
 }
 
+global gCurrentDetailClip = BlankClip
+global gCurrentDetailLeft = 0
+global gCurrentDetailTop = 0
+global gCurrentDetailWidth = gClipWidth
+global gCurrentDetailHeight = gClipHeight
+global gCurrentDetailLastFrame = 0
+
+function resetCurrentDetail()
+{
+    global gCurrentDetailClip = BlankClip
+    global gCurrentDetailLeft = 0
+    global gCurrentDetailTop = 0
+    global gCurrentDetailWidth = gClipWidth
+    global gCurrentDetailHeight = gClipHeight
+    global gCurrentDetailLastFrame = 0
+}
+
+function showDetail(clip, int totalFrames, int "left", int "top", int "width", int "height", int "transitionFrames")
+{
+    (gCurrentDetailClip == clip) ? NOP : resetCurrentDetail
+
+    theWidth = Default(width, gClipWidth)
+    theHeight = Default(height, gClipHeight)
+    detailClip = clip.trim(gCurrentDetailLastFrame, gCurrentDetailLastFrame + totalFrames)
+    result = Animate(detailClip, 0, Default(transitionFrames, gDetailsTransitionFrames), "LanczosResize",
+        \ gClipWidth, gClipHeight, gCurrentDetailLeft, gCurrentDetailTop, float(gCurrentDetailWidth), float(gCurrentDetailHeight),
+        \ gClipWidth, gClipHeight, left, top, float(theWidth), float(theHeight))
+
+    global gCurrentDetailClip = clip
+    global gCurrentDetailLeft = left
+    global gCurrentDetailTop = top
+    global gCurrentDetailWidth = theWidth
+    global gCurrentDetailHeight = theHeight
+    global gCurrentDetailLastFrame = gCurrentDetailLastFrame + totalFrames
+
+    return result
+}
