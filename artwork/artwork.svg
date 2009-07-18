@@ -105,12 +105,12 @@
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="2"
-     inkscape:cx="420.70817"
-     inkscape:cy="-55.29933"
+     inkscape:zoom="0.088388348"
+     inkscape:cx="3726.6007"
+     inkscape:cy="-713.88957"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:current-layer="originals"
+     inkscape:current-layer="oldstyles"
      inkscape:snap-bbox="true"
      showborder="false"
      inkscape:showpageshadow="false">
@@ -127,8 +127,7 @@
   <g
      inkscape:groupmode="layer"
      id="borders"
-     inkscape:label="borders"
-     sodipodi:insensitive="true">
+     inkscape:label="borders">
     <g
        id="border_1280x720">
       <rect
@@ -150,8 +149,29 @@
            sodipodi:role="line">1280 x 720</tspan></text>
     </g>
     <g
-       id="border_640x480"
+       id="border_960x720"
        transform="translate(1296,0)">
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="opacity:1;fill:none;stroke:#000000;stroke-width:1"
+         id="rect2587" />
+      <text
+         id="text2589"
+         y="-16.874352"
+         x="0"
+         style="font-size:71.6268158px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           id="tspan2591"
+           y="-16.874352"
+           x="0"
+           sodipodi:role="line">960 x 720</tspan></text>
+    </g>
+    <g
+       id="border_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -172,7 +192,7 @@
     </g>
     <g
        id="border_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <rect
          y="-0.066861615"
          x="-0.066861637"
@@ -193,7 +213,7 @@
     </g>
     <g
        id="border_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -214,7 +234,7 @@
     </g>
     <g
        id="border_424x320"
-       transform="translate(3104,0)">
+       transform="translate(4080,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -258,8 +278,28 @@
          transform="matrix(0.7418054,0,0,0.7418054,1216,88.991149)" />
     </g>
     <g
-       id="qt_small_640x480"
+       style="display:inline"
+       id="qt_small_960x720"
        transform="translate(1296,0)">
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="fill:none;stroke:none"
+         id="rect2596" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#qt"
+         id="use2598"
+         width="1280"
+         height="720"
+         transform="matrix(0.7418054,0,0,0.7418054,896,91.431207)" />
+    </g>
+    <g
+       id="qt_small_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -279,7 +319,7 @@
     <g
        style="display:inline"
        id="qt_small_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -298,7 +338,7 @@
     </g>
     <g
        id="qt_small_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -317,7 +357,7 @@
     </g>
     <g
        id="qt_small_424x320"
-       transform="translate(3104,0)">
+       transform="translate(4080,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -359,8 +399,28 @@
          id="rect2770" />
     </g>
     <g
-       id="qt_big_640x480"
+       style="display:inline"
+       id="qt_big_960x720"
        transform="translate(1296,0)">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#qt"
+         id="use2602"
+         width="960"
+         height="720"
+         transform="matrix(3.4617584,0,0,3.4679224,368,-2367.8777)" />
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="fill:none;stroke:none"
+         id="rect2604" />
+    </g>
+    <g
+       id="qt_big_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <use
          height="720"
          width="1280"
@@ -379,7 +439,7 @@
     </g>
     <g
        id="qt_big_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <use
          height="720"
          width="1280"
@@ -398,7 +458,7 @@
     </g>
     <g
        id="qt_big_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <use
          x="0"
          y="0"
@@ -417,7 +477,7 @@
     </g>
     <g
        id="qt_big_424x320"
-       transform="translate(3104,0)">
+       transform="translate(4080,-4.9999983e-7)">
       <use
          height="720"
          width="1280"
@@ -459,8 +519,28 @@
          transform="matrix(1.8550576,0,0,1.892704,-175.76644,-815.31339)" />
     </g>
     <g
-       id="cc-by-nc-sa_small_640x480"
+       style="display:inline"
+       id="cc-by-nc-sa_small_960x720"
        transform="translate(1296,0)">
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="fill:none;stroke:none"
+         id="rect2608" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#cc-by-nc-sa"
+         id="use2610"
+         width="1280"
+         height="720"
+         transform="matrix(1.8550576,0,0,1.892704,-175.76644,-815.31339)" />
+    </g>
+    <g
+       id="cc-by-nc-sa_small_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -480,7 +560,7 @@
     <g
        style="display:inline"
        id="cc-by-nc-sa_small_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -499,7 +579,7 @@
     </g>
     <g
        id="cc-by-nc-sa_small_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -518,7 +598,7 @@
     </g>
     <g
        id="cc-by-nc-sa_small_424x320"
-       transform="translate(3104,0)">
+       transform="translate(4080,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -560,8 +640,28 @@
          transform="matrix(3.4451069,0,0,3.406868,46.148024,-2273.9648)" />
     </g>
     <g
-       id="cc-by-nc-sa_big_640x480"
+       style="display:inline"
+       id="cc-by-nc-sa_big_960x720"
        transform="translate(1296,0)">
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="fill:none;stroke:none"
+         id="rect2614" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#cc-by-nc-sa"
+         id="use2616"
+         width="1280"
+         height="720"
+         transform="matrix(3.4451069,0,0,3.406868,-113.85197,-2273.9648)" />
+    </g>
+    <g
+       id="cc-by-nc-sa_big_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -581,7 +681,7 @@
     <g
        style="display:inline"
        id="cc-by-nc-sa_big_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -600,7 +700,7 @@
     </g>
     <g
        id="cc-by-nc-sa_big_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -619,7 +719,7 @@
     </g>
     <g
        id="cc-by-nc-sa_big_424x320"
-       transform="translate(3104,0)">
+       transform="translate(4080,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -661,8 +761,28 @@
          id="rect3073" />
     </g>
     <g
-       id="cc-by-nc-nd_small_640x480"
+       style="display:inline"
+       id="cc-by-nc-nd_small_960x720"
        transform="translate(1296,0)">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#cc-by-nc-nd"
+         id="use2620"
+         width="1280"
+         height="720"
+         transform="matrix(1.8550576,0,0,1.892704,-531.93751,-815.31341)" />
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="fill:none;stroke:none"
+         id="rect2622" />
+    </g>
+    <g
+       id="cc-by-nc-nd_small_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -682,7 +802,7 @@
     <g
        style="display:inline"
        id="cc-by-nc-nd_small_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -701,7 +821,7 @@
     </g>
     <g
        id="cc-by-nc-nd_small_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -720,7 +840,7 @@
     </g>
     <g
        id="cc-by-nc-nd_small_424x320"
-       transform="translate(3104,0)"
+       transform="translate(4080,-4.9999983e-7)"
        style="display:inline">
       <rect
          y="0"
@@ -763,8 +883,28 @@
          transform="matrix(3.4451069,0,0,3.406868,-615.3125,-2273.9648)" />
     </g>
     <g
-       id="cc-by-nc-nd_big_640x480"
+       style="display:inline"
+       id="cc-by-nc-nd_big_960x720"
        transform="translate(1296,0)">
+      <rect
+         y="0"
+         x="0"
+         height="720"
+         width="960"
+         style="fill:none;stroke:none"
+         id="rect2626" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#cc-by-nc-nd"
+         id="use2628"
+         width="1280"
+         height="720"
+         transform="matrix(3.4451069,0,0,3.406868,-775.31419,-2273.9648)" />
+    </g>
+    <g
+       id="cc-by-nc-nd_big_640x480"
+       transform="translate(2272,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -784,7 +924,7 @@
     <g
        style="display:inline"
        id="cc-by-nc-nd_big_640x360"
-       transform="translate(1952,0)">
+       transform="translate(2928,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -803,7 +943,7 @@
     </g>
     <g
        id="cc-by-nc-nd_big_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -822,7 +962,7 @@
     </g>
     <g
        id="cc-by-nc-nd_big_424x320"
-       transform="translate(3104,0)">
+       transform="translate(4080,-4.9999983e-7)">
       <rect
          y="0"
          x="0"
@@ -857,8 +997,21 @@
          transform="matrix(12.8,0,0,7.2,-7372.8,-5644.8)" />
     </g>
     <g
+       style="display:inline"
+       id="oldstyle_960x720"
+       transform="translate(1296,0)">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#oldstyle"
+         id="use2632"
+         width="960"
+         height="720"
+         transform="matrix(9.6,0,0,7.2,-5529.6,-5644.8)" />
+    </g>
+    <g
        id="oldstyle_640x480"
-       transform="translate(1286,-16)">
+       transform="translate(2262,-16)">
       <use
          x="0"
          y="0"
@@ -871,7 +1024,7 @@
     <g
        style="display:inline"
        id="oldstyle_640x360"
-       transform="translate(1942,-16)">
+       transform="translate(2918,-16)">
       <use
          x="0"
          y="0"
@@ -883,7 +1036,7 @@
     </g>
     <g
        id="oldstyle_480x360"
-       transform="translate(2608,0)">
+       transform="translate(3584,-4.9999983e-7)">
       <use
          x="0"
          y="0"
@@ -895,7 +1048,7 @@
     </g>
     <g
        id="oldstyle_424x320"
-       transform="matrix(4.24,0,0,3.2,1340.16,-2406.4)">
+       transform="matrix(4.24,0,0,3.2,2316.16,-2406.4)">
       <use
          x="0"
          y="0"
