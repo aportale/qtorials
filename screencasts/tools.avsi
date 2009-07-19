@@ -119,10 +119,17 @@ function sCurveInterpolation(float sourceValue, float targetValue, int frame, in
     return sourceValue + y * (targetValue - sourceValue)
 }
 
+function showDetailStartAndEndSameSize()
+{
+    return (gDetailStartWidth == gDetailEndWidth) && (gDetailStartHeight == gDetailEndHeight)
+}
+
 function showDetailFrame()
 {
     interpolatedLeft = sCurveInterpolation(float(gDetailStartLeft), float(gDetailEndLeft), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
+    interpolatedLeft = showDetailStartAndEndSameSize ? Round(interpolatedLeft) : interpolatedLeft
     interpolatedTop = sCurveInterpolation(float(gDetailStartTop), float(gDetailEndTop), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
+    interpolatedTop = showDetailStartAndEndSameSize ? Round(interpolatedTop) : interpolatedTop
     interpolatedWidth = sCurveInterpolation(float(gDetailStartWidth), float(gDetailEndWidth), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     interpolatedHeight = sCurveInterpolation(float(gDetailStartHeight), float(gDetailEndHeight), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     result = gDetailClip
