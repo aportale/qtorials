@@ -285,5 +285,13 @@
 <attribute NAME="clip_tags" VALUE="signal mapper"/>
 </node>
 </node>
+<node COLOR="#0033ff" CREATED="1248036909043" FOLDED="true" ID="ID_1353909696" LINK="http://creativecommons.org/licenses/by-nc-sa/3.0/" MODIFIED="1248037007287" POSITION="left" TEXT="License">
+<edge STYLE="sharp_bezier" WIDTH="8"/>
+<font NAME="SansSerif" SIZE="18"/>
+<node COLOR="#00b439" CREATED="1248036914273" ID="ID_1496406040" LINK="http://creativecommons.org/licenses/by-nc-sa/3.0/" MODIFIED="1248036957085" TEXT="This work is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+</node>
+</node>
 </node>
 </map>
