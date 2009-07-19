@@ -2,8 +2,8 @@ global gStillFrameLength = 30
 global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
-global qTitleTextSize = 25
-global gDetailsTransitionFrames = 15
+global gTitleTextSize = 25
+global gDetailsTransitionDeafultFrameCount = 15
 
 function trimAudio(clip audioClip, float startSecond, float endSecond)
 {
@@ -37,7 +37,7 @@ function textClip(clip templateClip, string text)
     textColor = $333333
     return
         \  BlankClip(clip = templateClip, length = StrLen(text) * 2, color = backgroundColor)
-        \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = qTitleTextSize, lsp = 100)
+        \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = gTitleTextSize, lsp = 100)
 }
 
 function frame(clip sourceClip, int frame)
@@ -90,40 +90,70 @@ function qtLogoSmall(clip)
     return clip.Overlay(qtlogo, 0, 0, qtlogomask, 0.6)
 }
 
-global gCurrentDetailClip = BlankClip
-global gCurrentDetailLeft = 0
-global gCurrentDetailTop = 0
-global gCurrentDetailWidth = gClipWidth
-global gCurrentDetailHeight = gClipHeight
-global gCurrentDetailLastFrame = 0
+global gDetailClip = BlankClip
 
 function resetCurrentDetail()
 {
-    global gCurrentDetailClip = BlankClip
-    global gCurrentDetailLeft = 0
-    global gCurrentDetailTop = 0
-    global gCurrentDetailWidth = gClipWidth
-    global gCurrentDetailHeight = gClipHeight
-    global gCurrentDetailLastFrame = 0
+    global gDetailClip = BlankClip
+    global gDetailLastFrame = 1
+
+    global gDetailCurrentTransitionFrame = 1
+
+    global gDetailStartLeft = 0
+    global gDetailStartTop = 0
+    global gDetailStartWidth = gClipWidth
+    global gDetailStartHeight = gClipHeight
+
+    global gDetailEndLeft = 0
+    global gDetailEndTop = 0
+    global gDetailEndWidth = gClipWidth
+    global gDetailEndHeight = gClipHeight
+}
+resetCurrentDetail
+
+function sCurveInterpolation(float sourceValue, float targetValue, int frame, int framesCount)
+{
+    factor = 4
+    x = (factor*2 * (frame - (framesCount / 2)) / float(framesCount))
+    y = 1.0 / (1.0 + exp(-x))
+    return sourceValue + y * (targetValue - sourceValue)
 }
 
-function showDetail(clip, int totalFrames, int "left", int "top", int "width", int "height", int "transitionFrames")
+function showDetailFrame()
 {
-    (gCurrentDetailClip == clip) ? NOP : resetCurrentDetail
+    interpolatedLeft = sCurveInterpolation(float(gDetailStartLeft), float(gDetailEndLeft), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
+    interpolatedTop = sCurveInterpolation(float(gDetailStartTop), float(gDetailEndTop), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
+    interpolatedWidth = sCurveInterpolation(float(gDetailStartWidth), float(gDetailEndWidth), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
+    interpolatedHeight = sCurveInterpolation(float(gDetailStartHeight), float(gDetailEndHeight), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
+    result = gDetailClip
+        \ .Trim(gDetailLastFrame + gDetailCurrentTransitionFrame, gDetailLastFrame + gDetailCurrentTransitionFrame)
+        \ .LanczosResize(gClipWidth, gClipHeight, interpolatedLeft, interpolatedTop, interpolatedWidth, interpolatedHeight)
+    global gDetailCurrentTransitionFrame = gDetailCurrentTransitionFrame + 1
+    return (gDetailCurrentTransitionFrame <= gDetailsTransitionFrameCount) ? (result + showDetailFrame) : result  # recursion = poor man's loop in AviSynth
+}
 
-    theWidth = Default(width, gClipWidth)
-    theHeight = Default(height, gClipHeight)
-    detailClip = clip.trim(gCurrentDetailLastFrame, gCurrentDetailLastFrame + totalFrames)
-    result = Animate(detailClip, 0, Default(transitionFrames, gDetailsTransitionFrames), "LanczosResize",
-        \ gClipWidth, gClipHeight, gCurrentDetailLeft, gCurrentDetailTop, float(gCurrentDetailWidth), float(gCurrentDetailHeight),
-        \ gClipWidth, gClipHeight, left, top, float(theWidth), float(theHeight))
+function showDetail(clip, int totalFrames, int left, int top, int "width", int "height", int "transitionFrames")
+{
+    (gDetailClip != clip) ? resetCurrentDetail : NOP
 
-    global gCurrentDetailClip = clip
-    global gCurrentDetailLeft = left
-    global gCurrentDetailTop = top
-    global gCurrentDetailWidth = theWidth
-    global gCurrentDetailHeight = theHeight
-    global gCurrentDetailLastFrame = gCurrentDetailLastFrame + totalFrames
+    global gDetailClip = clip
+    global gDetailEndLeft = left
+    global gDetailEndTop = top
+    global gDetailEndWidth = Default(width, gClipWidth)
+    global gDetailEndHeight = Default(height, gClipHeight)
+    global gDetailsTransitionFrameCount = Default(transitionFrames, gDetailsTransitionDeafultFrameCount)
+    global gDetailCurrentTransitionFrame = 1
 
-    return result
+    transition = showDetailFrame
+    detail = clip
+        \ .trim(gDetailLastFrame + gDetailsTransitionFrameCount , gDetailLastFrame + totalFrames)
+        \ .LanczosResize(gClipWidth, gClipHeight, gDetailEndLeft, gDetailEndTop, gDetailEndWidth, gDetailEndHeight)
+
+    global gDetailStartLeft = gDetailEndLeft
+    global gDetailStartTop = gDetailEndTop
+    global gDetailStartWidth = gDetailEndWidth
+    global gDetailStartHeight = gDetailEndHeight
+    global gDetailLastFrame = gDetailLastFrame + totalFrames
+
+    return transition + detail
 }
