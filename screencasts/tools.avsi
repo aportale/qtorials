@@ -129,9 +129,8 @@ resetCurrentDetail
 
 function sCurveInterpolation(float sourceValue, float targetValue, int frame, int framesCount)
 {
-    factor = 4
-    x = (factor*2 * (frame - (framesCount / 2)) / float(framesCount))
-    y = 1.0 / (1.0 + exp(-x))
+    x = float(frame) / float(framesCount)
+    y = Spline(x, 0.0, 0.0,  1.0/3.0, 1.0/6.0,  2.0/3.0, 5.0/6.0,  1.0, 1.0,  true)
     return sourceValue + y * (targetValue - sourceValue)
 }
 
