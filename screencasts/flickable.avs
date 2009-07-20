@@ -7,7 +7,7 @@
 # California, 94105, USA.
 
 # Webcasting Ariya's flickable example
-# http://labs.trolltech.com/blogs/
+# http://labs.trolltech.com/blogs/2009/07/19/kinetic-scrolling-on-any-widgets/
 
 Import("tools.avsi")
 
