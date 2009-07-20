@@ -12,6 +12,7 @@ global gClipWidth = 480
 global gClipHeight = 360
 global gTitleTextSize = 25
 global gDetailsTransitionDeafultFrameCount = 15
+global gDetailsExpansionColor = $eeeeee
 
 function trimAudio(clip audioClip, float startSecond, float endSecond)
 {
@@ -111,6 +112,7 @@ global gDetailClip = BlankClip
 function resetCurrentDetail()
 {
     global gDetailClip = BlankClip
+    global gDetailExpandedClip = gDetailClip
     global gDetailLastFrame = 1
 
     global gDetailCurrentTransitionFrame = 1
@@ -126,6 +128,17 @@ function resetCurrentDetail()
     global gDetailEndHeight = gClipHeight
 }
 resetCurrentDetail
+
+# Adds borders to the clip in order to make it the same aspect ratio as gClipWidth/gClipHeight
+# Either Top/Bottom or Left/Right or no Borders are added.
+function expandedClipForDetails(clip)
+{
+    clipWithToHeight = Float(clip.Width) / Float(clip.Height)
+    globalClipWithToHeight = Float(gClipWidth) / Float(gClipHeight)
+    global gDetailWidthExpand = (globalClipWithToHeight > clipWithToHeight) ? Round(clip.Width * globalClipWithToHeight / clipWithToHeight - clip.Width) / 2: 0
+    global gDetailHeightExpand = (globalClipWithToHeight < clipWithToHeight) ? Round(clip.Height * clipWithToHeight / globalClipWithToHeight - clip.Height) / 2: 0
+    return clip.addBorders(gDetailWidthExpand, gDetailHeightExpand, gDetailWidthExpand, gDetailHeightExpand, gDetailsExpansionColor)
+}
 
 function sCurveInterpolation(float sourceValue, float targetValue, int frame, int framesCount)
 {
@@ -147,11 +160,33 @@ function showDetailFrame()
     interpolatedTop = showDetailStartAndEndSameSize ? Round(interpolatedTop) : interpolatedTop
     interpolatedWidth = sCurveInterpolation(float(gDetailStartWidth), float(gDetailEndWidth), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     interpolatedHeight = sCurveInterpolation(float(gDetailStartHeight), float(gDetailEndHeight), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
-    result = gDetailClip
+    result = gDetailExpandedClip
         \ .Trim(gDetailLastFrame + gDetailCurrentTransitionFrame, gDetailLastFrame + gDetailCurrentTransitionFrame)
         \ .LanczosResize(gClipWidth, gClipHeight, interpolatedLeft, interpolatedTop, interpolatedWidth, interpolatedHeight)
     global gDetailCurrentTransitionFrame = gDetailCurrentTransitionFrame + 1
-    return (gDetailCurrentTransitionFrame <= gDetailsTransitionFrameCount) ? (result + showDetailFrame) : result  # recursion = poor man's loop in AviSynth
+    return (gDetailCurrentTransitionFrame < gDetailsTransitionFrameCount) ? (result + showDetailFrame) : result  # recursion = poor man's loop in AviSynth
+}
+
+function setFullScreen(clip)
+{
+    global gDetailClip = clip
+    expandedClip = expandedClipForDetails(clip)
+    setDetail(-gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
+}
+
+function showFullScreen(clip, int totalFrames, int "transitionFrames")
+{
+    expandedClip = expandedClipForDetails(clip)
+    transitionFrameCount = Default(transitionFrames, gDetailsTransitionDeafultFrameCount)
+    return showDetail(clip, totalFrames, -gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
+}
+
+function setDetail(int left, int top, int "width", int "height")
+{
+    global gDetailStartLeft = left + gDetailWidthExpand
+    global gDetailStartTop = top + gDetailHeightExpand
+    global gDetailStartWidth = Default(width, gClipWidth)
+    global gDetailStartHeight = Default(height, gClipHeight)
 }
 
 function showDetail(clip, int totalFrames, int left, int top, int "width", int "height", int "transitionFrames")
@@ -159,17 +194,18 @@ function showDetail(clip, int totalFrames, int left, int top, int "width", int "
     (gDetailClip != clip) ? resetCurrentDetail : NOP
 
     global gDetailClip = clip
-    global gDetailEndLeft = left
-    global gDetailEndTop = top
+    global gDetailExpandedClip = expandedClipForDetails(gDetailClip)
+    global gDetailEndLeft = left + gDetailWidthExpand
+    global gDetailEndTop = top + gDetailHeightExpand
     global gDetailEndWidth = Default(width, gClipWidth)
     global gDetailEndHeight = Default(height, gClipHeight)
-    global gDetailsTransitionFrameCount = Default(transitionFrames, gDetailsTransitionDeafultFrameCount)
-    global gDetailCurrentTransitionFrame = 1
+    global gDetailsTransitionFrameCount = Min(Default(transitionFrames, gDetailsTransitionDeafultFrameCount), totalFrames)
+    global gDetailCurrentTransitionFrame = 0
 
-    transition = showDetailFrame
-    detail = clip
-        \ .trim(gDetailLastFrame + gDetailsTransitionFrameCount , gDetailLastFrame + totalFrames)
+    detail = gDetailExpandedClip
+        \ .trim(gDetailLastFrame + gDetailsTransitionFrameCount + 1, gDetailLastFrame + totalFrames)
         \ .LanczosResize(gClipWidth, gClipHeight, gDetailEndLeft, gDetailEndTop, gDetailEndWidth, gDetailEndHeight)
+    detail = (gDetailsTransitionFrameCount > 0) ? (showDetailFrame + detail) : detail
 
     global gDetailStartLeft = gDetailEndLeft
     global gDetailStartTop = gDetailEndTop
@@ -177,5 +213,5 @@ function showDetail(clip, int totalFrames, int left, int top, int "width", int "
     global gDetailStartHeight = gDetailEndHeight
     global gDetailLastFrame = gDetailLastFrame + totalFrames
 
-    return transition + detail
+    return detail
 }
