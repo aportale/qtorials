@@ -113,7 +113,7 @@ function resetCurrentDetail()
 {
     global gDetailClip = BlankClip
     global gDetailExpandedClip = gDetailClip
-    global gDetailLastFrame = 1
+    global gDetailLastFrame = 0
 
     global gDetailCurrentTransitionFrame = 1
 
@@ -161,7 +161,7 @@ function showDetailFrame()
     interpolatedWidth = sCurveInterpolation(float(gDetailStartWidth), float(gDetailEndWidth), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     interpolatedHeight = sCurveInterpolation(float(gDetailStartHeight), float(gDetailEndHeight), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     result = gDetailExpandedClip
-        \ .Trim(gDetailLastFrame + gDetailCurrentTransitionFrame, gDetailLastFrame + gDetailCurrentTransitionFrame)
+        \ .Trim(gDetailLastFrame + gDetailCurrentTransitionFrame + 1, gDetailLastFrame + gDetailCurrentTransitionFrame + 1)
         \ .LanczosResize(gClipWidth, gClipHeight, interpolatedLeft, interpolatedTop, interpolatedWidth, interpolatedHeight)
     global gDetailCurrentTransitionFrame = gDetailCurrentTransitionFrame + 1
     return (gDetailCurrentTransitionFrame < gDetailsTransitionFrameCount) ? (result + showDetailFrame) : result  # recursion = poor man's loop in AviSynth
