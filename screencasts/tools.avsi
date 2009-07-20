@@ -98,6 +98,14 @@ function qtLogoSmall(clip)
     return clip.Overlay(qtlogo, 0, 0, qtlogomask, 0.6)
 }
 
+function oldStyle(clip)
+{
+    clipSizeString = String(clip.Width) + "x" + String(clip.Height)
+    oldStyle = ImageReader("..\artwork\oldstyle_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
+    oldStyleAlpha = oldStyle.showalpha()
+    return clip.Overlay(oldStyle, 0, 0, oldStyleAlpha, 0.6)
+}
+
 global gDetailClip = BlankClip
 
 function resetCurrentDetail()
