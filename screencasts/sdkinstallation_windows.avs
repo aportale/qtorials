@@ -30,7 +30,7 @@ function videoWelcome()
         \ , 6).ConvertToRGB24
 }
 
-function audioSDKDownload()
+function audioDownload()
 {
     #n Let's visit the Qt website.
     #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
@@ -56,11 +56,11 @@ function audioSDKDownload()
     return a1 + a2 + a3 + a4 + a5 + audioNoise(10)
 }
 
-function videoSDKDownload()
+function videoDownload()
 {
 }
 
-function audioSDKInstallation()
+function audioInstallation()
 {
     #n We simply execute the downloaded installer...
     #  Starting installer from downloaded files
@@ -77,11 +77,11 @@ function audioSDKInstallation()
     return a1 + a2 + a3 + audioNoise(10)
 }
 
-function videoSDKInstallation()
+function videoInstallation()
 {
 }
 
-function audioSDKComponents()
+function audioComponents()
 {
     #n The installer created a start menu program group "Qt SDK by Nokia".
     #  Start->All Programs->Mouse on program group
@@ -128,7 +128,7 @@ function audioSDKComponents()
     return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + audioNoise(10)
 }
 
-function videoSDKComponents()
+function videoComponents()
 {
     return Dissolve(textClip(carbide, "Our first Qt for S60 application"), carbide, emulator, 6)
 }
@@ -148,9 +148,9 @@ function videoOutro()
 function clip_2d()
 {
     return Dissolve(
-        \   AudioDub(videoSDKDownload(), audioSDKDownload())
-        \ , AudioDub(videoSDKInstallation(), audioSDKInstallation())
-        \ , AudioDub(videoSDKComponents(), audioSDKComponents())
+        \   AudioDub(videoDownload(), audioDownload())
+        \ , AudioDub(videoInstallation(), audioInstallation())
+        \ , AudioDub(videoComponents(), audioComponents())
         \ , 6)
 }
 
