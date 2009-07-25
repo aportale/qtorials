@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
     au3Ts <<
         "#include <Array.au3>\n\n"
         "Opt(\"SendKeyDelay\", 80)\n"
-        "HotKeySet(\"{F10}\", \"Terminate\")\n"
-        "HotKeySet(\"{F11}\", \"TypeSnippet\")\n\n"
+        "HotKeySet(\"{F8}\", \"Terminate\")\n"
+        "HotKeySet(\"{F9}\", \"TypeSnippet\")\n\n"
         "Local $snippetsArray[1]\n"
         "$snippetsLineIndex = 1\n\n"
         "Func Terminate()\n"
