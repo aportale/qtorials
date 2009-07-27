@@ -12,7 +12,7 @@ global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
 global gAudioNoiseStart = 13216700 / 44100.0
 global gAudioNoiseEnd = 13225219 / 44100.0
 
-function audioWelcome()
+function audioWelcome
 {
     #n Let's download and install the Qt SDK for Windows...
     #n ...and afterwards take a short look at the installed components.
@@ -21,7 +21,7 @@ function audioWelcome()
     return a1 + audioNoise(10)
 }
 
-function videoWelcome()
+function videoWelcome
 {
     return Dissolve(
         \   ImageReader("..\..\..\qtlogobackground_480x360.png", 0, 0, 25).Loop(160).AssumeFPS(25, 1)
@@ -30,64 +30,94 @@ function videoWelcome()
         \ , 6).ConvertToRGB24
 }
 
-function audioDownload()
+function audioDownload
 {
+    return
+\[*
     #n We visit the Qt website...
     #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
     #t qtsoftware.com
-    a1 = audioNoise(1) + audioClip(07.671, 09.654, 1)
-
+*]
+        \   audioNoise(2.5)
+        \ + audioClip(07.671, 09.654, 1)
+\[*
     #n ...and go straight to the "Downloads"...
     #  Clicking on "Downloads"
-    a2 = audioClip(10.151, 12.184, 1)
-
+*]
+        \ + audioClip(10.151, 12.184, 0.3)
+\[*
     #n ...there, we choose the "LGPL / Free" tab,
     #  Clicking on "LGPL / Free"...
-    a3 = audioClip(12.797, 15.615, 1)
-
+*]
+        \ + audioClip(12.797, 15.615, 0.4)
+\[*
     #n ...click on "Download Qt SDK for Windows",...
     #  Click on "Download Qt SDK for Windows"
-    a4 = audioClip(16.209, 18.965, 1)
-
+*]
+        \ + audioClip(16.209, 18.965, 1)
+\[*
     #n ...and save the installer to the disk.
     #  Save 
-    a5 = audioClip(19.360, 21.371, 1)
+*]
+        \ + audioClip(19.360, 21.371, 1)
 
-    return a1 + a2 + a3 + a4 + a5 + audioNoise(10)
+        \ + audioNoise(10)
 }
 
-function videoDownload()
+function videoDownload
 {
     footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download.avi")
     
     return
-        \   footage.trim(   25,   167)      /* Entering Url + go            */
-        \ + footage.trim(  225,   272)      /* Click on 'Download'          */
-        \ + footage.trim(  300,   397)      /* Click on instller            */
+        \   footage.trim(   25,   167)                  [* Entering Url + go *]
+        \ + footage.trim(  225,   272)                  [* Click on 'Download' *]
+        \ + footage.trim(  300,   397)                  [* Click on installer *]
+        \ + footage.trim(  397,   397).loop(40)         [* still clicking on installer *]
+        \ + footage.trim(  397,   420)                  [* Download redirect *]
+        \ + footage.trim(  490,   625)                  [* Save file *]
 }
 
-function audioInstallation()
+function audioInstallation
 {
+    return
+\[*
     #n We execute the installer...
     #  Starting installer from downloaded files
-    a1 = audioNoise(4) + audioClip(21.856, 23.893, 1)
-
+*]
+        \ + audioNoise(2) + audioClip(21.856, 23.893, 1)
+\[*
     #n ...and go through the installation wizard.
     #  Next, yes, next...
-    a2 = audioClip(27.200, 29.176, 1)
-
+*]
+        \ + audioClip(27.200, 29.176, 2)
+\[*
     #n Now, it will take a minute or two before the Qt SDK is installed.
     #  installation progress / cut / Click finish
-    a3 = audioClip(29.463, 33.442, 1)
+*]
+        \ + audioClip(29.463, 33.442, 1)
 
-    return a1 + a2 + a3 + audioNoise(10)
+        \ + audioNoise(10)
 }
 
-function videoInstallation()
+function videoInstallation
 {
+    footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_installation.avi")
+
+    startingInstaller =
+        \   footage.trim(  230,   330)                  [* Starting installer *]
+    wizard =
+        \ (footage.trim( 2860, 3360)                    [* Going through wizard (2x time lapse) *]
+            \ . SelectEvery(2, 1)
+            \ . AssumeFps(25))
+    finishingInstaller =
+        \ (footage.trim( 5915, 6035)                    [* Finishing installer (2x time lapse) *]
+            \ . SelectEvery(2, 1)
+            \ . AssumeFps(25))
+
+    return Dissolve(startingInstaller, wizard, finishingInstaller, gDissolveLength)
 }
 
-function audioComponents()
+function audioComponents
 {
     #n The installer created a program group called "Qt SDK by Nokia".
     #  Start->All Programs->Mouse on program group
@@ -135,48 +165,48 @@ function audioComponents()
     return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + audioNoise(10)
 }
 
-function videoComponents()
+function videoComponents
 {
     return Dissolve(textClip(carbide, "Our first Qt for S60 application"), carbide, emulator, 6)
 }
 
-function audioOutro()
+function audioOutro
 {
     #n Now, that the Qt SDK is installed, we should continue with the other Qtorials :)
 
     return audioNoise(1) + audioClip(96.123, 141.674, 1)
 }
 
-function videoOutro()
+function videoOutro
 {
     return ImageReader("..\..\..\qtlogobackground_480x360.png", 0, 0, 25).Loop(160).AssumeFPS(25, 1).ConvertToRGB24
 }
 
-function clip_2d()
+function clip_2d
 {
     return Dissolve(
-        \   AudioDub(videoDownload(), audioDownload())
-        \ , AudioDub(videoInstallation(), audioInstallation())
-        \ , AudioDub(videoComponents(), audioComponents())
+        \   AudioDub(videoDownload, audioDownload)
+        \ , AudioDub(videoInstallation, audioInstallation)
+        \ , AudioDub(videoComponents, audioComponents)
         \ , 6)
 }
 
-function clip_3d()
+function clip_3d
 {
-    audio = clip_2d().killvideo()
+    audio = clip_2d.killvideo
     video = ImageSource("screencast_3D_480x360/%04d.png", start = 1, end = 5517, fps = 25)
     return AudioDub(video, audio)
 }
 
-function completeclip()
+function completeclip
 {
     return Dissolve(
-        \   AudioDub(videoWelcome(), audioWelcome()).ConvertToYUY2()
-        \ , clip_3d().ConvertToYUY2()
-        \ , AudioDub(videoOutro(), audioOutro()).ConvertToYUY2()
+        \   AudioDub(videoWelcome, audioWelcome).ConvertToYUY2
+        \ , clip_3d.ConvertToYUY2
+        \ , AudioDub(videoOutro, audioOutro).ConvertToYUY2
         \ , 6).oldGradient.qtLogoSmall
 }
 
-#clip_2d()
-AudioDub(videoDownload, audioDownload)
-#completeclip()
+#clip_2d
+AudioDub(videoInstallation, audioInstallation)
+#completeclip
