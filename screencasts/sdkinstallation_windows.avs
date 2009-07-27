@@ -117,57 +117,160 @@ function videoInstallation
     return Dissolve(startingInstaller, wizard, finishingInstaller, gDissolveLength)
 }
 
-function audioComponents
+function audioComponentQtdemo
 {
+    return
+\[*
     #n The installer created a program group called "Qt SDK by Nokia".
     #  Start->All Programs->Mouse on program group
-    a1 = audioNoise(1) + audioClip(34.132, 38.480, 1)
+*]
+        \ + audioNoise(1) + audioClip(34.132, 38.480, 2)
+\[*
+    #n The Qt Demo is a collection of examples which showcase different parts of the Qt application framework.
+*]
+        \ + audioClip(67.697, 74.696, 2)
+\[*
+    #n Some of these examples are really fancy. And of course we can study all their source codes.
+    #  Clicking around some demos, browsing through sources.
+*]
+        \ + audioClip(74.696, 80.283, 1)
 
-    #n The Qt Command prompt has a fully set up environment for advanced tasks in the command line.
-    #t qmake --version{ENTER}
-    a2 = audioClip(3.,787, 44.489, 1)
+        \ + audioNoise(10)
+}
 
+function videoComponentQtdemo
+{
+    footage =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtdemo.avi")
+
+    vectorTransformation =
+        \   footage.Trim(    0,   86)                   [* Opening start menu *]
+        \ + footage.Trim(   86,   86).loop(40)          [* Resting on 'Qt SDK by Nokia' group *]
+        \ + footage.Trim(   86,  125)                   [* Opening and playing with Vector Transformation *]
+        \ + footage.Trim(  125,  125).loop(25)          [* Resting on QtDemo *]
+        \ + footage.Trim(  125,  415)                   [* Opening and playing with Vector Transformation *]
+
+    spreadSheet =
+        \   footage.Trim( 1275, 1450)                   [* Playing with Vector SpreadSheet *]
+
+    return Dissolve(vectorTransformation, spreadSheet, gDissolveLength)
+}
+
+function audioComponentQtcreator
+{
+    return
+\[*
     #n Qt Creator is the integrated development environment...
     #n ...that comes with...
     #  Starting Qt Creator
-    a3 = audioClip(44.967, 50.006, 1)
-
+*]
+        \ + audioNoise(1) + audioClip(44.967, 50.006, 0)
+\[*
     #n ...an advanced C++ code editor...
     #  Quick impressions of code completion based on Gui App made with the wizard
     #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
-    a4 = audioClip(50.211, 52.761, 1)
-
+*]
+        \ + audioClip(50.211, 52.761, 3)
+\[*
     #n ...a Drag'n'Drop Gui editor...
     #  Quick impressions of designer
-    a5 = audioClip(56.363, 58.674, 1)
-
+*]
+        \ + audioClip(56.363, 58.674, 3)
+\[*
     #n ...a debugger...
     #  Quick impressions of the debugger
-    a6 = audioClip(59.063, 60.301, 1)
-
+*]
+        \ + audioClip(59.063, 60.301, 3)
+\[*
     #n ...and a help system.
     #  Quick impressions of help
-    a7 = audioClip(61.148, 62.536, 1)
-
+*]
+        \ + audioClip(61.148, 62.536, 0.5)
+\[*
     #n We will do most of the application development in Qt Creator.
-    a8 = audioClip(63.697, 67.280, 1)
+*]
+        \ + audioClip(63.697, 67.280, 1)
 
-    #n The Qt Demo is a collection of examples which showcase different parts of the Qt application framework.
-    #n Some of these examples are really fancy. And of course we can study all their source codes.
-    #  Clicking around some demos, browsing through sources.
-    a9 = audioClip(67.697, 80.283, 1)
+        \ + audioNoise(10)
+}
 
+function videoComponentQtcreator
+{
+    footageEditor =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtcreator_editor.avi")
+    footageDesigner =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtcreator_designer.avi")
+    footageDebugger =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtcreator_debugger.avi")
+    footageHelp =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtcreator_help.avi")
+
+    editor =
+        \   footageEditor.Trim(   85,   134)            [* Starting Qt Creator *]
+        \ + footageEditor.Trim(  180,   400)            [* Qt Creator shows up, completion example *]
+
+    return Dissolve(
+        \   editor
+        \ , footageDesigner.Trim(25, 150)               [* Adding textedit and rediobuttons to form *]
+        \ , footageDebugger.Trim(75, 175)               [* Adding breakpoints and start debugging *]
+        \ , footageDebugger.Trim(510, 580)              [* Showing contents of QStringList *]
+        \ , footageHelp.Trim(60, 225)                   [* Jumping to aboutToActivate *]
+        \ , gDissolveLength)
+}
+
+function audioComponentLinguist
+{
+    return
+\[*
     #n Qt Linguist is the language translation tool.
     #n It can be used by translation specialists to create or maintain multiple languages for our applications.
     #  Some clicks through Linguist
-    a10 = audioClip(84.918, 95.720, 1)
+*]
+        \ audioNoise(1.5) + audioClip(84.918, 95.720, 1)
 
-    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + audioNoise(10)
+        \ + audioNoise(10)
 }
 
-function videoComponents
+function videoComponentLinguist
 {
-    return Dissolve(textClip(carbide, "Our first Qt for S60 application"), carbide, emulator, 6)
+    footage =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_linguist.avi")
+
+    return footage.Trim(62, 425)
+}
+
+function audioComponentCommandprompt
+{
+    return
+\[*
+    #n The Qt Command prompt has a fully set up environment for advanced tasks in the command line.
+    #t qmake --version{ENTER}
+*]
+        \ audioNoise(1) + audioClip(38.787, 44.489, 1)
+
+        \ + audioNoise(10)
+}
+
+function videoComponentCommandprompt
+{
+    footage =
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_commandprompt.avi")
+
+    return
+        \   footage.Trim(86, 243)                       [* Typing in qmake --v *]
+        \ + footage.Trim(244, 244).Loop(24)             [* Cursor blink white *]
+        \ + footage.Trim(243, 243).Loop(24)             [* Cursor blink black *]
+        \ + footage.Trim(244, 244).Loop(24)             [* Cursor blink white *]
+}
+
+function Components
+{
+    return Dissolve(
+        \   AudioDub(videoComponentQtdemo, audioComponentQtdemo)
+        \ , AudioDub(videoComponentQtcreator, audioComponentQtcreator)
+        \ , AudioDub(videoComponentLinguist, audioComponentLinguist)
+        \ , AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
+        \ , gDissolveLength)
 }
 
 function audioOutro
@@ -208,5 +311,6 @@ function completeclip
 }
 
 #clip_2d
-AudioDub(videoInstallation, audioInstallation)
+#AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
 #completeclip
+Components
