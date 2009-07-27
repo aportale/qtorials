@@ -13,6 +13,7 @@ global gClipHeight = 360
 global gTitleTextSize = 25
 global gDetailsTransitionDeafultFrameCount = 15
 global gDetailsExpansionColor = $eeeeee
+global gMediaDir = "..\..\qtorials_media\"
 
 function trimAudio(clip audioClip, float startSecond, float endSecond)
 {
