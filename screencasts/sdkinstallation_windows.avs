@@ -16,7 +16,7 @@ function audioWelcome()
 {
     #n Let's download and install the Qt SDK for Windows...
     #n ...and afterwards take a short look at the installed components.
-    a1 = audioNoise(0.7) + audioClip(0.0, 2.0, 1)
+    a1 = audioNoise(0.7) + audioClip(00.533, 07.247, 1)
 
     return a1 + audioNoise(10)
 }
@@ -35,23 +35,23 @@ function audioDownload()
     #n We visit the Qt website...
     #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
     #t qtsoftware.com
-    a1 = audioNoise(1) + audioClip(0.0, 2.0, 1)
+    a1 = audioNoise(1) + audioClip(07.671, 09.654, 1)
 
     #n ...and go straight to the "Downloads"...
     #  Clicking on "Downloads"
-    a2 = audioClip(0.0, 2.0, 1)
+    a2 = audioClip(10.151, 12.184, 1)
 
     #n ...there, we choose the "LGPL / Free" tab,
     #  Clicking on "LGPL / Free"...
-    a3 = audioClip(0.0, 2.0, 1)
+    a3 = audioClip(12.797, 15.615, 1)
 
     #n ...click on "Download Qt SDK for Windows",...
     #  Click on "Download Qt SDK for Windows"
-    a4 = audioClip(0.0, 2.0, 1)
+    a4 = audioClip(16.209, 18.965, 1)
 
     #n ...and save the installer to the disk.
     #  Save 
-    a5 = audioClip(0.0, 2.0, 1)
+    a5 = audioClip(19.360, 21.371, 1)
 
     return a1 + a2 + a3 + a4 + a5 + audioNoise(10)
 }
@@ -59,23 +59,26 @@ function audioDownload()
 function videoDownload()
 {
     footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download.avi")
-
-    return footage
+    
+    return
+        \   footage.trim(   25,   167)      /* Entering Url + go            */
+        \ + footage.trim(  225,   272)      /* Click on 'Download'          */
+        \ + footage.trim(  300,   397)      /* Click on instller            */
 }
 
 function audioInstallation()
 {
-    #n We execute the downloaded installer...
+    #n We execute the installer...
     #  Starting installer from downloaded files
-    a1 = audioNoise(4) + audioClip(0.0, 2.0, 1)
+    a1 = audioNoise(4) + audioClip(21.856, 23.893, 1)
 
     #n ...and go through the installation wizard.
     #  Next, yes, next...
-    a2 = audioClip(0.0, 2.0, 1)
+    a2 = audioClip(27.200, 29.176, 1)
 
     #n Now, it will take a minute or two before the Qt SDK is installed.
     #  installation progress / cut / Click finish
-    a3 = audioClip(0.0, 2.0, 1)
+    a3 = audioClip(29.463, 33.442, 1)
 
     return a1 + a2 + a3 + audioNoise(10)
 }
@@ -88,52 +91,48 @@ function audioComponents()
 {
     #n The installer created a program group called "Qt SDK by Nokia".
     #  Start->All Programs->Mouse on program group
-    a1 = audioNoise(1) + audioClip(0.0, 2.0, 1)
+    a1 = audioNoise(1) + audioClip(34.132, 38.480, 1)
 
     #n The Qt Command prompt has a fully set up environment for advanced tasks in the command line.
     #t qmake --version{ENTER}
-    a2 = audioClip(0.0, 2.0, 1)
+    a2 = audioClip(3.,787, 44.489, 1)
 
     #n Qt Creator is the integrated development environment...
     #n ...that comes with...
     #  Starting Qt Creator
-    a3 = audioClip(0.0, 2.0, 1)
+    a3 = audioClip(44.967, 50.006, 1)
 
     #n ...an advanced C++ code editor...
     #  Quick impressions of code completion based on Gui App made with the wizard
     #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
-    a4 = audioClip(0.0, 2.0, 1)
+    a4 = audioClip(50.211, 52.761, 1)
 
     #n ...a Drag'n'Drop Gui editor...
     #  Quick impressions of designer
-    a5 = audioClip(0.0, 2.0, 1)
+    a5 = audioClip(56.363, 58.674, 1)
 
     #n ...a debugger...
     #  Quick impressions of the debugger
-    a6 = audioClip(0.0, 2.0, 1)
+    a6 = audioClip(59.063, 60.301, 1)
 
     #n ...and a help system.
     #  Quick impressions of help
-    a7 = audioClip(0.0, 2.0, 1)
+    a7 = audioClip(61.148, 62.536, 1)
 
     #n We will do most of the application development in Qt Creator.
-    a8 = audioClip(0.0, 2.0, 1)
+    a8 = audioClip(63.697, 67.280, 1)
 
     #n The Qt Demo is a collection of examples which showcase different parts of the Qt application framework.
     #n Some of these examples are really fancy. And of course we can study all their source codes.
     #  Clicking around some demos, browsing through sources.
-    a9 = audioClip(0.0, 2.0, 1)
+    a9 = audioClip(67.697, 80.283, 1)
 
     #n Qt Linguist is the language translation tool.
     #n It can be used by translation specialists to create or maintain multiple languages for our applications.
     #  Some clicks through Linguist
-    a10 = audioClip(0.0, 2.0, 1)
+    a10 = audioClip(84.918, 95.720, 1)
 
-    #n The last two shortcuts are a link to the QtSoftware website, and the deinstallation of the Qt SDK.
-    #  Hover over last two shortcuts
-    a11 = audioClip(0.0, 2.0, 1)
-
-    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + audioNoise(10)
+    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + audioNoise(10)
 }
 
 function videoComponents()
@@ -145,7 +144,7 @@ function audioOutro()
 {
     #n Now, that the Qt SDK is installed, we should continue with the other Qtorials :)
 
-    return audioNoise(1) + audioClip(0.0, 2.0, 1)
+    return audioNoise(1) + audioClip(96.123, 141.674, 1)
 }
 
 function videoOutro()
