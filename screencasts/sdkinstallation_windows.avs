@@ -14,8 +14,8 @@ global gAudioNoiseEnd = 13225219 / 44100.0
 
 function audioWelcome()
 {
-    #n Now we will download and install the Qt SDK for Windows.
-    #n Then, we take a short look at the installed components.
+    #n Let's download and install the Qt SDK for Windows...
+    #n ...and afterwards take a short look at the installed components.
     a1 = audioNoise(0.7) + audioClip(0.0, 2.0, 1)
 
     return a1 + audioNoise(10)
@@ -32,16 +32,16 @@ function videoWelcome()
 
 function audioDownload()
 {
-    #n Let's visit the Qt website.
+    #n We visit the Qt website...
     #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
     #t qtsoftware.com
     a1 = audioNoise(1) + audioClip(0.0, 2.0, 1)
 
-    #n First we go to the "Downloads"...
+    #n ...and go straight to the "Downloads"...
     #  Clicking on "Downloads"
     a2 = audioClip(0.0, 2.0, 1)
 
-    #n ...then, we choose the tab "LGPL / Free",
+    #n ...there, we choose the "LGPL / Free" tab,
     #  Clicking on "LGPL / Free"...
     a3 = audioClip(0.0, 2.0, 1)
 
@@ -49,7 +49,7 @@ function audioDownload()
     #  Click on "Download Qt SDK for Windows"
     a4 = audioClip(0.0, 2.0, 1)
 
-    #n ...and save the file on the disk.
+    #n ...and save the installer to the disk.
     #  Save 
     a5 = audioClip(0.0, 2.0, 1)
 
@@ -62,7 +62,7 @@ function videoDownload()
 
 function audioInstallation()
 {
-    #n We simply execute the downloaded installer...
+    #n We execute the downloaded installer...
     #  Starting installer from downloaded files
     a1 = audioNoise(4) + audioClip(0.0, 2.0, 1)
 
@@ -83,49 +83,58 @@ function videoInstallation()
 
 function audioComponents()
 {
-    #n The installer created a start menu program group "Qt SDK by Nokia".
+    #n The installer created a program group called "Qt SDK by Nokia".
     #  Start->All Programs->Mouse on program group
     a1 = audioNoise(1) + audioClip(0.0, 2.0, 1)
 
-    #n It contains shortcuts to the Qt SDK components
+    #n It contains shortcuts to the Qt SDK components.
     #  Hover on program group contents
     a2 = audioClip(0.0, 2.0, 1)
 
-    #n The Qt Command prompt has a fully set up environment that allows to perform some advanced tasks in the command line.
+    #n The Qt Command prompt has a fully set up environment for advanced tasks in the command line.
     #t qmake --version{ENTER}
     a3 = audioClip(0.0, 2.0, 1)
 
-    #n Qt Creator is the integrated development environment with an advanced code editor...
-    #  Quick impressions of code completion
+    #n Qt Creator is the integrated development environment...
+    #n ...that comes with...
+    #  Starting Qt Creator
     a4 = audioClip(0.0, 2.0, 1)
 
-    #n ...a Gui editor,...
-    #  Quick impressions of designer
+    #n ...an advanced C++ code editor...
+    #  Quick impressions of code completion based on Gui App made with the wizard
+    #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
     a5 = audioClip(0.0, 2.0, 1)
+
+    #n ...a Drag'n'Drop Gui editor...
+    #  Quick impressions of designer
+    a6 = audioClip(0.0, 2.0, 1)
 
     #n ...a debugger...
     #  Quick impressions of the debugger
-    a6 = audioClip(0.0, 2.0, 1)
-
-    #n ...and an integrated help system. We will do most the application development in Qt Creator.
-    #  Quick impressions of help
     a7 = audioClip(0.0, 2.0, 1)
 
-    #n The Qt Demo is a collection of examples which showcase different aspects of the Qt application framework.
+    #n ...and a help system.
+    #  Quick impressions of help
+    a8 = audioClip(0.0, 2.0, 1)
+
+    #n We will do most of the application development in Qt Creator.
+    a9 = audioClip(0.0, 2.0, 1)
+
+    #n The Qt Demo is a collection of examples which showcase different parts of the Qt application framework.
     #n Some of these examples are really fancy. And of course we can study all their source codes.
     #  Clicking around some demos, browsing through sources.
-    a8 = audioClip(0.0, 2.0, 1)
+    a10 = audioClip(0.0, 2.0, 1)
 
     #n Qt Linguist is the language translation tool.
     #n It can be used by translation specialists to create or maintain multiple languages for our applications.
     #  Some clicks through Linguist
-    a9 = audioClip(0.0, 2.0, 1)
+    a11 = audioClip(0.0, 2.0, 1)
 
     #n The last two shortcuts are a link to the QtSoftware website, and the deinstallation of the Qt SDK.
     #  Hover over last two shortcuts
-    a10 = audioClip(0.0, 2.0, 1)
+    a12 = audioClip(0.0, 2.0, 1)
 
-    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + audioNoise(10)
+    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + audioNoise(10)
 }
 
 function videoComponents()
