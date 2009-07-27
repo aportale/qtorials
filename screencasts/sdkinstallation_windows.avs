@@ -6,9 +6,9 @@
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
 
-Import("..\..\..\tools.avsi")
+Import("tools.avsi")
 
-global gAudioClip = WAVSource("qts60garden_audio.wav")
+global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
 global gAudioNoiseStart = 13216700 / 44100.0
 global gAudioNoiseEnd = 13225219 / 44100.0
 
@@ -58,6 +58,9 @@ function audioDownload()
 
 function videoDownload()
 {
+    footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download.avi")
+
+    return footage
 }
 
 function audioInstallation()
@@ -87,54 +90,50 @@ function audioComponents()
     #  Start->All Programs->Mouse on program group
     a1 = audioNoise(1) + audioClip(0.0, 2.0, 1)
 
-    #n It contains shortcuts to the Qt SDK components.
-    #  Hover on program group contents
-    a2 = audioClip(0.0, 2.0, 1)
-
     #n The Qt Command prompt has a fully set up environment for advanced tasks in the command line.
     #t qmake --version{ENTER}
-    a3 = audioClip(0.0, 2.0, 1)
+    a2 = audioClip(0.0, 2.0, 1)
 
     #n Qt Creator is the integrated development environment...
     #n ...that comes with...
     #  Starting Qt Creator
-    a4 = audioClip(0.0, 2.0, 1)
+    a3 = audioClip(0.0, 2.0, 1)
 
     #n ...an advanced C++ code editor...
     #  Quick impressions of code completion based on Gui App made with the wizard
     #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
-    a5 = audioClip(0.0, 2.0, 1)
+    a4 = audioClip(0.0, 2.0, 1)
 
     #n ...a Drag'n'Drop Gui editor...
     #  Quick impressions of designer
-    a6 = audioClip(0.0, 2.0, 1)
+    a5 = audioClip(0.0, 2.0, 1)
 
     #n ...a debugger...
     #  Quick impressions of the debugger
-    a7 = audioClip(0.0, 2.0, 1)
+    a6 = audioClip(0.0, 2.0, 1)
 
     #n ...and a help system.
     #  Quick impressions of help
-    a8 = audioClip(0.0, 2.0, 1)
+    a7 = audioClip(0.0, 2.0, 1)
 
     #n We will do most of the application development in Qt Creator.
-    a9 = audioClip(0.0, 2.0, 1)
+    a8 = audioClip(0.0, 2.0, 1)
 
     #n The Qt Demo is a collection of examples which showcase different parts of the Qt application framework.
     #n Some of these examples are really fancy. And of course we can study all their source codes.
     #  Clicking around some demos, browsing through sources.
-    a10 = audioClip(0.0, 2.0, 1)
+    a9 = audioClip(0.0, 2.0, 1)
 
     #n Qt Linguist is the language translation tool.
     #n It can be used by translation specialists to create or maintain multiple languages for our applications.
     #  Some clicks through Linguist
-    a11 = audioClip(0.0, 2.0, 1)
+    a10 = audioClip(0.0, 2.0, 1)
 
     #n The last two shortcuts are a link to the QtSoftware website, and the deinstallation of the Qt SDK.
     #  Hover over last two shortcuts
-    a12 = audioClip(0.0, 2.0, 1)
+    a11 = audioClip(0.0, 2.0, 1)
 
-    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + audioNoise(10)
+    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + audioNoise(10)
 }
 
 function videoComponents()
@@ -180,5 +179,5 @@ function completeclip()
 }
 
 #clip_2d()
-#AudioDub(videoCarbide(), audioCarbide())
-completeclip()
+AudioDub(videoDownload, audioDownload)
+#completeclip()
