@@ -7,7 +7,7 @@ rem or send a letter to Creative Commons,
 rem 171 Second Street, Suite 300, San Francisco,
 rem California, 94105, USA.
 
-for %%i in (qt_small qt_big cc-by-nc-sa_small cc-by-nc-sa_big cc-by-nc-nd_small cc-by-nc-nd_big oldstyle) do call :exportidtopng %%i
+for %%i in (qt_small qt_big qt_orials cc-by-sa_small cc-by-sa_big cc-by-nc-sa_small cc-by-nc-sa_big cc-by-nc-nd_small cc-by-nc-nd_big oldstyle) do call :exportidtopng %%i
 goto :eof
 
 :exportidtopng
