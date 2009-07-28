@@ -1771,13 +1771,10 @@
        id="cc-by-sa"
        transform="translate(160,752)">
       <g
-         inkscape:export-ydpi="300.23013"
-         inkscape:export-xdpi="300.23013"
-         inkscape:export-filename="/mnt/hgfs/Bov/Documents/Work/2007/cc/identity/srr buttons/big/by-sa.png"
          id="g287"
          transform="matrix(0.9937807,0,0,0.9936694,-177.69409,-74.436409)">
         <path
-           style="fill:#aab2ab"
+           style="fill:#aaaaaa"
            d="M 182.23532,75.39014 L 296.29928,75.59326 C 297.89303,75.59326 299.31686,75.35644 299.31686,78.77344 L 299.17721,116.34033 L 179.3569,116.34033 L 179.3569,78.63379 C 179.3569,76.94922 179.51999,75.39014 182.23532,75.39014 z"
            nodetypes="ccccccc"
            id="path3817_2_" />
