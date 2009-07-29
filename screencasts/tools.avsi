@@ -33,8 +33,8 @@ function trimAudio(clip audioClip, float startSecond, float endSecond)
 function audioNoise(float lengthSeconds)
 {
     noiseSample = trimAudio(gAudioClip, gAudioNoiseStart, gAudioNoiseEnd)
-    noiseSampleReverse = noiseSample.reverse()
-    noiseSample = noiseSample + noiseSample.reverse()
+    noiseSampleReverse = noiseSample.reverse
+    noiseSample = noiseSample + noiseSample.reverse
     noiseSampleLength = (gAudioNoiseEnd - gAudioNoiseStart) * 2 # '* 2' because it has the reversed noise appended
     noiseAudio = noiseSample.loop(ceil(lengthSeconds / noiseSampleLength))
     return noiseAudio.trimAudio(0, lengthSeconds)
@@ -50,7 +50,7 @@ function textClip(String text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     return
-        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor)
+        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB24")
         \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
 }
 
@@ -59,8 +59,8 @@ function titleTextClip(string text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     result =
-        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor)
-        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2.5), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
+        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB24")
+        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
     return result.overlayQtorialImage("qt_orials")
 }
 
@@ -69,7 +69,7 @@ function frame(clip sourceClip, int frame)
     return sourceClip.trim(frame, frame).loop(gStillFrameLength)
 }
 
-function clipSizeString()
+function clipSizeString
 {
     return String(gClipWidth) + "x" + String(gClipHeight)
 }
@@ -126,7 +126,7 @@ function oldStyle(clip)
 
 global gDetailClip = BlankClip
 
-function resetCurrentDetail()
+function resetCurrentDetail
 {
     global gDetailClip = BlankClip
     global gDetailExpandedClip = gDetailClip
@@ -164,12 +164,12 @@ function sCurveInterpolation(float sourceValue, float targetValue, int frame, in
     return sourceValue + y * (targetValue - sourceValue)
 }
 
-function showDetailStartAndEndSameSize()
+function showDetailStartAndEndSameSize
 {
     return (gDetailStartWidth == gDetailEndWidth) && (gDetailStartHeight == gDetailEndHeight)
 }
 
-function showDetailFrame()
+function showDetailFrame
 {
     interpolatedLeft = sCurveInterpolation(float(gDetailStartLeft), float(gDetailEndLeft), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     interpolatedLeft = showDetailStartAndEndSameSize ? Round(interpolatedLeft) : interpolatedLeft
@@ -204,6 +204,16 @@ function setDetail(int left, int top, int "width", int "height")
     global gDetailStartTop = top + gDetailHeightExpand
     global gDetailStartWidth = Default(width, gClipWidth)
     global gDetailStartHeight = Default(height, gClipHeight)
+}
+
+function creativeCommons(clip)
+{
+    backgroundColor = $eeeeee
+    textColor = $333333
+    return Dissolve(
+        \   clip
+        \ , Audiodub(BlankClip(clip, 75, color = backgroundColor).overlayQtorialImage("cc-by-sa_big"), audioNoise(10))
+        \ , gDissolveLength)
 }
 
 function showDetail(clip, int totalFrames, int left, int top, int "width", int "height", int "transitionFrames")
