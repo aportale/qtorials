@@ -11,8 +11,8 @@ Import("tools.avsi")
 global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
 global gAudioNoiseStart = 4501384 / 44100.0
 global gAudioNoiseEnd = 4513940 / 44100.0
-global gClipWidth = 960
-global gClipHeight = 720
+global gClipWidth = 640
+global gClipHeight = 360
 
 function audioWelcome
 {
@@ -167,7 +167,7 @@ function videoComponentQtdemo
         \ + footage.Trim(  125,  415)                   [* Opening and playing with Vector Transformation *]
 
     spreadSheet =
-        \   footage.Trim( 1275, 1450)                   [* Playing with Vector SpreadSheet *]
+        \   footage.Trim( 1275, 1450)                   [* Playing with SpreadSheet *]
 
     return Dissolve(vectorTransformation, spreadSheet, gDissolveLength)
 }
@@ -279,7 +279,7 @@ function videoComponentCommandprompt
         \ + footage.Trim(244, 244).Loop(24)             [* Cursor blink white *]
 }
 
-function components
+function videoComponents_960x720
 {
     return Dissolve(
         \   AudioDub(videoComponentQtdemo, audioComponentQtdemo)
@@ -287,6 +287,42 @@ function components
         \ , AudioDub(videoComponentLinguist, audioComponentLinguist)
         \ , AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
         \ , gDissolveLength)
+}
+
+function videoComponents_640x360
+{
+    fullscreen = videoComponents_960x720
+    setFullScreen(fullscreen)
+    return
+        \   showFullScreen(fullscreen,   70 -    0)
+        \ + showDetail(fullscreen,      205 -   70, 0, 188)                 [* Open Start Menu, with group *]
+        \ + showFullScreen(fullscreen,  410 -  205)                         [* Launching QtDemo *]
+        \ + showDetail(fullscreen,      660 -  410, 0, 37, 948, 533)        [* Vector Transformation, Spreadsheet *]
+        \ + showDetail(fullscreen,      715 -  660, 0, 188)                 [* Open Start Menu, with group *]
+        \ + showFullScreen(fullscreen,  805 -  715)                         [* Launching QtCreator *]
+        \ + showDetail(fullscreen,      900 -  805, 0, 0)                   [* Code Completion *]
+        \ + showFullScreen(fullscreen,  960 -  900)                         [* Designer overview *]
+        \ + showDetail(fullscreen,     1015 -  960, 30, 73)                 [* Designer action *]
+        \ + showFullScreen(fullscreen, 1080 - 1015)                         [* Debugger overview *]
+        \ + showDetail(fullscreen,     1150 - 1080, 190, 104)               [* Debugger action *]
+        \ + showFullScreen(fullscreen, 1220 - 1150)                         [* Help overview *]
+        \ + showDetail(fullscreen,     1280 - 1220, 0, 122)                 [* Help action1 *]
+        \ + showDetail(fullscreen,     1340 - 1280, 320, 0)                 [* Help action1 *]
+        \ + showFullScreen(fullscreen, 1370 - 1340)                         [* Help zoom out *]
+        \ + showDetail(fullscreen,     1420 - 1370, 0, 188)                 [* Open Start Menu, with group *]
+        \ + showFullScreen(fullscreen, 1490 - 1420)                         [* Linguist overview *]
+        \ + showDetail(fullscreen,     1610 - 1490, 0, 53, 960, 540)        [* Linguist open translations *]
+        \ + showDetail(fullscreen,     1690 - 1610, 207, 73)                [* Linguist action *]
+}
+
+function audioComponents
+{
+    return videoComponents.killAudio
+}
+
+function components
+{
+    return AudioDub(videoWithClipSize("videoComponents"), audioComponentQtdemo)
 }
 
 function audioOutro
@@ -322,5 +358,6 @@ function completeclip
         \ .FadeIO(gDissolveLength)
 }
 
-completeclip
+videoComponents_640x360
+#videoComponents_960x720
 #titleTextClip("Qt SDK installation on Windows").oldStyle.FadeIO(gDissolveLength)
