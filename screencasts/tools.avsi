@@ -10,10 +10,14 @@ global gStillFrameLength = 30
 global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
-global gTitleTextSize = 25
 global gDetailsTransitionDeafultFrameCount = 15
 global gDetailsExpansionColor = $eeeeee
 global gMediaDir = "..\..\qtorials_media\"
+
+function titleTextSize
+{
+    return gClipHeight / 14
+}
 
 function trimAudio(clip audioClip, float startSecond, float endSecond)
 {
@@ -41,13 +45,23 @@ function audioClip(float startSecond, float endSecond, float appendedSilenceSeco
     return gAudioClip.trimAudio(startSecond, endSecond) + audioNoise(appendedSilenceSeconds)
 }
 
-function textClip(clip templateClip, string text)
+function textClip(String text, int "frames")
 {
     backgroundColor = $eeeeee
     textColor = $333333
     return
-        \  BlankClip(clip = templateClip, length = StrLen(text) * 2, color = backgroundColor)
-        \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = gTitleTextSize, lsp = 100)
+        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor)
+        \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
+}
+
+function titleTextClip(string text, int "frames")
+{
+    backgroundColor = $eeeeee
+    textColor = $333333
+    result =
+        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor)
+        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2.5), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
+    return result.overlayQtorialImage("qt_orials")
 }
 
 function frame(clip sourceClip, int frame)
@@ -92,20 +106,22 @@ function CroppedFittedClip(clip theClip, int left, int top, int width, int heigh
     theClip.Crop(left, top, width, height).fittedClip(gClipWidth, gClipHeight)
 }
 
-function qtLogoSmall(clip)
+function overlayQtorialImage(clip, string baseName, float "opacity")
 {
     clipSizeString = String(clip.Width) + "x" + String(clip.Height)
-    qtLogo = ImageReader("..\artwork\qt_small_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
-    qtLogoMask = qtLogo.showalpha
-    return clip.Overlay(qtlogo, 0, 0, qtlogomask, 0.6)
+    image = ImageReader("..\artwork\" + baseName + "_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
+    imageMask = image.showalpha
+    return clip.Overlay(image, 0, 0, imageMask, Default(opacity, 1.0))
+}
+
+function qtLogoSmall(clip)
+{
+    clip.overlayQtorialImage("qt_small", 0.6)
 }
 
 function oldStyle(clip)
 {
-    clipSizeString = String(clip.Width) + "x" + String(clip.Height)
-    oldStyle = ImageReader("..\artwork\oldstyle_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
-    oldStyleAlpha = oldStyle.showalpha()
-    return clip.Overlay(oldStyle, 0, 0, oldStyleAlpha, 0.6)
+    clip.overlayQtorialImage("oldstyle")
 }
 
 global gDetailClip = BlankClip
