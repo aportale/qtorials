@@ -9,14 +9,16 @@
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
-global gAudioNoiseStart = 13216700 / 44100.0
-global gAudioNoiseEnd = 13225219 / 44100.0
+global gAudioNoiseStart = 4501384 / 44100.0
+global gAudioNoiseEnd = 4513940 / 44100.0
+global gClipWidth = 960
+global gClipHeight = 720
 
 function audioWelcome
 {
     #n Let's download and install the Qt SDK for Windows...
     #n ...and afterwards take a short look at the installed components.
-    a1 = audioNoise(0.7) + audioClip(00.533, 07.247, 1)
+    a1 = audioNoise(2) + audioClip(00.533, 07.247, 1)
 
     return a1 + audioNoise(10)
 }
@@ -24,10 +26,14 @@ function audioWelcome
 function videoWelcome
 {
     return Dissolve(
-        \   ImageReader("..\..\..\qtlogobackground_480x360.png", 0, 0, 25).Loop(160).AssumeFPS(25, 1)
-        \ , textClip(BlankClip(0, 480, 360, fps=25), "Qt SDK Installation on Windows").trim(1,1).loop(155)
-        \ , textClip(BlankClip(0, 480, 360, fps=25), "QtCreator, QtDemo, QtLinguist...").trim(1,1).loop(80)
-        \ , 6).ConvertToRGB24
+        \   titleTextClip("Qt SDK installation on Windows", 175)
+        \ , titleTextClip("QtDemo, QtCreator, QtLinguist ...", 100)
+        \ , gDissolveLength)
+}
+
+function welcome
+{
+    return AudioDub(videoWelcome, audioWelcome)
 }
 
 function audioDownload
@@ -77,6 +83,11 @@ function videoDownload
         \ + footage.trim(  490,   625)                  [* Save file *]
 }
 
+function download
+{
+    return AudioDub(videoDownload, audioDownload)
+}
+
 function audioInstallation
 {
     return
@@ -115,6 +126,11 @@ function videoInstallation
             \ . AssumeFps(25))
 
     return Dissolve(startingInstaller, wizard, finishingInstaller, gDissolveLength)
+}
+
+function installation
+{
+    return AudioDub(videoInstallation, audioInstallation)
 }
 
 function audioComponentQtdemo
@@ -263,7 +279,7 @@ function videoComponentCommandprompt
         \ + footage.Trim(244, 244).Loop(24)             [* Cursor blink white *]
 }
 
-function Components
+function components
 {
     return Dissolve(
         \   AudioDub(videoComponentQtdemo, audioComponentQtdemo)
@@ -282,35 +298,29 @@ function audioOutro
 
 function videoOutro
 {
-    return ImageReader("..\..\..\qtlogobackground_480x360.png", 0, 0, 25).Loop(160).AssumeFPS(25, 1).ConvertToRGB24
+    return titleTextClip("...thanks for watching...", 175)
 }
 
-function clip_2d
+function outro
 {
-    return Dissolve(
-        \   AudioDub(videoDownload, audioDownload)
-        \ , AudioDub(videoInstallation, audioInstallation)
-        \ , AudioDub(videoComponents, audioComponents)
-        \ , 6)
-}
-
-function clip_3d
-{
-    audio = clip_2d.killvideo
-    video = ImageSource("screencast_3D_480x360/%04d.png", start = 1, end = 5517, fps = 25)
-    return AudioDub(video, audio)
+    return AudioDub(videoOutro, audioOutro)
 }
 
 function completeclip
 {
-    return Dissolve(
-        \   AudioDub(videoWelcome, audioWelcome).ConvertToYUY2
-        \ , clip_3d.ConvertToYUY2
-        \ , AudioDub(videoOutro, audioOutro).ConvertToYUY2
-        \ , 6).oldGradient.qtLogoSmall
+    return
+        \ Dissolve(
+            \   welcome
+            \ , download
+            \ , installation
+            \ , components
+            \ , outro
+            \ , gDissolveLength)
+        \ .oldStyle
+        \ .qtLogoSmall
+        \ .creativeCommons
+        \ .FadeIO(gDissolveLength)
 }
 
-#clip_2d
-#AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
-#completeclip
-Components
+completeclip
+#titleTextClip("Qt SDK installation on Windows").oldStyle.FadeIO(gDissolveLength)
