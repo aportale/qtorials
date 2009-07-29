@@ -121,12 +121,12 @@
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="4124.0765"
-     inkscape:cy="498.32865"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:current-layer="qt_orials_424x320"
+     inkscape:zoom="0.50000001"
+     inkscape:cx="942.83557"
+     inkscape:cy="306.87231"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:current-layer="qt_big"
      inkscape:snap-bbox="true"
      showborder="false"
      inkscape:showpageshadow="false">
@@ -393,7 +393,7 @@
   <g
      inkscape:groupmode="layer"
      id="qt_big"
-     style="display:none">
+     style="display:inline">
     <g
        id="qt_big_1280x720">
       <use
@@ -516,7 +516,7 @@
     <g
        id="qt_orials_1280x720">
       <use
-         transform="matrix(4.4041536,0,0,4.4029955,480.00163,-3623.7321)"
+         transform="matrix(4.4041536,0,0,4.4029955,480.00163,-3593.7321)"
          height="720"
          width="1280"
          id="use4618"
@@ -536,7 +536,7 @@
        id="qt_orials_960x720"
        style="display:inline">
       <use
-         transform="matrix(3.7346252,0,0,3.741275,352.00138,-3029.7722)"
+         transform="matrix(4.1004189,0,0,4.1077201,336.00152,-3323.0371)"
          height="720"
          width="960"
          id="use4623"
@@ -555,7 +555,7 @@
        transform="translate(2272,-4.9999983e-7)"
        id="qt_orials_640x480">
       <use
-         transform="matrix(2.6766623,0,0,2.603839,232.00099,-2114.7058)"
+         transform="matrix(2.9624732,0,0,2.8524623,216.0011,-2322.888)"
          x="0"
          y="0"
          xlink:href="#qt_orials_original"
@@ -574,7 +574,7 @@
        transform="translate(2928,-4.9999983e-7)"
        id="qt_orials_640x360">
       <use
-         transform="matrix(2.2449237,0,0,2.1838404,240.00083,-1792.8595)"
+         transform="matrix(2.2449237,0,0,2.1838404,240.00083,-1780.8595)"
          x="0"
          y="0"
          xlink:href="#qt_orials_original"
@@ -593,7 +593,7 @@
        transform="translate(3584,-4.9999983e-7)"
        id="qt_orials_480x360">
       <use
-         transform="matrix(1.8803127,0,0,1.8666328,175.90019,-1506.4424)"
+         transform="matrix(2.1166006,0,0,2.1012016,168.00078,-1701.3502)"
          height="720"
          width="1280"
          id="use4638"
@@ -612,7 +612,7 @@
        transform="translate(4080,-4.9999983e-7)"
        id="qt_orials_424x320">
       <use
-         transform="matrix(1.7724113,0,0,1.6954685,152.00066,-1367.7101)"
+         transform="matrix(2.0002109,0,0,1.913379,144.00074,-1552.4921)"
          x="0"
          y="0"
          xlink:href="#qt_orials_original"
@@ -631,7 +631,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-nd_small"
-     style="display:none">
+     style="display:inline">
     <g
        id="cc-by-nc-nd_small_1280x720">
       <use
@@ -752,7 +752,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-nd_big"
-     style="display:none">
+     style="display:inline">
     <g
        id="cc-by-nc-nd_big_1280x720">
       <rect
@@ -872,7 +872,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-sa_small"
-     style="display:none">
+     style="display:inline">
     <g
        id="cc-by-nc-sa_small_1280x720">
       <use
@@ -993,7 +993,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-sa_big"
-     style="display:none">
+     style="display:inline">
     <g
        id="cc-by-nc-sa_big_1280x720">
       <rect
@@ -1113,7 +1113,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-sa_small"
-     style="display:none">
+     style="display:inline">
     <g
        id="cc-by-sa_small_1280x720">
       <use
@@ -1234,7 +1234,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-sa_big"
-     style="display:none">
+     style="display:inline">
     <g
        id="cc-by-sa_big_1280x720">
       <rect
