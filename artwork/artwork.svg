@@ -121,12 +121,12 @@
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="0.25"
-     inkscape:cx="1482.7315"
-     inkscape:cy="580.70923"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:current-layer="qt_small"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="4124.0765"
+     inkscape:cy="498.32865"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:current-layer="qt_orials_424x320"
      inkscape:snap-bbox="true"
      showborder="false"
      inkscape:showpageshadow="false">
@@ -393,7 +393,7 @@
   <g
      inkscape:groupmode="layer"
      id="qt_big"
-     style="display:inline">
+     style="display:none">
     <g
        id="qt_big_1280x720">
       <use
@@ -516,7 +516,7 @@
     <g
        id="qt_orials_1280x720">
       <use
-         transform="matrix(2.2277528,0,0,2.2271669,548,-1784.7602)"
+         transform="matrix(4.4041536,0,0,4.4029955,480.00163,-3623.7321)"
          height="720"
          width="1280"
          id="use4618"
@@ -536,7 +536,7 @@
        id="qt_orials_960x720"
        style="display:inline">
       <use
-         transform="matrix(1.7654643,0,0,1.7686079,396,-1353.4259)"
+         transform="matrix(3.7346252,0,0,3.741275,352.00138,-3029.7722)"
          height="720"
          width="960"
          id="use4623"
@@ -555,7 +555,7 @@
        transform="translate(2272,-4.9999983e-7)"
        id="qt_orials_640x480">
       <use
-         transform="matrix(1.0630753,0,0,1.0630753,276,-814.22434)"
+         transform="matrix(2.6766623,0,0,2.603839,232.00099,-2114.7058)"
          x="0"
          y="0"
          xlink:href="#qt_orials_original"
@@ -574,7 +574,7 @@
        transform="translate(2928,-4.9999983e-7)"
        id="qt_orials_640x360">
       <use
-         transform="matrix(0.8352734,0,0,0.812546,295.87867,-637.27745)"
+         transform="matrix(2.2449237,0,0,2.1838404,240.00083,-1792.8595)"
          x="0"
          y="0"
          xlink:href="#qt_orials_original"
@@ -593,7 +593,7 @@
        transform="translate(3584,-4.9999983e-7)"
        id="qt_orials_480x360">
       <use
-         transform="matrix(0.7593001,0,0,0.753776,216.12133,-584.79548)"
+         transform="matrix(1.8803127,0,0,1.8666328,175.90019,-1506.4424)"
          height="720"
          width="1280"
          id="use4638"
@@ -612,7 +612,7 @@
        transform="translate(4080,-4.9999983e-7)"
        id="qt_orials_424x320">
       <use
-         transform="matrix(0.6074716,0,0,0.5811004,189.87867,-436.28779)"
+         transform="matrix(1.7724113,0,0,1.6954685,152.00066,-1367.7101)"
          x="0"
          y="0"
          xlink:href="#qt_orials_original"
@@ -631,7 +631,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-nd_small"
-     style="display:inline">
+     style="display:none">
     <g
        id="cc-by-nc-nd_small_1280x720">
       <use
@@ -752,7 +752,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-nd_big"
-     style="display:inline">
+     style="display:none">
     <g
        id="cc-by-nc-nd_big_1280x720">
       <rect
@@ -872,7 +872,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-sa_small"
-     style="display:inline">
+     style="display:none">
     <g
        id="cc-by-nc-sa_small_1280x720">
       <use
@@ -993,7 +993,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-nc-sa_big"
-     style="display:inline">
+     style="display:none">
     <g
        id="cc-by-nc-sa_big_1280x720">
       <rect
@@ -1113,7 +1113,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-sa_small"
-     style="display:inline">
+     style="display:none">
     <g
        id="cc-by-sa_small_1280x720">
       <use
@@ -1234,7 +1234,7 @@
   <g
      inkscape:groupmode="layer"
      id="cc-by-sa_big"
-     style="display:inline">
+     style="display:none">
     <g
        id="cc-by-sa_big_1280x720">
       <rect
@@ -1354,7 +1354,8 @@
   <g
      inkscape:groupmode="layer"
      id="oldstyles"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <g
        id="oldstyle_1280x720">
       <use
