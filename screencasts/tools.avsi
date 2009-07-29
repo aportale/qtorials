@@ -10,7 +10,7 @@ global gStillFrameLength = 30
 global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
-global gDetailsTransitionDeafultFrameCount = 15
+global gDetailsTransitionDeafultFrameCount = 10
 global gDetailsExpansionColor = $eeeeee
 global gMediaDir = "..\..\qtorials_media\"
 
@@ -104,6 +104,12 @@ function fittedClip(clip theClip, int outerClipWidth, int outerClipHeight)
 function CroppedFittedClip(clip theClip, int left, int top, int width, int height)
 {
     theClip.Crop(left, top, width, height).fittedClip(gClipWidth, gClipHeight)
+}
+
+function videoWithClipSize(string videoBaseName, int "width", int "height")
+{
+    sizeString = String(Default(width, gClipWidth)) + "x" + String(Default(height, gClipHeight))
+    return Eval(videoBaseName + "_" + sizeString)
 }
 
 function overlayQtorialImage(clip, string baseName, float "opacity")
