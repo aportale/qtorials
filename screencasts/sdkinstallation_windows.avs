@@ -40,7 +40,7 @@ function audioDownload
 {
     return
 \[*
-    #n We visit the Qt website...
+    #n We visit qtsoftware.com,...
     #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
     #t qtsoftware.com
 *]
@@ -57,15 +57,10 @@ function audioDownload
 *]
         \ + audioClip(12.797, 15.615, 0.4)
 \[*
-    #n ...click on "Download Qt SDK for Windows",...
+    #n ...and click on "Download Qt SDK for Windows",...
     #  Click on "Download Qt SDK for Windows"
 *]
         \ + audioClip(16.209, 18.965, 1)
-\[*
-    #n ...and save the installer to the disk.
-    #  Save 
-*]
-        \ + audioClip(19.360, 21.371, 1)
 
         \ + audioNoise(10)
 }
@@ -92,7 +87,7 @@ function audioInstallation
 {
     return
 \[*
-    #n We execute the installer...
+    #n We launch the installer...
     #  Starting installer from downloaded files
 *]
         \ + audioNoise(2) + audioClip(21.856, 23.893, 1)
@@ -102,7 +97,7 @@ function audioInstallation
 *]
         \ + audioClip(27.200, 29.176, 2)
 \[*
-    #n Now, it will take a minute or two before the Qt SDK is installed.
+    #n It will take a minute or two before the Qt SDK is installed.
     #  installation progress / cut / Click finish
 *]
         \ + audioClip(29.463, 33.442, 1)
@@ -133,6 +128,24 @@ function installation
     return AudioDub(videoInstallation, audioInstallation)
 }
 
+function audioComponentsIntro
+{
+    return
+\[*
+    #n And now let's look at the components that have been installed
+    #  "
+*]
+        \ + audioClip(74.696, 80.283, 1)
+
+        \ + audioNoise(10)
+
+}
+
+function videoComponentsIntro
+{
+    return textClip("QtDemo, QtCreator, QtLinguist ...", 175)
+}
+
 function audioComponentQtdemo
 {
     return
@@ -142,11 +155,11 @@ function audioComponentQtdemo
 *]
         \ + audioNoise(1) + audioClip(34.132, 38.480, 2)
 \[*
-    #n The Qt Demo is a collection of examples which showcase different parts of the Qt application framework.
+    #n The Qt Demo consists of examples which demonstrate different parts of the Qt framework.
 *]
         \ + audioClip(67.697, 74.696, 2)
 \[*
-    #n Some of these examples are really fancy. And of course we can study all their source codes.
+    #n Some of these examples are really fancy. And of course, their complete source code is included in the Qt SDK.
     #  Clicking around some demos, browsing through sources.
 *]
         \ + audioClip(74.696, 80.283, 1)
@@ -176,29 +189,28 @@ function audioComponentQtcreator
 {
     return
 \[*
-    #n Qt Creator is the integrated development environment...
-    #n ...that comes with...
+    #n Qt Creator is the integrated development environment, that comes with...
     #  Starting Qt Creator
 *]
         \ + audioNoise(1) + audioClip(44.967, 50.006, 0)
 \[*
-    #n ...an advanced C++ code editor...
+    #n ...an advanced C++ code editor with smart code completion...
     #  Quick impressions of code completion based on Gui App made with the wizard
     #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
 *]
         \ + audioClip(50.211, 52.761, 3)
 \[*
-    #n ...a Drag'n'Drop Gui editor...
+    #n ...a Drag'n'Drop-based Gui designer...
     #  Quick impressions of designer
 *]
         \ + audioClip(56.363, 58.674, 3)
 \[*
-    #n ...a debugger...
+    #n ...a debugger that displays Qt datatypes,...
     #  Quick impressions of the debugger
 *]
         \ + audioClip(59.063, 60.301, 3)
 \[*
-    #n ...and a help system.
+    #n ...and an integrated help system.
     #  Quick impressions of help
 *]
         \ + audioClip(61.148, 62.536, 0.5)
@@ -239,7 +251,7 @@ function audioComponentLinguist
     return
 \[*
     #n Qt Linguist is the language translation tool.
-    #n It can be used by translation specialists to create or maintain multiple languages for our applications.
+    #n It is used by translators to create or maintain multiple languages for applications made with Qt.
     #  Some clicks through Linguist
 *]
         \ audioNoise(1.5) + audioClip(84.918, 95.720, 1)
@@ -259,7 +271,7 @@ function audioComponentCommandprompt
 {
     return
 \[*
-    #n The Qt Command prompt has a fully set up environment for advanced tasks in the command line.
+    #n The Qt Command prompt has a fully set up environment for advanced operations.
     #t qmake --version{ENTER}
 *]
         \ audioNoise(1) + audioClip(38.787, 44.489, 1)
@@ -312,7 +324,10 @@ function videoComponents_640x360
         \ + showDetail(fullscreen,     1420 - 1370, 0, 188)                 [* Open Start Menu, with group *]
         \ + showFullScreen(fullscreen, 1490 - 1420)                         [* Linguist overview *]
         \ + showDetail(fullscreen,     1610 - 1490, 0, 53, 960, 540)        [* Linguist open translations *]
-        \ + showDetail(fullscreen,     1690 - 1610, 207, 73)                [* Linguist action *]
+        \ + showDetail(fullscreen,     1720 - 1610, 207, 73)                [* Linguist action *]
+        \ + showDetail(fullscreen,     1770 - 1720, 0, 188)                 [* Open Start Menu, with group *]
+        \ + showDetail(fullscreen,     1800 - 1770, 0, 33, 896, 504)        [* Commandprompt action *]
+        \ + showDetail(fullscreen,     1940 - 1800, 30, 35)                 [* Commandprompt action *]
 }
 
 function audioComponents
@@ -322,7 +337,10 @@ function audioComponents
 
 function components
 {
-    return AudioDub(videoWithClipSize("videoComponents"), audioComponentQtdemo)
+    return Dissolve(
+        \   AudioDub(videoComponentsIntro, audioComponentsIntro)
+        \ , AudioDub(videoWithClipSize("videoComponents"), audioComponents)
+        \ , gDissolveLength)
 }
 
 function audioOutro
@@ -359,5 +377,6 @@ function completeclip
 }
 
 videoComponents_640x360
+#\ .oldStyle.qtLogoSmall.creativeCommons.FadeIO(gDissolveLength)
 #videoComponents_960x720
 #titleTextClip("Qt SDK installation on Windows").oldStyle.FadeIO(gDissolveLength)
