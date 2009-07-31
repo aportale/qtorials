@@ -9,16 +9,16 @@
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
-global gAudioNoiseStart = 4501384 / 44100.0
-global gAudioNoiseEnd = 4513940 / 44100.0
-global gClipWidth = 640
-global gClipHeight = 360
+global gAudioNoiseStart = 1829888 / 44100.0
+global gAudioNoiseEnd = 1912832 / 44100.0
+global gClipWidth = 960
+global gClipHeight = 720
 
 function audioWelcome
 {
     #n Let's download and install the Qt SDK for Windows...
-    #n ...and afterwards take a short look at the installed components.
-    a1 = audioNoise(2) + audioClip(00.533, 07.247, 1)
+    #n ...and afterwards take a look at the installed components.
+    a1 = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a1 + audioNoise(10)
 }
@@ -44,38 +44,37 @@ function audioDownload
     #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
     #t qtsoftware.com
 *]
-        \   audioNoise(2.5)
-        \ + audioClip(07.671, 09.654, 1)
+        \   audioNoise(3)
+        \ + audioClip(12.387, 14.442, 2)
 \[*
     #n ...and go straight to the "Downloads"...
     #  Clicking on "Downloads"
 *]
-        \ + audioClip(10.151, 12.184, 0.3)
+        \ + audioClip(14.843, 16.875, 2)
 \[*
     #n ...there, we choose the "LGPL / Free" tab,
     #  Clicking on "LGPL / Free"...
 *]
-        \ + audioClip(12.797, 15.615, 0.4)
+        \ + audioClip(17.339, 20.172, 1)
 \[*
     #n ...and click on "Download Qt SDK for Windows",...
     #  Click on "Download Qt SDK for Windows"
 *]
-        \ + audioClip(16.209, 18.965, 1)
+        \ + audioClip(20.572, 23.957, 1)
 
         \ + audioNoise(10)
 }
 
 function videoDownload
 {
-    footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download.avi")
-    
+    footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download_installation.avi")
+
     return
-        \   footage.trim(   25,   167)                  [* Entering Url + go *]
-        \ + footage.trim(  225,   272)                  [* Click on 'Download' *]
-        \ + footage.trim(  300,   397)                  [* Click on installer *]
-        \ + footage.trim(  397,   397).loop(40)         [* still clicking on installer *]
-        \ + footage.trim(  397,   420)                  [* Download redirect *]
-        \ + footage.trim(  490,   625)                  [* Save file *]
+        \   footage.trim(   85,   217)                  [* Entering Url + go *]
+        \ + footage.trim(  257,   520)                  [* Navigating to download *]
+        \ + footage.trim(  520,   520).loop(35)         [* Clicking download *]
+        \ + footage.trim(  520,   547)                  [* Clicked download *]
+        \ + footage.trim(  627,   755)                  [* Save file *]
 }
 
 function download
@@ -90,33 +89,33 @@ function audioInstallation
     #n We launch the installer...
     #  Starting installer from downloaded files
 *]
-        \ + audioNoise(2) + audioClip(21.856, 23.893, 1)
+        \ + audioNoise(2) + audioClip(27.184, 28.496, 1)
 \[*
     #n ...and go through the installation wizard.
     #  Next, yes, next...
 *]
-        \ + audioClip(27.200, 29.176, 2)
+        \ + audioClip(28.757, 30.841, 1.5)
 \[*
     #n It will take a minute or two before the Qt SDK is installed.
     #  installation progress / cut / Click finish
 *]
-        \ + audioClip(29.463, 33.442, 1)
+        \ + audioClip(31.306, 34.487, 1)
 
         \ + audioNoise(10)
 }
 
 function videoInstallation
 {
-    footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_installation.avi")
+    footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download_installation.avi")
 
     startingInstaller =
-        \   footage.trim(  230,   330)                  [* Starting installer *]
+        \  footage.trim( 1160,   1240)                  [* Launching installer *]
     wizard =
-        \ (footage.trim( 2860, 3360)                    [* Going through wizard (2x time lapse) *]
+        \ (footage.trim( 2950, 3400)                    [* Going through wizard (2x time lapse) *]
             \ . SelectEvery(2, 1)
             \ . AssumeFps(25))
     finishingInstaller =
-        \ (footage.trim( 5915, 6035)                    [* Finishing installer (2x time lapse) *]
+        \ (footage.trim( 3555, 3860)                    [* Finishing installer (2x time lapse) *]
             \ . SelectEvery(2, 1)
             \ . AssumeFps(25))
 
@@ -135,7 +134,7 @@ function audioComponentsIntro
     #n And now let's look at the components that have been installed
     #  "
 *]
-        \ + audioClip(74.696, 80.283, 1)
+        \ + audioClip(36.861, 40.559, 1)
 
         \ + audioNoise(10)
 
@@ -150,19 +149,14 @@ function audioComponentQtdemo
 {
     return
 \[*
-    #n The installer created a program group called "Qt SDK by Nokia".
-    #  Start->All Programs->Mouse on program group
-*]
-        \ + audioNoise(1) + audioClip(34.132, 38.480, 2)
-\[*
     #n The Qt Demo consists of examples which demonstrate different parts of the Qt framework.
 *]
-        \ + audioClip(67.697, 74.696, 2)
+        \ + audioClip(61.324, 68.522, 1)
 \[*
     #n Some of these examples are really fancy. And of course, their complete source code is included in the Qt SDK.
     #  Clicking around some demos, browsing through sources.
 *]
-        \ + audioClip(74.696, 80.283, 1)
+        \ + audioClip(69.637, 76.115, 1)
 
         \ + audioNoise(10)
 }
@@ -192,32 +186,32 @@ function audioComponentQtcreator
     #n Qt Creator is the integrated development environment, that comes with...
     #  Starting Qt Creator
 *]
-        \ + audioNoise(1) + audioClip(44.967, 50.006, 0)
+        \ + audioNoise(1) + audioClip(79.006, 84.358, 1)
 \[*
     #n ...an advanced C++ code editor with smart code completion...
     #  Quick impressions of code completion based on Gui App made with the wizard
     #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
 *]
-        \ + audioClip(50.211, 52.761, 3)
+        \ + audioClip(84.463, 88.677, 1)
 \[*
     #n ...a Drag'n'Drop-based Gui designer...
     #  Quick impressions of designer
 *]
-        \ + audioClip(56.363, 58.674, 3)
+        \ + audioClip(93.042, 95.283, 1)
 \[*
     #n ...a debugger that displays Qt datatypes,...
     #  Quick impressions of the debugger
 *]
-        \ + audioClip(59.063, 60.301, 3)
+        \ + audioClip(95.771, 99.219, 1)
 \[*
     #n ...and an integrated help system.
     #  Quick impressions of help
 *]
-        \ + audioClip(61.148, 62.536, 0.5)
+        \ + audioClip(100.229, 102.354, 1)
 \[*
     #n We will do most of the application development in Qt Creator.
 *]
-        \ + audioClip(63.697, 67.280, 1)
+        \ + audioClip(106.452, 110.330, 1)
 
         \ + audioNoise(10)
 }
@@ -246,7 +240,7 @@ function videoComponentQtcreator
         \ , gDissolveLength)
 }
 
-function audioComponentLinguist
+function audioComponentQtlinguist
 {
     return
 \[*
@@ -254,15 +248,15 @@ function audioComponentLinguist
     #n It is used by translators to create or maintain multiple languages for applications made with Qt.
     #  Some clicks through Linguist
 *]
-        \ audioNoise(1.5) + audioClip(84.918, 95.720, 1)
+        \ audioNoise(1.5) + audioClip(111.839, 122.079, 1)
 
         \ + audioNoise(10)
 }
 
-function videoComponentLinguist
+function videoComponentQtlinguist
 {
     footage =
-        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_linguist.avi")
+        \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtlinguist.avi")
 
     return footage.Trim(62, 425)
 }
@@ -274,7 +268,7 @@ function audioComponentCommandprompt
     #n The Qt Command prompt has a fully set up environment for advanced operations.
     #t qmake --version{ENTER}
 *]
-        \ audioNoise(1) + audioClip(38.787, 44.489, 1)
+        \ audioNoise(1) + audioClip(129.196, 134.455, 1)
 
         \ + audioNoise(10)
 }
@@ -296,7 +290,7 @@ function videoComponents_960x720
     return Dissolve(
         \   AudioDub(videoComponentQtdemo, audioComponentQtdemo)
         \ , AudioDub(videoComponentQtcreator, audioComponentQtcreator)
-        \ , AudioDub(videoComponentLinguist, audioComponentLinguist)
+        \ , AudioDub(videoComponentQtlinguist, audioComponentQtlinguist)
         \ , AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
         \ , gDissolveLength)
 }
@@ -332,7 +326,7 @@ function videoComponents_640x360
 
 function audioComponents
 {
-    return videoComponents.killAudio
+    return videoComponents_960x720.killAudio
 }
 
 function components
@@ -347,7 +341,7 @@ function audioOutro
 {
     #n Now, that the Qt SDK is installed, we should continue with the other Qtorials :)
 
-    return audioNoise(1) + audioClip(96.123, 141.674, 1)
+    return audioNoise(1) + audioClip(144.382, 149.653, 1)
 }
 
 function videoOutro
@@ -376,7 +370,8 @@ function completeclip
         \ .FadeIO(gDissolveLength)
 }
 
-videoComponents_640x360
+components
+
 #\ .oldStyle.qtLogoSmall.creativeCommons.FadeIO(gDissolveLength)
 #videoComponents_960x720
 #titleTextClip("Qt SDK installation on Windows").oldStyle.FadeIO(gDissolveLength)
