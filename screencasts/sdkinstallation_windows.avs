@@ -153,7 +153,7 @@ function audioComponentQtdemo
 \[*
     #n The Qt Demo consists of examples which demonstrate different parts of the Qt framework.
 *]
-        \ audioNoise(5) + audioClip(61.324, 68.522, 3.5)
+        \ audioNoise(2.5) + audioClip(61.324, 68.522, 3.5)
 \[*
     #n Some of these examples are really fancy. And of course, their complete source code is included in the Qt SDK.
     #  Clicking around some demos, browsing through sources.
@@ -169,15 +169,16 @@ function videoComponentQtdemo
         \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtdemo.avi")
 
     vectorTransformation =
-        \   footage.Trim(   50,  175)                   [* Launching QtDemo *]
-        \ + footage.Trim(  215,  390)                   [* Opening Vector Transformation *]
-        \ + footage.Trim(  436,  580)                   [* Playing with Vector Transformation *]
+        \   footage.Trim(50, 150).SelectEvery(2).AssumeFps(25)          [* Going to QtDemo shortcut *]
+        \ + footage.Trim(151, 175)                                      [* Launching QtDemo *]
+        \ + footage.Trim(215, 390)                                      [* Opening Vector Transformation *]
+        \ + footage.Trim(436, 630)                                      [* Playing with Vector Transformation *]
 
     spreadSheet =
-        \   footage.Trim(  850, 1000)                   [* Playing with SpreadSheet *]
+        \   footage.Trim(850, 990)                                      [* Playing with SpreadSheet *]
 
     closingQtDemo =
-        \   footage.Trim( 1165, 1230)                   [* Closing QtDemo *]
+        \   footage.Trim(1165, 1230)                                    [* Closing QtDemo *]
 
     return Dissolve(vectorTransformation, spreadSheet, closingQtDemo, gDissolveLength)
 }
@@ -189,23 +190,23 @@ function audioComponentQtcreator
     #n Qt Creator is the integrated development environment, that comes with...
     #  Starting Qt Creator
 *]
-        \ + audioNoise(1) + audioClip(79.006, 84.358, 1)
+        \ + audioNoise(1.5) + audioClip(79.006, 84.358, 0.5)
 \[*
     #n ...an advanced C++ code editor with smart code completion...
     #  Quick impressions of code completion based on Gui App made with the wizard
     #t {ENTER}§w.res§{DOWN}§{ENTER}§{DOWN}§640, §480);
 *]
-        \ + audioClip(84.463, 88.677, 1)
+        \ + audioClip(84.463, 88.677, 5)
 \[*
     #n ...a Drag'n'Drop-based Gui designer...
     #  Quick impressions of designer
 *]
-        \ + audioClip(93.042, 95.283, 1)
+        \ + audioClip(93.042, 95.283, 5.5)
 \[*
     #n ...a debugger that displays Qt datatypes,...
     #  Quick impressions of the debugger
 *]
-        \ + audioClip(95.771, 99.219, 1)
+        \ + audioClip(95.771, 99.219, 6)
 \[*
     #n ...and an integrated help system.
     #  Quick impressions of help
@@ -231,15 +232,19 @@ function videoComponentQtcreator
         \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtcreator_help.avi")
 
     editor =
-        \   footageEditor.Trim(   85,   134)            [* Starting Qt Creator *]
-        \ + footageEditor.Trim(  180,   400)            [* Qt Creator shows up, completion example *]
+        \   footageEditor.Trim(185, 261).SelectEvery(2).AssumeFps(25)   [* Going to QtCreator shortcut *]
+        \ + footageEditor.Trim(261, 290)                                [* Clicking QtCreator shortcut *]
+        \ + footageEditor.Trim(690, 975)                                [* Qt Creator shows up, completion example *]
+
+    debugger =
+        \   footageDebugger.Trim(100, 172)                              [* Adding breakpoint and start debugging *]
+        \ + footageDebugger.Trim(260, 460)                              [* Adding breakpoint and start debugging *]
 
     return Dissolve(
         \   editor
-        \ , footageDesigner.Trim(25, 150)               [* Adding textedit and rediobuttons to form *]
-        \ , footageDebugger.Trim(75, 175)               [* Adding breakpoints and start debugging *]
-        \ , footageDebugger.Trim(510, 580)              [* Showing contents of QStringList *]
-        \ , footageHelp.Trim(60, 225)                   [* Jumping to aboutToActivate *]
+        \ , footageDesigner.Trim(40, 400).SelectEvery(2).AssumeFps(25)  [* Adding radiobuttons to form *]
+        \ , debugger
+        \ , footageHelp.Trim(60, 320)                                   [* Jumping to QList::takeLast *]
         \ , gDissolveLength)
 }
 
@@ -375,10 +380,10 @@ function completeclip
             \ , components
             \ , outro
             \ , gDissolveLength)
+        \ .creativeCommons
         \ .oldStyle
         \ .qtLogoSmall
-        \ .creativeCommons
         \ .FadeIO(gDissolveLength)
 }
 
-AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
+completeclip
