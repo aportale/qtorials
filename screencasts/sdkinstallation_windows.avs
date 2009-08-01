@@ -8,6 +8,8 @@
 
 Import("tools.avsi")
 
+SetMemoryMax(64)
+
 global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
 global gAudioNoiseStart = 1829888 / 44100.0
 global gAudioNoiseEnd = 1912832 / 44100.0
@@ -134,7 +136,7 @@ function audioComponentsIntro
     #n And now let's look at the components that have been installed
     #  "
 *]
-        \ + audioClip(36.861, 40.559, 1)
+        \ audioNoise(1) + audioClip(36.861, 40.559, 1)
 
         \ + audioNoise(10)
 
@@ -142,7 +144,7 @@ function audioComponentsIntro
 
 function videoComponentsIntro
 {
-    return textClip("QtDemo, QtCreator, QtLinguist ...", 175)
+    return textClip("QtDemo, QtCreator, QtLinguist ...", 150)
 }
 
 function audioComponentQtdemo
@@ -151,7 +153,7 @@ function audioComponentQtdemo
 \[*
     #n The Qt Demo consists of examples which demonstrate different parts of the Qt framework.
 *]
-        \ + audioClip(61.324, 68.522, 1)
+        \ audioNoise(5) + audioClip(61.324, 68.522, 3.5)
 \[*
     #n Some of these examples are really fancy. And of course, their complete source code is included in the Qt SDK.
     #  Clicking around some demos, browsing through sources.
@@ -167,16 +169,17 @@ function videoComponentQtdemo
         \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtdemo.avi")
 
     vectorTransformation =
-        \   footage.Trim(    0,   86)                   [* Opening start menu *]
-        \ + footage.Trim(   86,   86).loop(40)          [* Resting on 'Qt SDK by Nokia' group *]
-        \ + footage.Trim(   86,  125)                   [* Opening and playing with Vector Transformation *]
-        \ + footage.Trim(  125,  125).loop(25)          [* Resting on QtDemo *]
-        \ + footage.Trim(  125,  415)                   [* Opening and playing with Vector Transformation *]
+        \   footage.Trim(   50,  175)                   [* Launching QtDemo *]
+        \ + footage.Trim(  215,  390)                   [* Opening Vector Transformation *]
+        \ + footage.Trim(  436,  580)                   [* Playing with Vector Transformation *]
 
     spreadSheet =
-        \   footage.Trim( 1275, 1450)                   [* Playing with SpreadSheet *]
+        \   footage.Trim(  850, 1000)                   [* Playing with SpreadSheet *]
 
-    return Dissolve(vectorTransformation, spreadSheet, gDissolveLength)
+    closingQtDemo =
+        \   footage.Trim( 1165, 1230)                   [* Closing QtDemo *]
+
+    return Dissolve(vectorTransformation, spreadSheet, closingQtDemo, gDissolveLength)
 }
 
 function audioComponentQtcreator
@@ -245,10 +248,14 @@ function audioComponentQtlinguist
     return
 \[*
     #n Qt Linguist is the language translation tool.
+    #  Launching Qt Linguist
+*]
+        \ audioNoise(2) + audioClip(111.839, 115.182, 3)
+\[*
     #n It is used by translators to create or maintain multiple languages for applications made with Qt.
     #  Some clicks through Linguist
 *]
-        \ audioNoise(1.5) + audioClip(111.839, 122.079, 1)
+        \ + audioClip(115.397, 122.079, 1)
 
         \ + audioNoise(10)
 }
@@ -258,7 +265,11 @@ function videoComponentQtlinguist
     footage =
         \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_qtlinguist.avi")
 
-    return footage.Trim(62, 425)
+    return
+        \   footage.Trim(120, 210).SelectEvery(2).AssumeFps(25)     [* Going to QtLinguist shortcut *]
+        \ + footage.Trim(210, 210).loop(15)                         [* Mouse on QtLinguist shortcut *]
+        \ + footage.Trim(210, 565)                                  [* Playing with Linguist *]
+        \ + footage.Trim(605, 685).SelectEvery(2).AssumeFps(25)     [* Closing QtLinguist *]
 }
 
 function audioComponentCommandprompt
@@ -268,7 +279,7 @@ function audioComponentCommandprompt
     #n The Qt Command prompt has a fully set up environment for advanced operations.
     #t qmake --version{ENTER}
 *]
-        \ audioNoise(1) + audioClip(129.196, 134.455, 1)
+        \ audioNoise(3) + audioClip(129.196, 134.455, 1)
 
         \ + audioNoise(10)
 }
@@ -279,10 +290,10 @@ function videoComponentCommandprompt
         \   DirectShowSource(gMediaDir + "sdkinstallation_windows_components_commandprompt.avi")
 
     return
-        \   footage.Trim(86, 243)                       [* Typing in qmake --v *]
-        \ + footage.Trim(244, 244).Loop(24)             [* Cursor blink white *]
-        \ + footage.Trim(243, 243).Loop(24)             [* Cursor blink black *]
-        \ + footage.Trim(244, 244).Loop(24)             [* Cursor blink white *]
+        \   footage.Trim(75, 175).SelectEvery(2).AssumeFps(25)      [* Going to Commandprompt shortcut *]
+        \ + footage.Trim(175, 175).loop(15)                         [* Mouse on Commandprompt shortcut *]
+        \ + footage.Trim(175, 289)                                  [* Typing in qmake --version *]
+        \ + footage.Trim(316, 430)                                  [* Cout out a cursor bink. *]
 }
 
 function videoComponents_960x720
@@ -370,8 +381,4 @@ function completeclip
         \ .FadeIO(gDissolveLength)
 }
 
-components
-
-#\ .oldStyle.qtLogoSmall.creativeCommons.FadeIO(gDissolveLength)
-#videoComponents_960x720
-#titleTextClip("Qt SDK installation on Windows").oldStyle.FadeIO(gDissolveLength)
+AudioDub(videoComponentCommandprompt, audioComponentCommandprompt)
