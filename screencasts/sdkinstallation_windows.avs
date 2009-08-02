@@ -13,8 +13,8 @@ SetMemoryMax(64)
 global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
 global gAudioNoiseStart = 1829888 / 44100.0
 global gAudioNoiseEnd = 1912832 / 44100.0
-global gClipWidth = 960
-global gClipHeight = 720
+global gClipWidth = 640
+global gClipHeight = 360
 
 function audioWelcome
 {
@@ -67,7 +67,7 @@ function audioDownload
         \ + audioNoise(10)
 }
 
-function videoDownload
+function videoDownload_960x720
 {
     footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download_installation.avi")
 
@@ -79,9 +79,23 @@ function videoDownload
         \ + footage.trim(  627,   755)                  [* Save file *]
 }
 
+function videoDownload_640x360
+{
+    fullscreen = videoDownload_960x720.killAudio
+    resetCurrentDetail
+    setFullScreen(fullscreen)
+    return
+        \   showFullScreen(fullscreen,   40)
+        \ + showDetail(fullscreen,      115, 90, 0)                    [* Entering Url + go *]
+        \ + showFullScreen(fullscreen,  190)                           [* Website loading *]
+        \ + showDetail(fullscreen,      335, 0, 112)                   [* Navigating to download *]
+        \ + showDetail(fullscreen,      510, 0, 254)                   [* Starting download, saving file *]
+        \ + showFullScreen(fullscreen,  589)                           [* Finishing download *]
+}
+
 function download
 {
-    return AudioDub(videoDownload, audioDownload)
+    return AudioDub(videoWithClipSize("videoDownload"), audioDownload)
 }
 
 function audioInstallation
@@ -106,7 +120,7 @@ function audioInstallation
         \ + audioNoise(10)
 }
 
-function videoInstallation
+function videoInstallation_960x720
 {
     footage = DirectShowSource(gMediaDir + "sdkinstallation_windows_download_installation.avi")
 
@@ -124,9 +138,21 @@ function videoInstallation
     return Dissolve(startingInstaller, wizard, finishingInstaller, gDissolveLength)
 }
 
+function videoInstallation_640x360
+{
+    fullscreen = videoInstallation_960x720.killAudio
+    resetCurrentDetail
+    setFullScreen(fullscreen)
+    return
+        \   showFullScreen(fullscreen,   15)
+        \ + showDetail(fullscreen,       85, 110, 126)                 [* Launching installer *]
+        \ + showDetail(fullscreen,      390, 160, 170)                 [* Going through wizard *]
+        \ + showFullScreen(fullscreen,  447)                           [* Finishing installer *]
+}
+
 function installation
 {
-    return AudioDub(videoInstallation, audioInstallation)
+    return AudioDub(videoWithClipSize("videoInstallation"), audioInstallation)
 }
 
 function audioComponentsIntro
@@ -313,36 +339,42 @@ function videoComponents_960x720
 
 function videoComponents_640x360
 {
-    fullscreen = videoComponents_960x720
+    fullscreen = videoComponents_960x720.killAudio
+    resetCurrentDetail
     setFullScreen(fullscreen)
     return
-        \   showFullScreen(fullscreen,   70 -    0)
-        \ + showDetail(fullscreen,      205 -   70, 0, 188)                 [* Open Start Menu, with group *]
-        \ + showFullScreen(fullscreen,  410 -  205)                         [* Launching QtDemo *]
-        \ + showDetail(fullscreen,      660 -  410, 0, 37, 948, 533)        [* Vector Transformation, Spreadsheet *]
-        \ + showDetail(fullscreen,      715 -  660, 0, 188)                 [* Open Start Menu, with group *]
-        \ + showFullScreen(fullscreen,  805 -  715)                         [* Launching QtCreator *]
-        \ + showDetail(fullscreen,      900 -  805, 0, 0)                   [* Code Completion *]
-        \ + showFullScreen(fullscreen,  960 -  900)                         [* Designer overview *]
-        \ + showDetail(fullscreen,     1015 -  960, 30, 73)                 [* Designer action *]
-        \ + showFullScreen(fullscreen, 1080 - 1015)                         [* Debugger overview *]
-        \ + showDetail(fullscreen,     1150 - 1080, 190, 104)               [* Debugger action *]
-        \ + showFullScreen(fullscreen, 1220 - 1150)                         [* Help overview *]
-        \ + showDetail(fullscreen,     1280 - 1220, 0, 122)                 [* Help action1 *]
-        \ + showDetail(fullscreen,     1340 - 1280, 320, 0)                 [* Help action1 *]
-        \ + showFullScreen(fullscreen, 1370 - 1340)                         [* Help zoom out *]
-        \ + showDetail(fullscreen,     1420 - 1370, 0, 188)                 [* Open Start Menu, with group *]
-        \ + showFullScreen(fullscreen, 1490 - 1420)                         [* Linguist overview *]
-        \ + showDetail(fullscreen,     1610 - 1490, 0, 53, 960, 540)        [* Linguist open translations *]
-        \ + showDetail(fullscreen,     1720 - 1610, 207, 73)                [* Linguist action *]
-        \ + showDetail(fullscreen,     1770 - 1720, 0, 188)                 [* Open Start Menu, with group *]
-        \ + showDetail(fullscreen,     1800 - 1770, 0, 33, 896, 504)        [* Commandprompt action *]
-        \ + showDetail(fullscreen,     1940 - 1800, 30, 35)                 [* Commandprompt action *]
+        \   showFullScreen(fullscreen,   20)
+        \ + showDetail(fullscreen,       60, 0, 360)                 [* Open Start Menu, QtDemo *]
+        \ + showFullScreen(fullscreen,  130)                         [* Launching QtDemo *]
+        \ + showDetail(fullscreen,      265, -85, 30, 1130, 635)     [* Navigating QtDemos, starting Vector Transformation *]
+        \ + showDetail(fullscreen,      458, 0, 138, 936, 527)       [* Vector Transformation *]
+        \ + showDetail(fullscreen,      575, 0, 110, 828, 466)       [* SpreadSheet *]
+        \ + showFullScreen(fullscreen,  648)                         [* Closing QtDemo *]
+        \ + showDetail(fullscreen,      700, 0, 360)                 [* Open Start Menu, QtCreator *]
+        \ + showFullScreen(fullscreen,  820)                         [* Launching QtCreator *]
+        \ + showDetail(fullscreen,      955, 0, 0)                   [* Code Completion *]
+        \ + showFullScreen(fullscreen, 1050)                         [* Designer overview *]
+        \ + showDetail(fullscreen,     1120, 0, 0)                   [* Designer action *]
+        \ + showFullScreen(fullscreen, 1185)                         [* Debugger overview *]
+        \ + showDetail(fullscreen,     1410, 0, 66)                  [* Debugger action *]
+        \ + showFullScreen(fullscreen, 1475)                         [* Help overview *]
+        \ + showDetail(fullscreen,     1535, 0, 0)                   [* Help action on source code *]
+        \ + showDetail(fullscreen,     1610, 320, 0)                 [* Help zoom/pan to help topic *]
+        \ + showFullScreen(fullscreen, 1705)                         [* Closing QtCreator *]
+        \ + showDetail(fullscreen,     1750, 0, 360)                 [* Open Start Menu, QtLinguist *]
+        \ + showFullScreen(fullscreen, 1825)                         [* Linguist overview *]
+        \ + showDetail(fullscreen,     1895, 0, 0)                   [* Linguist open translations *]
+        \ + showFullScreen(fullscreen, 1955)                         [* Linguist overview with open translations *]
+        \ + showDetail(fullscreen,     2075, 0, 60)                  [* Linguist action *]
+        \ + showFullScreen(fullscreen, 2155)                         [* Closing Linguist *]
+        \ + showDetail(fullscreen,     2215, 0, 360)                 [* Open Start Menu, with group *]
+        \ + showDetail(fullscreen,     2350, 172, 260)               [* Commandprompt action *]
+        \ + showFullScreen(fullscreen, 2431)                         [* Closing Commandprompt *]
 }
 
 function audioComponents
 {
-    return videoComponents_960x720.killAudio
+    return videoComponents_960x720.killVideo
 }
 
 function components
