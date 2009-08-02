@@ -10,7 +10,7 @@ global gStillFrameLength = 30
 global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
-global gDetailsTransitionDeafultFrameCount = 10
+global gDetailsTransitionDefaultFrameCount = 20
 global gDetailsExpansionColor = $eeeeee
 global gMediaDir = "..\..\qtorials_media\"
 
@@ -197,11 +197,11 @@ function setFullScreen(clip)
     setDetail(-gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
 }
 
-function showFullScreen(clip, int totalFrames, int "transitionFrames")
+function showFullScreen(clip, int untilFrame, int "transitionFrames")
 {
     expandedClip = expandedClipForDetails(clip)
-    transitionFrameCount = Default(transitionFrames, gDetailsTransitionDeafultFrameCount)
-    return showDetail(clip, totalFrames, -gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
+    transitionFrameCount = Default(transitionFrames, gDetailsTransitionDefaultFrameCount)
+    return showDetail(clip, untilFrame, -gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
 }
 
 function setDetail(int left, int top, int "width", int "height")
@@ -222,7 +222,7 @@ function creativeCommons(clip)
         \ , gDissolveLength)
 }
 
-function showDetail(clip, int totalFrames, int left, int top, int "width", int "height", int "transitionFrames")
+function showDetail(clip, int untilFrame, int left, int top, int "width", int "height", int "transitionFrames")
 {
     (gDetailClip != clip) ? resetCurrentDetail : NOP
 
@@ -232,7 +232,8 @@ function showDetail(clip, int totalFrames, int left, int top, int "width", int "
     global gDetailEndTop = top + gDetailHeightExpand
     global gDetailEndWidth = Default(width, gClipWidth)
     global gDetailEndHeight = Default(height, gClipHeight)
-    global gDetailsTransitionFrameCount = Min(Default(transitionFrames, gDetailsTransitionDeafultFrameCount), totalFrames)
+    totalFrames = untilFrame - gDetailLastFrame
+    global gDetailsTransitionFrameCount = Min(Default(transitionFrames, gDetailsTransitionDefaultFrameCount), totalFrames)
     global gDetailCurrentTransitionFrame = 0
 
     detail = gDetailExpandedClip
