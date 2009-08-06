@@ -6,8 +6,8 @@
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
 
-# Webcasting Ariya's lightmaps info example
-# http://labs.trolltech.com/blogs/2009/07/foo
+# Webcasting Ariya's lightmaps example
+# http://labs.trolltech.com/blogs/2009/08/04/openstreetmap-and-qt-and-s60/
 
 Import("tools.avsi")
 
