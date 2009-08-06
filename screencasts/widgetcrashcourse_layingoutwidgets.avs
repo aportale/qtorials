@@ -14,14 +14,19 @@ global gAudioNoiseEnd = 13225219 / 44100.0
 
 function audioWelcome()
 {
+    return
+        \ audioNoise(1.5)
+\[*
     #n In the last Qtorial, we used parent-child relationships in order to put widgets inside a dialog.
     #  Short flash back to last video
-    a2 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n We will now learn some basics about Qts layout management and how use it in our application
-    a1 = audioNoise(0.7) + audioClip(0.0, 2.0, 1)
+*]
+        \ + audioClip(0, 1, 2)
 
-    return a1 + a2 + audioNoise(10)
+        \ + audioNoise(10)
 }
 
 function videoWelcome()
@@ -35,59 +40,75 @@ function videoWelcome()
 
 function audioBoringTheory()
 {
+    return
+        \ audioNoise(1.5)
+\[*
     #n First the boring (but short) theory about Qts layout management 
     #  Text "Qts layout management"
-    a1 = audioNoise(2) + audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n We have our QDialog with child-QWidgets "A", "B", "C". As we saw, without layout management, the children are in the upper left.
     #  Whiteboard: QDialog with overlapping A, B, C children
-    a2 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n The parent of the widgets...
     #  Whiteboard: Empty dialog
-    a3 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n ...needs its layout manager...
     #  Whiteboard: Underneath dialog: Indicating horizontal boxlayout with strokes. Arrow from layout to dialog
-    a4 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n ...which will layout the children.
     #  Whiteboard: Underneath dialog: Widgets A, B, C. Arrow from widgets to boxlayout
-    a5 = audioClip(0.0, 2.0, 1)
-    
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n What we see here is the Horizontal Box Layout, arranging the children horizontally in a row.
     #  Whiteboard: Widgets A, B, C inside boxlayout, inside dialog. (Subtitle: HBoxLayout)
-    a6 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n The Vertical Box Layout does domething similar...
     #  Whiteboard: Blending to: layout next to dialog, next to Widgets A, B, C. With arrows.
-    a7 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n ...only in a vertical fashion.
     #  Whiteboard: Blending to: Widgets A, B, C inside boxlayout, inside dialog. (Subtitle: VBoxLayout)
-    a8 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n Then there is the Gridlayout...
     #  Whiteboard: 2x2 gridlayout next to dialog, next to Widgets A, B, C. With arrows. Lower right cell is empty
-    a9 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n ...which acts like a table as we know them from Html.
     #  Whiteboard: Blending to: Widgets A, B, C inside gridlayout, inside dialog. Lower right cell is empty. (Subtitle: QGridLayout)
-    a10 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n A laid out widget can span mutiple cells, just like in Html.
     #  Whiteboard: Blending to: Widgets A, B, C inside gridlayout, inside dialog. C Widget spans over both lower cells. (Subtitle: QGridLayout)
-    a11 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n It is possible to nest layout managers of different types one into the other...
     #  Whiteboard: main HorizontalLayout takes 1) VBoxLayout 2) Widget 3) QGridLayout. All sublayouts filled with widgtes. Many arrows.
-    a12 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n ...so there are theoretically no limits for the complexity of Qt Guis.
     #  Whiteboard: Blending to: Same as before, only all laid out
-    a13 = audioClip(0.0, 2.0, 1)
+*]
+        \ + audioClip(0, 1, 2)
 
-    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + audioNoise(10)
+        \ + audioNoise(10)
 }
 
 function videoBoringTheory()
@@ -96,28 +117,45 @@ function videoBoringTheory()
 
 function audioCoding()
 {
+    return
+        \ audioNoise(1.5)
+\[*
     #n Let's apply the theory on our code.
     #  Text "Enough theory."
-    a1 = audioClip(0.0, 2.0, 1)
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n We create a layout manager for the QDialog... More precisely a "vertical box" layout...
     #  Open main.cpp, go to the end of dialog.show()
     #t {ENTER}§{ENTER}§{UP}§QVBoxLayout *layout = new QVBoxLayout(
-    
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n ...and what is the parameter that we pass to the constructor?? The address of the dialog. The dialog takes the ownership of the layout and the layout lays out child widgets of the dialog.
     #t &dialog);
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n We have to tell the layout about the widgets which it is supposed to lay out. We do that by "adding" them to the layout.
     #t {DOWN}§{DOWN}§{DOWN}§{END}§{ENTER}§layout->addWidget(textEdit);§{DOWN}§{DOWN}§{DOWN}§{DOWN}§{END}§{ENTER}§layout->addWidget(pushButton);
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n Btw., since now the widgets have a parent and are layed out, we do not need to show them individually. They are shown automatically when the parent is shown.
     #t {UP}{END}§+{HOME}§+{HOME}§{DEL}{DEL}§{UP}§{UP}§{UP}§{UP}§{UP}+{END}§{DEL}{DEL}
-
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n Let's see what our current program looks like
     #  Cliack "Play"
-    
+*]
+        \ + audioClip(0, 1, 2)
+\[*
     #n The widgets are now laid out nicely. Even if the dialog is resized.
-    return a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + audioNoise(10)
+*]
+        \ + audioClip(0, 1, 2)
+
+        \ + audioNoise(10)
 }
 
 function videoCoding()
@@ -126,9 +164,14 @@ function videoCoding()
 
 function audioOutro()
 {
+    return
+        \ audioNoise(1.5)
+\[*
     #n The next Qtorial will show how to create the same Gui in a vissual manner with Qts Designer.
+*]
+        \ + audioClip(0, 1, 2)
 
-    return audioNoise(1) + audioClip(312.704, 317.112, 0)
+        \ + audioNoise(10)
 }
 
 function videoOutro()
