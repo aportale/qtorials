@@ -10,41 +10,32 @@
 
 #include "windows.h"
 #include "avisynth.h"
+#include "filters.h"
 #include <QtGui>
+
+Q_GLOBAL_STATIC_WITH_INITIALIZER(QApplication*, app, {
+    static char *args[] = {"."};
+    static int argc = sizeof(args) / sizeof(args[0]);
+    *x = new QApplication(argc, args);
+})
 
 class QtAviSynth : public GenericVideoFilter
 {
 public:
     QtAviSynth(PClip _child, IScriptEnvironment* env);
-    ~QtAviSynth();
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
-
-private:
-    static int argc;
-    static char *args[];
-    QApplication *app;
 };
-
-int QtAviSynth::argc = 1;
-char *QtAviSynth::args[] = {"."};
 
 QtAviSynth::QtAviSynth(PClip _child, IScriptEnvironment* env)
     : GenericVideoFilter(_child)
-    , app(0)
 {
     if (!vi.IsRGB32())
         env->ThrowError("QtAviSynth: input to filter must be in RGB32");
-    app = new QApplication(argc, args); // Is that too silly?
-}
-
-QtAviSynth::~QtAviSynth()
-{
-    if (app)
-        delete app;
 }
 
 PVideoFrame __stdcall QtAviSynth::GetFrame(int n, IScriptEnvironment* env)
 {
+    app();
     PVideoFrame src = child->GetFrame(n, env);
     PVideoFrame dst = env->NewVideoFrame(vi);
     const unsigned char* srcp = src->GetReadPtr();
@@ -59,7 +50,12 @@ PVideoFrame __stdcall QtAviSynth::GetFrame(int n, IScriptEnvironment* env)
 
     QImage i(dst_width / 4, dst_height, QImage::Format_ARGB32_Premultiplied);
 
-    i.fill(Qt::white);
+    for (int row = 0; row < src_height; ++row) {
+        memcpy(i.scanLine(row), srcp, src_width);
+        srcp += src_pitch;
+    }
+
+//    i.fill(Qt::white);
     QPainter p(&i);
     p.setRenderHint(QPainter::Antialiasing);
     p.setPen(Qt::red);
@@ -84,9 +80,48 @@ AVSValue __cdecl Create_QtAviSynth(AVSValue args, void* user_data, IScriptEnviro
     return new QtAviSynth(args[0].AsClip(), env);
 }
 
+class QtorialsOldstyle : public GenericVideoFilter
+{
+public:
+    QtorialsOldstyle(PClip _child, IScriptEnvironment* env);
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
+};
+
+QtorialsOldstyle::QtorialsOldstyle(PClip _child, IScriptEnvironment* env)
+    : GenericVideoFilter(_child)
+{
+    if (!vi.IsRGB32())
+        env->ThrowError("QtorialsOldstyle: input to filter must be in RGB32");
+}
+
+PVideoFrame __stdcall QtorialsOldstyle::GetFrame(int n, IScriptEnvironment* env)
+{
+    app();
+    PVideoFrame src = child->GetFrame(n, env);
+
+    unsigned char* srcp = src->GetWritePtr();
+    const int src_width = src->GetRowSize();
+    const int src_height = src->GetHeight();
+    const int src_pitch = src->GetPitch();
+    int w, h;
+
+    QImage i(srcp, src_width / 4, src_height, src_pitch, QImage::Format_ARGB32_Premultiplied);
+
+    QPainter p(&i);
+    paintOldStyle(&p, QRect(0, 0, src_width / 4, src_height));
+
+    return src;
+}
+
+AVSValue __cdecl Create_QtorialsOldstyle(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    return new QtorialsOldstyle(args[0].AsClip(), env);
+}
+
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtAviSynth", "c", Create_QtAviSynth, 0);
+    env->AddFunction("QtorialsOldstyle", "c", Create_QtorialsOldstyle, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
