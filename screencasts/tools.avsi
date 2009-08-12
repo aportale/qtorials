@@ -12,6 +12,7 @@ global gClipWidth = 480
 global gClipHeight = 360
 global gDetailsTransitionDefaultFrameCount = 20
 global gDetailsExpansionColor = $eeeeee
+global gArtworkDir = "..\artwork\"
 global gMediaDir = "..\..\qtorials_media\"
 
 function titleTextSize
@@ -115,7 +116,7 @@ function videoWithClipSize(string videoBaseName, int "width", int "height")
 function overlayQtorialImage(clip, string baseName, float "opacity")
 {
     clipSizeString = String(clip.Width) + "x" + String(clip.Height)
-    image = ImageReader("..\artwork\" + baseName + "_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
+    image = ImageReader(gArtworkDir + baseName + "_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
     imageMask = image.showalpha
     return clip.Overlay(image, 0, 0, imageMask, Default(opacity, 1.0))
 }
