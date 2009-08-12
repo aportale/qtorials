@@ -15,5 +15,6 @@
 
 void paintOldStyle(QPainter *p, const QRect &rect);
 void paintRgbPatterns(QPainter *p, const QRect &rect);
+void paintTitle(QPainter *p, const QRect &rect, const QString &titleText);
 
 #endif // FILTERS_H

@@ -10,6 +10,22 @@
 
 #include "filters.h"
 
+static char *argv[] = {"."};
+static int argc = sizeof(argv) / sizeof(argv[0]);
+
+QApplication* createQApplicationIfNeeded()
+{
+    return qApp ? 0 : new QApplication(argc, argv);
+}
+
+void deleteQApplicationIfNeeded(QApplication* &app)
+{
+    if (app) {
+        delete app;
+        app = 0;
+    }
+}
+
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
     static QImage gradientCache;
@@ -91,4 +107,30 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
         patternsCache = newPatternsImage;
     }
     p->drawImage(rect.topLeft(), patternsCache);
+}
+
+void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
+{
+    static QImage titleCache;
+    static QString titleTextCache;
+
+    if (titleCache.size() != rect.size() || titleText != titleTextCache) {
+        QApplication *a = createQApplicationIfNeeded();
+        QImage newTitleImage(rect.size(), QImage::Format_RGB32);
+        newTitleImage.fill(0xeeeeee);
+        QPainter newP(&newTitleImage);
+        QFont font;
+        font.setPixelSize(qMax(8, rect.height() / 14));
+        font.setBold(true);
+        newP.setFont(font);
+        newP.setTransform(QTransform().rotate(0.00000000001, Qt::YAxis));
+        newP.scale(1, -1);
+        newP.translate(0, -newTitleImage.height());
+        newP.setRenderHint(QPainter::Antialiasing);
+        newP.setPen(0x333333);
+        newP.drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
+        titleCache = newTitleImage;
+        deleteQApplicationIfNeeded(a);
+    }
+    p->drawImage(rect.topLeft(), titleCache);
 }
