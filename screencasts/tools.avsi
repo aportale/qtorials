@@ -55,7 +55,7 @@ function textClip(String text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     return
-        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
+        \  BlankClip(Default(frames, StrLen(text) * 3), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
         \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
 }
 
@@ -64,7 +64,7 @@ function titleTextClip(string text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     result =
-        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
+        \  BlankClip(Default(frames, StrLen(text) * 3), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
         \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
     return result.overlayQtorialImage("qt_orials")
 }
