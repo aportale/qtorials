@@ -11,9 +11,13 @@ global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
 global gDetailsTransitionDefaultFrameCount = 20
+global gDetailsExpansionWidth = 2
 global gDetailsExpansionColor = $eeeeee
 global gArtworkDir = "..\artwork\"
 global gMediaDir = "..\..\qtorials_media\"
+global gAudioClip = BlankClip
+global gAudioNoiseStart = 0
+global gAudioNoiseEnd = 1
 
 function titleTextSize
 {
@@ -51,7 +55,7 @@ function textClip(String text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     return
-        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB24")
+        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
         \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
 }
 
@@ -60,7 +64,7 @@ function titleTextClip(string text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     result =
-        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB24")
+        \  BlankClip(Default(frames, StrLen(text) * 2), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
         \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
     return result.overlayQtorialImage("qt_orials")
 }
@@ -75,38 +79,6 @@ function clipSizeString
     return String(gClipWidth) + "x" + String(gClipHeight)
 }
 
-function fittedClipWidth(int outerClipWidth, int outerClipHeight, int fittedClipOriginalWidth, int fittedClipOriginalHeight)
-{
-    innerOuterWidthRatio = float(outerClipWidth) / fittedClipOriginalWidth
-    innerOuterHeightRatio = float(outerClipHeight) / fittedClipOriginalHeight
-    return int(fittedClipOriginalWidth * (innerOuterWidthRatio > innerOuterHeightRatio ? innerOuterHeightRatio : innerOuterWidthRatio))
-}
-
-function fittedClipHeight(int outerClipWidth, int outerClipHeight, int fittedClipOriginalWidth, int fittedClipOriginalHeight)
-{
-    innerOuterWidthRatio = float(outerClipWidth) / fittedClipOriginalWidth
-    innerOuterHeightRatio = float(outerClipHeight) / fittedClipOriginalHeight
-    return int(fittedClipOriginalHeight * (innerOuterWidthRatio > innerOuterHeightRatio ? innerOuterHeightRatio : innerOuterWidthRatio))
-}
-
-function fittedClip(clip theClip, int outerClipWidth, int outerClipHeight)
-{
-    fittedClipWidth = fittedClipWidth(outerClipWidth, outerClipHeight, theClip.Width, theClip.Height)
-    fittedClipWidth = (fittedClipWidth % 2 == 1) ? fittedClipWidth - 1 : fittedClipWidth
-    fittedClipHeight = fittedClipHeight(outerClipWidth, outerClipHeight, theClip.Width, theClip.Height)
-    fittedClipHeight = (fittedClipHeight % 2 == 1) ? fittedClipHeight - 1 : fittedClipHeight
-    borderLeft = (outerClipWidth - fittedClipWidth) / 2
-    borderTop = (outerClipHeight - fittedClipHeight) / 2
-    borderRight = outerClipWidth - borderLeft - fittedClipWidth
-    borderBottom = outerClipHeight - borderTop - fittedClipHeight
-    theClip.LanczosResize(fittedClipWidth, fittedClipHeight).addBorders(borderLeft, borderTop, borderRight, borderBottom)
-}
-
-function CroppedFittedClip(clip theClip, int left, int top, int width, int height)
-{
-    theClip.Crop(left, top, width, height).fittedClip(gClipWidth, gClipHeight)
-}
-
 function videoWithClipSize(string videoBaseName, int "width", int "height")
 {
     sizeString = String(Default(width, gClipWidth)) + "x" + String(Default(height, gClipHeight))
@@ -118,7 +90,7 @@ function overlayQtorialImage(clip, string baseName, float "opacity")
     clipSizeString = String(clip.Width) + "x" + String(clip.Height)
     image = ImageReader(gArtworkDir + baseName + "_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
     imageMask = image.showalpha
-    return clip.Overlay(image, 0, 0, imageMask, Default(opacity, 1.0))
+    return clip.Overlay(image, 0, 0, imageMask, Default(opacity, 1.0), output = "YV12")
 }
 
 function qtLogoSmall(clip)
@@ -131,12 +103,8 @@ function oldStyle(clip)
     clip.overlayQtorialImage("oldstyle")
 }
 
-global gDetailClip = BlankClip
-
 function resetCurrentDetail
 {
-    global gDetailClip = BlankClip
-    global gDetailExpandedClip = gDetailClip
     global gDetailLastFrame = 0
 
     global gDetailCurrentTransitionFrame = 1
@@ -152,17 +120,6 @@ function resetCurrentDetail
     global gDetailEndHeight = gClipHeight
 }
 resetCurrentDetail
-
-# Adds borders to the clip in order to make it the same aspect ratio as gClipWidth/gClipHeight
-# Either Top/Bottom or Left/Right or no Borders are added.
-function expandedClipForDetails(clip)
-{
-    clipWithToHeight = Float(clip.Width) / Float(clip.Height)
-    globalClipWithToHeight = Float(gClipWidth) / Float(gClipHeight)
-    global gDetailWidthExpand = (globalClipWithToHeight > clipWithToHeight) ? Round(clip.Width * globalClipWithToHeight / clipWithToHeight - clip.Width) / 2: 0
-    global gDetailHeightExpand = (globalClipWithToHeight < clipWithToHeight) ? Round(clip.Height * clipWithToHeight / globalClipWithToHeight - clip.Height) / 2: 0
-    return clip.addBorders(gDetailWidthExpand, gDetailHeightExpand, gDetailWidthExpand, gDetailHeightExpand, gDetailsExpansionColor)
-}
 
 function sCurveInterpolation(float sourceValue, float targetValue, int frame, int framesCount)
 {
@@ -184,17 +141,21 @@ function showDetailFrame
     interpolatedTop = showDetailStartAndEndSameSize ? Round(interpolatedTop) : interpolatedTop
     interpolatedWidth = sCurveInterpolation(float(gDetailStartWidth), float(gDetailEndWidth), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
     interpolatedHeight = sCurveInterpolation(float(gDetailStartHeight), float(gDetailEndHeight), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
-    result = gDetailExpandedClip
+    result = gDetailClip
         \ .Trim(gDetailLastFrame + gDetailCurrentTransitionFrame + 1, gDetailLastFrame + gDetailCurrentTransitionFrame + 1)
         \ .LanczosResize(gClipWidth, gClipHeight, interpolatedLeft, interpolatedTop, interpolatedWidth, interpolatedHeight)
     global gDetailCurrentTransitionFrame = gDetailCurrentTransitionFrame + 1
     return (gDetailCurrentTransitionFrame < gDetailsTransitionFrameCount) ? (result + showDetailFrame) : result  # recursion = poor man's loop in AviSynth
 }
 
-function setFullScreen(clip)
+function setDetailClip(clip)
 {
-    global gDetailClip = clip
-    expandedClip = expandedClipForDetails(clip)
+    resetCurrentDetail
+    global gDetailClip = clip.addBorders(gDetailsExpansionWidth, gDetailsExpansionWidth, gDetailsExpansionWidth, gDetailsExpansionWidth, gDetailsExpansionColor)
+}
+
+function setFullScreen()
+{
     setDetail(-gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
 }
 
@@ -207,8 +168,8 @@ function showFullScreen(clip, int untilFrame, int "transitionFrames")
 
 function setDetail(int left, int top, int "width", int "height")
 {
-    global gDetailStartLeft = left + gDetailWidthExpand
-    global gDetailStartTop = top + gDetailHeightExpand
+    global gDetailStartLeft = left + gDetailsExpansionWidth
+    global gDetailStartTop = top + gDetailsExpansionWidth
     global gDetailStartWidth = Default(width, gClipWidth)
     global gDetailStartHeight = Default(height, gClipHeight)
 }
@@ -217,27 +178,24 @@ function creativeCommons(clip)
 {
     backgroundColor = $eeeeee
     textColor = $333333
+    theLogo = BlankClip(clip, 75, color = backgroundColor).overlayQtorialImage("cc-by-sa_big")
     return Dissolve(
         \   clip
-        \ , Audiodub(BlankClip(clip, 75, color = backgroundColor).overlayQtorialImage("cc-by-sa_big"), audioNoise(10))
+        \ , clip.hasAudio ? Audiodub(theLogo, audioNoise(10)) : theLogo
         \ , gDissolveLength)
 }
 
-function showDetail(clip, int untilFrame, int left, int top, int "width", int "height", int "transitionFrames")
+function showDetail(int untilFrame, int left, int top, int "width", int "height", int "transitionFrames")
 {
-    (gDetailClip != clip) ? resetCurrentDetail : NOP
-
-    global gDetailClip = clip
-    global gDetailExpandedClip = expandedClipForDetails(gDetailClip)
-    global gDetailEndLeft = left + gDetailWidthExpand
-    global gDetailEndTop = top + gDetailHeightExpand
+    global gDetailEndLeft = left + gDetailsExpansionWidth
+    global gDetailEndTop = top + gDetailsExpansionWidth
     global gDetailEndWidth = Default(width, gClipWidth)
     global gDetailEndHeight = Default(height, gClipHeight)
     totalFrames = untilFrame - gDetailLastFrame
     global gDetailsTransitionFrameCount = Min(Default(transitionFrames, gDetailsTransitionDefaultFrameCount), totalFrames)
     global gDetailCurrentTransitionFrame = 0
 
-    detail = gDetailExpandedClip
+    detail = gDetailClip
         \ .trim(gDetailLastFrame + gDetailsTransitionFrameCount + 1, gDetailLastFrame + totalFrames)
         \ .LanczosResize(gClipWidth, gClipHeight, gDetailEndLeft, gDetailEndTop, gDetailEndWidth, gDetailEndHeight)
     detail = (gDetailsTransitionFrameCount > 0) ? (showDetailFrame + detail) : detail
