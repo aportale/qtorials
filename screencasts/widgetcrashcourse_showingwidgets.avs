@@ -17,7 +17,7 @@ function audioWelcome()
     return
         \ audioNoise(1.5)
 \[*
-    #n Let's start by writing a few lines of code that create and show some Qt widgets.
+    #n Let's start by writing a few lines of code that will show some Qt widgets.
     #  Text: "Create & show Qt widgets"
 *]
         \ + audioClip(0, 1, 2)
@@ -54,7 +54,7 @@ function audioCreateProject()
 *]
         \ + audioClip(0, 1, 2)
 \[*
-    #n After finish the Wizard we get a project which consists of a file with the extension ".pro".
+    #n After finishing the Wizard we get a project which consists of a file with the extension ".pro".
     #n This is the actual project file, and it is currently empty.
     #  clicking on "widgetCrashCourse.pro"
 *]
