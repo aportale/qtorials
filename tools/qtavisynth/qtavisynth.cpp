@@ -46,36 +46,41 @@ public:
     }
 };
 
-class QtorialsRgbPatterns : public GenericVideoFilter
+class QtorialsRgbPatterns : public IClip
 {
 public:
-    QtorialsRgbPatterns(PClip _child, IScriptEnvironment* env)
-        : GenericVideoFilter(_child)
+    QtorialsRgbPatterns(int w, int h, int frames, IScriptEnvironment* env)
     {
-        if (!vi.IsRGB32())
-            env->ThrowError("QtorialsRgbPatterns: input to filter must be in RGB32");
+        memset(&m_videoInfo, 0, sizeof(VideoInfo));
+        m_videoInfo.width = w;
+        m_videoInfo.height = h;
+        m_videoInfo.fps_numerator = 25;
+        m_videoInfo.fps_denominator = 1;
+        m_videoInfo.num_frames = frames;
+        m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+        m_frame = env->NewVideoFrame(m_videoInfo);
+        unsigned char* frameBits = m_frame->GetWritePtr();
+
+        QImage m_image(m_videoInfo.width,  m_videoInfo.height, QImage::Format_ARGB32_Premultiplied);
+        QPainter p(&m_image);
+        paintRgbPatterns(&p, m_image.rect());
+        memcpy(frameBits, m_image.bits(), m_image.bytesPerLine() * m_image.height());
     }
 
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
-    {
-        PVideoFrame src = env->NewVideoFrame(vi);
-        unsigned char* srcp = src->GetWritePtr();
-        const int src_width = src->GetRowSize();
-        const int src_height = src->GetHeight();
-        const int src_pitch = src->GetPitch();
-
-        QImage i(srcp, src_width / 4, src_height, src_pitch, QImage::Format_ARGB32_Premultiplied);
-
-        QPainter p(&i);
-        paintRgbPatterns(&p, QRect(0, 0, src_width / 4, src_height));
-
-        return src;
-    }
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) { return m_frame; }
+    bool __stdcall GetParity(int n) { return false; }
+    const VideoInfo& __stdcall GetVideoInfo() { return m_videoInfo; }
+    void __stdcall SetCacheHints(int cachehints, int frame_range) { }
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env) { }
 
     static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
     {
-        return new QtorialsRgbPatterns(args[0].AsClip(), env);
+        return new QtorialsRgbPatterns(args[0].AsInt(640), args[1].AsInt(480), args[2].AsInt(100), env);
     }
+
+protected:
+    PVideoFrame m_frame;
+    VideoInfo m_videoInfo;
 };
 
 class QtorialsTitle : public GenericVideoFilter
@@ -118,7 +123,7 @@ extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsOldstyle", "c", QtorialsOldstyle::Create, 0);
-    env->AddFunction("QtorialsRgbPatterns", "c", QtorialsRgbPatterns::Create, 0);
+    env->AddFunction("QtorialsRgbPatterns", "[width]i[height]i[frames]i", QtorialsRgbPatterns::Create, 0);
     env->AddFunction("QtorialsTitle", "cs", QtorialsTitle::Create, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }

@@ -8,6 +8,4 @@
 
 LoadPlugin("qtavisynth.dll")
 
-BlankClip(100, 256, 256, "RGB32", 25)
-info
-QtAviSynth
+QtorialsRgbPatterns(1280, 720, 250)

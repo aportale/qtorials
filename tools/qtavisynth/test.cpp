@@ -24,8 +24,9 @@ public:
         Q_UNUSED(event);
         QPainter p(this);
         p.fillRect(rect(), Qt::white);
-        paintRgbPatterns(&p, rect());
+//        paintRgbPatterns(&p, rect());
 //        paintOldStyle(&p, rect());
+        paintTitle(&p, rect(), "Hallo AviSynth sdfg<b>sdf</b>gsdf gsdfgsd fgsdfg sdfgsd fgs dfg");
     }
 };
 
