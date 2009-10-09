@@ -5,9 +5,14 @@
 # or send a letter to Creative Commons,
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
-
 TEMPLATE = lib
-SOURCES = qtavisynth.cpp filters.cpp
-HEADERS += avisynth.h filters.h
-CONFIG += dll qt
+SOURCES = qtavisynth.cpp \
+    filters.cpp
+HEADERS += avisynth.h \
+    filters.h
+CONFIG += dll \
+    qt
 DESTDIR = ./
+RESOURCES += qtavisynth.qrc
+QT += svg
+OTHER_FILES = qtavisynth.avs

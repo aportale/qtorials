@@ -8,4 +8,4 @@
 
 LoadPlugin("qtavisynth.dll")
 
-QtorialsRgbPatterns(1280, 720, 250)
+QtorialsRgbPatterns(640, 480, 250).QtorialsOldstyle

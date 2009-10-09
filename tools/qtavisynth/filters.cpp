@@ -9,6 +9,7 @@
 */
 
 #include "filters.h"
+#include <QtSvg>
 
 static char *argv[] = {"."};
 static int argc = sizeof(argv) / sizeof(argv[0]);
@@ -28,17 +29,9 @@ void deleteQApplicationIfNeeded(QApplication* &app)
 
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
-    QRadialGradient gradient(QPointF(.5, .5), 0.8);
-    gradient.setColorAt(  0, QColor(  0,   0,   0,   0));
-    gradient.setColorAt(0.4, QColor(  0,   0,   0,   0));
-    gradient.setColorAt(0.8, QColor(  0,   0,   0,  15));
-    gradient.setColorAt(1.0, QColor(  0,   0,   0,  40));
-    _RPT1(0, "jio", 0);
-
-    p->setRenderHint(QPainter::Antialiasing);
-//    p->scale(rect.width(), rect.height());
-//    p->fillRect(rect, QBrush(gradient));
-    p->fillRect(rect, Qt::blue);
+//    QApplication::instance();
+    static QSvgRenderer renderer(QLatin1String(":/oldstyle.svg"));
+    renderer.render(p, rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -94,7 +87,7 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
 
 void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
 {
-//        QApplication *a = createQApplicationIfNeeded();
+//    QApplication *a = createQApplicationIfNeeded();
     p->fillRect(rect, 0xeeeeee);
     QFont font;
     font.setPixelSize(qMax(8, rect.height() / 14));
@@ -106,5 +99,5 @@ void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
     p->setRenderHint(QPainter::Antialiasing);
     p->setPen(0x333333);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
-//        deleteQApplicationIfNeeded(a);
+//    deleteQApplicationIfNeeded(a);
 }

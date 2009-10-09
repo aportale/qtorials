@@ -18,32 +18,42 @@ class QtorialsOldstyle : public GenericVideoFilter
 public:
     QtorialsOldstyle(PClip _child, IScriptEnvironment* env)
         : GenericVideoFilter(_child)
+        , m_gradient(vi.width, vi.height, QImage::Format_ARGB32)
     {
         if (!vi.IsRGB32())
             env->ThrowError("QtorialsOldstyle: input to filter must be in RGB32");
+
+        m_gradient.fill(0);
+        QPainter p(&m_gradient);
+        paintOldStyle(&p, m_gradient.rect());
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
     {
         PVideoFrame src = child->GetFrame(n, env);
-
-        unsigned char* srcp = src->GetWritePtr();
+        const unsigned char* srcp = src->GetReadPtr();
         const int src_width = src->GetRowSize();
         const int src_height = src->GetHeight();
         const int src_pitch = src->GetPitch();
 
-        QImage i(srcp, src_width / 4, src_height, src_pitch, QImage::Format_ARGB32_Premultiplied);
+        PVideoFrame dst = env->NewVideoFrame(vi);
+        unsigned char* frameBits = dst->GetWritePtr();
 
+        QImage i(frameBits, src_width / 4, src_height, src_pitch, QImage::Format_ARGB32);
+        memcpy(frameBits, srcp, src_width * src_height);
         QPainter p(&i);
-        paintOldStyle(&p, QRect(0, 0, src_width / 4, src_height));
+        p.drawImage(0, 0, m_gradient);
 
-        return src;
+        return dst;
     }
 
     static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
     {
         return new QtorialsOldstyle(args[0].AsClip(), env);
     }
+
+protected:
+    QImage m_gradient;
 };
 
 class QtorialsRgbPatterns : public IClip
@@ -61,10 +71,10 @@ public:
         m_frame = env->NewVideoFrame(m_videoInfo);
         unsigned char* frameBits = m_frame->GetWritePtr();
 
-        QImage m_image(m_videoInfo.width,  m_videoInfo.height, QImage::Format_ARGB32_Premultiplied);
-        QPainter p(&m_image);
-        paintRgbPatterns(&p, m_image.rect());
-        memcpy(frameBits, m_image.bits(), m_image.bytesPerLine() * m_image.height());
+        QImage image(m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32_Premultiplied);
+        QPainter p(&image);
+        paintRgbPatterns(&p, image.rect());
+        memcpy(frameBits, image.bits(), image.bytesPerLine() * image.height());
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) { return m_frame; }

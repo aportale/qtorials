@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Qt Logo Created with Inkscape (http://www.inkscape.org/) by Marsupilami -->
+
+<!--
+   This work is licensed under the Creative Commons
+   Attribution-Noncommercial-Share Alike 3.0 Unported
+   License. To view a copy of this license, visit
+   http://creativecommons.org/licenses/by-nc-sa/3.0/
+   or send a letter to Creative Commons,
+   171 Second Street, Suite 300, San Francisco,
+   California, 94105, USA.
+-->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="100"
+   height="100"
+   viewBox=""
+   id="svg4095"
+   sodipodi:version="0.32"
+   inkscape:version="0.47pre3 "
+   sodipodi:docname="artwork.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs2474">
+    <linearGradient
+       id="linearGradient3165-7">
+      <stop
+         offset="0"
+         stop-opacity="0" />
+      <stop
+         offset="0.45"
+         stop-opacity="0" />
+      <stop
+         stop-opacity="0.08"
+         offset="0.8" />
+      <stop
+         offset="1"
+         stop-opacity="0.15" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3165-7"
+       id="radialGradient5475"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.234375,0,0,0.234375,-23.43749,-23.4375)"
+       cx="320"
+       cy="320"
+       fx="320"
+       fy="320"
+       r="320" />
+  </defs>
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="1004"
+     inkscape:window-width="1280"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="4.0000001"
+     inkscape:cx="69.425034"
+     inkscape:cy="36.330801"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:current-layer="svg4095"
+     inkscape:snap-bbox="true"
+     showborder="true"
+     inkscape:showpageshadow="true"
+     inkscape:window-maximized="0"
+     borderlayer="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2405"
+       visible="true"
+       enabled="true"
+       dotted="true"
+       spacingx="16px"
+       spacingy="16px"
+       empspacing="4"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <rect
+     id="oldstyle"
+     style="fill:url(#radialGradient5475);stroke:none;display:inline"
+     width="100"
+     height="100"
+     x="0"
+     y="0" />
+</svg>
+<!-- version: 20080810, original size: 64.707001 77.855324, border: 3% -->
+
