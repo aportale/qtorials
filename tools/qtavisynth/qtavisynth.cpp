@@ -20,8 +20,8 @@ public:
         : GenericVideoFilter(_child)
         , m_gradient(vi.width, vi.height, QImage::Format_ARGB32)
     {
-        if (!vi.IsRGB32())
-            env->ThrowError("QtorialsOldstyle: input to filter must be in RGB32");
+        if (!vi.IsRGB())
+            env->ThrowError("QtorialsOldstyle: input to filter must be in RGB24 or RGB32");
 
         m_gradient.fill(0);
         QPainter p(&m_gradient);
@@ -39,10 +39,13 @@ public:
         PVideoFrame dst = env->NewVideoFrame(vi);
         unsigned char* frameBits = dst->GetWritePtr();
 
-        QImage i(frameBits, src_width / 4, src_height, src_pitch, QImage::Format_ARGB32);
-        memcpy(frameBits, srcp, src_width * src_height);
-        QPainter p(&i);
-        p.drawImage(0, 0, m_gradient);
+        if (vi.IsRGB()) {
+            const QImage::Format imageFormat = vi.IsRGB24() ? QImage::Format_RGB888 : QImage::Format_RGB32;
+            QImage i(frameBits, vi.width, src_height, src_pitch, imageFormat);
+            memcpy(frameBits, srcp, src_width * src_height);
+            QPainter p(&i);
+            p.drawImage(0, 0, m_gradient);
+        }
 
         return dst;
     }
