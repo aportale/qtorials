@@ -18,6 +18,7 @@ global gMediaDir = "..\..\qtorials_media\"
 global gAudioClip = BlankClip
 global gAudioNoiseStart = 0
 global gAudioNoiseEnd = 1
+global gTextClipFramesPerCharacter = 3
 
 function titleTextSize
 {
@@ -55,7 +56,7 @@ function textClip(String text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     return
-        \  BlankClip(Default(frames, StrLen(text) * 3), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
+        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
         \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
 }
 
@@ -64,7 +65,7 @@ function titleTextClip(string text, int "frames")
     backgroundColor = $eeeeee
     textColor = $333333
     result =
-        \  BlankClip(Default(frames, StrLen(text) * 3), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
+        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
         \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
     return result.overlayQtorialImage("qt_orials")
 }
@@ -174,11 +175,11 @@ function setDetail(int left, int top, int "width", int "height")
     global gDetailStartHeight = Default(height, gClipHeight)
 }
 
-function creativeCommons(clip)
+function creativeCommons(clip, string "cclicense")
 {
     backgroundColor = $eeeeee
     textColor = $333333
-    theLogo = BlankClip(clip, 75, color = backgroundColor).overlayQtorialImage("cc-by-sa_big")
+    theLogo = BlankClip(clip, 75, color = backgroundColor).overlayQtorialImage("cc-" + Default(cclicense, "by-sa") + "_big")
     return Dissolve(
         \   clip
         \ , clip.hasAudio ? Audiodub(theLogo, audioNoise(10)) : theLogo
