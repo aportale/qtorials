@@ -16,6 +16,7 @@ global gDetailsExpansionColor = $000000
 global gDetailsExpansionBorder = 10
 global gDetailsTransitionDefaultFrameCount = 15
 global gLongDissolveLength = 25
+global gTextClipFramesPerCharacter = 4
 
 global gDeviceNameN95 = "Symbian / Nokia N95"
 global gDeviceNameXP5800 = "Symbian / Nokia XpressMusic 5800"
@@ -167,17 +168,22 @@ function raycasting
 function all
 {
     return Dissolve (
-        \   textClip("Qt demos on mobile devices").killaudio.converttoyv12
-        \ , textClip("Digital clock", 50).killaudio.converttoyv12
-        \ , digiflip.killaudio
-        \ , textClip("Kinetic scrolling").killaudio.converttoyv12
-        \ , flickable.killaudio
-        \ , textClip("Weather info").killaudio.converttoyv12
-        \ , weatherinfo.killaudio
-        \ , textClip("OpenStreetMap viewer").killaudio.converttoyv12
-        \ , lightmaps.killaudio
-        \ , textClip("Ray casting").killaudio.converttoyv12
+        \   textClip("Qt Everywhere").killaudio.converttoyv12
+        \ , textClip("Cross-platform deployment\non mobile devices").killaudio.converttoyv12
+        \ , textClip("Symbian / S60").killaudio.converttoyv12
+        \ , textClip("Maemo / Linux X11").killaudio.converttoyv12
+        \ , textClip("Windows Mobile").killaudio.converttoyv12
+        \ , textClip("", 20).killaudio.converttoyv12
+        \ , textClip("'Ray casting'").killaudio.converttoyv12
         \ , raycasting.killaudio
+        \ , textClip("'OpenStreetMap viewer'").killaudio.converttoyv12
+        \ , lightmaps.killaudio
+        \ , textClip("'Weather info'").killaudio.converttoyv12
+        \ , weatherinfo.killaudio
+        \ , textClip("'Digital clock'").killaudio.converttoyv12
+        \ , digiflip.killaudio
+        \ , textClip("'Kinetic scrolling'").killaudio.converttoyv12
+        \ , flickable.killaudio
         \ , textClip("http://qt.nokia.com", 100).killaudio.converttoyv12
         \ , gDissolveLength).creativeCommons.qtlogosmall.oldStyle.FadeIO(10)
 }
