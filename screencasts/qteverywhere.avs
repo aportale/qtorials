@@ -43,7 +43,7 @@ function zoompan(clip,
 function digiflip
 {
     clip_5800 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_digiflip_5800.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_digiflip_5800.MTS", audio=false)
         \ .trim(10, 170)
         \ .TemporalSoften(2, 4, 8)
         \ .TurnRight
@@ -51,7 +51,7 @@ function digiflip
         \ .devicename(gDeviceNameXP5800)
 
     clip_n900 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_digiflip_n900.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_digiflip_n900.MTS", audio=false)
         \ .trim(160, 340)
         \ .TemporalSoften(2, 4, 8)
         \ .Turn180
@@ -64,7 +64,7 @@ function digiflip
 function flickable
 {
     clip_5800 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_flickable_5800.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_flickable_5800.MTS", audio=false)
         \ .trim(10, 300)
         \ .TemporalSoften(2, 4, 8)
         \ .TurnRight
@@ -72,7 +72,7 @@ function flickable
         \ .devicename(gDeviceNameXP5800)
 
     clip_n900 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_flickable_n900.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_flickable_n900.MTS", audio=false)
         \ .trim(10, 170)
         \ .TemporalSoften(2, 4, 8)
         \ .Turn180
@@ -80,7 +80,7 @@ function flickable
         \ .devicename(gDeviceNameN900)
 
     clip_omnia =
-        \  DirectShowSource(gMediaDir + "qteverywhere_flickable_omnia.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_flickable_omnia.MTS", audio=false)
         \ .trim(100, 250)
         \ .Tweak(bright = 3)
         \ .TemporalSoften(2, 4, 8)
@@ -94,7 +94,7 @@ function flickable
 function weatherinfo
 {
     clip_5800 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_weatherinfo_5800.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_weatherinfo_5800.MTS", audio=false)
         \ .trim(30, 320)
         \ .TemporalSoften(2, 4, 8)
         \ .TurnRight
@@ -102,7 +102,7 @@ function weatherinfo
         \ .devicename(gDeviceNameXP5800)
 
     clip_omnia =
-        \  DirectShowSource(gMediaDir + "qteverywhere_weatherinfo_omnia.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_weatherinfo_omnia.MTS", audio=false)
         \ .trim(10, 140)
         \ .Tweak(bright = 3)
         \ .TemporalSoften(2, 4, 8)
@@ -116,7 +116,7 @@ function weatherinfo
 function lightmaps
 {
     clip_5800 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_lightmaps_5800.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_lightmaps_5800.MTS", audio=false)
         \ .trim(0, 280)
         \ .TemporalSoften(2, 4, 8)
         \ .TurnRight
@@ -124,7 +124,7 @@ function lightmaps
         \ .devicename(gDeviceNameXP5800)
 
     clip_omnia =
-        \  DirectShowSource(gMediaDir + "qteverywhere_lightmaps_omnia.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_lightmaps_omnia.MTS", audio=false)
         \ .trim(20, 300)
         \ .Tweak(bright = 3)
         \ .TemporalSoften(2, 4, 8)
@@ -138,7 +138,7 @@ function lightmaps
 function raycasting
 {
     clip_5800 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_raycasting_5800.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_raycasting_5800.MTS", audio=false)
         \ .trim(0, 310)
         \ .TemporalSoften(2, 4, 8)
         \ .TurnRight
@@ -146,7 +146,7 @@ function raycasting
         \ .devicename(gDeviceNameXP5800)
 
     clip_omnia =
-        \  DirectShowSource(gMediaDir + "qteverywhere_raycasting_omnia.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_raycasting_omnia.MTS", audio=false)
         \ .trim(0, 240)
         \ .Tweak(bright = 5)
         \ .TemporalSoften(2, 4, 8)
@@ -155,7 +155,7 @@ function raycasting
         \ .devicename(gDeviceNameI900)
 
     clip_n95 =
-        \  DirectShowSource(gMediaDir + "qteverywhere_raycasting_n95.MTS")
+        \  DirectShowSource(gMediaDir + "qteverywhere_raycasting_n95.MTS", audio=false)
         \ .trim(0, 240)
         \ .TemporalSoften(2, 4, 8)
         \ .TurnRight
@@ -168,24 +168,30 @@ function raycasting
 function all
 {
     return Dissolve (
-        \   textClip("Qt Everywhere").killaudio.converttoyv12
-        \ , textClip("Cross-platform deployment\non mobile devices").killaudio.converttoyv12
-        \ , textClip("Symbian / S60").killaudio.converttoyv12
-        \ , textClip("Maemo / Linux X11").killaudio.converttoyv12
-        \ , textClip("Windows Mobile").killaudio.converttoyv12
+        \   textClip("Qt Everywhere", x = 408, y = 420, align = 8,
+        \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
+        \ , textClip("Cross-platform deployment\non mobile devices", x = 408, y = 385, align = 8,
+        \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
+        \ , textClip("Symbian / S60\nMaemo / Linux X11\nWindows Mobile", x = 408, y = 360, align = 8,
+        \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
         \ , textClip("", 20).killaudio.converttoyv12
-        \ , textClip("'Ray casting'").killaudio.converttoyv12
-        \ , raycasting.killaudio
-        \ , textClip("'OpenStreetMap viewer'").killaudio.converttoyv12
-        \ , lightmaps.killaudio
-        \ , textClip("'Weather info'").killaudio.converttoyv12
-        \ , weatherinfo.killaudio
-        \ , textClip("'Digital clock'").killaudio.converttoyv12
-        \ , digiflip.killaudio
-        \ , textClip("'Kinetic scrolling'").killaudio.converttoyv12
-        \ , flickable.killaudio
-        \ , textClip("http://qt.nokia.com", 100).killaudio.converttoyv12
-        \ , gDissolveLength).creativeCommons.qtlogosmall.oldStyle.FadeIO(10)
+        \ , textClip("'Ray casting'",
+        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , raycasting
+        \ , textClip("'OpenStreetMap viewer'",
+        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , lightmaps
+        \ , textClip("'Weather info'",
+        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , weatherinfo
+        \ , textClip("'Digital clock'",
+        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , digiflip
+        \ , textClip("'Kinetic scrolling'",
+        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , flickable
+        \ , ImageSource(gArtworkDir + "Qt_VideoScreen_Closing.png", end = 100).converttoyv12
+        \ , gDissolveLength).creativeCommons.oldStyle.FadeIO(10)
 }
 
 all
