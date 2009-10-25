@@ -51,13 +51,16 @@ function audioClip(float startSecond, float endSecond, float appendedSilenceSeco
     return gAudioClip.trimAudio(startSecond, endSecond) + audioNoise(appendedSilenceSeconds)
 }
 
-function textClip(String text, int "frames")
+function textClip(String text, int "frames", int "align", int "x", int "y", string "backgroundimage")
 {
     backgroundColor = $eeeeee
     textColor = $333333
-    return
-        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
-        \ .Subtitle(text, align = 5, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
+    framesCount = Default(frames, StrLen(text) * gTextClipFramesPerCharacter)
+    background = Defined(backgroundimage) ?
+        \ ImageSource(backgroundimage, fps = 25, end = framesCount)
+        \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
+    return background
+        \ .Subtitle(text, align = Default(5, align), x = Default(x, -1), y = Default(y, -1), text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
 }
 
 function titleTextClip(string text, int "frames")
