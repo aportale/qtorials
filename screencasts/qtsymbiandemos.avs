@@ -209,7 +209,7 @@ function medley
 		\   textClip("Qt demos for Symbian/S60").killaudio.converttoyv12
 		\ , textClip("Digital clock", 50).killaudio.converttoyv12
 		\ , digiflip.killaudio
-		\ , textClip("Kinetic scrolling\non any Qt widgets").killaudio.converttoyv12
+		\ , textClip("Kinetic scrolling\non any Qt widget").killaudio.converttoyv12
 		\ , flickable.killaudio
 		\ , textClip("Weather info with Qt").killaudio.converttoyv12
 		\ , weatherinfo.killaudio
