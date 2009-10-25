@@ -29,6 +29,11 @@ function devicename(clip, string name)
         \ .Subtitle(name, align = 2, size = clip.height / 15, text_color = $40FFFFFF, halo_color = $40000000)
 }
 
+function demoTitle(clip, string title)
+{
+    return textClip(title, backgroundimage = gArtworkDir + "Qt_VideoScreen_Title.png").killaudio.converttoyv12
+}
+
 function zoompan(clip,
     \ float leftStart, float topStart, float widthStart, float heightStart,
     \ float leftEnd, float topEnd, float widthEnd, float heightEnd)
@@ -174,21 +179,17 @@ function all
         \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
         \ , textClip("Symbian / S60\nMaemo / Linux X11\nWindows Mobile", x = 408, y = 360, align = 8,
         \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
-        \ , textClip("", 20).killaudio.converttoyv12
-        \ , textClip("'Ray casting'",
-        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , textClip("", 20,
+        \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Title.png").killaudio.converttoyv12
+        \ , demoTitle("'Ray casting'")
         \ , raycasting
-        \ , textClip("'OpenStreetMap viewer'",
-        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , demoTitle("'OpenStreetMap viewer'")
         \ , lightmaps
-        \ , textClip("'Weather info'",
-        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , demoTitle("'Weather info'")
         \ , weatherinfo
-        \ , textClip("'Digital clock'",
-        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , demoTitle("'Digital clock'")
         \ , digiflip
-        \ , textClip("'Kinetic scrolling'",
-        \       backgroundimage = gArtworkDir + "middle.png").killaudio.converttoyv12
+        \ , demoTitle("'Kinetic scrolling'")
         \ , flickable
         \ , ImageSource(gArtworkDir + "Qt_VideoScreen_Closing.png", end = 100).converttoyv12
         \ , gDissolveLength).creativeCommons.oldStyle.FadeIO(10)
