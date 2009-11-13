@@ -52,6 +52,7 @@ public:
 
     static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
     {
+        Q_UNUSED(user_data)
         return new QtorialsOldstyle(args[0].AsClip(), env);
     }
 
@@ -79,11 +80,12 @@ public:
         memcpy(frameBits, image.bits(), image.bytesPerLine() * image.height());
     }
 
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) { return m_frame; }
-    bool __stdcall GetParity(int n) { return false; }
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) { Q_UNUSED(n) Q_UNUSED(env) return m_frame; }
+    bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
     const VideoInfo& __stdcall GetVideoInfo() { return m_videoInfo; }
-    void __stdcall SetCacheHints(int cachehints, int frame_range) { }
-    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env) { }
+    void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
+    { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
 protected:
     PVideoFrame m_frame;
@@ -92,6 +94,7 @@ protected:
 
 AVSValue __cdecl CreateRgbPatterns(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
+    Q_UNUSED(user_data)
     QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32_Premultiplied);
     QPainter p(&image);
     paintRgbPatterns(&p, image.rect());
@@ -100,6 +103,7 @@ AVSValue __cdecl CreateRgbPatterns(AVSValue args, void* user_data, IScriptEnviro
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
+    Q_UNUSED(user_data)
     const QString title = QString::fromLatin1(args[3].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
     QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32_Premultiplied);
     QPainter p(&image);
