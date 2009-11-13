@@ -59,24 +59,23 @@ protected:
     QImage m_gradient;
 };
 
-class QtorialsRgbPatterns : public IClip
+class QtorialsStillImage : public IClip
 {
 public:
-    QtorialsRgbPatterns(int w, int h, int frames, IScriptEnvironment* env)
+    QtorialsStillImage(const QImage &image, int frames, IScriptEnvironment* env)
     {
         memset(&m_videoInfo, 0, sizeof(VideoInfo));
-        m_videoInfo.width = w;
-        m_videoInfo.height = h;
+        m_videoInfo.width = image.width();
+        m_videoInfo.height = image.height();
         m_videoInfo.fps_numerator = 25;
         m_videoInfo.fps_denominator = 1;
         m_videoInfo.num_frames = frames;
-        m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+        m_videoInfo.pixel_type =
+                (image.format() == QImage::Format_ARGB32
+                    || image.format() == QImage::Format_ARGB32_Premultiplied) ?
+                        VideoInfo::CS_BGR32 : VideoInfo::CS_BGR24;
         m_frame = env->NewVideoFrame(m_videoInfo);
         unsigned char* frameBits = m_frame->GetWritePtr();
-
-        QImage image(m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32_Premultiplied);
-        QPainter p(&image);
-        paintRgbPatterns(&p, image.rect());
         memcpy(frameBits, image.bits(), image.bytesPerLine() * image.height());
     }
 
@@ -86,57 +85,33 @@ public:
     void __stdcall SetCacheHints(int cachehints, int frame_range) { }
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env) { }
 
-    static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
-    {
-        return new QtorialsRgbPatterns(args[0].AsInt(640), args[1].AsInt(480), args[2].AsInt(100), env);
-    }
-
 protected:
     PVideoFrame m_frame;
     VideoInfo m_videoInfo;
 };
 
-class QtorialsTitle : public GenericVideoFilter
+AVSValue __cdecl CreateRgbPatterns(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
-public:
-    QtorialsTitle(PClip _child, IScriptEnvironment* env, const char* title)
-        : GenericVideoFilter(_child)
-    {
-        m_title = QString::fromLatin1(title).replace(QLatin1String("\\n"), QLatin1String("\n"));
-        if (!vi.IsRGB32())
-            env->ThrowError("QtorialsTitle: input to filter must be in RGB32");
-    }
+    QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32_Premultiplied);
+    QPainter p(&image);
+    paintRgbPatterns(&p, image.rect());
+    return new QtorialsStillImage(image, args[2].AsInt(100), env);
+}
 
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
-    {
-        PVideoFrame src = env->NewVideoFrame(vi);
-        unsigned char* srcp = src->GetWritePtr();
-        const int src_width = src->GetRowSize();
-        const int src_height = src->GetHeight();
-        const int src_pitch = src->GetPitch();
-
-        QImage i(srcp, src_width / 4, src_height, src_pitch, QImage::Format_RGB32);
-
-        QPainter p(&i);
-        paintTitle(&p, QRect(0, 0, src_width / 4, src_height), m_title);
-
-        return src;
-    }
-
-    static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
-    {
-        return new QtorialsTitle(args[0].AsClip(), env, args[1].AsString());
-    }
-
-private:
-    QString m_title;
-};
+AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    const QString title = QString::fromLatin1(args[3].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
+    QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32_Premultiplied);
+    QPainter p(&image);
+    paintTitle(&p, image.rect(), title);
+    return new QtorialsStillImage(image, args[2].AsInt(100), env);
+}
 
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsOldstyle", "c", QtorialsOldstyle::Create, 0);
-    env->AddFunction("QtorialsRgbPatterns", "[width]i[height]i[frames]i", QtorialsRgbPatterns::Create, 0);
-    env->AddFunction("QtorialsTitle", "cs", QtorialsTitle::Create, 0);
+    env->AddFunction("QtorialsRgbPatterns", "[width]i[height]i[frames]i", CreateRgbPatterns, 0);
+    env->AddFunction("QtorialsTitle", "[width]i[height]i[frames]i[text]s", CreateTitle, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
