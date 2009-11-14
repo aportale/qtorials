@@ -13,53 +13,6 @@
 #include "filters.h"
 #include <QtGui>
 
-class QtorialsOldstyle : public GenericVideoFilter
-{
-public:
-    QtorialsOldstyle(PClip _child, IScriptEnvironment* env)
-        : GenericVideoFilter(_child)
-        , m_gradient(vi.width, vi.height, QImage::Format_ARGB32)
-    {
-        if (!vi.IsRGB())
-            env->ThrowError("QtorialsOldstyle: input to filter must be in RGB24 or RGB32");
-
-        m_gradient.fill(0);
-        QPainter p(&m_gradient);
-        paintOldStyle(&p, m_gradient.rect());
-    }
-
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
-    {
-        PVideoFrame src = child->GetFrame(n, env);
-        const unsigned char* srcp = src->GetReadPtr();
-        const int src_width = src->GetRowSize();
-        const int src_height = src->GetHeight();
-        const int src_pitch = src->GetPitch();
-
-        PVideoFrame dst = env->NewVideoFrame(vi);
-        unsigned char* frameBits = dst->GetWritePtr();
-
-        if (vi.IsRGB()) {
-            const QImage::Format imageFormat = vi.IsRGB24() ? QImage::Format_RGB888 : QImage::Format_RGB32;
-            QImage i(frameBits, vi.width, src_height, src_pitch, imageFormat);
-            memcpy(frameBits, srcp, src_width * src_height);
-            QPainter p(&i);
-            p.drawImage(0, 0, m_gradient);
-        }
-
-        return dst;
-    }
-
-    static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
-    {
-        Q_UNUSED(user_data)
-        return new QtorialsOldstyle(args[0].AsClip(), env);
-    }
-
-protected:
-    QImage m_gradient;
-};
-
 class QtorialsStillImage : public IClip
 {
 public:
@@ -92,6 +45,17 @@ protected:
     VideoInfo m_videoInfo;
 };
 
+AVSValue __cdecl CreateOldStyle(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+    QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32_Premultiplied);
+    image.fill(0);
+    QPainter p(&image);
+    paintOldStyle(&p, image.rect());
+    return new QtorialsStillImage(image, args[2].AsInt(100), env);
+}
+
+
 AVSValue __cdecl CreateRgbPatterns(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
@@ -114,7 +78,7 @@ AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment*
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
-    env->AddFunction("QtorialsOldstyle", "c", QtorialsOldstyle::Create, 0);
+    env->AddFunction("QtorialsOldstyle", "[width]i[height]i[frames]i", CreateOldStyle, 0);
     env->AddFunction("QtorialsRgbPatterns", "[width]i[height]i[frames]i", CreateRgbPatterns, 0);
     env->AddFunction("QtorialsTitle", "[width]i[height]i[frames]i[text]s", CreateTitle, 0);
     return "`QtAviSynth' QtAviSynth plugin";
