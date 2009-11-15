@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>oldstyle.svg</file>
+        <file>artwork.svg</file>
     </qresource>
 </RCC>
