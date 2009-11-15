@@ -30,7 +30,7 @@ public:
                         VideoInfo::CS_BGR32 : VideoInfo::CS_BGR24;
         m_frame = env->NewVideoFrame(m_videoInfo);
         unsigned char* frameBits = m_frame->GetWritePtr();
-        memcpy(frameBits, image.bits(), image.bytesPerLine() * image.height());
+        memcpy(frameBits, image.mirrored(false, true).bits(), image.bytesPerLine() * image.height());
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) { Q_UNUSED(n) Q_UNUSED(env) return m_frame; }
@@ -48,7 +48,7 @@ protected:
 AVSValue __cdecl CreateOldStyle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32_Premultiplied);
+    QImage image(args[0].AsInt(640), args[1].AsInt(480), QImage::Format_ARGB32);
     image.fill(0);
     QPainter p(&image);
     paintOldStyle(&p, image.rect());
