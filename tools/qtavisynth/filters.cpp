@@ -109,7 +109,7 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
 {
     const QLatin1String svgId("qtlogo");
     const int blockSize = 16;
-    const int logoWidthForRectHeigh = qMax(blockSize, rect.height() / 10);
+    const int logoWidthForRectHeigh = qBound(blockSize, rect.height() / 11, blockSize * 3);
     const int logoWidth = logoWidthForRectHeigh - (logoWidthForRectHeigh % blockSize);
     const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
     const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
@@ -119,8 +119,10 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
         QPainter imagePainter(&logo);
         svgRenderer()->render(&imagePainter, svgId, logo.rect());
     }
+    const int logoX = rect.width() - logoWidth - blockSize;
+    const int logoY = rect.height() - logoHeight - (blockSize * 0.75);
     p->save();
     p->setOpacity(0.7);
-    p->drawImage(0, 0, logo);
+    p->drawImage(logoX, logoY, logo);
     p->restore();
 }
