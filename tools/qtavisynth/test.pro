@@ -6,8 +6,12 @@
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
 
+QT += svg
+
 SOURCES += \
     test.cpp \
     filters.cpp
 
 HEADERS += filters.h
+
+RESOURCES = qtavisynth.qrc
