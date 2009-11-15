@@ -9,7 +9,12 @@
 */
 
 #include "filters.h"
+#include "qglobal.h"
 #include <QtSvg>
+
+Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
+    x->load(QLatin1String(":/artwork.svg"));
+});
 
 static char *argv[] = {"."};
 static int argc = sizeof(argv) / sizeof(argv[0]);
@@ -27,11 +32,11 @@ void deleteQApplicationIfNeeded(QApplication* &app)
     }
 }
 
+void paintQtLogoSmall(QPainter *p, const QRect &rect);
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
-//    QApplication::instance();
-    static QSvgRenderer renderer(QLatin1String(":/oldstyle.svg"));
-    renderer.render(p, rect);
+    svgRenderer()->render(p, QLatin1String("oldstyle"), rect);
+    paintQtLogoSmall(p, rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -94,10 +99,28 @@ void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
     font.setBold(true);
     p->setFont(font);
     p->setTransform(QTransform().rotate(0.00000000001, Qt::YAxis));
-    p->scale(1, -1);
-    p->translate(0, -rect.height());
     p->setRenderHint(QPainter::Antialiasing);
     p->setPen(0x333333);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
 //    deleteQApplicationIfNeeded(a);
+}
+
+void paintQtLogoSmall(QPainter *p, const QRect &rect)
+{
+    const QLatin1String svgId("qtlogo");
+    const int blockSize = 16;
+    const int logoWidthForRectHeigh = qMax(blockSize, rect.height() / 10);
+    const int logoWidth = logoWidthForRectHeigh - (logoWidthForRectHeigh % blockSize);
+    const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
+    const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
+    QImage logo(logoWidth, logoHeight, QImage::Format_ARGB32);
+    logo.fill(0);
+    {
+        QPainter imagePainter(&logo);
+        svgRenderer()->render(&imagePainter, svgId, logo.rect());
+    }
+    p->save();
+    p->setOpacity(0.7);
+    p->drawImage(0, 0, logo);
+    p->restore();
 }
