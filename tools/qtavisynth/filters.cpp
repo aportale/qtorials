@@ -12,6 +12,8 @@
 #include "qglobal.h"
 #include <QtSvg>
 
+static const int codecBlockSize = 16;
+
 Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
     x->load(QLatin1String(":/artwork.svg"));
 });
@@ -33,10 +35,14 @@ void deleteQApplicationIfNeeded(QApplication* &app)
 }
 
 void paintQtLogoSmall(QPainter *p, const QRect &rect);
+//void paintQtLogoBig(QPainter *p, const QRect &rect);
+void paintCodecBlockPattern(QPainter *p, const QRect &rect);
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
     svgRenderer()->render(p, QLatin1String("oldstyle"), rect);
+    paintCodecBlockPattern(p, rect);
     paintQtLogoSmall(p, rect);
+    //paintQtLogoBig(p, rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -108,9 +114,10 @@ void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
 void paintQtLogoSmall(QPainter *p, const QRect &rect)
 {
     const QLatin1String svgId("qtlogo");
-    const int blockSize = 16;
-    const int logoWidthForRectHeigh = qBound(blockSize, rect.height() / 11, blockSize * 3);
-    const int logoWidth = logoWidthForRectHeigh - (logoWidthForRectHeigh % blockSize);
+    const int logoWidthForRectHeight =
+            qBound(codecBlockSize, rect.height() / 11, codecBlockSize * 3);
+    const int logoWidth =
+            logoWidthForRectHeight - (logoWidthForRectHeight % codecBlockSize);
     const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
     const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
     QImage logo(logoWidth, logoHeight, QImage::Format_ARGB32);
@@ -119,10 +126,21 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
         QPainter imagePainter(&logo);
         svgRenderer()->render(&imagePainter, svgId, logo.rect());
     }
-    const int logoX = rect.width() - logoWidth - blockSize;
-    const int logoY = rect.height() - logoHeight - (blockSize * 0.75);
+    const int logoX = rect.width() - logoWidth - codecBlockSize;
+    const int logoY = rect.height() - logoHeight - (codecBlockSize * 0.75);
     p->save();
     p->setOpacity(0.7);
     p->drawImage(logoX, logoY, logo);
     p->restore();
+}
+
+void paintCodecBlockPattern(QPainter *p, const QRect &rect)
+{
+    QImage brush(codecBlockSize * 2, codecBlockSize * 2, QImage::Format_RGB32);
+    QPainter brushPainter(&brush);
+    brushPainter.fillRect(brush.rect(), Qt::lightGray);
+    const QRect blockRect(0, 0, codecBlockSize, codecBlockSize);
+    brushPainter.fillRect(blockRect, Qt::gray);
+    brushPainter.fillRect(blockRect.translated(codecBlockSize, codecBlockSize), Qt::gray);
+    p->fillRect(rect, QBrush(brush));
 }
