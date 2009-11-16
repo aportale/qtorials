@@ -126,7 +126,7 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
         QPainter imagePainter(&logo);
         svgRenderer()->render(&imagePainter, svgId, logo.rect());
     }
-    const int logoX = rect.width() - logoWidth - codecBlockSize;
+    const int logoX = (rect.width() - logoWidth - codecBlockSize) / codecBlockSize * codecBlockSize;
     const int logoY = rect.height() - logoHeight - (codecBlockSize * 0.75);
     p->save();
     p->setOpacity(0.7);
