@@ -12,7 +12,11 @@
 #include "qglobal.h"
 #include <QtSvg>
 
-static const int codecBlockSize = 16;
+inline static int codecBlockSize(int clipHeight)
+{
+    // Ideal values for YouTube (experimented)
+    return clipHeight == 720 ? 24 : 4;
+}
 
 Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
     x->load(QLatin1String(":/artwork.svg"));
@@ -115,9 +119,9 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
 {
     const QLatin1String svgId("qtlogo");
     const int logoWidthForRectHeight =
-            qBound(codecBlockSize, rect.height() / 11, codecBlockSize * 3);
+            qBound(codecBlockSize(rect.height()), rect.height() / 11, 48);
     const int logoWidth =
-            logoWidthForRectHeight - (logoWidthForRectHeight % codecBlockSize);
+            logoWidthForRectHeight - (logoWidthForRectHeight % codecBlockSize(rect.height()));
     const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
     const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
     QImage logo(logoWidth, logoHeight, QImage::Format_ARGB32);
@@ -126,8 +130,9 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
         QPainter imagePainter(&logo);
         svgRenderer()->render(&imagePainter, svgId, logo.rect());
     }
-    const int logoX = (rect.width() - logoWidth - codecBlockSize) / codecBlockSize * codecBlockSize;
-    const int logoY = rect.height() - logoHeight - (codecBlockSize * 0.75);
+    const int logoX = (rect.width() - logoWidth - codecBlockSize(rect.height()))
+                      / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
+    const int logoY = rect.height() - logoHeight - (codecBlockSize(rect.height()) * 0.75);
     p->save();
     p->setOpacity(0.7);
     p->drawImage(logoX, logoY, logo);
@@ -136,11 +141,12 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
 
 void paintCodecBlockPattern(QPainter *p, const QRect &rect)
 {
-    QImage brush(codecBlockSize * 2, codecBlockSize * 2, QImage::Format_RGB32);
+    QImage brush(codecBlockSize(rect.height()) * 2, codecBlockSize(rect.height()) * 2,
+                 QImage::Format_RGB32);
+    brush.fill(QColor(Qt::red).rgb());
     QPainter brushPainter(&brush);
-    brushPainter.fillRect(brush.rect(), Qt::lightGray);
-    const QRect blockRect(0, 0, codecBlockSize, codecBlockSize);
-    brushPainter.fillRect(blockRect, Qt::gray);
-    brushPainter.fillRect(blockRect.translated(codecBlockSize, codecBlockSize), Qt::gray);
+    const QRect blockRect(0, 0, codecBlockSize(rect.height()), codecBlockSize(rect.height()));
+    brushPainter.fillRect(blockRect, Qt::blue);
+    brushPainter.fillRect(blockRect.translated(codecBlockSize(rect.height()), codecBlockSize(rect.height())), Qt::blue);
     p->fillRect(rect, QBrush(brush));
 }
