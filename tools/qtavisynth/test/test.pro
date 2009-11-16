@@ -10,8 +10,10 @@ QT += svg
 
 SOURCES += \
     test.cpp \
-    filters.cpp
+    ../filters.cpp
 
-HEADERS += filters.h
+INCLUDEPATH += ../
 
-RESOURCES = qtavisynth.qrc
+HEADERS += ../filters.h
+
+RESOURCES = ../qtavisynth.qrc
