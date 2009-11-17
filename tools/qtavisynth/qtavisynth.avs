@@ -8,4 +8,23 @@
 
 LoadPlugin("qtavisynth.dll")
 
-QtorialsTitle("huhuasdf asdf asdf asdf asdf asdf", 640, 360).layer(QtorialsElements("codecblockpattern, qtlogosmall, symbianlogobig, qtlogobig, oldstyle", 640, 360))
+function overlayRgbClipOnRgb(clip background, clip overlay)
+{
+    return background.layer(overlay)
+}
+
+function overlayRgbClipOnNonRgb(clip background, clip overlay)
+{
+    return background.Overlay(overlay, 0, 0, overlay.showAlpha)
+}
+
+function overlayRgbClip(clip background, clip overlay)
+{
+    return background.IsRGB ?
+        \ overlayRgbClipOnRgb(background, overlay)
+        \ : overlayRgbClipOnNonRgb(background, overlay)
+}
+
+QtorialsTitle("huhuasdf adf sdfsfd asdf asdf asdf asdf", 640, 360).ConvertToYUY2
+\ .overlayRgbClip(QtorialsElements("oldstyle, qtlogosmall, symbianlogobig, qtlogobig", 640, 360))
+
