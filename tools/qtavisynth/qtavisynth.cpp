@@ -48,26 +48,6 @@ protected:
     VideoInfo m_videoInfo;
 };
 
-AVSValue __cdecl CreateOldStyle(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    QImage image(args[0].AsInt(defaultClipWidth), args[1].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(0);
-    QPainter p(&image);
-    paintOldStyle(&p, image.rect());
-    return new QtorialsStillImage(image, args[2].AsInt(100), env);
-}
-
-
-AVSValue __cdecl CreateRgbPatterns(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    QImage image(args[0].AsInt(defaultClipWidth), args[1].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    QPainter p(&image);
-    paintRgbPatterns(&p, image.rect());
-    return new QtorialsStillImage(image, args[2].AsInt(100), env);
-}
-
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
@@ -91,8 +71,6 @@ AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironme
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
-    env->AddFunction("QtorialsOldstyle", "[width]i[height]i[frames]i", CreateOldStyle, 0);
-    env->AddFunction("QtorialsRgbPatterns", "[width]i[height]i[frames]i", CreateRgbPatterns, 0);
     env->AddFunction("QtorialsTitle", "[text]s[width]i[height]i[frames]i", CreateTitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     return "`QtAviSynth' QtAviSynth plugin";

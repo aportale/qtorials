@@ -13,8 +13,6 @@
 
 #include <QtGui>
 
-void paintOldStyle(QPainter *p, const QRect &rect);
-void paintRgbPatterns(QPainter *p, const QRect &rect);
 void paintTitle(QPainter *p, const QRect &rect, const QString &titleText);
 void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
 
