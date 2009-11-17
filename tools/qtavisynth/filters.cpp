@@ -39,14 +39,14 @@ void deleteQApplicationIfNeeded(QApplication* &app)
 }
 
 void paintQtLogoSmall(QPainter *p, const QRect &rect);
-//void paintQtLogoBig(QPainter *p, const QRect &rect);
+void paintQtLogoBig(QPainter *p, const QRect &rect);
 void paintCodecBlockPattern(QPainter *p, const QRect &rect);
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
     svgRenderer()->render(p, QLatin1String("oldstyle"), rect);
     paintCodecBlockPattern(p, rect);
     paintQtLogoSmall(p, rect);
-    //paintQtLogoBig(p, rect);
+    paintQtLogoBig(p, rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -137,6 +137,20 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
     p->setOpacity(0.7);
     p->drawImage(logoX, logoY, logo);
     p->restore();
+}
+
+void paintQtLogoBig(QPainter *p, const QRect &rect)
+{
+    const QLatin1String svgId("qtlogo");
+    const int logoWidthForRectHeight = int(rect.height() / 2.5);
+    const int logoX = (rect.width() - logoWidthForRectHeight)
+             / 2 / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
+    const int logoWidth = (rect.width() - 2*logoX)
+             / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
+    const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
+    const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
+    const int logoY = (rect.height() - logoHeight) / 2;
+    svgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
 void paintCodecBlockPattern(QPainter *p, const QRect &rect)
