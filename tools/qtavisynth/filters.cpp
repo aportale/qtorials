@@ -15,7 +15,7 @@
 inline static int codecBlockSize(int clipHeight)
 {
     // Ideal values for YouTube (experimented)
-    return clipHeight == 720 ? 24 : 4;
+    return clipHeight == 720 ? 24 : 8;
 }
 
 Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
