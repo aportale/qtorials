@@ -38,15 +38,23 @@ void deleteQApplicationIfNeeded(QApplication* &app)
     }
 }
 
-void paintQtLogoSmall(QPainter *p, const QRect &rect);
-void paintQtLogoBig(QPainter *p, const QRect &rect);
-void paintCodecBlockPattern(QPainter *p, const QRect &rect);
+void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
+{
+    QApplication *a = createQApplicationIfNeeded();
+    p->fillRect(rect, 0xeeeeee);
+    QFont font;
+    font.setPixelSize(qMax(8, rect.height() / 14));
+    font.setBold(true);
+    p->setFont(font);
+//    p->setTransform(QTransform().rotate(0.00000000001, Qt::YAxis));
+    p->setPen(0x333333);
+    p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
+    deleteQApplicationIfNeeded(a);
+}
+
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
     svgRenderer()->render(p, QLatin1String("oldstyle"), rect);
-    paintCodecBlockPattern(p, rect);
-    paintQtLogoSmall(p, rect);
-    paintQtLogoBig(p, rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -100,26 +108,12 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
         }
 }
 
-void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
-{
-//    QApplication *a = createQApplicationIfNeeded();
-    p->fillRect(rect, 0xeeeeee);
-    QFont font;
-    font.setPixelSize(qMax(8, rect.height() / 14));
-    font.setBold(true);
-    p->setFont(font);
-    p->setTransform(QTransform().rotate(0.00000000001, Qt::YAxis));
-    p->setRenderHint(QPainter::Antialiasing);
-    p->setPen(0x333333);
-    p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
-//    deleteQApplicationIfNeeded(a);
-}
-
 void paintQtLogoSmall(QPainter *p, const QRect &rect)
 {
     const QLatin1String svgId("qtlogo");
     const int logoWidthForRectHeight =
-            qBound(codecBlockSize(rect.height()), rect.height() / 11, 48);
+            qBound(codecBlockSize(qMin(rect.height(), rect.width())),
+                                  qMin(rect.height(), rect.width()) / 11, 48);
     const int logoWidth =
             logoWidthForRectHeight - (logoWidthForRectHeight % codecBlockSize(rect.height()));
     const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
@@ -142,7 +136,7 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
 void paintQtLogoBig(QPainter *p, const QRect &rect)
 {
     const QLatin1String svgId("qtlogo");
-    const int logoWidthForRectHeight = int(rect.height() / 2.5);
+    const int logoWidthForRectHeight = int(qMin(rect.height(), rect.width()) / 2.5);
     const int logoX = (rect.width() - logoWidthForRectHeight)
              / 2 / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
     const int logoWidth = (rect.width() - 2*logoX)
@@ -150,6 +144,17 @@ void paintQtLogoBig(QPainter *p, const QRect &rect)
     const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
     const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
     const int logoY = (rect.height() - logoHeight) / 2;
+    svgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
+}
+
+void paintSymbianLogoBig(QPainter *p, const QRect &rect)
+{
+    const QLatin1String svgId("symbianlogo");
+    const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
+    const int logoHeight = qMin(rect.height() / 3, rect.width() / 4);
+    const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
+    const int logoY = (rect.height() - logoHeight) / 2;
+    const int logoX = (rect.width() - logoWidth) / 2;
     svgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
@@ -163,4 +168,30 @@ void paintCodecBlockPattern(QPainter *p, const QRect &rect)
     brushPainter.fillRect(blockRect, Qt::blue);
     brushPainter.fillRect(blockRect.translated(codecBlockSize(rect.height()), codecBlockSize(rect.height())), Qt::blue);
     p->fillRect(rect, QBrush(brush));
+}
+
+void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect)
+{
+    static QHash<QString, void (*)(QPainter *, const QRect&)> elementFunctions;
+    if (elementFunctions.isEmpty()) {
+        static const struct {
+            QString name;
+            void (*function)(QPainter *, const QRect&);
+        } elementFunctionArray [] = {
+            { QLatin1String("oldstyle"),            paintOldStyle },
+            { QLatin1String("rgbpatterns"),         paintRgbPatterns },
+            { QLatin1String("blockpattern"),        paintCodecBlockPattern },
+            { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
+            { QLatin1String("qtlogobig"),           paintQtLogoBig },
+            { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
+            { QLatin1String("codecblockpattern"),   paintCodecBlockPattern }
+        };
+        for (int i = 0; i < int(sizeof elementFunctionArray / sizeof elementFunctionArray[0]); i++)
+            elementFunctions.insert(elementFunctionArray[i].name, elementFunctionArray[i].function);
+    }
+    foreach (const QString &element, elementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+        const QString cleanElement = element.toLower().trimmed();
+        if (elementFunctions.contains(cleanElement))
+            elementFunctions.value(cleanElement)(p, rect);
+    }
 }

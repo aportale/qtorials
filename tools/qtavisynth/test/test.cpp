@@ -26,7 +26,7 @@ public:
         p.fillRect(rect(), Qt::white);
 //        paintRgbPatterns(&p, rect());
 //        paintTitle(&p, rect(), "Hallo AviSynth sdfg<b>sdf</b>gsdf gsdfgsd fgsdfg sdfgsd fgs dfg");
-        paintOldStyle(&p, rect());
+        paintElements(&p, "qtlogosmall", rect());
     }
 };
 

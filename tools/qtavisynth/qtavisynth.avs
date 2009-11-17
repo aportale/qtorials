@@ -8,4 +8,4 @@
 
 LoadPlugin("qtavisynth.dll")
 
-QtorialsRgbPatterns.layer(QtorialsOldstyle)
+QtorialsTitle("huhuasdf asdf asdf asdf asdf asdf", 640, 360).layer(QtorialsElements("codecblockpattern, qtlogosmall, symbianlogobig, qtlogobig, oldstyle", 640, 360))
