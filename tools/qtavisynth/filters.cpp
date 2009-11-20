@@ -18,6 +18,12 @@ inline static int codecBlockSize(int clipHeight)
     return clipHeight == 720 ? 24 : 8;
 }
 
+inline static int snappedToBlockSize(int value, int clipHeight)
+{
+    const int blockSize = codecBlockSize(clipHeight);
+    return value / blockSize * blockSize;
+}
+
 Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
     x->load(QLatin1String(":/artwork.svg"));
 });
@@ -46,7 +52,6 @@ void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
     font.setPixelSize(qMax(8, rect.height() / 14));
     font.setBold(true);
     p->setFont(font);
-//    p->setTransform(QTransform().rotate(0.00000000001, Qt::YAxis));
     p->setPen(0x333333);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
     deleteQApplicationIfNeeded(a);
@@ -194,4 +199,38 @@ void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect)
         if (elementFunctions.contains(cleanElement))
             elementFunctions.value(cleanElement)(p, rect);
     }
+}
+
+qreal inOutAnimationValue(int inOffset, int inLength, QEasingCurve::Type inType,
+                          int outOffset, int outLength, QEasingCurve::Type outType,
+                          int frame, int framesCount)
+{
+    qreal result = qreal(1);
+    if (frame < inOffset || frame > framesCount - outOffset)
+        result = 0;
+    if (frame <= inOffset + inLength)
+        result = QEasingCurve(inType)
+            .valueForProgress(qreal(1) / inLength * (frame - inOffset));
+    else if (frame >= framesCount - outOffset - outLength)
+        result = QEasingCurve(outType)
+            .valueForProgress(qreal(1) / outLength * (framesCount - frame - outOffset - 1));
+    return result;
+}
+
+void paintAnimatedSubTitle(QPainter *p, const QString &text, int frame,
+                           int framesCount, const QRect &rect)
+{
+    const qreal value =
+            inOutAnimationValue(0, 7, QEasingCurve::OutQuad,
+                                0, 7, QEasingCurve::OutQuad,
+                                frame, framesCount);
+    const int backgroundHeight = snappedToBlockSize(rect.height() / 6, rect.height());
+    const int backgroundTop = rect.height() - value * backgroundHeight;
+    const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
+    QLinearGradient gradient(background.topLeft(), background.topRight());
+    gradient.setColorAt(0.70, QColor(128, 128, 128, 128));
+    gradient.setColorAt(1, QColor(128, 128, 128, 0));
+    p->fillRect(background, gradient);
+//    QApplication *a = createQApplicationIfNeeded();
+//    deleteQApplicationIfNeeded(a);
 }

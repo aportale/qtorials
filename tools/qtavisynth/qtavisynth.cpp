@@ -48,6 +48,44 @@ protected:
     VideoInfo m_videoInfo;
 };
 
+class QtorialsSubtitle : public IClip
+{
+public:
+    QtorialsSubtitle(const QString &titleText, int width, int height, int frames)
+        : m_titleText(titleText)
+    {
+        memset(&m_videoInfo, 0, sizeof(VideoInfo));
+        m_videoInfo.width = width;
+        m_videoInfo.height = height;
+        m_videoInfo.fps_numerator = 25;
+        m_videoInfo.fps_denominator = 1;
+        m_videoInfo.num_frames = frames;
+        m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+    }
+
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
+    {
+        PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
+        unsigned char* frameBits = frame->GetWritePtr();
+        QImage image(m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
+        image.fill(0);
+        QPainter p(&image);
+        paintAnimatedSubTitle(&p, m_titleText, n, m_videoInfo.num_frames, image.rect());
+        memcpy(frameBits, image.mirrored(false, true).bits(), image.bytesPerLine() * image.height());
+        return frame;
+    }
+
+    bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
+    const VideoInfo& __stdcall GetVideoInfo() { return m_videoInfo; }
+    void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
+    { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
+
+protected:
+    VideoInfo m_videoInfo;
+    QString m_titleText;
+};
+
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
@@ -56,6 +94,15 @@ AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment*
     QPainter p(&image);
     paintTitle(&p, image.rect(), title);
     return new QtorialsStillImage(image, args[3].AsInt(100), env);
+}
+
+AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+    return new QtorialsSubtitle(args[0].AsString("Title"),
+                                args[1].AsInt(defaultClipWidth),
+                                args[2].AsInt(defaultClipHeight),
+                                args[3].AsInt(100));
 }
 
 AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
@@ -72,6 +119,7 @@ extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsTitle", "[text]s[width]i[height]i[frames]i", CreateTitle, 0);
+    env->AddFunction("QtorialsSubtitle", "[text]s[width]i[height]i[frames]i", CreateSubtitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
