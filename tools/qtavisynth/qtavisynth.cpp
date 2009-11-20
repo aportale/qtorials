@@ -51,8 +51,10 @@ protected:
 class QtorialsSubtitle : public IClip
 {
 public:
-    QtorialsSubtitle(const QString &titleText, int width, int height, int frames)
+    QtorialsSubtitle(const QString &titleText, const QString &subtitleText,
+                     int width, int height, int frames)
         : m_titleText(titleText)
+        , m_subtitleText(subtitleText)
     {
         memset(&m_videoInfo, 0, sizeof(VideoInfo));
         m_videoInfo.width = width;
@@ -70,7 +72,8 @@ public:
         QImage image(m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
         image.fill(0);
         QPainter p(&image);
-        paintAnimatedSubTitle(&p, m_titleText, n, m_videoInfo.num_frames, image.rect());
+        paintAnimatedSubTitle(&p, m_titleText, m_subtitleText,
+                              n, m_videoInfo.num_frames, image.rect());
         memcpy(frameBits, image.mirrored(false, true).bits(), image.bytesPerLine() * image.height());
         return frame;
     }
@@ -84,6 +87,7 @@ public:
 protected:
     VideoInfo m_videoInfo;
     QString m_titleText;
+    QString m_subtitleText;
 };
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
@@ -100,9 +104,10 @@ AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironme
 {
     Q_UNUSED(user_data)
     return new QtorialsSubtitle(args[0].AsString("Title"),
-                                args[1].AsInt(defaultClipWidth),
-                                args[2].AsInt(defaultClipHeight),
-                                args[3].AsInt(100));
+                                args[1].AsString("Subtitle"),
+                                args[2].AsInt(defaultClipWidth),
+                                args[3].AsInt(defaultClipHeight),
+                                args[4].AsInt(100));
 }
 
 AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
@@ -119,7 +124,7 @@ extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsTitle", "[text]s[width]i[height]i[frames]i", CreateTitle, 0);
-    env->AddFunction("QtorialsSubtitle", "[text]s[width]i[height]i[frames]i", CreateSubtitle, 0);
+    env->AddFunction("QtorialsSubtitle", "[title]s[subtitle]s[width]i[height]i[frames]i", CreateSubtitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }

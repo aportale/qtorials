@@ -15,6 +15,7 @@
 
 void paintTitle(QPainter *p, const QRect &rect, const QString &titleText);
 void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
-void paintAnimatedSubTitle(QPainter *p, const QString &text, int frame, int frames, const QRect &rect);
+void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
+                           int frame, int frames, const QRect &rect);
 
 #endif // FILTERS_H

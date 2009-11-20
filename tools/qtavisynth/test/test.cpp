@@ -27,7 +27,7 @@ public:
 //        paintRgbPatterns(&p, rect());
 //        paintTitle(&p, rect(), "Hallo AviSynth sdfg<b>sdf</b>gsdf gsdfgsd fgsdfg sdfgsd fgs dfg");
         paintElements(&p, "qtlogosmall", rect());
-        paintAnimatedSubTitle(&p, "huhu", 50, 100, rect());
+        paintAnimatedSubTitle(&p, "huhu", "huih iuh iuhi", 50, 100, rect());
     }
 };
 

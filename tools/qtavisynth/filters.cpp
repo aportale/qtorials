@@ -217,20 +217,48 @@ qreal inOutAnimationValue(int inOffset, int inLength, QEasingCurve::Type inType,
     return result;
 }
 
-void paintAnimatedSubTitle(QPainter *p, const QString &text, int frame,
-                           int framesCount, const QRect &rect)
+void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
+                           int frame, int framesCount, const QRect &rect)
 {
-    const qreal value =
-            inOutAnimationValue(0, 7, QEasingCurve::OutQuad,
-                                0, 7, QEasingCurve::OutQuad,
+    const QString html = QString::fromLatin1(
+            "<span style=\"font-family: Verdana; font-weight: bold; color: rgb(255, 250, 170); \">"
+             "<span style=\"font-size: %1px;\">&nbsp;%3</span><br>"
+             "<span style=\"font-size: %2px\">&nbsp;&nbsp;&nbsp;%4</span>"
+             "</span>")
+            .arg(rect.height() / 14)
+            .arg(rect.height() / 20)
+            .arg(title)
+            .arg(subTitle);
+
+    QTextDocument document;
+    document.setHtml(html);
+    document.setDocumentMargin(5);
+
+    static const int slideInFrames = 7;
+    const qreal slideInFactor =
+            inOutAnimationValue(0, slideInFrames, QEasingCurve::OutQuad,
+                                0, slideInFrames, QEasingCurve::OutQuad,
                                 frame, framesCount);
-    const int backgroundHeight = snappedToBlockSize(rect.height() / 6, rect.height());
-    const int backgroundTop = rect.height() - value * backgroundHeight;
+    const int backgroundHeight =
+            snappedToBlockSize(document.size().height() + 2, rect.height());
+    const int backgroundTop = rect.height() - slideInFactor * backgroundHeight;
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     QLinearGradient gradient(background.topLeft(), background.topRight());
-    gradient.setColorAt(0.70, QColor(128, 128, 128, 128));
-    gradient.setColorAt(1, QColor(128, 128, 128, 0));
+    gradient.setColorAt(0.65, QColor(64, 64, 64, 128));
+    gradient.setColorAt(0.85, QColor(64, 64, 64, 0));
     p->fillRect(background, gradient);
-//    QApplication *a = createQApplicationIfNeeded();
-//    deleteQApplicationIfNeeded(a);
+
+
+    static const int blendInFrames = 7;
+    const qreal textOpacity =
+            inOutAnimationValue(slideInFrames * 0.7, blendInFrames, QEasingCurve::Linear,
+                                slideInFrames * 0.7, blendInFrames, QEasingCurve::Linear,
+                                frame, framesCount);
+    QApplication *a = createQApplicationIfNeeded();
+    p->save();
+    p->setOpacity(textOpacity + 0.2);
+    p->translate(background.topLeft());
+    document.drawContents(p, rect);
+    p->restore();
+    deleteQApplicationIfNeeded(a);
 }

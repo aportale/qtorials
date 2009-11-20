@@ -25,6 +25,7 @@ function overlayRgbClip(clip background, clip overlay)
         \ : overlayRgbClipOnNonRgb(background, overlay)
 }
 
-QtorialsTitle("huhuasdf adf sdfsfd asdf asdf asdf asdf", 640, 360).ConvertToYUY2
+QtorialsTitle("huhuasdf adf sdfsfd asdf asdf asdf asdf", 640, 360)
 \ .overlayRgbClip(QtorialsElements("oldstyle, qtlogosmall, symbianlogobig, qtlogobig", 640, 360))
+\ .overlayRgbClip(QtorialsSubtitle("Alessandro Portale", "Funny man with long name", 640, 360))
 
