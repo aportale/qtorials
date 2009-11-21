@@ -101,7 +101,7 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
     static const int gradientColorsCount =
         int(sizeof gradientColors / sizeof gradientColors[0]);
 
-    const int gradientHeight = 5;
+    const int gradientHeight = codecBlockSize(rect.height());
     int gradientNumber = 0;
     for (int a = 0; a < gradientColorsCount; a++)
         for (int b = a + 1; b < gradientColorsCount; b++) {
