@@ -277,7 +277,7 @@ void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &sub
         p->setFont(subTitleFont);
         p->drawText(padding * 1.68,
                     tweakedPadding + titleFont.pixelSize() + textLineDistance + subTitleFont.pixelSize(),
-                    title);
+                    subTitle);
     }
     p->restore();
     deleteQApplicationIfNeeded(a);
