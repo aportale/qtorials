@@ -220,6 +220,15 @@ qreal inOutAnimationValue(int inOffset, int inLength, QEasingCurve::Type inType,
 void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                            int frame, int framesCount, const QRect &rect)
 {
+    static const int slideInFrames = 7;
+    const qreal slideInFactor =
+            inOutAnimationValue(0, slideInFrames, QEasingCurve::OutQuad,
+                                0, slideInFrames, QEasingCurve::OutQuad,
+                                frame, framesCount);
+
+    if (slideInFactor <= 0)
+        return;
+
     QFont titleFont(QLatin1String("Verdana"));
     QFont subTitleFont(titleFont);
     subTitleFont.setPixelSize(rect.height() / (subTitle.isEmpty() ? 18 : 20));
@@ -237,15 +246,10 @@ void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &sub
         tweakedPadding -= textLineDistance + subTitleFont.pixelSize();
     tweakedPadding /= 2;
 
-    static const int slideInFrames = 7;
-    const qreal slideInFactor =
-            inOutAnimationValue(0, slideInFrames, QEasingCurve::OutQuad,
-                                0, slideInFrames, QEasingCurve::OutQuad,
-                                frame, framesCount);
     const int backgroundTop = rect.height() - slideInFactor * backgroundHeight;
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     QLinearGradient gradient(background.topLeft(), background.topRight());
-    gradient.setColorAt(0.65, QColor(64, 64, 64, 128));
+    gradient.setColorAt(0.65, QColor(64, 64, 64, 192));
     gradient.setColorAt(0.85, QColor(64, 64, 64, 0));
     p->fillRect(background, gradient);
 
