@@ -21,7 +21,7 @@ inline static int codecBlockSize(int clipHeight)
 inline static int snappedToBlockSize(int value, int clipHeight)
 {
     const int blockSize = codecBlockSize(clipHeight);
-    return value / blockSize * blockSize;
+    return qCeil(value / qreal(blockSize)) * blockSize;
 }
 
 Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
@@ -220,27 +220,28 @@ qreal inOutAnimationValue(int inOffset, int inLength, QEasingCurve::Type inType,
 void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                            int frame, int framesCount, const QRect &rect)
 {
-    const QString html = QString::fromLatin1(
-            "<span style=\"font-family: Verdana; font-weight: bold; color: rgb(255, 250, 170); \">"
-             "<span style=\"font-size: %1px;\">&nbsp;%3</span><br>"
-             "<span style=\"font-size: %2px\">&nbsp;&nbsp;&nbsp;%4</span>"
-             "</span>")
-            .arg(rect.height() / 14)
-            .arg(rect.height() / 20)
-            .arg(title)
-            .arg(subTitle);
+    QFont titleFont(QLatin1String("Verdana"));
+    QFont subTitleFont(titleFont);
+    subTitleFont.setPixelSize(rect.height() / (subTitle.isEmpty() ? 18 : 20));
+    titleFont.setPixelSize(rect.height() / 14);
+    titleFont.setBold(true);
 
-    QTextDocument document;
-    document.setHtml(html);
-    document.setDocumentMargin(5);
+    const int padding = rect.height() / 45;
+    const int textLineDistance = rect.height() / 80;
+    qreal backgroundHeight = padding + titleFont.pixelSize() + padding;
+    if (!subTitle.isEmpty())
+        backgroundHeight += textLineDistance + subTitleFont.pixelSize();
+    backgroundHeight = snappedToBlockSize(backgroundHeight, rect.height());
+    int tweakedPadding = backgroundHeight - titleFont.pixelSize();
+    if (!subTitle.isEmpty())
+        tweakedPadding -= textLineDistance + subTitleFont.pixelSize();
+    tweakedPadding /= 2;
 
     static const int slideInFrames = 7;
     const qreal slideInFactor =
             inOutAnimationValue(0, slideInFrames, QEasingCurve::OutQuad,
                                 0, slideInFrames, QEasingCurve::OutQuad,
                                 frame, framesCount);
-    const int backgroundHeight =
-            snappedToBlockSize(document.size().height() + 2, rect.height());
     const int backgroundTop = rect.height() - slideInFactor * backgroundHeight;
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     QLinearGradient gradient(background.topLeft(), background.topRight());
@@ -249,16 +250,31 @@ void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &sub
     p->fillRect(background, gradient);
 
 
-    static const int blendInFrames = 7;
+    static const int blendInFrames = 6;
     const qreal textOpacity =
             inOutAnimationValue(slideInFrames * 0.7, blendInFrames, QEasingCurve::Linear,
                                 slideInFrames * 0.7, blendInFrames, QEasingCurve::Linear,
                                 frame, framesCount);
     QApplication *a = createQApplicationIfNeeded();
     p->save();
+    p->setPen(QColor(245, 235, 170));
+    p->setCompositionMode(QPainter::CompositionMode_Lighten);
     p->setOpacity(textOpacity + 0.2);
     p->translate(background.topLeft());
-    document.drawContents(p, rect);
+    p->setFont(titleFont);
+    int titleTextTop = tweakedPadding + titleFont.pixelSize();
+    if (subTitle.isEmpty()) {
+        const QFontMetrics fm(titleFont);
+        titleTextTop =
+            tweakedPadding + fm.ascent() - fm.xHeight()/2;
+    }
+    p->drawText(padding, titleTextTop, title);
+    if (!subTitle.isEmpty()) {
+        p->setFont(subTitleFont);
+        p->drawText(padding * 1.68,
+                    tweakedPadding + titleFont.pixelSize() + textLineDistance + subTitleFont.pixelSize(),
+                    title);
+    }
     p->restore();
     deleteQApplicationIfNeeded(a);
 }
