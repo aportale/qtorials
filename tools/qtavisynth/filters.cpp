@@ -24,9 +24,49 @@ inline static int snappedToBlockSize(int value, int clipHeight)
     return qCeil(value / qreal(blockSize)) * blockSize;
 }
 
-Q_GLOBAL_STATIC_WITH_INITIALIZER(QSvgRenderer, svgRenderer, {
-    x->load(QLatin1String(":/artwork.svg"));
-});
+class SvgRendererStore
+{
+public:
+    ~SvgRendererStore()
+    {
+        qDeleteAll(m_svgRenderers);
+    }
+
+    QSvgRenderer* svgRenderer(const QString &svgFileName,
+                              Filters::PaintSvgResult &error)
+    {
+        const QFileInfo fileInfo(svgFileName);
+        if (!fileInfo.exists()) {
+            error = Filters::PaintSvgFileNotValid;
+            return 0;
+        }
+        const QString saneSvgFileName =
+                fileInfo.canonicalFilePath();
+        if (!m_svgRenderers.contains(saneSvgFileName)) {
+            QSvgRenderer *renderer = new QSvgRenderer(svgFileName);
+            if (!renderer->isValid()) {
+                error = Filters::PaintSvgFileNotValid;
+                return 0;
+            }
+            m_svgRenderers.insert(saneSvgFileName, renderer);
+        }
+        error = Filters::PaintSvgOk;
+        return m_svgRenderers.value(saneSvgFileName);
+    }
+
+    static QSvgRenderer* artworkSvgRenderer();
+
+private:
+    QHash<QString, QSvgRenderer*> m_svgRenderers;
+};
+
+Q_GLOBAL_STATIC(SvgRendererStore, svgRendererStore);
+
+QSvgRenderer* SvgRendererStore::artworkSvgRenderer()
+{
+    Filters::PaintSvgResult error;
+    return svgRendererStore()->svgRenderer(QLatin1String(":/artwork.svg"), error);
+}
 
 static char *argv[] = {"."};
 static int argc = sizeof(argv) / sizeof(argv[0]);
@@ -44,7 +84,7 @@ void deleteQApplicationIfNeeded(QApplication* &app)
     }
 }
 
-void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
+void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
 {
     QApplication *a = createQApplicationIfNeeded();
     p->fillRect(rect, 0xeeeeee);
@@ -59,7 +99,7 @@ void paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
 
 void paintOldStyle(QPainter *p, const QRect &rect)
 {
-    svgRenderer()->render(p, QLatin1String("oldstyle"), rect);
+    SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("oldstyle"), rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -121,13 +161,14 @@ void paintQtLogoSmall(QPainter *p, const QRect &rect)
                                   qMin(rect.height(), rect.width()) / 11, 48);
     const int logoWidth =
             logoWidthForRectHeight - (logoWidthForRectHeight % codecBlockSize(rect.height()));
-    const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
+    const QRectF logoElementBounds =
+            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
     const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
     QImage logo(logoWidth, logoHeight, QImage::Format_ARGB32);
     logo.fill(0);
     {
         QPainter imagePainter(&logo);
-        svgRenderer()->render(&imagePainter, svgId, logo.rect());
+        SvgRendererStore::artworkSvgRenderer()->render(&imagePainter, svgId, logo.rect());
     }
     const int logoX = (rect.width() - logoWidth - codecBlockSize(rect.height()))
                       / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
@@ -146,21 +187,23 @@ void paintQtLogoBig(QPainter *p, const QRect &rect)
              / 2 / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
     const int logoWidth = (rect.width() - 2*logoX)
              / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
-    const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
+    const QRectF logoElementBounds =
+            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
     const int logoHeight = logoElementBounds.height() / logoElementBounds.width() * logoWidth;
     const int logoY = (rect.height() - logoHeight) / 2;
-    svgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
+    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
 void paintSymbianLogoBig(QPainter *p, const QRect &rect)
 {
     const QLatin1String svgId("symbianlogo");
-    const QRectF logoElementBounds = svgRenderer()->boundsOnElement(svgId);
+    const QRectF logoElementBounds =
+            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
     const int logoHeight = qMin(rect.height() / 3, rect.width() / 4);
     const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
     const int logoY = (rect.height() - logoHeight) / 2;
     const int logoX = (rect.width() - logoWidth) / 2;
-    svgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
+    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
 void paintCodecBlockPattern(QPainter *p, const QRect &rect)
@@ -175,7 +218,23 @@ void paintCodecBlockPattern(QPainter *p, const QRect &rect)
     p->fillRect(rect, QBrush(brush));
 }
 
-void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect)
+Filters::PaintSvgResult Filters::paintSvg(QPainter *p, const QString &svgFileName,
+                        const QString &elementsCSV, const QRect &rect)
+{
+    PaintSvgResult result;
+    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
+    if (result != PaintSvgOk)
+        return result;
+    foreach (const QString &element, elementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+        const QString cleanElement = element.trimmed();
+        if (!renderer->elementExists(cleanElement))
+            return PaintSvgElementNotFound;
+        renderer->render(p, cleanElement, rect);
+    }
+    return PaintSvgOk;
+}
+
+void Filters::paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect)
 {
     static QHash<QString, void (*)(QPainter *, const QRect&)> elementFunctions;
     if (elementFunctions.isEmpty()) {
@@ -217,7 +276,7 @@ qreal inOutAnimationValue(int inOffset, int inLength, QEasingCurve::Type inType,
     return result;
 }
 
-void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
+void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                            int frame, int framesCount, const QRect &rect)
 {
     static const int slideInFrames = 7;

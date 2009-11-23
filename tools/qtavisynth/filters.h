@@ -13,9 +13,20 @@
 
 #include <QtGui>
 
-void paintTitle(QPainter *p, const QRect &rect, const QString &titleText);
-void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
-void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
-                           int frame, int frames, const QRect &rect);
+class Filters
+{
+public:
+    enum PaintSvgResult {
+        PaintSvgOk,
+        PaintSvgFileNotValid,
+        PaintSvgElementNotFound
+    };
+    static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText);
+    static void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
+    static PaintSvgResult paintSvg(QPainter *p, const QString &svgFileName,
+                                   const QString &elementsCSV, const QRect &rect);
+    static void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
+                                      int frame, int frames, const QRect &rect);\
+};
 
 #endif // FILTERS_H
