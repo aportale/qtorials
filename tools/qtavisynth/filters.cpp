@@ -225,12 +225,23 @@ Filters::PaintSvgResult Filters::paintSvg(QPainter *p, const QString &svgFileNam
     QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
     if (result != PaintSvgOk)
         return result;
+    const QRectF viewBox = renderer->viewBoxF();
+    const qreal widthFactor = rect.width() / viewBox.width();
+    const qreal heightFactor = rect.height() / viewBox.height();
+    const qreal sizeFactor = qMin(widthFactor, heightFactor);
+    p->save();
+    p->translate(-viewBox.topLeft());
+    p->scale(sizeFactor, sizeFactor);
+    p->translate((rect.width() / sizeFactor - viewBox.width()) / 2,
+                 (rect.height() / sizeFactor - viewBox.height()) / 2);
     foreach (const QString &element, elementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
         const QString cleanElement = element.trimmed();
         if (!renderer->elementExists(cleanElement))
             return PaintSvgElementNotFound;
-        renderer->render(p, cleanElement, rect);
+        const QRectF elementBounds = renderer->boundsOnElement(cleanElement);
+        renderer->render(p, cleanElement, elementBounds);
     }
+    p->restore();
     return PaintSvgOk;
 }
 
