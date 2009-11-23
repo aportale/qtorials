@@ -25,7 +25,9 @@ function overlayRgbClip(clip background, clip overlay)
         \ : overlayRgbClipOnNonRgb(background, overlay)
 }
 
-QtorialsElements("rgbpatterns, qtlogosmall, qtlogobig", 640, 360, 500)
+QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", 640, 360)
+\ .overlayRgbClip(QtorialsSvg("artwork.svg", "qtlogobig", 640, 360))
+\ .overlayRgbClip(QtorialsElements("qtlogosmall", 640, 360))
 \ .overlayRgbClip(QtorialsSubtitle(640, 360,
    \ "Alessandro", "Funny guy with long name", 20, 80,
    \ "Alessandro", "", 120, 180,

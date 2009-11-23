@@ -26,8 +26,9 @@ public:
         p.fillRect(rect(), Qt::white);
 //        paintRgbPatterns(&p, rect());
 //        paintTitle(&p, rect(), "Hallo AviSynth sdfg<b>sdf</b>gsdf gsdfgsd fgsdfg sdfgsd fgs dfg");
-        paintElements(&p, "qtlogosmall", rect());
-        paintAnimatedSubTitle(&p, "huhu", "huih iuh iuhi", 50, 100, rect());
+        Filters::paintElements(&p, "qtlogosmall", rect());
+        Filters::paintSvg(&p, "../artwork.svg", "qtlogo", rect());
+        Filters::paintAnimatedSubTitle(&p, "huhu", "huih iuh iuhi", 50, 100, rect());
     }
 };
 
