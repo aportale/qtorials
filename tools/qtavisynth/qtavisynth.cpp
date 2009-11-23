@@ -150,8 +150,21 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
     QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
     image.fill(0);
     QPainter p(&image);
-    Filters::paintSvg(&p, QString::fromLatin1(args[0].AsString()),
-                      QString::fromLatin1(args[1].AsString()), image.rect());
+    const Filters::PaintSvgResult result =
+            Filters::paintSvg(&p, QString::fromLatin1(args[0].AsString()),
+                              QString::fromLatin1(args[1].AsString()), image.rect());
+    switch (result) {
+        case Filters::PaintSvgFileNotValid:
+                env->ThrowError("QtorialsSvg: File '%s'' was not found or is invalid.",
+                                args[0].AsString());
+            break;
+        case Filters::PaintSvgElementNotFound:
+                env->ThrowError("QtorialsSvg: One of the Svg elements '%s' was not found.",
+                                args[1].AsString());
+            break;
+        default:
+            break;
+    }
     return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 
