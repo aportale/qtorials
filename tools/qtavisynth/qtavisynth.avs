@@ -8,23 +8,6 @@
 
 LoadPlugin("qtavisynth.dll")
 
-function overlayRgbClipOnRgb(clip background, clip overlay)
-{
-    return background.layer(overlay)
-}
-
-function overlayRgbClipOnNonRgb(clip background, clip overlay)
-{
-    return background.Overlay(overlay, 0, 0, overlay.showAlpha)
-}
-
-function overlayRgbClip(clip background, clip overlay)
-{
-    return background.IsRGB ?
-        \ overlayRgbClipOnRgb(background, overlay)
-        \ : overlayRgbClipOnNonRgb(background, overlay)
-}
-
 QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", 640, 360)
 \ .overlayRgbClip(QtorialsSvg("artwork.svg", "qtlogobig", 640, 360))
 \ .overlayRgbClip(QtorialsElements("qtlogosmall", 640, 360))
