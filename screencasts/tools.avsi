@@ -230,3 +230,9 @@ function overlayRgbClip(clip background, clip overlay)
         \ overlayRgbClipOnRgb(background, overlay)
         \ : overlayRgbClipOnNonRgb(background, overlay)
 }
+
+function overlayQtorialsElements(clip background, string overlayElements)
+{
+    return background.overlayRgbClip(
+        \ QtorialsElements(overlayElements, background.Width, background.Height, background.FrameCount))
+}

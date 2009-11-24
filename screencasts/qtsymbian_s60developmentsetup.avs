@@ -80,10 +80,11 @@ function videoS60SdksVideo
         \ , svgSnippet("s60logo32, sdk3, fp2", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, myapp32", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, myapp50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, myapp50, phonearrow50, phone50", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, division", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, division, myapp50", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, division, myapp50, phonearrow50, phone50", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 100)
         \ , gDissolveLength)
         
     clip
@@ -111,4 +112,4 @@ function completeclip
 }
 
 #completeclip
-videoS60SdksVideo
+videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
