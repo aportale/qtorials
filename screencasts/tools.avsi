@@ -19,6 +19,7 @@ global gAudioClip = BlankClip
 global gAudioNoiseStart = 0
 global gAudioNoiseEnd = 1
 global gTextClipFramesPerCharacter = 3
+global gBackgroundColor = $eeeeee
 
 function titleTextSize
 {
@@ -53,23 +54,23 @@ function audioClip(float startSecond, float endSecond, float appendedSilenceSeco
 
 function textClip(String text, int "frames", int "align", int "x", int "y", string "backgroundimage")
 {
-    backgroundColor = $eeeeee
+    gBackgroundColor = $eeeeee
     textColor = $333333
     framesCount = Default(frames, StrLen(text) * gTextClipFramesPerCharacter)
     background = Defined(backgroundimage) ?
         \ ImageSource(backgroundimage, fps = 25, end = framesCount)
-        \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
+        \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
     return background
-        \ .Subtitle(text, align = Default(5, align), x = Default(x, -1), y = Default(y, -1), text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
+        \ .Subtitle(text, align = Default(5, align), x = Default(x, -1), y = Default(y, -1), text_color = textColor, halo_color = gBackgroundColor, size = titleTextSize, lsp = 100)
 }
 
 function titleTextClip(string text, int "frames")
 {
-    backgroundColor = $eeeeee
+    gBackgroundColor = $eeeeee
     textColor = $333333
     result =
-        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = backgroundColor, pixel_type = "RGB32")
-        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = backgroundColor, size = titleTextSize, lsp = 100)
+        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
+        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = gBackgroundColor, size = titleTextSize, lsp = 100)
     return result.overlayQtorialImage("qt_orials")
 }
 
@@ -180,9 +181,9 @@ function setDetail(int left, int top, int "width", int "height")
 
 function creativeCommons(clip, string "cclicense")
 {
-    backgroundColor = $eeeeee
+    gBackgroundColor = $eeeeee
     textColor = $333333
-    theLogo = BlankClip(clip, 75, color = backgroundColor).overlayQtorialImage("cc-" + Default(cclicense, "by-sa") + "_big")
+    theLogo = BlankClip(clip, 75, color = gBackgroundColor).overlayQtorialImage("cc-" + Default(cclicense, "by-sa") + "_big")
     return Dissolve(
         \   clip
         \ , clip.hasAudio ? Audiodub(theLogo, audioNoise(10)) : theLogo
@@ -211,4 +212,21 @@ function showDetail(int untilFrame, int left, int top, int "width", int "height"
     global gDetailLastFrame = gDetailLastFrame + totalFrames
 
     return detail
+}
+
+function overlayRgbClipOnRgb(clip background, clip overlay)
+{
+    return background.layer(overlay)
+}
+
+function overlayRgbClipOnNonRgb(clip background, clip overlay)
+{
+    return background.Overlay(overlay, 0, 0, overlay.showAlpha)
+}
+
+function overlayRgbClip(clip background, clip overlay)
+{
+    return background.IsRGB ?
+        \ overlayRgbClipOnRgb(background, overlay)
+        \ : overlayRgbClipOnNonRgb(background, overlay)
 }
