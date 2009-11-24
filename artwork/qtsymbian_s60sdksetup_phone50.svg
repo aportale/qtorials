@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Qt Logo Created with Inkscape (http://www.inkscape.org/) by Marsupilami -->
+<!--
+   This work is licensed under the Creative Commons
+   Attribution-Noncommercial-Share Alike 3.0 Unported
+   License. To view a copy of this license, visit
+   http://creativecommons.org/licenses/by-nc-sa/3.0/
+   or send a letter to Creative Commons,
+   171 Second Street, Suite 300, San Francisco,
+   California, 94105, USA.
+-->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="560"
+   height="360"
+   viewBox=""
+   id="svg4095"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="qtsymbian_s60sdksetup_phone50.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs2474">
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Lend"
+       style="overflow:visible;">
+      <path
+         id="path3349"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(1.1) rotate(180) translate(1,0)" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="1174"
+     inkscape:window-width="1600"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="1.4142135"
+     inkscape:cx="260.13169"
+     inkscape:cy="195.88329"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:current-layer="single"
+     inkscape:snap-bbox="true"
+     showborder="true"
+     inkscape:showpageshadow="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2405"
+       visible="true"
+       enabled="true"
+       dotted="true"
+       spacingx="16px"
+       spacingy="16px"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <g
+     inkscape:groupmode="layer"
+     id="originals"
+     style="display:inline">
+    <g
+       id="qtlogo"
+       transform="translate(36.987176,-692.07972)">
+      <path
+         sodipodi:nodetypes="cccscccc"
+         style="fill:#006325;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path2464"
+         d="M 189.35054,579.28163 C 188.55516,579.15038 187.77492,579.11913 187.02091,579.17663 L 187.01954,579.17663 C 187.01954,579.17663 181.86766,579.52663 181.63329,579.54538 C 176.93066,579.92163 173.36079,583.78788 173.36079,589.12788 L 173.36079,652.09413 L 178.62691,657.00413 L 189.35054,579.28163" />
+      <path
+         style="fill:#80c341;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path2466"
+         d="M 238.06779,638.54413 C 238.06779,643.18163 235.19191,647.47663 231.54979,648.10913 L 178.62691,657.00413 L 178.62691,588.79413 C 178.62691,582.59038 183.57817,578.33038 189.35054,579.28163 L 238.06779,587.26788 L 238.06779,638.54413" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path2468"
+         d="M 201.42966,593.55413 C 197.65866,593.55413 194.67179,594.99788 192.52341,597.99163 C 189.97841,601.54038 188.67966,607.16038 188.67966,614.74163 C 188.67966,621.77413 189.60342,627.12788 191.46091,630.80413 C 193.29091,634.42163 195.94529,636.58163 199.33591,637.30413 C 200.07367,640.88163 201.21291,643.30038 202.77341,644.55413 C 203.95267,645.50413 205.52341,645.99163 207.46091,645.99163 C 208.04642,645.99163 208.68354,645.95163 209.33591,645.86663 L 211.55466,645.55413 L 211.55466,640.71038 C 211.21329,640.74913 210.88529,640.74163 210.58591,640.74163 C 209.55079,640.74163 208.77529,640.53538 208.27341,640.08538 C 207.62642,639.49913 207.12591,638.39288 206.80466,636.74163 C 209.99316,635.65038 212.34029,633.28163 213.86716,629.67913 C 215.36766,626.12663 216.11717,621.32788 216.11716,615.21038 C 216.11716,608.53163 215.10979,603.44538 213.05466,599.89788 C 210.96191,596.27038 207.74066,594.15913 203.30466,593.64788 C 202.66154,593.57163 202.03316,593.55413 201.42966,593.55413 z M 221.77341,596.17913 L 219.99216,603.71038 L 217.17966,603.52288 L 217.17966,608.55413 L 219.49216,608.67913 L 219.49216,627.74163 C 219.49216,630.23663 219.97992,632.04663 220.99216,633.17913 C 221.86079,634.15663 223.14166,634.64788 224.80466,634.64788 C 225.05329,634.64788 225.31979,634.63663 225.58591,634.61663 C 227.42241,634.45913 229.27341,633.95288 231.17966,633.11663 L 231.17966,628.77288 C 230.05804,629.28413 229.03267,629.59288 228.08591,629.64788 C 228.02441,629.65163 227.95803,629.64788 227.89841,629.64788 C 227.28028,629.64788 226.8218,629.45038 226.52341,629.05413 C 226.19241,628.62163 226.02341,627.67538 226.02341,626.17913 L 226.02341,608.96038 L 230.83591,609.17913 L 230.83591,604.49163 L 226.02341,604.14788 L 226.02341,596.64788 L 221.77341,596.17913 z M 202.89841,599.27288 C 203.02591,599.27288 203.17129,599.29288 203.30466,599.30413 C 205.04392,599.45663 206.34379,600.66163 207.21091,602.89788 C 208.07767,605.12288 208.49217,609.15788 208.49216,615.05413 C 208.49216,621.62413 208.05266,626.02913 207.17966,628.27288 C 206.30079,630.53913 205.02441,631.72663 203.30466,631.83538 C 203.22704,631.84038 203.13079,631.86663 203.05466,631.86663 C 201.33741,631.86663 200.05329,630.62413 199.17966,628.14788 C 198.25342,625.54788 197.77341,621.13913 197.77341,614.89788 C 197.77341,608.44038 198.24467,604.17538 199.17966,602.11663 C 200.04291,600.22788 201.28666,599.27288 202.89841,599.27288 z" />
+      <path
+         sodipodi:nodetypes="ccscccsccccccscscccccccccsccsccsccccccccccccccccccccccccsccccscc"
+         style="fill:#006325;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path2470"
+         d="M 199.04829,593.55505 C 195.28166,593.55755 192.28854,595.0013 190.14204,597.99255 C 187.59653,601.5413 186.32954,607.1613 186.32954,614.74255 C 186.32955,621.77505 187.25329,627.1288 189.11079,630.80505 C 190.9413,634.42255 193.59567,636.58255 196.98579,637.30505 C 197.72354,640.88255 198.8628,643.3013 200.42329,644.55505 C 201.60253,645.50505 203.17329,645.99255 205.11079,645.99255 C 205.14741,645.99255 205.19967,645.9938 205.23579,645.99255 L 207.29829,645.99255 C 206.03316,645.97255 204.92242,645.7388 203.98579,645.30505 C 203.52873,645.10096 203.15885,644.84321 202.76981,644.55228 C 201.2093,643.29853 200.0673,640.88255 199.32954,637.30505 C 195.93891,636.58255 193.28454,634.42255 191.45454,630.80505 C 189.59704,627.1288 188.67329,621.77505 188.67329,614.74255 C 188.67329,607.1613 189.97204,601.5413 192.51704,597.99255 C 194.66541,594.9988 197.65229,593.55505 201.42329,593.55505 C 201.43553,593.55505 199.04829,593.55505 199.04829,593.55505 z M 219.51704,596.18005 L 217.79829,603.55505 L 219.98579,603.7113 L 221.76704,596.18005 L 219.51704,596.18005 z M 202.89204,599.2738 C 202.48678,599.2738 202.12542,599.3413 201.76704,599.4613 C 203.10341,599.8763 204.10342,601.02505 204.82954,602.8988 C 205.69679,605.1238 206.14204,609.1588 206.14204,615.05505 C 206.14204,621.62505 205.70254,626.03005 204.82954,628.2738 C 204.12691,630.08505 203.16154,631.21505 201.92329,631.6488 C 202.28116,631.7838 202.64542,631.86755 203.04829,631.86755 C 203.12441,631.86755 203.22067,631.8413 203.29829,631.8363 C 205.01803,631.72755 206.29442,630.54005 207.17329,628.2738 C 208.04628,626.03005 208.48579,621.62505 208.48579,615.05505 C 208.48579,609.1588 208.0713,605.1238 207.20454,602.8988 C 206.33741,600.66255 205.03755,599.45755 203.29829,599.30505 C 203.16491,599.2938 203.01954,599.2738 202.89204,599.2738 z M 214.92329,603.5238 L 214.92329,604.6488 C 215.24554,605.86255 215.51704,607.1663 215.70454,608.5863 L 217.23579,608.68005 L 217.23579,627.74255 C 217.23579,630.23755 217.75529,632.04755 218.76704,633.18005 C 219.63566,634.15755 220.91692,634.6488 222.57954,634.6488 L 224.79829,634.6488 C 223.13528,634.6488 221.85442,634.15755 220.98579,633.18005 C 219.97354,632.04755 219.48579,630.23755 219.48579,627.74255 L 219.48579,608.68005 L 217.17329,608.55505 L 217.17329,603.5238 L 214.92329,603.5238 z M 226.04829,608.9613 L 226.04829,609.0863 L 228.61079,609.18005 L 230.86079,609.18005 L 226.04829,608.9613 z M 228.95454,628.7738 C 228.27878,629.0813 227.65866,629.31755 227.04829,629.4613 C 227.29341,629.58255 227.58054,629.6488 227.92329,629.6488 C 227.98291,629.6488 228.04928,629.65255 228.11079,629.6488 C 229.05754,629.5938 230.08292,629.28505 231.20454,628.7738 L 228.95454,628.7738 z M 209.73579,640.68005 C 209.98579,640.7188 210.28453,640.74255 210.57954,640.74255 C 210.87877,640.74255 211.20704,640.7188 211.54829,640.68005 L 209.73579,640.68005 z" />
+    </g>
+    <g
+       id="s60logo"
+       transform="matrix(7.8685232e-2,0,0,7.8685232e-2,32.643017,-90.371244)">
+      <path
+         style="fill:#f739f8"
+         d="M 1493.1731,58.988823 L 1541.7517,-29.542159 L 1730.0638,-26.485182 L 1731.019,25.492511 L 1544.1814,29.974847 L 1632.6303,194.39885 L 1588.7227,220.15666 L 1493.1731,58.988823 z"
+         id="path2572"
+         sodipodi:nodetypes="cccccccc" />
+      <path
+         style="fill:#6aa6de"
+         d="M 1492.5838,-57.729193 L 1589.0664,-220.35523 L 1633.7456,-194.24 L 1541.766,-29.551294 L 1492.5838,-57.729193 z"
+         id="path2570"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         style="fill:#9afb07"
+         d="M 1251.9437,26.026894 L 1253.2453,-26.176426 L 1439.3737,-31.161474 L 1351.417,-192.45396 L 1394.807,-220.40887 L 1492.6082,-57.814881 L 1439.7255,28.64507 L 1251.9437,26.026894 z"
+         id="path2568"
+         sodipodi:nodetypes="cccccccc" />
+      <path
+         style="fill:#5a6465"
+         d="M 515.2396,639.33789 C 512.37609,638.94387 501.28346,637.42133 490.5893,635.95446 C 467.12294,632.7357 435.79847,625.2359 414.58274,617.75673 C 405.9922,614.72831 398.77101,612.07453 398.53565,611.85943 C 397.86661,611.24798 411.40826,544.92316 412.40583,543.9256 C 412.89442,543.437 421.21807,545.39123 430.90282,548.26835 C 471.49184,560.32644 514.61426,566.43825 559.49391,566.49379 C 601.92322,566.5463 615.98674,563.9811 631.81857,553.3017 C 646.50944,543.39193 652.86335,518.62697 650.92062,478.84957 C 649.63444,452.51466 647.32004,443.76397 639.50391,435.68312 C 630.25488,426.12084 613.09959,419.91289 560.28804,407.01743 C 534.5569,400.73443 506.08503,393.18806 497.01724,390.24775 C 443.64653,372.94179 421.8218,351.89187 412.52287,308.75303 C 409.91492,296.65444 409.39108,286.28416 409.4624,248.16617 C 409.54062,206.36171 409.89323,200.93787 413.33701,188.56698 C 424.05212,150.07566 446.84566,125.75521 484.00126,113.16901 C 528.78145,98.000037 610.33749,96.867873 684.44725,110.3864 C 704.21673,113.99261 721.42175,118.18078 723.26262,119.83517 C 724.87697,121.28594 719.4504,187.4121 717.53887,189.58277 C 716.91404,190.29231 707.06518,188.97362 695.65251,186.65232 C 661.82546,179.77204 633.77256,176.76136 594.20317,175.76463 C 537.03459,174.32456 513.70285,178.6771 501.37269,193.08209 C 497.99505,197.02811 494.26663,203.42198 493.08732,207.29065 C 490.06195,217.2153 490.14741,283.23459 493.19676,291.83428 C 499.24483,308.89086 513.55172,315.42418 583.89619,333.2527 C 690.0603,360.15954 718.39854,378.87825 728.54117,428.79735 C 732.27594,447.17882 733.92086,499.67191 731.5031,523.31959 C 724.74177,589.45124 696.45239,621.08467 631.39737,635.2587 C 616.57952,638.48716 607.5862,639.08708 567.30349,639.53419 C 541.53187,639.82024 518.10311,639.73189 515.2396,639.33789 z M 897.4384,637.85473 C 849.72315,629.48877 818.70311,609.94319 802.83928,578.24822 C 789.15538,550.90863 789.43777,554.65817 789.48158,400.88692 C 789.52444,250.31723 789.666,247.99991 800.87283,214.39897 C 818.24485,162.31314 856.97719,133.12631 924.12472,121.52228 C 952.2374,116.66402 1003.2189,114.99636 1034.6506,117.90688 C 1055.2551,119.81483 1088.0347,125.3298 1089.9086,127.20373 C 1090.7655,128.06057 1082.2068,194.60683 1081.097,195.71659 C 1080.6698,196.14384 1076.5685,195.6442 1071.9831,194.60627 C 1035.5226,186.35328 973.02185,185.94151 934.35394,193.69953 C 907.91475,199.00408 888.83868,211.71919 879.88449,230.00603 C 871.76202,246.59431 869.95373,259.13506 868.90758,306.13296 L 867.94563,349.34832 L 872.08079,348.15555 C 913.09053,336.32631 964.66514,332.03234 1000.3015,337.4802 C 1054.7092,345.79769 1083.0959,369.03279 1096.1234,415.91265 C 1099.5894,428.38516 1099.9131,433.65391 1099.998,478.98276 C 1100.0756,520.40976 1099.5812,530.8064 1096.9541,542.99126 C 1090.8172,571.45558 1080.6054,591.38621 1064.3363,606.65211 C 1048.9748,621.06648 1030.6818,630.03025 1003.8455,636.29333 C 987.77903,640.0429 915.93183,641.09718 897.4384,637.85473 z M 985.55831,564.81313 C 998.57359,561.42309 1006.3026,556.61185 1012.519,548.03028 C 1020.1821,537.4518 1021.4713,527.02627 1020.7974,481.0851 C 1020.1303,435.60235 1019.3024,431.51998 1008.477,420.33513 C 991.41191,402.70331 934.64684,402.39787 883.15778,419.66083 L 869.27408,424.31568 L 868.77409,468.56999 C 868.08976,529.14032 870.46271,540.97805 885.94532,554.23057 C 898.98977,565.39614 919.22636,569.53692 954.41968,568.24167 C 965.93307,567.81794 979.94546,566.2751 985.55831,564.81313 z M 1268.2549,637.85339 C 1205.6345,628.12572 1168.7588,597.31283 1154.402,542.71919 C 1150.7379,528.78596 1150.6315,525.17508 1149.9652,392.20961 C 1149.2153,242.55828 1149.8571,227.76263 1158.1704,203.04413 C 1165.3316,181.75092 1170.9489,172.6956 1186.732,157.00155 C 1197.6057,146.18913 1204.0747,141.42058 1215.59,135.72913 C 1232.9675,127.1403 1256.2346,120.85466 1281.5712,117.90424 C 1303.6078,115.33808 1351.2997,116.7661 1369.9056,120.54919 C 1428.7276,132.50929 1462.3838,161.47165 1476.2066,212.02515 L 1480.1571,226.47288 L 1480.1571,378.3259 C 1480.1571,529.82003 1480.148,530.21315 1476.2942,544.66105 C 1469.7782,569.09021 1461.6588,583.64181 1445.6412,599.5979 C 1434.6314,610.56532 1428.3499,615.19569 1416.8127,620.84859 C 1399.7555,629.20613 1377.9039,635.86101 1358.7886,638.51969 C 1340.9918,640.995 1285.8669,640.5893 1268.2549,637.85339 z M 1349.2506,565.73298 C 1378.4132,560.20242 1394.7326,543.80878 1399.3389,515.41704 C 1401.8249,500.09393 1401.8284,256.5925 1399.3429,241.22432 C 1396.7104,224.94764 1389.8994,212.31107 1379.4819,204.37606 C 1366.1116,194.19186 1352.6957,190.6867 1322.9988,189.6188 C 1295.2349,188.62038 1275.0746,191.41672 1261.6361,198.1301 C 1250.7684,203.55927 1240.2423,214.76226 1235.8741,225.5489 L 1231.9859,235.1502 L 1231.5018,373.90436 C 1231.1745,467.73082 1231.6202,515.56049 1232.8784,521.62092 C 1239.8134,555.02692 1269.6304,570.51071 1322.5826,568.20379 C 1332.3215,567.7795 1344.3222,566.66764 1349.2506,565.73298 z"
+         id="path2566" />
+    </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#s60logo"
+       id="s60logo32"
+       transform="matrix(0.8491836,-2.7857033e-2,2.7857033e-2,0.8491836,82.226665,118.73475)"
+       width="560"
+       height="360" />
+    <text
+       xml:space="preserve"
+       style="font-size:28px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="151.75017"
+       y="112.84856"
+       id="sdk3"
+       transform="matrix(0.9994624,-3.2786851e-2,3.2786851e-2,0.9994624,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan5159"
+         x="151.75017"
+         y="112.84856">3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:28px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       x="166.25015"
+       y="112.84856"
+       id="fp2"
+       transform="matrix(0.9994624,-3.2786851e-2,3.2786851e-2,0.9994624,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan5167"
+         x="166.25015"
+         y="112.84856">.2</tspan></text>
+    <g
+       id="phone32"
+       transform="translate(0.7071068,0)">
+      <image
+         transform="matrix(0.9857025,-0.1684948,0.1684948,0.9857025,0,0)"
+         xlink:href="qtsymbian_s60sdksetup_phone32.jpg"
+         sodipodi:absref="C:\ownprojects\qtorials\artwork\qtsymbian_s60sdksetup_phone32.jpg"
+         width="105.47392"
+         height="187.392"
+         id="image5184"
+         x="-21.19643"
+         y="174.20645" />
+    </g>
+    <g
+       id="s60sdk50"
+       transform="matrix(0.9994646,3.271795e-2,-3.271795e-2,0.9994646,1.8117306,7.7149048)">
+      <use
+         height="360"
+         width="560"
+         transform="matrix(0.8496404,0,0,0.8496404,249.62301,99.518308)"
+         id="use6283"
+         xlink:href="#s60logo"
+         y="0"
+         x="0"
+         style="display:inline" />
+      <text
+         id="text6285"
+         y="90.999992"
+         x="323.08368"
+         style="font-size:28px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="90.999992"
+           x="323.08368"
+           id="tspan6287"
+           sodipodi:role="line">5.0</tspan></text>
+    </g>
+    <g
+       id="phone50"
+       transform="translate(155.93726,7.7026118)">
+      <image
+         transform="matrix(0.9883925,0.1519214,-0.1519214,0.9883925,-160.27529,7.6169163)"
+         xlink:href="qtsymbian_s60sdksetup_phone50.jpg"
+         sodipodi:absref="C:\ownprojects\qtorials\artwork\qtsymbian_s60sdksetup_phone50.jpg"
+         width="102.4"
+         height="201.38667"
+         id="image5197"
+         x="478.35638"
+         y="49.735561"
+         style="display:inline" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="single"
+     style="display:inline">
+    <g
+       style="display:inline"
+       id="myapp32"
+       transform="matrix(0.9996562,-2.6221006e-2,2.6221006e-2,0.9996562,-6.062719,4.81632)">
+      <use
+         height="360"
+         width="560"
+         transform="matrix(0.8379705,0,0,0.8379705,-0.448694,237.46748)"
+         id="use5169"
+         xlink:href="#qtlogo"
+         y="0"
+         x="0" />
+      <text
+         id="text5171"
+         y="231.23288"
+         x="158.04639"
+         style="font-size:28px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="231.23288"
+           x="158.04639"
+           id="tspan5173"
+           sodipodi:role="line">MyApp</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+         d="M 202.13017,92.315474 C 214.70754,101.65794 218.56587,116.36524 213.49989,142.23089"
+         id="path6263"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <path
+       sodipodi:nodetypes="cc"
+       id="phonearrow32"
+       d="M 187.67926,246.5944 C 183.70064,266.3444 167.70064,279.20495 138.6039,282.94454"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline" />
+    <g
+       style="display:inline"
+       id="myapp50"
+       transform="matrix(0.9995337,3.0536352e-2,-3.0536352e-2,0.9995337,158.62988,-2.91914)">
+      <use
+         height="360"
+         width="560"
+         transform="matrix(0.8379705,0,0,0.8379705,0.258083,237.44589)"
+         id="use6267"
+         xlink:href="#qtlogo"
+         y="0"
+         x="0" />
+      <text
+         id="text6269"
+         y="230.17291"
+         x="157.91364"
+         style="font-size:28px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="230.17291"
+           x="157.91364"
+           id="tspan6271"
+           sodipodi:role="line">MyApp</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+         d="M 160.81657,94.014978 C 146.66623,99.258496 137.87666,118.56418 171.18789,144.93427"
+         id="path6273"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <path
+       sodipodi:nodetypes="cc"
+       id="phonearrow50"
+       d="M 350.79275,243.59297 C 349.97808,259.62532 368.6777,286.34422 430.19673,286.34064"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="universal"
+     style="display:inline">
+    <g
+       style="display:inline"
+       id="myappuniversal"
+       transform="matrix(0.9999867,-5.1622358e-3,5.1622358e-3,0.9999867,68.23853,30.332234)">
+      <use
+         height="360"
+         width="560"
+         transform="matrix(0.8379705,0,0,0.8379705,0.258083,237.44589)"
+         id="use6307"
+         xlink:href="#qtlogo"
+         y="0"
+         x="0" />
+      <text
+         id="text6309"
+         y="230.17291"
+         x="157.91364"
+         style="font-size:28px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="230.17291"
+           x="157.91364"
+           id="tspan6311"
+           sodipodi:role="line">MyApp</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+         d="M 131.87941,74.349547 C 160.29644,90.496458 171.21369,106.55303 171.0485,138.5526"
+         id="path6313"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+         d="M 267.29501,91.048817 C 267.20277,108.91622 256.53614,120.5188 237.61506,144.67907"
+         id="path6315"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+         d="M 160.39252,239.63386 C 154.95789,252.92248 122.38838,266.30311 74.389019,266.05532"
+         id="path6317"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.60000002;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-end:url(#Arrow2Lend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+         d="M 250.55186,234.9643 C 260.03912,244.57227 290.84383,275.36662 354.88528,267.50333"
+         id="path6319"
+         sodipodi:nodetypes="cc" />
+    </g>
+  </g>
+</svg>
+<!-- version: 20080810, original size: 64.707001 77.855324, border: 3% -->
