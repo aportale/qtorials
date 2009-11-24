@@ -68,7 +68,7 @@ function audioDownload
 function svgSnippet(string elementsCsv, int frames)
 {
     clip =
-        \ QtorialsSvg(gArtworkDir + "qtsymbian_s60sdksetup.svg", elementsCsv, gClipWidth, gClipHeight)
+        \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight)
     overlayRgbClip(BlankClip(clip, color = $FFFFFF), clip)
 }
 

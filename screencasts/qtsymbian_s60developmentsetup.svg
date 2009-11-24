@@ -167,7 +167,7 @@
        transform="translate(0.7071068,0)">
       <image
          transform="matrix(0.9857025,-0.1684948,0.1684948,0.9857025,0,0)"
-         xlink:href="qtsymbian_s60sdksetup_phone32.jpg"
+         xlink:href="qtsymbian_s60developmentsetup_phone32.jpg"
          width="105.47392"
          height="187.392"
          id="image5184"
@@ -196,7 +196,7 @@
        transform="translate(155.93726,7.7026118)">
       <image
          transform="matrix(0.9883925,0.1519214,-0.1519214,0.9883925,-160.27529,7.6169163)"
-         xlink:href="qtsymbian_s60sdksetup_phone50.jpg"
+         xlink:href="qtsymbian_s60developmentsetup_phone50.jpg"
          width="102.4"
          height="201.38667"
          id="image5197"
