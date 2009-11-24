@@ -10,6 +10,8 @@
 
 TEMPLATE = lib
 
+TARGET = ../../screencasts/qtavisynth
+
 SOURCES = \
     qtavisynth.cpp \
     filters.cpp
