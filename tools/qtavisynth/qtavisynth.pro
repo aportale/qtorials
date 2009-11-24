@@ -40,3 +40,11 @@ contains (DEFINES, AVISYNTH26) {
     HEADERS += avisynth25\avisynth.h
     INCLUDEPATH += avisynth25
 }
+
+contains(CONFIG, static) {
+    QTPLUGIN += \
+        qgif \
+        qjpeg \
+        qsvg \
+        qtiff
+}

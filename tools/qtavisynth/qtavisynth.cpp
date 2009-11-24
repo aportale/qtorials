@@ -13,6 +13,13 @@
 #include "filters.h"
 #include <QtGui>
 
+#if !defined(QT_SHARED) && !defined(QT_DLL)
+Q_IMPORT_PLUGIN(qgif)
+Q_IMPORT_PLUGIN(qjpeg)
+Q_IMPORT_PLUGIN(qtiff)
+Q_IMPORT_PLUGIN(qsvg)
+#endif
+
 const int defaultClipWidth = 640;
 const int defaultClipHeight = 480;
 
