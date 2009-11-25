@@ -12,64 +12,57 @@ Import("tools.avsi")
 #global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
 #global gAudioNoiseStart = 1829888 / 44100.0
 #global gAudioNoiseEnd = 1912832 / 44100.0
-global gClipWidth = 640
+global gClipWidth = 480
 global gClipHeight = 360
-
-function audioWelcome
-{
-    #n ...and afterwards take a look at the installed components.
-#    a1 = audioNoise(2) + audioClip(4.075, 11.563, 1)
-
-#    return a1 + audioNoise(10)
-}
-
-function videoWelcome
-{
-#    return Dissolve(
-#        \   titleTextClip("Qt SDK installation on Windows", 175)
-#        \ , titleTextClip("QtDemo, QtCreator, QtLinguist ...", 100)
-#        \ , gDissolveLength)
-}
+global gBackgroundColor = $FFFFFF
 
 function welcome
 {
-#    return AudioDub(videoWelcome, audioWelcome)
+    #n Hi, I am Alessandro Portale from Nokia, Qt Development Frameworks.
+    #n Qt 4.6 comes with many new features. One very important one is that you can now develop applications for phones running the Symbian Platform.
+    #n This video will show you how to set up a Symbian Development environment on your Windows PC.
 }
 
-function audioDownload
+function audioOverview
 {
-    return
+    audioNoise(10)
 \[*
-    #n We visit qtsoftware.com,...
-    #  In browser address bar, typing in "qtsoftware.com" -> click "Go"
-    #t qtsoftware.com
+    #n Such a development environment usually consists of...
+    #n ...Carbide.c++, an Eclipse based IDE, plus some more tools that we need, later..
+    #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version, otherwise, the Symbian tool chain does not work...
+    #n ...An S60 Platform SDK. It will contains the Symbian specific header files, libraries, Emulator, and compiler for the device.
+    #n ...We also need the "Open C/C++" Plugin. That will be installed on top of the S60 Platform SDK, and we will also install some "Open C" packages to our phone.
+    #n ...And last but not lease we need the Nokia PC suite for an easy installation of applications on our phone
+    #  Slide with components
 *]
-        \   audioNoise(3)
-        \ + audioClip(12.387, 14.442, 2)
+        \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n ...and go straight to the "Downloads"...
-    #  Clicking on "Downloads"
+    #n Let's start with Carbide.c++
+    #  Slide with "Carbide.c++"
 *]
-        \ + audioClip(14.843, 16.875, 2)
-\[*
-    #n ...there, we choose the "LGPL / Free" tab,
-    #  Clicking on "LGPL / Free"...
-*]
-        \ + audioClip(17.339, 20.172, 1)
-\[*
-    #n ...and click on "Download Qt SDK for Windows",...
-    #  Click on "Download Qt SDK for Windows"
-*]
-        \ + audioClip(20.572, 23.957, 1)
+        \ + audioClip(1.000, 2.000, 1)
 
         \ + audioNoise(10)
+}
+
+function videoOverview
+{
+    Dissolve(
+        \   QtorialsTitle("Carbide.c++\n\n\n\n", gClipWidth, gClipHeight, 200)
+        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\n\n\n", gClipWidth, gClipHeight, 200)
+        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", gClipWidth, gClipHeight, 200)
+        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", gClipWidth, gClipHeight, 200)
+        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nNokia PC Suite", gClipWidth, gClipHeight, 200)
+        \ , QtorialsTitle("", gClipWidth, gClipHeight, 200)
+        \ , QtorialsTitle("Carbide.c++", gClipWidth, gClipHeight, 200)
+        \ , gDissolveLength)
 }
 
 function svgSnippet(string elementsCsv, int frames)
 {
     clip =
         \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight)
-    overlayRgbClip(BlankClip(clip, color = $FFFFFF), clip)
+    overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
 }
 
 function videoS60SdksVideo
@@ -86,7 +79,7 @@ function videoS60SdksVideo
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 100)
         \ , gDissolveLength)
-        
+
     clip
 }
 
@@ -112,4 +105,7 @@ function completeclip
 }
 
 #completeclip
-videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
+#videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
+videoOverview
+
+overlayQtorialsElements("qtlogosmall, oldstyle")
