@@ -19,7 +19,7 @@ global gAudioClip = BlankClip
 global gAudioNoiseStart = 0
 global gAudioNoiseEnd = 1
 global gTextClipFramesPerCharacter = 3
-global gBackgroundColor = $eeeeee
+global gBackgroundColor = $ffffff
 
 function titleTextSize
 {
@@ -54,24 +54,13 @@ function audioClip(float startSecond, float endSecond, float appendedSilenceSeco
 
 function textClip(String text, int "frames", int "align", int "x", int "y", string "backgroundimage")
 {
-    gBackgroundColor = $eeeeee
     textColor = $333333
     framesCount = Default(frames, StrLen(text) * gTextClipFramesPerCharacter)
     background = Defined(backgroundimage) ?
         \ ImageSource(backgroundimage, fps = 25, end = framesCount)
         \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
-    return background
-        \ .Subtitle(text, align = Default(5, align), x = Default(x, -1), y = Default(y, -1), text_color = textColor, halo_color = gBackgroundColor, size = titleTextSize, lsp = 100)
-}
-
-function titleTextClip(string text, int "frames")
-{
-    gBackgroundColor = $eeeeee
-    textColor = $333333
-    result =
-        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
-        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = gBackgroundColor, size = titleTextSize, lsp = 100)
-    return result.overlayQtorialImage("qt_orials")
+    background.overlayRgbClip(
+        \ QtorialsTitle(text, textColor, gClipWidth, gClipHeight, framesCount))
 }
 
 function frame(clip sourceClip, int frame)
@@ -216,7 +205,7 @@ function showDetail(int untilFrame, int left, int top, int "width", int "height"
 
 function overlayRgbClipOnRgb(clip background, clip overlay)
 {
-    return background.layer(overlay)
+    return background.layer(overlay, "add")
 }
 
 function overlayRgbClipOnNonRgb(clip background, clip overlay)

@@ -21,7 +21,8 @@ public:
         PaintSvgFileNotValid,
         PaintSvgElementNotFound
     };
-    static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText);
+    static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
+                           const QColor &textColor);
     static void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
     static PaintSvgResult paintSvg(QPainter *p, const QString &svgFileName,
                                    const QString &elementsCSV, const QRect &rect);

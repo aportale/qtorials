@@ -84,15 +84,15 @@ void deleteQApplicationIfNeeded(QApplication* &app)
     }
 }
 
-void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText)
+void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
+                         const QColor &textColor)
 {
     QApplication *a = createQApplicationIfNeeded();
-    p->fillRect(rect, 0xeeeeee);
     QFont font;
     font.setPixelSize(qMax(8, rect.height() / 14));
     font.setBold(true);
     p->setFont(font);
-    p->setPen(0x333333);
+    p->setPen(textColor);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
     deleteQApplicationIfNeeded(a);
 }

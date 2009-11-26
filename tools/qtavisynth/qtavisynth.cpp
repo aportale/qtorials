@@ -22,6 +22,7 @@ Q_IMPORT_PLUGIN(qsvg)
 
 const int defaultClipWidth = 640;
 const int defaultClipHeight = 480;
+const QRgb transparentColor = qRgba(0xa0, 0xa0, 0xa0, 0x0);
 
 class QtorialsStillImage : public IClip
 {
@@ -124,11 +125,14 @@ protected:
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    const QString title = QString::fromLatin1(args[0].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
-    QImage image(args[1].AsInt(defaultClipWidth), args[2].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+    const QString title =
+        QString::fromLatin1(args[0].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
+    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+    image.fill(transparentColor);
     QPainter p(&image);
-    Filters::paintTitle(&p, image.rect(), title);
-    return new QtorialsStillImage(image, args[3].AsInt(100), env);
+    Filters::paintTitle(&p, image.rect(), title,
+                        args[1].AsInt(qRgba(0x0, 0x0, 0x0, 0xff)));
+    return new QtorialsStillImage(image, args[5].AsInt(100), env);
 }
 
 AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
@@ -145,7 +149,7 @@ AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironme
 {
     Q_UNUSED(user_data)
     QImage image(args[1].AsInt(defaultClipWidth), args[2].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(0);
+    image.fill(transparentColor);
     QPainter p(&image);
     Filters::paintElements(&p, QString::fromLatin1(args[0].AsString("qtlogosmall")), image.rect());
     return new QtorialsStillImage(image, args[3].AsInt(100), env);
@@ -178,7 +182,8 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
-    env->AddFunction("QtorialsTitle", "[text]s[width]i[height]i[frames]i", CreateTitle, 0);
+    env->AddFunction("QtorialsTitle",
+                     "[text]s[textcolor]i[width]i[height]i[frames]i", CreateTitle, 0);
     env->AddFunction("QtorialsSubtitle", "[width]i[height]i.*", CreateSubtitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i", CreateSvg, 0);

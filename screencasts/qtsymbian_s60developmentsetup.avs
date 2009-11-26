@@ -14,7 +14,6 @@ Import("tools.avsi")
 #global gAudioNoiseEnd = 1912832 / 44100.0
 global gClipWidth = 480
 global gClipHeight = 360
-global gBackgroundColor = $FFFFFF
 
 function welcome
 {
@@ -48,13 +47,14 @@ function audioOverview
 function videoOverview
 {
     Dissolve(
-        \   QtorialsTitle("Carbide.c++\n\n\n\n", gClipWidth, gClipHeight, 200)
-        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\n\n\n", gClipWidth, gClipHeight, 200)
-        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", gClipWidth, gClipHeight, 200)
-        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", gClipWidth, gClipHeight, 200)
-        \ , QtorialsTitle("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nNokia PC Suite", gClipWidth, gClipHeight, 200)
-        \ , QtorialsTitle("", gClipWidth, gClipHeight, 200)
-        \ , QtorialsTitle("Carbide.c++", gClipWidth, gClipHeight, 200)
+        \   textClip("", 200)
+        \ , textClip("Carbide.c++\n\n\n\n", 200)
+        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 200)
+        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 200)
+        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
+        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nNokia PC Suite", 200)
+        \ , textClip("", 200)
+        \ , textClip("Carbide.c++", 200)
         \ , gDissolveLength)
 }
 
@@ -65,10 +65,11 @@ function svgSnippet(string elementsCsv, int frames)
     overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
 }
 
-function videoS60SdksVideo
+function videoS60Sdks
 {
     clip = Dissolve(
-        \   svgSnippet("s60logo32", 100)
+        \   svgSnippet("", 100)
+        \ , svgSnippet("s60logo32", 100)
         \ , svgSnippet("s60logo32, sdk3", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, myapp32", 100)
@@ -83,7 +84,7 @@ function videoS60SdksVideo
     clip
 }
 
-function videoS60Sdks
+function S60Sdks
 {
     return AudioDub(videoS60SdksVideo, videoS60SdksVideo)
 }
@@ -106,6 +107,8 @@ function completeclip
 
 #completeclip
 #videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
-videoOverview
+videoS60Sdks
 
 overlayQtorialsElements("qtlogosmall, oldstyle")
+
+#converttoyv12
