@@ -159,7 +159,7 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
 {
     Q_UNUSED(user_data)
     QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(0);
+    image.fill(transparentColor);
     QPainter p(&image);
     const Filters::PaintSvgResult result =
             Filters::paintSvg(&p, QString::fromLatin1(args[0].AsString()),
