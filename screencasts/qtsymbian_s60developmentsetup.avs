@@ -30,10 +30,11 @@ function audioOverview
     #n Here an overview:
     #n A Symbian development environment usually consists of...
     #n ...The Nokia PC suite for an easy installation of applications on our phone...
-    #n ...Carbide.c++, an Eclipse based IDE. It comes with some more tools that we need, later..
+    #n ...Carbide.c++, an Eclipse based IDE. We will just install it for the completeness. But, in the following, we use QtCreator with it's preliminary Symbian support as our IDE...
     #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version, otherwise, the Symbian tool chain does not work...
-    #n ...An S60 Platform SDK. It contains the Symbian specific header files, libraries, Emulator, and compiler for the device.
-    #n ...We also need the "Open C/C++" Plugin. It will be installed on top of the S60 Platform SDK, and we will also install some "Open C" packages to our phone.
+    #n ...An S60 Platform SDK. It contains the Symbian specific header files, libraries, and the cross compiling toolchain compiler for the device...
+    #n ...We also want the "Open C/C++" Plugin. It will be installed on top of the S60 Platform SDK, and later also to our phone...
+    #n ...And last but not least, we want to install the 'Application TRK' on our phone. That is needed for on-device debugging and automated deployment...
     #  Slide with components
 *]
         \ + audioClip(1.000, 2.000, 1)
@@ -51,11 +52,12 @@ function videoOverview
     Dissolve(
         \   textClip("Overview", 200)
         \ , textClip("", 200)
-        \ , textClip("Nokia PC Suite\n\n\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\n\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++", 200)
+        \ , textClip("Nokia PC Suite\n\n\n\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\n\n\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 200)
         \ , textClip("", 200)
         \ , textClip("Nokia PC Suite", 200)
         \ , gDissolveLength)
@@ -228,7 +230,8 @@ function completeclip
 
 #completeclip
 #videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
-videoS60Sdks
+#videoS60Sdks
+videoOverview
 
 overlayQtorialsElements("qtlogosmall, oldstyle")
 
