@@ -19,7 +19,7 @@ function welcome
 {
     #n Hi, I am Alessandro Portale from Nokia, Qt Development Frameworks.
     #n Qt 4.6 comes with many new features. One of them is that you can now develop applications for phones which run the Symbian platform.
-    #n This first of three videos will guide you through the most painful part of Qt for Symbian development:
+    #n This first of three videos will guide you through the most challenging part of Qt for Symbian development:
     #n That is: how to set up a Symbian Development environment on your Windows PC.
 }
 
@@ -29,17 +29,17 @@ function audioOverview
 \[*
     #n Here an overview:
     #n A Symbian development environment usually consists of...
+    #n ...The Nokia PC suite for an easy installation of applications on our phone...
     #n ...Carbide.c++, an Eclipse based IDE, plus some more tools that we need, later..
     #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version, otherwise, the Symbian tool chain does not work...
     #n ...An S60 Platform SDK. It contains the Symbian specific header files, libraries, Emulator, and compiler for the device.
     #n ...We also need the "Open C/C++" Plugin. That will be installed on top of the S60 Platform SDK, and we will also install some "Open C" packages to our phone.
-    #n ...And last but not least we need the Nokia PC suite for an easy installation of applications on our phone
     #  Slide with components
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n Let's start with Carbide.c++
-    #  Slide with "Carbide.c++"
+    #n Let's start with the Nokia PC Suite
+    #  Slide with "Nokia PC Suite+"
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -51,32 +51,71 @@ function videoOverview
     Dissolve(
         \   textClip("Overview", 200)
         \ , textClip("", 200)
-        \ , textClip("Carbide.c++\n\n\n\n", 200)
-        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 200)
-        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 200)
-        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
-        \ , textClip("Carbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nNokia PC Suite", 200)
+        \ , textClip("Nokia PC Suite\n\n\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\n\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n", 200)
+        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++", 200)
         \ , textClip("", 200)
-        \ , textClip("Carbide.c++", 200)
+        \ , textClip("Nokia PC Suite", 200)
         \ , gDissolveLength)
+}
+
+function audioNokiaPCSuite
+{
+    audioNoise(10)
+\[*
+    #n We google for "Download Nokia PC Suite" and land on Nokias web site.
+    #t Download Nokia PC Suite
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...There, we click on "Download Nokia PC Suite", ...
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...then on the bottom of the page we click "Download"...
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...and and install it.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
 }
 
 function audioCarbide
 {
     audioNoise(10)
 \[*
-    #n We google for "Carbide c++ download"
-    #n ...Carbide.c++, an Eclipse based IDE, plus some more tools that we need, later..
-    #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version, otherwise, the Symbian tool chain does not work...
-    #n ...An S60 Platform SDK. It contains the Symbian specific header files, libraries, Emulator, and compiler for the device.
-    #n ...We also need the "Open C/C++" Plugin. That will be installed on top of the S60 Platform SDK, and we will also install some "Open C" packages to our phone.
-    #n ...And last but not least we need the Nokia PC suite for an easy installation of applications on our phone
-    #  Slide with components
+    #n We google for "Carbide c++ download" and land on a 'Forum Nokia' page.
+    #t Carbide c++ download
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n Let's start with Carbide.c++
-    #  Slide with "Carbide.c++"
+    #n ...There, we click on "Download Carbide.c++"...
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...and "Download now"...
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...and 'oops', we need to login into Forum Nokia. If you do not yet have an account, you can get it through the registration form.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n I am sorry for that. And I promise that this will be the only account that you need to create in order to use Symbian.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n After logging in we need to click that file name link to download Carbide c++.
+    #t qtsymbiandeveloper
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n During the installation we can leave all settings as they are.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
