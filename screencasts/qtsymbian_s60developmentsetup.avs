@@ -114,6 +114,10 @@ function audioCarbide
     #n During the installation we can leave all settings as they are.
 *]
         \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n After the installation, we start the shortcut called 'Configure environment for WINSCW command line' in order to add the required environment variables to our system.
+*]
+        \ + audioClip(1.000, 2.000, 1)
 
         \ + audioNoise(10)
 }
@@ -127,28 +131,47 @@ function audioS60Sdk
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n We have the choice between three SDKs. Now, which is the one for us?
+    #n We have the choice between three SDKs... Now, which is the one for us?
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n ...There, we click on "Download now".
+    #n Normally, we use a specific S60 SDK, for example third edition... feature pack 2 to build our application.
+    #n And that application would run on a S60 third edition, feature pack 2 based phone.
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n ...and 'oops', we need to login into Forum Nokia. If you do not yet have an account, you can get it through the registration form.
+    #n Or we would use the S60 SDK fifth edition to build our application and run that on a phone with S60 fifth edition.
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n I am sorry for that. And I promise that this will be the only account that you need to create in order to use Symbian.
+    #n But in effect, since we will use the Qt Api, all those version differences do not matter. Our Qt application can be built with any S60 SDK since the third edition featurepack 1.
+    #n And we can run our application on any S60 phone with at least the 3rd edition feature pack 1.
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n After logging in we need to click that file name link to download Carbide c++.
-    #t qtsymbiandeveloper
+    #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n During the installation we can leave all settings as they are.
+    #n We need to make sure that we have enough space on the drive where we install the SDK. We will need to install Qt on the same drive, later on.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
+}
+
+function audioActivePerl
+{
+    audioNoise(10)
+\[*
+    #n We visit the ActiveState Download page of Active Perl 5.6.
+    #t bit.ly/activeperl56
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n There, we chose the version 5.6.1, build 635...
+    #n ...and install it.
+    #n This is the recommended version by Forum Nokia. Any other perl version might deter the Symbain toolchain from working properly.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -169,11 +192,12 @@ function videoS60Sdks
         \ , svgSnippet("s60logo32", 100)
         \ , svgSnippet("s60logo32, sdk3", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, division", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, division, myapp50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, phonearrow32, phone32, s60sdk50, division, myapp50, phonearrow50, phone50", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60, phonearrow50, phone50", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32qt, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50qt, phonearrow50, phone50", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 100)
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 100)
         \ , gDissolveLength)
@@ -204,7 +228,7 @@ function completeclip
 
 #completeclip
 #videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
-videoOverview.killAudio
+videoS60Sdks
 
 overlayQtorialsElements("qtlogosmall, oldstyle")
 
