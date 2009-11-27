@@ -22,7 +22,7 @@ Q_IMPORT_PLUGIN(qsvg)
 
 const int defaultClipWidth = 640;
 const int defaultClipHeight = 480;
-const QRgb transparentColor = qRgba(0xa0, 0xa0, 0xa0, 0x0);
+const QRgb transparentColor = qRgba(0x00, 0x00, 0x00, 0x00);
 
 class QtorialsStillImage : public IClip
 {
