@@ -18,29 +18,27 @@ global gClipHeight = 360
 function welcome
 {
     #n Hi, I am Alessandro Portale from Nokia, Qt Development Frameworks.
-    #n Qt 4.6 comes with many new features. One of them is that you can now develop applications for phones which run the Symbian platform.
-    #n This first of three videos will guide you through the most challenging part of Qt for Symbian development:
-    #n That is: how to set up a Symbian Development environment on your Windows PC.
+    #n This video will guide you through the first challenge of software development for the Symbian Platform.
+    #n Setting up a Symbian development environment on your Windows PC.
 }
 
 function audioOverview
 {
     audioNoise(10)
 \[*
-    #n Here an overview:
     #n A Symbian development environment usually consists of...
-    #n ...The Nokia PC suite for an easy installation of applications on our phone...
-    #n ...Carbide.c++, an Eclipse based IDE. We will just install it for the completeness. But, in the following, we use QtCreator with it's preliminary Symbian support as our IDE...
-    #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version, otherwise, the Symbian tool chain does not work...
-    #n ...An S60 Platform SDK. It contains the Symbian specific header files, libraries, and the cross compiling toolchain compiler for the device...
-    #n ...We also want the "Open C/C++" Plugin. It will be installed on top of the S60 Platform SDK, and later also to our phone...
+    #n ...The Nokia Ovi Suite for easy application installation to our phone...
+    #n ...Carbide.c++, which is an Eclipse based IDE for Symbian development. We install it for the sake of completeness. In the following, we will use the IDE QtCreator with it's preliminary Symbian support...
+    #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version. Otherwise, the Symbian tool chain might not work...
+    #n ...An S60 SDK. It contains the Symbian platform specific tools, header files, libraries, and the cross compiling toolchain for the phone...
+    #n ...We also want the an updated "Open C" Plugin. It will be installed on top of the S60 SDK, and later also on our phone...
     #n ...And last but not least, we want to install the 'Application TRK' on our phone. That is needed for on-device debugging and automated deployment...
     #  Slide with components
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n Let's start with the Nokia PC Suite
-    #  Slide with "Nokia PC Suite+"
+    #n Let's start with the Nokia Ovi Suite
+    #  Slide with "Nokia Ovi Suite"
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -52,14 +50,14 @@ function videoOverview
     Dissolve(
         \   textClip("Overview", 200)
         \ , textClip("", 200)
-        \ , textClip("Nokia PC Suite\n\n\n\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\n\n\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
-        \ , textClip("Nokia PC Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 200)
+        \ , textClip("Nokia Ovi Suite\n\n\n\n\n", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\n\n\n\n", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 200)
         \ , textClip("", 200)
-        \ , textClip("Nokia PC Suite", 200)
+        \ , textClip("Nokia Ovi Suite", 200)
         \ , gDissolveLength)
 }
 
@@ -67,12 +65,12 @@ function audioNokiaPCSuite
 {
     audioNoise(10)
 \[*
-    #n We visit the Nokia PC suite download site.
-    #t bit.ly/nokiapcsuite
+    #n We visit the Nokia Ovi Suite download site.
+    #t bit.ly/ovisuite
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n On the bottom of the page we click "Download"...
+    #n There, we click "Download"...
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
@@ -80,7 +78,7 @@ function audioNokiaPCSuite
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n If we see this icon, the nokia PC suite is running and our device is connected.
+    #n If after the installation, we see such an icon, the Nokia Ovi Suite is connected to our device.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -91,12 +89,12 @@ function audioCarbide
 {
     audioNoise(10)
 \[*
-    #n We visit the Carbide c++ Download page at Forum Nokia.
+    #n We visit the Carbide.c++ download page at Forum Nokia.
     #t bit.ly/carbidecpp
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n We click on "Download now"...
+    #n There, we click on "Download now"...
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
@@ -104,7 +102,7 @@ function audioCarbide
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n I am sorry for that. And I promise that this will be the only account that you need to create in order to use Symbian.
+    #n I am sorry for that. But this is the only registration that you need for Symbian development.
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
@@ -117,7 +115,25 @@ function audioCarbide
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n After the installation, we start the shortcut called 'Configure environment for WINSCW command line' in order to add the required environment variables to our system.
+    #n After the installation, we start the shortcut called 'Configure environment for WINSCW command line' in order to add s few required environment variables to our system.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
+}
+
+function audioActivePerl
+{
+    audioNoise(10)
+\[*
+    #n We visit the ActiveState Download page of Active Perl 5.6.
+    #t bit.ly/activeperl56
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n There, we chose the version 5.6.1, build 635...
+    #n This is the recommended version by Forum Nokia. Any other perl version might deter the Symbain toolchain from working properly.
+    #n When installing it, we make sure that Perl is added to the PATH environment variable.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -152,28 +168,40 @@ function audioS60Sdk
         \ + audioClip(1.000, 2.000, 1)
 \[*
     #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
+    #n This time, we will get a big .zip file. We need to unzip it somewhere in order to execute the zipped installer.
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n We need to make sure that we have enough space on the drive where we install the SDK. We will need to install Qt on the same drive, later on.
+    #n If the installer complains about a missing Java Runtime Environment, we don't care.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n We need to make sure that we have enough space on the drive where we install the SDK. Qt has to be installed on the same drive, later on.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n The installer offers to install the 'CSL Arm Toolchain', which we accept. It is needed to build our applications for the phone.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
         \ + audioNoise(10)
 }
 
-function audioActivePerl
+function audioOpenC
 {
     audioNoise(10)
 \[*
-    #n We visit the ActiveState Download page of Active Perl 5.6.
-    #t bit.ly/activeperl56
+    #n We visit the Open C Plugin download site at Forum Nokia.
+    #t bit.ly/openc
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n There, we chose the version 5.6.1, build 635...
-    #n ...and install it.
-    #n This is the recommended version by Forum Nokia. Any other perl version might deter the Symbain toolchain from working properly.
+    #n There, we click on Download.
+    #n And again we ge a .zip file with an installer, inside.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n The installer will ask us for the S60 SDK on top of which we want to install the Open C plugin. The preselcted one should be fine.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
