@@ -225,3 +225,10 @@ function overlayQtorialsElements(clip background, string overlayElements)
     return background.overlayRgbClip(
         \ QtorialsElements(overlayElements, background.Width, background.Height, background.FrameCount))
 }
+
+function simpleQtorialsElements(string overlayElements, int framesCount)
+{
+    overlayRgbClip(
+        \   BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
+        \ , QtorialsElements(overlayElements, gClipWidth, gClipHeight, framesCount))
+}
