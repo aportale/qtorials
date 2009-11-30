@@ -14,12 +14,37 @@ Import("tools.avsi")
 #global gAudioNoiseEnd = 1912832 / 44100.0
 global gClipWidth = 640
 global gClipHeight = 360
+global gTextClipFramesPerCharacter = 2
+
+function intro
+{
+    Dissolve(
+        \   textClip("Mobile development with\nQt for the Symbian Platform", 75)
+        \ , textClip("1 of 3 - Setting up a\nSymbian development environment", 75)
+        \ , gDissolveLength)
+}
+
+function videoWelcome_960x720
+{
+    DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup.MTS", audio = false)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .Crop(400, 0, 1280, 960)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight)
+}
+
+function videoWelcome_640x360
+{
+    DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup.MTS", audio = false)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .Crop(200, 40, 1568, 880)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight)
+}
 
 function welcome
 {
-    #n Hi, I am Alessandro Portale from Nokia, Qt Development Frameworks.
-    #n This video will guide you through the first challenge of software development for the Symbian Platform.
-    #n Setting up a Symbian development environment on your Windows PC.
+    AudioDub(videoWithClipSize("videoWelcome"), WAVSource(gMediaDir + "qtsymbian_s60developmentsetup.wav"))
+        \ .DelayAudio(4.34)
+        \ .Trim(115, 715)
 }
 
 function audioOverview
@@ -65,7 +90,7 @@ function audioNokiaPCSuite
 {
     audioNoise(10)
 \[*
-    #n We visit the Nokia Ovi Suite download site.
+    #n We visit the Nokia Ovi Suite download page.
     #t bit.ly/ovisuite
 *]
         \ + audioClip(1.000, 2.000, 1)
@@ -144,7 +169,7 @@ function audioS60Sdk
 {
     audioNoise(10)
 \[*
-    #n We visit the S60 SDK download site at Forum Nokia.
+    #n We visit the S60 SDK download page at Forum Nokia.
     #t bit.ly/s60sdk
 *]
         \ + audioClip(1.000, 2.000, 1)
@@ -191,7 +216,7 @@ function audioOpenC
 {
     audioNoise(10)
 \[*
-    #n We visit the Open C Plugin download site at Forum Nokia.
+    #n We visit the Open C Plugin download page at Forum Nokia.
     #t bit.ly/openc
 *]
         \ + audioClip(1.000, 2.000, 1)
@@ -202,6 +227,27 @@ function audioOpenC
         \ + audioClip(1.000, 2.000, 1)
 \[*
     #n The installer will ask us for the S60 SDK on top of which we want to install the Open C plugin. The preselcted one should be fine.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
+}
+
+function audioAppTrk
+{
+    audioNoise(10)
+\[*
+    #n We visit the Application TRK download page.
+    #t bit.ly/apptrk
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n And choose the app_trk package with the right version for our phone.
+    #n Since I have an ExpressMusic 5800 which runs S60 fifth edition, I take the 5 0 version.
+*]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n We simply double execute the downloaded .sisx file and the Ovi Suite will start the installation to our connected phone.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -244,23 +290,19 @@ function completeclip
 {
     return
         \ Dissolve(
-            \   welcome
-            \ , download
-            \ , installation
-            \ , components
-            \ , outro
+            \   intro
+            \ , welcome.converttorgb
             \ , gDissolveLength)
-        \ .creativeCommons
-        \ .oldStyle
-        \ .qtLogoSmall
+        \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
+#        \ .creativeCommons
 }
 
 #completeclip
 #videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
 #videoS60Sdks
-videoOverview
+#videoOverview
 
-overlayQtorialsElements("qtlogosmall, oldstyle")
+DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup.MTS", audio = false)
 
 #converttoyv12
