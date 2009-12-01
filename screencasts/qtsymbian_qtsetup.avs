@@ -72,6 +72,7 @@ function audioQtSymbian
 \[*
     #n We keep in mind that we need to install Qt on the same drive on which the S60 SDK was installed.
     #n I add dash 'symbian' to the installation directory in case I want to install Qt for other platforms, later.
+    #t -symbian
 *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
