@@ -9,6 +9,7 @@
 # Webcasting Ariya's demos on different Qt devices
 
 Import("tools.avsi")
+LoadPlugin("SmoothDeinterlacer.dll")
 
 global gClipWidth = 960
 global gClipHeight = 720
@@ -23,6 +24,28 @@ global gDeviceNameXP5800 = "Symbian / Nokia XpressMusic 5800"
 global gDeviceNameN900 = "Maemo / Nokia N900"
 global gDeviceNameI900 = "Windows Mobile / Samsung Omnia i900"
 
+function textClipLegacy(String text, int "frames", int "align", int "x", int "y", string "backgroundimage")
+{
+    gBackgroundColor = $eeeeee
+     textColor = $333333
+     framesCount = Default(frames, StrLen(text) * gTextClipFramesPerCharacter)
+     background = Defined(backgroundimage) ?
+         \ ImageSource(backgroundimage, fps = 25, end = framesCount)
+         \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
+    return background
+        \ .Subtitle(text, align = Default(5, align), x = Default(x, -1), y = Default(y, -1), text_color = textColor, halo_color = gBackgroundColor, size = titleTextSize, lsp = 100)
+}
+
+function titleTextClip(string text, int "frames")
+{
+    gBackgroundColor = $eeeeee
+    textColor = $333333
+    result =
+        \  BlankClip(Default(frames, StrLen(text) * gTextClipFramesPerCharacter), gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
+        \ .Subtitle(text, y = gClipHeight - int(titleTextSize * 2), align = 2, text_color = textColor, halo_color = gBackgroundColor, size = titleTextSize, lsp = 100)
+    return result.overlayQtorialImage("qt_orials")
+}
+
 function devicename(clip, string name)
 {
     return clip
@@ -31,7 +54,7 @@ function devicename(clip, string name)
 
 function demoTitle(clip, string title)
 {
-    return textClip(title, backgroundimage = gArtworkDir + "Qt_VideoScreen_Title.png").killaudio.converttoyv12
+    return textClipLegacy(title, backgroundimage = gArtworkDir + "Qt_VideoScreen_Title.png").killaudio.converttoyv12
 }
 
 function zoompan(clip,
@@ -43,6 +66,11 @@ function zoompan(clip,
         \ .animate(0, clip.FrameCount, "Lanczos4Resize",
         \   gClipWidth, gClipHeight, float(leftStart + gDetailsExpansionBorder), float(topStart + gDetailsExpansionBorder), float(widthStart), float(heightStart),
         \   gClipWidth, gClipHeight, float(leftEnd + gDetailsExpansionBorder), float(topEnd + gDetailsExpansionBorder), float(widthEnd), float(heightEnd))
+}
+
+function fixMpeg(clip)
+{
+    clip.SmoothDeinterlace.TemporalSoften(2, 4, 8).ConverttoYv12.Lanczos4Resize(gClipWidth, 540).addborders(0, 90, 0, 90)
 }
 
 function digiflip
@@ -115,7 +143,13 @@ function weatherinfo
         \ .zoompan(-228, 346, 1536, 1230,   -484, 142, 2046, 1638)
         \ .devicename(gDeviceNameI900)
 
-    Dissolve(clip_5800, clip_omnia, gLongDissolveLength)
+    clip_n900 =
+        \  DirectShowSource(gMediaDir + "20090316135131_weather.mpg", audio=false)
+        \ .trim(0, 90)
+        \ .fixMpeg
+        \ .devicename(gDeviceNameN900)
+
+    Dissolve(clip_5800, clip_omnia, clip_n900, gLongDissolveLength)
 }
 
 function lightmaps
@@ -137,7 +171,13 @@ function lightmaps
         \ .zoompan(-484, 142, 2046, 1638,   -228, 346, 1536, 1230)
         \ .devicename(gDeviceNameI900)
 
-    Dissolve(clip_5800, clip_omnia, gLongDissolveLength)
+    clip_n900 =
+        \  DirectShowSource(gMediaDir + "20090316122237_maps.mpg", audio=false)
+        \ .trim(0, 180)
+        \ .fixMpeg
+        \ .devicename(gDeviceNameN900)
+
+    Dissolve(clip_5800, clip_omnia, clip_n900, gLongDissolveLength)
 }
 
 function raycasting
@@ -167,19 +207,25 @@ function raycasting
         \ .zoompan(-472, 152, 2022, 1618,   -282, 302, 1644, 1316)
         \ .devicename(gDeviceNameN95)
 
-    Dissolve(clip_5800, clip_omnia, clip_n95, gLongDissolveLength)
+    clip_n900 =
+        \  DirectShowSource(gMediaDir + "20090316121654_raycasting1.mpg", audio=false)
+        \ .trim(0, 180)
+        \ .fixMpeg
+        \ .devicename(gDeviceNameN900)
+
+    Dissolve(clip_5800, clip_omnia, clip_n95, clip_n900, gLongDissolveLength)
 }
 
 function all
 {
     return Dissolve (
-        \   textClip("Qt Everywhere", x = 408, y = 420, align = 8,
+        \   textClipLegacy("Qt Everywhere", x = 408, y = 420, align = 8,
         \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
-        \ , textClip("Cross-platform deployment\non mobile devices", x = 408, y = 385, align = 8,
+        \ , textClipLegacy("Cross-platform deployment\non mobile devices", x = 408, y = 385, align = 8,
         \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
-        \ , textClip("Symbian / S60\nMaemo / Linux X11\nWindows Mobile", x = 408, y = 360, align = 8,
+        \ , textClipLegacy("Symbian / S60\nMaemo / Linux X11\nWindows Mobile", x = 408, y = 360, align = 8,
         \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Opening.png").killaudio.converttoyv12
-        \ , textClip("", 20,
+        \ , textClipLegacy("", 20,
         \       backgroundimage = gArtworkDir + "Qt_VideoScreen_Title.png").killaudio.converttoyv12
         \ , demoTitle("'Ray casting'")
         \ , raycasting
@@ -192,8 +238,8 @@ function all
         \ , demoTitle("'Kinetic scrolling'")
         \ , flickable
         \ , ImageSource(gArtworkDir + "Qt_VideoScreen_Closing.png", end = 100).converttoyv12
-        \ , gDissolveLength).creativeCommons.oldStyle.FadeIO(10)
+        \ , gDissolveLength).oldStyle.FadeIO(10)
 }
 
-all
+AudioDub(all, WavSource(gMediaDir + "ANW1214_05_Fast-Track.wav").FadeOut(num_frames = 25, fps = 25))
 #flickable
