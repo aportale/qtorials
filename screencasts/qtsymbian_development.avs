@@ -59,10 +59,9 @@ function audioMockup
     audioNoise(10)
 \[*
     #n Let's say our application has a MainWindow.
-    #n There is a lineEdit... and a pushButton.
-    #n And there is a big listWidget.
-    #n The user can enter text into the listWidget.
-    #n And when the user presses the addButton, the text is added to the listWidget
+    #n There is a lineEdit, ... a pushButton ... and a big listWidget.
+    #n The user enters text into the lineEdit.
+    #n And when the user presses the pushButton, the text gets added to the listWidget.
 *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -98,16 +97,19 @@ function audioCoding
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n ...with the name 'MyFirstApp'...
+    #n ...with the name 'MyFirstApp'.
     #t MyFirstApp
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n ...and proceed to the end of the project wizard.
+    #n We proceed to the end of the project wizard.
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
     #n In the form editor, we add the widgets to the mainWindow...
+    #t pu
+    #t lin
+    #t lis
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
@@ -119,7 +121,7 @@ function audioCoding
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n Now, the button text is adjusted.
+    #n We edit the button text.
     #t Add
  *]
         \ + audioClip(1.000, 2.000, 1)
@@ -132,29 +134,105 @@ function audioCoding
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n ...and the IDE creates the slot for us.
+    #n ...and the IDE creates the right slot for us.
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n The actual code is a one liner.
-    #n We add an item to the listWidget, and that item is a text string.
+    #n Our code is just a one-liner.
+    #n We add an item to the listWidget.
+    #n That item is a text string...
     #t ui->§lis§{ENTER}->§addI§{ENTER}§{DOWN}
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n The text comes from the lineEdit.
+    #n ...and the text comes from the lineEdit.
     #t ui->§li§{ENTER}->§te§{DOWN}§{DOWN}§{ENTER}
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n In order to see the debugger in action, we create a slot that is executed when the selection in the listWidget changes.
-    #n As code we add some simple operations which we can follow in the debugger.
-    #t int a = 2;§{ENTER}int b = 3;§{ENTER}int c = a + b;§{ENTER}c++;§{ENTER}c++;{ENTER}c++;{ENTER}c++;
+    #n Now, let's test the application.
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
-    #n Now, let's test the application.
-    #n QtCreator will create a desktop application, by default.
+    #n QtCreator will build and run the project as a desktop application, by default.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n And as we can see, the application works.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n In order to see the debugger in action, we create a slot that is executed when we select or deselect an item in the listWidget.
+    #n As code we add a few simple operations which we can follow in the debugger.
+    #n And we set the breakpoint.
+    #t int a = 2;§{ENTER}int b = 3;§{ENTER}int c = a + b;§{ENTER}c++;§{ENTER}c++;{ENTER}c++;{ENTER}c++;
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
+}
+
+function audioOnDevice
+{
+    audioNoise(10)
+\[*
+    #n In order to build, run and debug the application on the phone, we change to the project mode.
+    #n First of all: What we see here is the preliminary project manager gui.
+    #n The QtCreator team is working on a simpler and more intuitive concept.
+    #n Nevertheless, what what we are going to do now should be very easy to reproduce, later on.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n In the 'Build Settings' section we add a new 'Build Configuration' using our previously installed Qt Version for Symbian.
+    #n It asks for a name.... The default is fine for us.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n And at the bottom of the dialog is the 'Run Settings' section, where we add a new 'run configuration' for our application on the Symbian Device
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n As we can see, QtCreator autmatically detected our device...
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...and we are done in the project mode.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n There are now two sets of build and run configurations. One set for the Desktop, which we already used. And one set for the Symbian Device, which we just added.
+    #n We want to debug our application on the device, so we need to switch the build and run configurations, accordingly.
+    #n With a long mouse press on the 'debug start' button, we get a context menu with the run configurations, where we chose the one for our device.
+    #n Then a dialog appears which offers to automatically change the current build configuration to the correct one. We will accept that and continue.
+    #n Btw.: Also this part of the user interface in QtCreator is preliminary. There will be a more intuitive and automated way of keeping these configurations in sync. So, stay tuned for the next versions of QtCreator :)
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n Before accepting and continuing, we launch the Application TRK on our phone. If it is using Bluetooth, we need to switch to USB mode and connect.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n And now, we start.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n The application gets built and deployed to the phone.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...and there it is...
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n ...it works just like the Desktop version. It is Qt after all.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n When selecting an item in the list the breakpoint is hit and we are in our second slot.
+ *]
+        \ + audioClip(1.000, 2.000, 1)
+\[*
+    #n Stepping forward we can see how the values of the variables change.
  *]
         \ + audioClip(1.000, 2.000, 1)
 
@@ -163,6 +241,23 @@ function audioCoding
 
 function videoCoding
 {
+}
+
+function audioOutro
+{
+    audioNoise(10)
+\[*
+    #n That's it, now you know how to develop your Qt applications on the Desktop and on the Device. Changing back and forth. Isn't that Qt?
+    #n Thanks for watching :)
+\[*
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
+}
+
+function videoOutro
+{
+    simpleQtorialsElements("qtlogobig", 100)
 }
 
 function completeclip
