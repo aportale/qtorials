@@ -12,15 +12,15 @@ Import("tools.avsi")
 global gAudioClip = WAVSource(gMediaDir + "qtsymbian_development_narration.wav")
 global gAudioNoiseStart = 1181064 / 44100.0
 global gAudioNoiseEnd = 1188232 / 44100.0
-global gClipWidth = 960
-global gClipHeight = 720
+global gClipWidth = 640
+global gClipHeight = 360
 global gTextClipFramesPerCharacter = 2
 
 function intro
 {
     Dissolve(
         \   textClip("Mobile development with\nQt for the Symbian Platform", 75)
-        \ , textClip("3 of 3 - Developing with\nQt for Symbian", 75)
+        \ , textClip("Developing with\nQt for Symbian", 75)
         \ , gDissolveLength)
 }
 
@@ -87,7 +87,7 @@ function mockup
     AudioDub(videoMockup, audioMockup)
 }
 
-function audioPrepareDebugging
+function audioCreatorAction
 {
     audioNoise(0)
 \[*
@@ -243,18 +243,22 @@ function audioPrepareDebugging
 
 function deviceOverlay
 {
-    trk = DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS.avi")
     trkRrb =
-        \  trk
+        \  DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS")
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .turnright()
+        \ .crop(70, 128, 934, 1662)
+        \ .Lanczos4Resize(204, 360)
         \ .converttorgb32
-        \ .addborders(gClipHeight / 60, 0, 0, 0, $ffffffff)
-    debug = DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS.avi")
     debugRrb =
-        \  debug
+        \  DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS")
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .turnright()
+        \ .crop(70, 128, 934, 1662)
+        \ .Lanczos4Resize(204, 360)
         \ .converttorgb32
-        \ .addborders(gClipHeight / 60, 0, 0, 0, $ffffffff)
     Dissolve(
-        \   Blankclip(trkRrb, 5000)
+        \   Blankclip(trkRrb, 4990)
         \ , trkRrb
         \ , Blankclip(debugRrb, 185)
         \ , debugRrb + debugRrb.trim(debugRrb.Framecount, debugRrb.Framecount).loop(140)
@@ -262,7 +266,7 @@ function deviceOverlay
         \ , gDissolveLength)
 }
 
-function videoPrepareDebugging_960x720
+function videoCreatorAction_960x720
 {
     appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
     desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
@@ -297,42 +301,45 @@ function videoPrepareDebugging_960x720
         \ , projectmode_cut
         \ , devicedebugging_cut
         \ , gDissolveLength).converttorgb32
-    layer(deviceOverlay)
 }
 
-function videoPrepareDebugging_640x360
+function videoCreatorAction_640x360
 {
-    setDetailClip(videoPrepareDebugging_960x720)
-    setDetail(316, 188, 932, 700)
-    showDetail( 70, 316, 188, 932, 700)
+    setDetailClip(videoCreatorAction_960x720)
+    setDetail(-140, 0, 1240, 720)
+    showDetail(25, -140, 0, 1240, 720)
+        \ + showDetail( 125, 160, 180)
+        \ + showDetail( 335, 174, 234)
+        \ + showDetail( 465, -140, 0, 1240, 720)
+        \ + showDetail( 840, 160, 0)
+        \ + showDetail( 935, 960 - 640, 720 - 360)
+        \ + showDetail(1200, 960 - 640, 48)
+        \ + showDetail(1580, 186, 330)
+        \ + showDetail(1800, 0, 148, 960, 540)
+        \ + showDetail(1950, 72, 144)
+        \ + showDetail(2070, -140, 0, 1240, 720)
+        \ + showDetail(2120, 320, 192)
+        \ + showDetail(2215, 960 - 640, 0)
+        \ + showDetail(2275, -140, 0, 1240, 720)
+        \ + showDetail(2530, 180, 360)
+        \ + showDetail(2660, -140, 0, 1240, 720)
+        \ + showDetail(3160, 0, 182, gClipWidth, gClipHeight, 120)
+        \ + showDetail(3230, 236, 190)                          [* Selecting new build configuration from popup *]
+        \ + showDetail(3290, 288, 106)                          [* accepting runconfiguration name *]
+        \ + showDetail(3420, -140, 0, 1240, 720)                [* Scrolling down *]
+        \ + showDetail(3680, 0, 360)                            [* Adding new run configuration *]
+        \ + showDetail(4240, -140, 0, 1240, 720)                [* Exiting rpoject mode *]
+        \ + showDetail(4410, 0, 360)                            [* Selection run configuration grom debug button popup *]
+        \ + showDetail(5560, 164, 164)                          [* configuration helper dialog *]
+        \ + showDetail(6010, 0, 0, 1240, 720)                   [* Qreator is active *]
+        \ + showDetail(6370, 260, 194)                          [* App runs on phone *]
+        \ + showDetail(6437, -140, 0, 1240, 720)                [* Finito *]
+    layer(deviceOverlay, x = gClipWidth - 204)
 }
 
-function prepareDebugging
+function creatorAction
 {
-    AudioDub(videoWithClipSize("videoPrepareDebugging"), audioPrepareDebugging)
-}
-
-function audioOnDevice
-{
-    audioNoise(10)
-\[*
-    #n ...and there it is...
- *]
-        \ + audioClip(196.632, 198.188, 1)
-\[*
-    #n ...it works just like the Desktop version. It is Qt after all.
- *]
-        \ + audioClip(198.606, 202.437, 1)
-\[*
-    #n When selecting an item in the list the breakpoint is hit and we are in our second slot.
- *]
-        \ + audioClip(203.204, 208.939, 1)
-\[*
-    #n Stepping forward we can see how the values of the variables change.
- *]
-        \ + audioClip(210.193, 214.814, 1)
-
-        \ + audioNoise(10)
+    AudioDub(videoWithClipSize("videoCreatorAction"), audioCreatorAction)
 }
 
 function audioOutro
@@ -363,16 +370,13 @@ function completeclip
             \   intro
             \ , welcome.converttorgb
             \ , mockup
+            \ , creatorAction
             \ , outro
             \ , gDissolveLength)
         \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
 }
 
-#completeclip
-#videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
-#videoS60Sdks
-#videoOverview
+completeclip
 
-prepareDebugging.overlayQtorialsElements("qtlogosmall, oldstyle")
 #converttoyv12
