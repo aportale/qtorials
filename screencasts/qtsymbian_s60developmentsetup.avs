@@ -165,6 +165,38 @@ function audioActivePerl
         \ + audioNoise(10)
 }
 
+function svgSnippet(string elementsCsv, int frames)
+{
+    clip =
+        \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight)
+    overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
+}
+
+function videoS60Sdks
+{
+    clip = Dissolve(
+        \   svgSnippet("", 100)
+        \ , svgSnippet("s60logo32", 100)
+        \ , svgSnippet("s60logo32, sdk3", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60, phonearrow50, phone50", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32qt, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50qt, phonearrow50, phone50", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 100)
+        \ , gDissolveLength)
+
+    clip
+}
+
+function S60Sdks
+{
+    return AudioDub(videoS60SdksVideo, videoS60SdksVideo)
+}
+
 function audioS60Sdk
 {
     audioNoise(10)
@@ -254,36 +286,25 @@ function audioAppTrk
         \ + audioNoise(10)
 }
 
-function svgSnippet(string elementsCsv, int frames)
+function audioOutro
 {
-    clip =
-        \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight)
-    overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
+    audioNoise(10)
+\[*
+    #n We made it! You have now a fully functional Symbian SDK. We can get Qt for Symbian running.
+\[*
+        \ + audioClip(1.000, 2.000, 1)
+
+        \ + audioNoise(10)
 }
 
-function videoS60Sdks
+function videoOutro
 {
-    clip = Dissolve(
-        \   svgSnippet("", 100)
-        \ , svgSnippet("s60logo32", 100)
-        \ , svgSnippet("s60logo32, sdk3", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60, phonearrow50, phone50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32qt, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50qt, phonearrow50, phone50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 100)
-        \ , gDissolveLength)
-
-    clip
+    simpleQtorialsElements("qtlogobig", 100)
 }
 
-function S60Sdks
+function outro
 {
-    return AudioDub(videoS60SdksVideo, videoS60SdksVideo)
+    AudioDub(videoOutro, audioOutro)
 }
 
 function completeclip
@@ -303,6 +324,5 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup.MTS", audio = false)
-
+videoS60Sdks
 #converttoyv12
