@@ -9,9 +9,9 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-#global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
-#global gAudioNoiseStart = 1829888 / 44100.0
-#global gAudioNoiseEnd = 1912832 / 44100.0
+global gAudioClip = WAVSource(gMediaDir + "qtsymbian_development_narration.wav")
+global gAudioNoiseStart = 1181064 / 44100.0
+global gAudioNoiseEnd = 1188232 / 44100.0
 global gClipWidth = 640
 global gClipHeight = 360
 global gTextClipFramesPerCharacter = 2
@@ -50,20 +50,20 @@ function welcome
 function svgSnippet(string elementsCsv, int frames)
 {
     clip =
-        \ QtorialsSvg("qtsymbian_development.svg", elementsCsv, gClipWidth, gClipHeight)
+        \ QtorialsSvg("qtsymbian_development.svg", elementsCsv, gClipWidth, gClipHeight, frames)
     overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
 }
 
 function audioMockup
 {
-    audioNoise(10)
+    audioNoise(2)
 \[*
     #n Let's say our application has a MainWindow.
     #n There is a lineEdit, ... a pushButton ... and a big listWidget.
     #n The user enters text into the lineEdit.
     #n And when the user presses the pushButton, the text gets added to the listWidget.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(1.155, 15.005, 1)
 
         \ + audioNoise(10)
 }
@@ -71,18 +71,20 @@ function audioMockup
 function videoMockup
 {
     Dissolve(
-        \   svgSnippet("", 100)
-        \ , svgSnippet("mainwindow", 100)
-        \ , svgSnippet("mainwindow, lineedit", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit, finger, foolistwidget", 100)
+        \   svgSnippet("", 80)
+        \ , svgSnippet("mainwindow", 60)
+        \ , svgSnippet("mainwindow, lineedit", 30)
+        \ , svgSnippet("mainwindow, lineedit, pushbutton", 35)
+        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget", 50)
+        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit", 70)
+        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit, finger, foolistwidget", 30)
         \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit, foolistwidget", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, barlineedit, foolistwidget", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, barlineedit, foolistwidget, finger, barlistwidget", 100)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, barlineedit, foolistwidget, barlistwidget", 100)
         \ , gDissolveLength)
+}
+
+function mockup
+{
+    AudioDub(videoMockup, audioMockup)
 }
 
 function audioCoding
@@ -91,85 +93,96 @@ function audioCoding
 \[*
     #n In QtCreator, we start a new project.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(16.050, 18.697, 1)
 \[*
     #n We want a 'Qt4 Gui Application'...
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(18.964, 21.159, 1)
 \[*
     #n ...with the name 'MyFirstApp'.
     #t MyFirstApp
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(21.449, 23.632, 1)
 \[*
     #n We proceed to the end of the project wizard.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(23.875, 26.604, 1)
 \[*
     #n In the form editor, we add the widgets to the mainWindow...
     #t pu
     #t lin
     #t lis
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(27.405, 30.923, 1)
 \[*
     #n ...we just drop them roughly on their final positions, ...
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(31.364, 34.243, 1)
 \[*
     #n and afterwards, we lay the widgets out in a GridLayout.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(34.545, 37.668, 1)
 \[*
     #n We edit the button text.
     #t Add{ENTER}
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(38.225, 39.944, 1)
 \[*
     #n With a right click and 'Go To Slot...'
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(40.617, 42.730, 1)
 \[*
     #n ...we tell QtCreator that we want to handle the button's 'clicked' signal...
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(42.904, 46.956, 1)
 \[*
     #n ...and the IDE creates the right slot for us.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(47.258, 50.347, 1)
 \[*
     #n Our code is just a one-liner.
     #n We add an item to the listWidget.
     #n That item is a text string...
     #t ui->§lis§{ENTER}->§addI§{ENTER}§{DOWN}
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(50.718, 57.475, 1)
 \[*
     #n ...and the text comes from the lineEdit.
     #t ui->§li§{ENTER}->§te§{DOWN}§{DOWN}§{ENTER}
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(57.522, 59.635, 1)
 \[*
     #n Now, let's test the application.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(60.134, 62.351, 1)
 \[*
     #n QtCreator will build and run the project as a desktop application, by default.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(62.943, 67.715, 1)
 \[*
     #n And as we can see, the application works.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(67.831, 70.571, 1)
 \[*
     #n In order to see the debugger in action, we create a slot that is executed when we select or deselect an item in the listWidget.
     #n As code we add a few simple operations which we can follow in the debugger.
     #n And we set the breakpoint.
     #t int a = 2;§{ENTER}int b = 3;§{ENTER}int c = a {+} b;§{ENTER}c{+}{+};§{ENTER}c{+}{+};{ENTER}c{+}{+};{ENTER}c{+}{+};
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(70.943, 85.130, 1)
 
         \ + audioNoise(10)
+}
+
+function videoCoding
+{
+    appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
+    desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
+}
+
+function coding
+{
+    
 }
 
 function audioOnDevice
@@ -181,24 +194,24 @@ function audioOnDevice
     #n The QtCreator team is working on a simpler and more intuitive concept.
     #n Nevertheless, what what we are going to do now should be very easy to reproduce, later on.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(85.664, 106.260, 1)
 \[*
     #n In the 'Build Settings' section we add a new 'Build Configuration' using our previously installed Qt Version for Symbian.
     #n It asks for a name.... The default is fine for us.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(106.469, 116.988, 1)
 \[*
     #n And at the bottom of the dialog is the 'Run Settings' section, where we add a new 'run configuration' for our application on the Symbian Device
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(117.336, 125.626, 1)
 \[*
     #n As we can see, QtCreator autmatically detected our device...
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(126.044, 130.456, 1)
 \[*
     #n ...and we are done in the project mode.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(130.525, 132.824, 1)
 \[*
     #n There are now two sets of build and run configurations. One set for the Desktop, which we already used. And one set for the Symbian Device, which we just added.
     #n We want to debug our application on the device, so we need to switch the build and run configurations, accordingly.
@@ -206,58 +219,58 @@ function audioOnDevice
     #n Then a dialog appears which offers to automatically change the current build configuration to the correct one. We will accept that and continue.
     #n Btw.: Also this part of the user interface in QtCreator is preliminary. There will be a more intuitive and automated way of keeping these configurations in sync. So, stay tuned for the next versions of QtCreator :)
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(133.172, 179.751, 1)
 \[*
     #n Before accepting and continuing, we launch the Application TRK on our phone. If it is using Bluetooth, we need to switch to USB mode and connect.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(180.077, 190.108, 1)
 \[*
     #n And now, we start.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(190.827, 192.778, 1)
 \[*
     #n The application gets built and deployed to the phone.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(193.358, 196.609, 1)
 \[*
     #n ...and there it is...
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(196.632, 198.188, 1)
 \[*
     #n ...it works just like the Desktop version. It is Qt after all.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(198.606, 202.437, 1)
 \[*
     #n When selecting an item in the list the breakpoint is hit and we are in our second slot.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(203.204, 208.939, 1)
 \[*
     #n Stepping forward we can see how the values of the variables change.
  *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(210.193, 214.814, 1)
 
         \ + audioNoise(10)
 }
 
-function videoCoding
-{
-}
-
 function audioOutro
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n That's it, now you know how to develop your Qt applications on the Desktop and on the Device. Changing back and forth. Isn't that Qt?
-    #n Thanks for watching :)
-\[*
-        \ + audioClip(1.000, 2.000, 1)
+ *]
+        \ + audioClip(215.440, 223.718, 1)
 
         \ + audioNoise(10)
 }
 
 function videoOutro
 {
-    simpleQtorialsElements("qtlogobig", 100)
+    simpleQtorialsElements("qtlogobig", 250)
+}
+
+function outro
+{
+    AudioDub(audioOutro, videoOutro)
 }
 
 function completeclip
@@ -266,10 +279,11 @@ function completeclip
         \ Dissolve(
             \   intro
             \ , welcome.converttorgb
+            \ , mockup
+            \ , outro
             \ , gDissolveLength)
         \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
-#        \ .creativeCommons
 }
 
 #completeclip
@@ -277,5 +291,5 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-videoMockup.overlayQtorialsElements("qtlogosmall, oldstyle")
+outro.overlayQtorialsElements("qtlogosmall, oldstyle")
 #converttoyv12
