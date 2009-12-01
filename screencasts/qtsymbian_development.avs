@@ -12,8 +12,8 @@ Import("tools.avsi")
 global gAudioClip = WAVSource(gMediaDir + "qtsymbian_development_narration.wav")
 global gAudioNoiseStart = 1181064 / 44100.0
 global gAudioNoiseEnd = 1188232 / 44100.0
-global gClipWidth = 640
-global gClipHeight = 360
+global gClipWidth = 960
+global gClipHeight = 720
 global gTextClipFramesPerCharacter = 2
 
 function intro
@@ -87,13 +87,13 @@ function mockup
     AudioDub(videoMockup, audioMockup)
 }
 
-function audioCoding
+function audioPrepareDebugging
 {
-    audioNoise(10)
+    audioNoise(0)
 \[*
     #n In QtCreator, we start a new project.
  *]
-        \ + audioClip(16.050, 18.697, 1)
+        \ + audioClip(16.050, 18.697, 0)
 \[*
     #n We want a 'Qt4 Gui Application'...
  *]
@@ -102,39 +102,39 @@ function audioCoding
     #n ...with the name 'MyFirstApp'.
     #t MyFirstApp
  *]
-        \ + audioClip(21.449, 23.632, 1)
+        \ + audioClip(21.449, 23.632, 2.5)
 \[*
     #n We proceed to the end of the project wizard.
  *]
-        \ + audioClip(23.875, 26.604, 1)
+        \ + audioClip(23.875, 26.604, 6)
 \[*
     #n In the form editor, we add the widgets to the mainWindow...
     #t pu
     #t lin
     #t lis
  *]
-        \ + audioClip(27.405, 30.923, 1)
+        \ + audioClip(27.405, 30.923, 4)
 \[*
     #n ...we just drop them roughly on their final positions, ...
  *]
-        \ + audioClip(31.364, 34.243, 1)
+        \ + audioClip(31.364, 34.243, 4)
 \[*
     #n and afterwards, we lay the widgets out in a GridLayout.
  *]
-        \ + audioClip(34.545, 37.668, 1)
+        \ + audioClip(34.545, 37.668, 2.5)
 \[*
     #n We edit the button text.
     #t Add{ENTER}
  *]
-        \ + audioClip(38.225, 39.944, 1)
+        \ + audioClip(38.225, 39.944, 0.5)
 \[*
     #n With a right click and 'Go To Slot...'
  *]
-        \ + audioClip(40.617, 42.730, 1)
+        \ + audioClip(40.617, 42.730, 0)
 \[*
     #n ...we tell QtCreator that we want to handle the button's 'clicked' signal...
  *]
-        \ + audioClip(42.904, 46.956, 1)
+        \ + audioClip(42.904, 46.956, 0)
 \[*
     #n ...and the IDE creates the right slot for us.
  *]
@@ -154,40 +154,25 @@ function audioCoding
 \[*
     #n Now, let's test the application.
  *]
-        \ + audioClip(60.134, 62.351, 1)
+        \ + audioClip(60.134, 62.351, 2)
 \[*
     #n QtCreator will build and run the project as a desktop application, by default.
  *]
-        \ + audioClip(62.943, 67.715, 1)
+        \ + audioClip(62.943, 67.715, 3)
 \[*
     #n And as we can see, the application works.
  *]
-        \ + audioClip(67.831, 70.571, 1)
+        \ + audioClip(67.831, 70.571, 4)
 \[*
     #n In order to see the debugger in action, we create a slot that is executed when we select or deselect an item in the listWidget.
+ *]
+        \ + audioClip(71.047, 78.715, 4)
+\[*
     #n As code we add a few simple operations which we can follow in the debugger.
     #n And we set the breakpoint.
     #t int a = 2;§{ENTER}int b = 3;§{ENTER}int c = a {+} b;§{ENTER}c{+}{+};§{ENTER}c{+}{+};{ENTER}c{+}{+};{ENTER}c{+}{+};
  *]
-        \ + audioClip(70.943, 85.130, 1)
-
-        \ + audioNoise(10)
-}
-
-function videoCoding
-{
-    appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
-    desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
-}
-
-function coding
-{
-    
-}
-
-function audioOnDevice
-{
-    audioNoise(10)
+        \ + audioClip(78.715, 85.130, 1)
 \[*
     #n In order to build, run and debug the application on the phone, we change to the project mode.
     #n First of all: What we see here is the preliminary project manager gui.
@@ -221,17 +206,115 @@ function audioOnDevice
  *]
         \ + audioClip(133.172, 179.751, 1)
 \[*
-    #n Before accepting and continuing, we launch the Application TRK on our phone. If it is using Bluetooth, we need to switch to USB mode and connect.
+    #n Before accepting and continuing, we launch the Application TRK on our phone.
  *]
-        \ + audioClip(180.077, 190.108, 1)
+        \ + audioClip(180.448, 185.306, 3)
+\[*
+    #n If it is using Bluetooth, we need to switch to USB mode and connect.
+ *]
+        \ + audioClip(185.434, 190.061, 6)
 \[*
     #n And now, we start.
  *]
-        \ + audioClip(190.827, 192.778, 1)
+        \ + audioClip(190.827, 192.778, 2)
 \[*
     #n The application gets built and deployed to the phone.
  *]
-        \ + audioClip(193.358, 196.609, 1)
+        \ + audioClip(193.358, 196.609, 3)
+\[*
+    #n ...and there it is...
+ *]
+        \ + audioClip(196.632, 198.188, 6)
+\[*
+    #n ...it works just like the Desktop version. It is Qt after all.
+ *]
+        \ + audioClip(198.606, 202.437, 1)
+\[*
+    #n When selecting an item in the list the breakpoint is hit and we are in our second slot.
+ *]
+        \ + audioClip(203.204, 208.939, 1)
+\[*
+    #n Stepping forward we can see how the values of the variables change.
+ *]
+        \ + audioClip(210.193, 214.814, 1)
+
+        \ + audioNoise(10)
+}
+
+function deviceOverlay
+{
+    trk = DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS.avi")
+    trkRrb =
+        \  trk
+        \ .converttorgb32
+        \ .addborders(gClipHeight / 60, 0, 0, 0, $ffffffff)
+    debug = DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS.avi")
+    debugRrb =
+        \  debug
+        \ .converttorgb32
+        \ .addborders(gClipHeight / 60, 0, 0, 0, $ffffffff)
+    Dissolve(
+        \   Blankclip(trkRrb, 5000)
+        \ , trkRrb
+        \ , Blankclip(debugRrb, 185)
+        \ , debugRrb + debugRrb.trim(debugRrb.Framecount, debugRrb.Framecount).loop(140)
+        \ , Blankclip(debugRrb, 185)
+        \ , gDissolveLength)
+}
+
+function videoPrepareDebugging_960x720
+{
+    appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
+    desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
+    desktopapp_cut =
+        \   desktopapp.trim(1, 833)                             [* Start until first goto slot *]
+        \ + desktopapp.trim(836, 860).loop(4)                   [* Cursorblink *]
+        \ + desktopapp.trim(860, 1329)                          [* first goto slot until app launch *]
+        \ + desktopapp.trim(1329, 1329).loop(3)                 [* app launch delay *]
+        \ + desktopapp.trim(1390, 1437)                         [* app launch until type hello *]
+        \ + desktopapp.trim(1464, 1629)                         [* type hello until *]
+    projectmode = DirectShowSource(gMediaDir + "qtsymbian_development_projectmode.avi")
+    projectmode_cut =
+        \   projectmode.trim(70, 720)                           [* changed to project mode *]
+        \ + projectmode.trim(720, 720).loop(440)                [* wait for that guy to finish talking *]
+        \ + projectmode.trim(720, 1230)                         [* talking guy until device detected *]
+        \ + projectmode.trim(1230, 1230).loop(120)              [* device detected *]
+        \ + projectmode.trim(1230, 1262)                        [* projectmode left *]
+    devicedebugging = DirectShowSource(gMediaDir + "qtsymbian_development_devicedebugging.avi")
+    devicedebugging_cut =
+        \   devicedebugging.trim(1, 1).loop(480)                [* changed to project mode *]
+        \ + devicedebugging.trim(1, 50)                         [* changed to project mode *]
+        \ + devicedebugging.trim(50, 50).loop(110)              [* context menu from debug button *]
+        \ + devicedebugging.trim(50, 150)                       [* *]
+        \ + devicedebugging.trim(150, 150).loop(1000)           [* configuration helper dialog *]
+        \ + devicedebugging.trim(150, 225)                      [* start of debugger launch *]
+        \ + devicedebugging.trim(381, 600)                      [* app starts up *]
+        \ + devicedebugging.trim(600, 600).loop(237)            [* app runs *]
+        \ + devicedebugging.trim(680, 1115)                     [* app hits breakpoint *]
+    Dissolve(
+        \   appwizard
+        \ , desktopapp_cut
+        \ , projectmode_cut
+        \ , devicedebugging_cut
+        \ , gDissolveLength).converttorgb32
+    layer(deviceOverlay)
+}
+
+function videoPrepareDebugging_640x360
+{
+    setDetailClip(videoPrepareDebugging_960x720)
+    setDetail(316, 188, 932, 700)
+    showDetail( 70, 316, 188, 932, 700)
+}
+
+function prepareDebugging
+{
+    AudioDub(videoWithClipSize("videoPrepareDebugging"), audioPrepareDebugging)
+}
+
+function audioOnDevice
+{
+    audioNoise(10)
 \[*
     #n ...and there it is...
  *]
@@ -291,5 +374,5 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-outro.overlayQtorialsElements("qtlogosmall, oldstyle")
+prepareDebugging.overlayQtorialsElements("qtlogosmall, oldstyle")
 #converttoyv12
