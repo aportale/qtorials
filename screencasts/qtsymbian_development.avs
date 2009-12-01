@@ -122,7 +122,7 @@ function audioCoding
         \ + audioClip(1.000, 2.000, 1)
 \[*
     #n We edit the button text.
-    #t Add
+    #t Add{ENTER}
  *]
         \ + audioClip(1.000, 2.000, 1)
 \[*
@@ -165,7 +165,7 @@ function audioCoding
     #n In order to see the debugger in action, we create a slot that is executed when we select or deselect an item in the listWidget.
     #n As code we add a few simple operations which we can follow in the debugger.
     #n And we set the breakpoint.
-    #t int a = 2;§{ENTER}int b = 3;§{ENTER}int c = a + b;§{ENTER}c++;§{ENTER}c++;{ENTER}c++;{ENTER}c++;
+    #t int a = 2;§{ENTER}int b = 3;§{ENTER}int c = a {+} b;§{ENTER}c{+}{+};§{ENTER}c{+}{+};{ENTER}c{+}{+};{ENTER}c{+}{+};
  *]
         \ + audioClip(1.000, 2.000, 1)
 
