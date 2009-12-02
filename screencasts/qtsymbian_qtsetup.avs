@@ -20,7 +20,7 @@ function intro
 {
     Dissolve(
         \   textClip("Mobile development with\nQt for the Symbian Platform", 75)
-        \ , textClip("2 of 3 - Setting up Qt for Symbian\nand the Qt SDK for Windows", 80)
+        \ , textClip("Setting up Qt for Symbian\nand the Qt SDK for Windows", 80)
         \ , gDissolveLength)
 }
 

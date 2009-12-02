@@ -25,7 +25,7 @@ function intro
 {
     Dissolve(
         \   textClip("Mobile development with\nQt for the Symbian Platform", 75)
-        \ , textClip("1 of 3 - Setting up a\nSymbian development environment", 75)
+        \ , textClip("Setting up a\nSymbian development environment", 75)
         \ , gDissolveLength)
 }
 
@@ -48,7 +48,7 @@ function videoWelcome_640x360
 function welcome
 {
     AudioDub(videoWithClipSize("videoWelcome"), WAVSource(gMediaDir + "qtsymbian_s60developmentsetup.wav"))
-        \ .DelayAudio(4.34)
+        \ .DelayAudio(4.37)
         \ .Trim(115, 715)
 }
 
@@ -542,6 +542,5 @@ function completeclip
         \ .FadeIO(gDissolveLength)
 }
 
-#completeclip
-welcome
+completeclip
 #converttoyv12
