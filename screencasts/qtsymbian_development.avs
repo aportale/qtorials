@@ -10,8 +10,8 @@ LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "qtsymbian_development_narration.wav")
-global gAudioNoiseStart = 1181064 / 44100.0
-global gAudioNoiseEnd = 1188232 / 44100.0
+global gAudioNoiseStart = 5538927 / 44100.0
+global gAudioNoiseEnd = 5559036 / 44100.0
 global gClipWidth = 640
 global gClipHeight = 360
 global gTextClipFramesPerCharacter = 2
@@ -42,9 +42,13 @@ function videoWelcome_640x360
 
 function welcome
 {
-    AudioDub(videoWithClipSize("videoWelcome"), WAVSource(gMediaDir + "qtsymbian_development.wav"))
+    AudioDub(
+        \  videoWithClipSize("videoWelcome")
+            \ , WAVSource(gMediaDir + "qtsymbian_development.wav"))
         \ .DelayAudio(0.26)
         \ .Trim(16, 350)
+        \ .overlayRgbClip(
+            \   QtorialsSubtitle(gClipWidth, gClipHeight, "Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160))
 }
 
 function svgSnippet(string elementsCsv, int frames)
