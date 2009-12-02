@@ -9,11 +9,11 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-#global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
-#global gAudioNoiseStart = 1829888 / 44100.0
-#global gAudioNoiseEnd = 1912832 / 44100.0
-global gClipWidth = 640
-global gClipHeight = 360
+global gAudioClip = WAVSource(gMediaDir + "qtsymbian_s60developmentsetup_narration.wav")
+global gAudioNoiseStart = 1 / 44100.0
+global gAudioNoiseEnd = 1 / 44100.0
+global gClipWidth = 960
+global gClipHeight = 720
 global gTextClipFramesPerCharacter = 2
 
 function intro
@@ -49,23 +49,21 @@ function welcome
 
 function audioOverview
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n A Symbian development environment usually consists of...
     #n ...The Nokia Ovi Suite for easy application installation to our phone...
     #n ...Carbide.c++, which is an Eclipse based IDE for Symbian development. We install it for the sake of completeness. In the following, we will use the IDE QtCreator with it's preliminary Symbian support...
-    #n ...ActivePerl-5.6.1, build 658. Yes, we need that specific version. Otherwise, the Symbian tool chain might not work...
+    #n ...ActivePerl-5.6.1, build 658...
+*]
+        \ + audioClip(2.043, 18.065, 0)
+\[*
     #n ...An S60 SDK. It contains the Symbian platform specific tools, header files, libraries, and the cross compiling toolchain for the phone...
     #n ...We also want the an updated "Open C" Plugin. It will be installed on top of the S60 SDK, and later also on our phone...
     #n ...And last but not least, we want to install the 'Application TRK' on our phone. That is needed for on-device debugging and automated deployment...
     #  Slide with components
 *]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n Let's start with the Nokia Ovi Suite
-    #  Slide with "Nokia Ovi Suite"
-*]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(23.614, 49.273, 1)
 
         \ + audioNoise(10)
 }
@@ -73,78 +71,116 @@ function audioOverview
 function videoOverview
 {
     Dissolve(
-        \   textClip("Overview", 200)
-        \ , textClip("", 200)
-        \ , textClip("Nokia Ovi Suite\n\n\n\n\n", 200)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\n\n\n\n", 200)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 200)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 200)
+        \   textClip("", 110)
+        \ , textClip("Nokia Ovi Suite\n\n\n\n\n", 110)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\n\n\n\n", 120)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 100)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 260)
         \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 200)
-        \ , textClip("", 200)
-        \ , textClip("Nokia Ovi Suite", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 250)
         \ , gDissolveLength)
 }
 
-function audioNokiaPCSuite
+function overview
 {
-    audioNoise(10)
+    AudioDub(videoOverview, audioOverview)
+}
+
+function audioNokiaOviSuite
+{
+    audioNoise(1)
 \[*
     #n We visit the Nokia Ovi Suite download page.
     #t bit.ly/ovisuite
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(53.870, 57.168, 1.5)
 \[*
     #n There, we click "Download"...
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(57.597, 59.164, 0.5)
 \[*
     #n ...and and install it.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(59.141, 60.302, 2.5)
 \[*
     #n If after the installation, we see such an icon, the Nokia Ovi Suite is connected to our device.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(60.778, 66.920, 1)
 
         \ + audioNoise(10)
 }
 
+function videoNokiaOviSuite_960x720
+{
+    install = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_ovisuiteinstallation.avi")
+    install_cut =
+        \   install.trim(30, 108)                                        [* Entering Url *]
+        \ + install.trim(150, 300)                                       [* click download *]
+        \ + install.trim(300, 2700).selectevery(40).assumefps(25)        [* time lapse installation *]
+    connected = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_ovisuiteconnected.avi")
+    connected_cut =
+        \   connected.trim(20, 140)                                      [* Phone is Connected *]
+        \ + connected.trim(140, 140).loop(60)                            [* Phone is Connected *]
+    Dissolve(install_cut, connected_cut, gDissolveLength)
+}
+
+function NokiaOviSuite
+{
+    AudioDub(videoWithClipSize("videoNokiaOviSuite"), audioNokiaOviSuite)
+}
+
 function audioCarbide
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n We visit the Carbide.c++ download page at Forum Nokia.
     #t bit.ly/carbidecpp
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(68.116, 71.622, 1.3)
 \[*
     #n There, we click on "Download now"...
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(71.924, 74.014, 2)
 \[*
     #n ...and 'oops', we need to login into Forum Nokia. If you do not have an account yet, you can get it through the registration form.
 *]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n I am sorry for that. But this is the only registration that you need for Symbian development.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n After logging in we need to click that file name link to download Carbide c++.
-    #t qtsymbiandeveloper
-*]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(74.048, 82.268, 3)
 \[*
     #n During the installation we can leave all settings as they are.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(88.410, 92.137, 2)
 \[*
     #n After the installation, we start the shortcut called 'Configure environment for WINSCW command line' in order to add s few required environment variables to our system.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(92.740, 102.992, 1)
 
         \ + audioNoise(10)
+}
+
+function videoCarbide_960x720
+{
+    beforelogin = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_carbide_beforelogin.avi")
+    beforelogin_cut =
+        \   beforelogin.trim(60, 202)                                     [* Entering Url *]
+        \ + beforelogin.trim(220, 300).selectevery(2).assumefps(25)       [* Fast forwarding slow mouse move *]
+        \ + beforelogin.trim(300, 340)                                    [* Clicked Download *]
+        \ + beforelogin.trim(436, 522)                                    [* Login page *]
+        \ + beforelogin.trim(522, 522).loop(165)                          [* Login page *]
+    afterlogin = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_carbide_afterlogin.avi")
+    afterlogin_cut =
+        \   afterlogin.trim(1, 4800).selectevery(120).assumefps(25)       [* Fast forward to Edition type step *]
+        \ + afterlogin.trim(4800, 4800).loop(60)                          [* Edition type step *]
+        \ + afterlogin.trim(4800, 4860)                                   [* Setup *]
+        \ + afterlogin.trim(4860, 6400).selectevery(80).assumefps(25)     [* Fast forward to WINSCW shortcut warning *]
+        \ + afterlogin.trim(6400, 6500)                                   [* hovering WINSCW shortcut *]
+        \ + afterlogin.trim(6500, 6500).loop(80)                          [* hovering WINSCW shortcut *]
+        \ + afterlogin.trim(6500, 6690)                                   [* launching WINSCW shortcut *]
+    Dissolve(beforelogin_cut, afterlogin_cut, gDissolveLength)
+}
+
+function Carbide
+{
+    AudioDub(videoWithClipSize("videoCarbide"), audioCarbide)
 }
 
 function audioActivePerl
@@ -154,115 +190,154 @@ function audioActivePerl
     #n We visit the ActiveState Download page of Active Perl 5.6.
     #t bit.ly/activeperl56
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(103.991, 108.495, 1)
 \[*
     #n There, we chose the version 5.6.1, build 635...
     #n This is the recommended version by Forum Nokia. Any other perl version might deter the Symbain toolchain from working properly.
+*]
+        \ + audioClip(108.681, 121.197, 1)
+\[*
     #n When installing it, we make sure that Perl is added to the PATH environment variable.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(121.916, 126.363, 1)
 
         \ + audioNoise(10)
+}
+
+function audioS60Sdk
+{
+    audioNoise(1)
+\[*
+    #n We visit the S60 SDK download page at Forum Nokia.
+    #t bit.ly/s60sdk
+*]
+        \ + audioClip(127.222, 130.798, 2)
+\[*
+    #n We have the choice between three SDKs... Now, which is the one for us?
+*]
+        \ + audioClip(131.030, 136.440, 1)
+\[*
+    #n Normally, we use a specific S60 SDK, for example third edition... feature pack 2 to build our application.
+    #n And that application would run on a S60 third edition, feature pack 2 based phone.
+    #n Or we would use the S60 SDK fifth edition to build our application and run that on a phone with S60 fifth edition.
+    #n But in effect, since we will use the Qt Api, all those version differences do not matter. Our Qt application can be built with any S60 SDK since the third edition featurepack 1.
+    #n And we can run our application on any S60 phone with at least the 3rd edition feature pack 1.
+*]
+        \ + audioClip(136.348, 172.756, 1)
+\[*
+    #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
+*]
+        \ + audioClip(173.082, 179.049, 2)
+\[*
+    #n If the installer complains about a missing Java Runtime Environment, we don't care.
+*]
+        \ + audioClip(186.108, 190.566, 1)
+\[*
+    #n We need to make sure that we have enough space on the drive where we install the SDK. Qt has to be installed on the same drive, later on.
+*]
+        \ + audioClip(191.193, 198.647, 3)
+\[*
+    #n The installer offers to install the 'CSL Arm Toolchain', which we accept. It is needed to build our applications for the phone.
+*]
+        \ + audioClip(200.110, 207.935, 1)
+
+        \ + audioNoise(10)
+}
+
+function videoS60Sdk1_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_s60sdk.avi")
+    footage.trim(1, 130)                                                [* Entering Url *]
+        \ + footage.trim(130, 202).selectevery(2).assumefps(25)         [* Fast forwarding slow mouse move *]
+        \ + footage.trim(202, 249)                                      [* Open version choice *]
+        \ + footage.trim(249, 249).loop(100)                            [* Which version? *]
 }
 
 function svgSnippet(string elementsCsv, int frames)
 {
     clip =
-        \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight)
+        \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight, frames)
     overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
 }
 
-function videoS60Sdks
+function videoS60Sdk2
 {
-    clip = Dissolve(
-        \   svgSnippet("", 100)
-        \ , svgSnippet("s60logo32", 100)
-        \ , svgSnippet("s60logo32, sdk3", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60, phonearrow50, phone50", 100)
+    Dissolve(
+        \   svgSnippet("", 60)
+        \ , svgSnippet("s60logo32", 70)
+        \ , svgSnippet("s60logo32, sdk3", 40)
+        \ , svgSnippet("s60logo32, sdk3, fp2", 40)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60", 45)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32", 130)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division", 55)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60", 50)
+        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60, phonearrow50, phone50", 120)
         \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32qt, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50qt, phonearrow50, phone50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 100)
+        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 140)
+        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 180)
         \ , gDissolveLength)
-
-    clip
 }
 
-function S60Sdks
+function videoS60Sdk3_960x720
 {
-    return AudioDub(videoS60SdksVideo, videoS60SdksVideo)
+    footage = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_s60sdk.avi")
+    footage.trim(230, 380)                                                  [* Selecting and downloading 5.0 *]
+        \ + footage.trim(380, 643).selectevery(12).assumefps(25)            [* Fast forwardig to download *]
+        \ + footage.trim(643, 13120).selectevery(400).assumefps(25)         [* downloading *]
+        \ + footage.trim(13120, 16970).selectevery(120).assumefps(25)       [* Forwardig to JRE warning *]
+        \ + footage.trim(16970, 17040)                                      [* Clicking JRE warning *]
+        \ + footage.trim(17040, 17180).selectevery(8).assumefps(25)         [* Fast forwarding to target directory *]
+        \ + footage.trim(17180, 17180).loop(220)                            [* Drive space considerations *]
+        \ + footage.trim(17180, 36600).selectevery(600).assumefps(25)       [* Fast forwarding to CSL Toolchain installer *]
+        \ + footage.trim(36600, 36800)                                      [* CSL Toolchain installer *]
+        \ + footage.trim(36800, 37200).selectevery(8).assumefps(25)         [* Fast forwarding to End *]
 }
 
-function audioS60Sdk
+function S60Sdk
 {
-    audioNoise(10)
-\[*
-    #n We visit the S60 SDK download page at Forum Nokia.
-    #t bit.ly/s60sdk
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n We have the choice between three SDKs... Now, which is the one for us?
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n Normally, we use a specific S60 SDK, for example third edition... feature pack 2 to build our application.
-    #n And that application would run on a S60 third edition, feature pack 2 based phone.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n Or we would use the S60 SDK fifth edition to build our application and run that on a phone with S60 fifth edition.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n But in effect, since we will use the Qt Api, all those version differences do not matter. Our Qt application can be built with any S60 SDK since the third edition featurepack 1.
-    #n And we can run our application on any S60 phone with at least the 3rd edition feature pack 1.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
-    #n This time, we will get a big .zip file. We need to unzip it somewhere in order to execute the zipped installer.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n If the installer complains about a missing Java Runtime Environment, we don't care.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n We need to make sure that we have enough space on the drive where we install the SDK. Qt has to be installed on the same drive, later on.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-\[*
-    #n The installer offers to install the 'CSL Arm Toolchain', which we accept. It is needed to build our applications for the phone.
-*]
-        \ + audioClip(1.000, 2.000, 1)
-
-        \ + audioNoise(10)
+    AudioDub(
+        \  Dissolve(
+            \  videoWithClipSize("videoS60Sdk1").converttorgb32
+            \ ,videoS60Sdk2
+            \ ,videoWithClipSize("videoS60Sdk3").converttorgb32
+            \ ,gDissolveLength)
+        \ ,audioS60Sdk)
 }
 
 function audioOpenC
 {
-    audioNoise(10)
+    audioNoise(2)
 \[*
     #n We visit the Open C Plugin download page at Forum Nokia.
     #t bit.ly/openc
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(208.446, 211.929, 4)
 \[*
-    #n There, we click on Download.
-    #n And again we ge a .zip file with an installer, inside.
+    #n The installer will ask us for the S60 SDK on top of which we want to install the Open C plugin.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(218.291, 223.887, 0.5)
 \[*
-    #n The installer will ask us for the S60 SDK on top of which we want to install the Open C plugin. The preselcted one should be fine.
+    #n The preselected one should be fine.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(224.676, 226.627, 1)
 
         \ + audioNoise(10)
+}
+
+function videoOpenC_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_openc.avi")
+    footage.trim(1, 136)                                                [* Entering Url *]
+        \ + footage.trim(137, 347).selectevery(12).assumefps(25)        [* Fast forward to Download *]
+        \ + footage.trim(347, 974).selectevery(24).assumefps(25)        [* Downloading *]
+        \ + footage.trim(974, 1701).selectevery(12).assumefps(25)       [* Fast forward to S60 Sdk Wizard page *]
+        \ + footage.trim(1701, 1701).loop(200)                          [* S60 Sdk Wizard page *]
+        \ + footage.trim(1701, 3556).selectevery(40).assumefps(25)      [* Fast forward to end *]
+}
+
+function openC
+{
+    AudioDub(videoWithClipSize("videoOpenC"), audioOpenC)
 }
 
 function audioAppTrk
@@ -272,16 +347,16 @@ function audioAppTrk
     #n We visit the Application TRK download page.
     #t bit.ly/apptrk
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(227.974, 230.783, 1)
 \[*
     #n And choose the app_trk package with the right version for our phone.
     #n Since I have an ExpressMusic 5800 which runs S60 fifth edition, I take the 5 0 version.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(230.969, 242.277, 1)
 \[*
-    #n We simply double execute the downloaded .sisx file and the Ovi Suite will start the installation to our connected phone.
+    #n We simply execute the downloaded .sisx file and the Ovi Suite will start the installation to our connected phone.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(242.788, 249.313, 1)
 
         \ + audioNoise(10)
 }
@@ -290,9 +365,9 @@ function audioOutro
 {
     audioNoise(10)
 \[*
-    #n We made it! You have now a fully functional Symbian SDK. We can get Qt for Symbian running.
-\[*
-        \ + audioClip(1.000, 2.000, 1)
+    #n You have now a fully functional Symbian SDK. Now, we can get Qt for Symbian running.
+*]
+        \ + audioClip(250.908, 257.967, 1)
 
         \ + audioNoise(10)
 }
@@ -324,5 +399,5 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-videoS60Sdks
+Carbide
 #converttoyv12
