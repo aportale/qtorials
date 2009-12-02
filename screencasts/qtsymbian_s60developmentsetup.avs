@@ -10,11 +10,16 @@ LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "qtsymbian_s60developmentsetup_narration.wav")
-global gAudioNoiseStart = 1 / 44100.0
-global gAudioNoiseEnd = 1 / 44100.0
-global gClipWidth = 960
-global gClipHeight = 720
-global gTextClipFramesPerCharacter = 2
+global gAudioNoiseStart = 1029400 / 44100.0
+global gAudioNoiseEnd = 1039584 / 44100.0
+global gClipWidth = 640
+global gClipHeight = 360
+global gTextClipFramesPerCharacter = 4
+
+function urlSubTitle(clip, string url)
+{
+    overlayRgbClip(clip.converttorgb32, QtorialsSubtitle(gClipWidth, gClipHeight, url, "", 30, 175))
+}
 
 function intro
 {
@@ -78,6 +83,7 @@ function videoOverview
         \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 260)
         \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
         \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 250)
+        \ , textClip("", 40)
         \ , gDissolveLength)
 }
 
@@ -124,9 +130,20 @@ function videoNokiaOviSuite_960x720
     Dissolve(install_cut, connected_cut, gDissolveLength)
 }
 
+function videoNokiaOviSuite_640x360
+{
+    setDetailClip(videoNokiaOviSuite_960x720)
+    setDetail(0, 0)
+    showDetail(75, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+        \ + showDetail(230, 60, 290)                                     [* Starting Download *]
+        \ + showDetail(340, -140, 0, 1240, 720)                          [* Installation *]
+        \ + showDetail(466, 0, 360)                                      [* Phone connected *]
+}
+
 function nokiaOviSuite
 {
-    AudioDub(videoWithClipSize("videoNokiaOviSuite"), audioNokiaOviSuite).converttorgb32
+    AudioDub(videoWithClipSize("videoNokiaOviSuite").urlSubTitle("bit.ly/ovisuite"), audioNokiaOviSuite).converttorgb32
 }
 
 function audioCarbide
@@ -178,9 +195,25 @@ function videoCarbide_960x720
     Dissolve(beforelogin_cut, afterlogin_cut, gDissolveLength)
 }
 
+function videoCarbide_640x360
+{
+    setDetailClip(videoCarbide_960x720)
+    setDetail(0, 0)
+    showDetail(85, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(165, -140, 0, 1240, 720)                          [* Page loads *]
+        \ + showDetail(210, 60, 290)                                     [* Starting Download *]
+        \ + showDetail(320, -140, 0, 1240, 720)                          [* Oops *]
+        \ + showDetail(430, 0, 236)                                      [* How to login *]
+        \ + showDetail(510, -140, 0, 1240, 720)                          [* Downloading *]
+        \ + showDetail(650, 160, 188)                                    [* Leave installation options untouched *]
+        \ + showDetail(850, 0, 360)                                      [* Launch WINSCW shortcut *]
+        \ + showDetail(960, 16, 19)                                      [* Executing WINSCW shortcut *]
+        \ + showDetail(1024, -140, 0, 1240, 720)                         [* End *]
+}
+
 function carbide
 {
-    AudioDub(videoWithClipSize("videoCarbide"), audioCarbide).converttorgb32
+    AudioDub(videoWithClipSize("videoCarbide").urlSubTitle("bit.ly/carbidecpp"), audioCarbide).converttorgb32
 }
 
 function audioActivePerl
@@ -216,9 +249,22 @@ function videoActivePerl_960x720
         \ + footage.trim(1165, 2363).selectevery(20).assumefps(25)      [* Fast forward to end *]
 }
 
+function videoActivePerl_640x360
+{
+    setDetailClip(videoActivePerl_960x720)
+    setDetail(0, 0)
+    showDetail(120, 0, 0)                                                [* Entering Url *]
+        \ + showDetail(210, -140, 0, 1240, 720)                          [* Page loads *]
+        \ + showDetail(440, 152, 294)                                    [* Clicking link *]
+        \ + showDetail(570, -140, 0, 1240, 720)                          [* Downloading, Installing *]
+        \ + showDetail(570, -140, 0, 1240, 720)                          [* Downloading, Installing *]
+        \ + showDetail(670, 160, 188)                                    [* Add to PATH environment variable *]
+        \ + showDetail(739, -140, 0, 1240, 720)                          [* End *]
+}
+
 function activePerl
 {
-    AudioDub(videoWithClipSize("videoActivePerl"), audioActivePerl).converttorgb32
+    AudioDub(videoWithClipSize("videoActivePerl").urlSubTitle("bit.ly/activeperl56"), audioActivePerl).converttorgb32
 }
 
 function audioS60Sdk
@@ -270,6 +316,15 @@ function videoS60Sdk1_960x720
         \ + footage.trim(249, 249).loop(100)                            [* Which version? *]
 }
 
+function videoS60Sdk1_640x360
+{
+    setDetailClip(videoS60Sdk1_960x720)
+    setDetail(0, 0)
+    showDetail(85, 0, 0)                                                [* Entering Url *]
+        \ + showDetail(145, -140, 0, 1240, 720)                         [* Page loads *]
+        \ + showDetail(315, 200, 360)                                   [* Which version? *]
+}
+
 function svgSnippet(string elementsCsv, int frames)
 {
     clip =
@@ -310,6 +365,20 @@ function videoS60Sdk3_960x720
         \ + footage.trim(36800, 37200).selectevery(8).assumefps(25)         [* Fast forwarding to End *]
 }
 
+function videoS60Sdk3_640x360
+{
+    setDetailClip(videoS60Sdk3_960x720)
+    setDetail(200, 360)
+    showDetail(140, 200, 360)                                           [* Choosing 5th edition *]
+        \ + showDetail(237, -140, 0, 1240, 720)                         [* Installing *]
+        \ + showDetail(300, 165, 200)                                   [* JRE warning *]
+        \ + showDetail(400, 8, 92, 952, 536)                            [* Installing *]
+        \ + showDetail(500, 192, 270)                                   [* Destination Path *]
+        \ + showDetail(580, -140, 0, 1240, 720)                         [* Installing *]
+        \ + showDetail(700, 161, 202)                                   [* CSL Tool chain *]
+        \ + showDetail(832, -140, 0, 1240, 720)                         [* End *]
+}
+
 function S60Sdk
 {
     AudioDub(
@@ -317,7 +386,7 @@ function S60Sdk
             \  videoWithClipSize("videoS60Sdk1").converttorgb32
             \ ,videoS60Sdk2
             \ ,videoWithClipSize("videoS60Sdk3").converttorgb32
-            \ ,gDissolveLength)
+            \ ,gDissolveLength).urlSubTitle("bit.ly/s60sdk")
         \ ,audioS60Sdk)
 }
 
@@ -352,9 +421,19 @@ function videoOpenC_960x720
         \ + footage.trim(1701, 3556).selectevery(40).assumefps(25)      [* Fast forward to end *]
 }
 
+function videoOpenC_640x360
+{
+    setDetailClip(videoOpenC_960x720)
+    setDetail(0, 0)
+    showDetail(90, 0, 0)                                                [* Entering Url *]
+        \ + showDetail(240, -140, 0, 1240, 720)                         [* Installing *]
+        \ + showDetail(415, 166, 188)                                   [* S60 Sdk Wizard page *]
+        \ + showDetail(489, -140, 0, 1240, 720)                         [* End *]
+}
+
 function openC
 {
-    AudioDub(videoWithClipSize("videoOpenC"), audioOpenC).converttorgb32
+    AudioDub(videoWithClipSize("videoOpenC").urlSubTitle("bit.ly/openc"), audioOpenC).converttorgb32
 }
 
 function audioAppTrk
@@ -388,18 +467,34 @@ function videoAppTrk_960x720
         \ + footage.trim(225, 465)                                      [* Opening .sisx *]
 }
 
+function videoAppTrk_640x360
+{
+    setDetailClip(videoAppTrk_960x720)
+    setDetail(0, 0)
+    showDetail(80, 0, 0)                                                [* Entering Url *]
+        \ + showDetail(145, -140, 0, 1240, 720)                         [* Page loads *]
+        \ + showDetail(400, 0, 360)                                     [* Click download *]
+        \ + showDetail(520, -140, 0, 1240, 720)                         [* Downloading *]
+        \ + showDetail(623, 0, 240)                                     [* Nokia App installer starts *]
+}
+
 function appTrk
 {
-[*
     appTrkInstall = 
-        \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS")
+        \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS", audio = false)
+        \ .trim(220, 380)
         \ .TemporalSoften(4, 4, 8, mode = 2)
         \ .turnright()
-        \ .crop(70, 128, 934, 1662)
-        \ .Lanczos4Resize(204, 360)
+        \ .crop(0, 330, 1080, 1280)
+        \ .Lanczos4Resize(304, 360)
+        \ .addborders(168, 0, 168, 0, $000000)
         \ .converttorgb32
-*]
-    AudioDub(videoWithClipSize("videoAppTrk"), audioAppTrk).converttorgb32
+    AudioDub(
+        \ Dissolve(
+            \  videoWithClipSize("videoAppTrk").converttorgb32
+            \ ,appTrkInstall
+            \ ,gDissolveLength).urlSubTitle("bit.ly/apptrk")
+        \ , audioAppTrk)
 }
 
 function audioOutro
@@ -423,29 +518,30 @@ function outro
     AudioDub(videoOutro, audioOutro)
 }
 
+function componenTitle(string title)
+{
+    AudioDub(textClip(title), audioNoise(10))
+}
+
 function completeclip
 {
     return
         \ Dissolve(
             \   intro
             \ , welcome.converttorgb32
-            \ , nokiaOviSuite
-            \ , carbide
-            \ , activePerl
-            \ , S60Sdk
-            \ , openC
-            \ , appTrk
+            \ , overview
+            \ , componenTitle("Nokia Ovi Suite"),                nokiaOviSuite
+            \ , componenTitle("Carbide.c++"),                    carbide
+            \ , componenTitle("ActivePerl-5.6.1, build 658"),    activePerl
+            \ , componenTitle("S60 Platform SDK"),               S60Sdk
+            \ , componenTitle("Open C/C++"),                     openC
+            \ , componenTitle("Application TRK"),                appTrk
             \ , outro
             \ , gDissolveLength)
         \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
-#        \ .creativeCommons
 }
 
 #completeclip
-#videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
-#videoS60Sdks
-#videoOverview
-
-completeclip
+welcome
 #converttoyv12
