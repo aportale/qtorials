@@ -83,7 +83,7 @@ function videoOverview
 
 function overview
 {
-    AudioDub(videoOverview, audioOverview)
+    AudioDub(videoOverview, audioOverview).converttorgb32
 }
 
 function audioNokiaOviSuite
@@ -124,9 +124,9 @@ function videoNokiaOviSuite_960x720
     Dissolve(install_cut, connected_cut, gDissolveLength)
 }
 
-function NokiaOviSuite
+function nokiaOviSuite
 {
-    AudioDub(videoWithClipSize("videoNokiaOviSuite"), audioNokiaOviSuite)
+    AudioDub(videoWithClipSize("videoNokiaOviSuite"), audioNokiaOviSuite).converttorgb32
 }
 
 function audioCarbide
@@ -178,30 +178,47 @@ function videoCarbide_960x720
     Dissolve(beforelogin_cut, afterlogin_cut, gDissolveLength)
 }
 
-function Carbide
+function carbide
 {
-    AudioDub(videoWithClipSize("videoCarbide"), audioCarbide)
+    AudioDub(videoWithClipSize("videoCarbide"), audioCarbide).converttorgb32
 }
 
 function audioActivePerl
 {
-    audioNoise(10)
+    audioNoise(1.5)
 \[*
     #n We visit the ActiveState Download page of Active Perl 5.6.
     #t bit.ly/activeperl56
 *]
-        \ + audioClip(103.991, 108.495, 1)
+        \ + audioClip(103.991, 108.495, 1.5)
 \[*
     #n There, we chose the version 5.6.1, build 635...
     #n This is the recommended version by Forum Nokia. Any other perl version might deter the Symbain toolchain from working properly.
 *]
-        \ + audioClip(108.681, 121.197, 1)
+        \ + audioClip(108.681, 121.197, 2)
 \[*
     #n When installing it, we make sure that Perl is added to the PATH environment variable.
 *]
         \ + audioClip(121.916, 126.363, 1)
 
         \ + audioNoise(10)
+}
+
+function videoActivePerl_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_activeperl.avi")
+    footage.trim(1, 141)                                                [* Entering Url *]
+        \ + footage.trim(200, 224)                                      [* Finish loading page *]
+        \ + footage.trim(224, 370).selectevery(2).assumefps(25)         [* Timelapse Scrolling and clicking *]
+        \ + footage.trim(370, 370).loop(275)                            [* Explaining version *]
+        \ + footage.trim(370, 1060).selectevery(12).assumefps(25)       [* Timelapse Installation *]
+        \ + footage.trim(1060, 1165)                                    [* Add to PATH environment variable *]
+        \ + footage.trim(1165, 2363).selectevery(20).assumefps(25)      [* Fast forward to end *]
+}
+
+function activePerl
+{
+    AudioDub(videoWithClipSize("videoActivePerl"), audioActivePerl).converttorgb32
 }
 
 function audioS60Sdk
@@ -337,12 +354,12 @@ function videoOpenC_960x720
 
 function openC
 {
-    AudioDub(videoWithClipSize("videoOpenC"), audioOpenC)
+    AudioDub(videoWithClipSize("videoOpenC"), audioOpenC).converttorgb32
 }
 
 function audioAppTrk
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n We visit the Application TRK download page.
     #t bit.ly/apptrk
@@ -361,9 +378,33 @@ function audioAppTrk
         \ + audioNoise(10)
 }
 
+function videoAppTrk_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.avi")
+    footage.trim(1, 115)                                                [* Entering Url *]
+        \ + footage.trim(140, 150)                                      [* Page loaded *]
+        \ + footage.trim(150, 225)                                      [* Fast forwarded slow mouse move *]
+        \ + footage.trim(225, 225).loop(180)                            [* App trk 5.0 verion *]
+        \ + footage.trim(225, 465)                                      [* Opening .sisx *]
+}
+
+function appTrk
+{
+[*
+    appTrkInstall = 
+        \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS")
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .turnright()
+        \ .crop(70, 128, 934, 1662)
+        \ .Lanczos4Resize(204, 360)
+        \ .converttorgb32
+*]
+    AudioDub(videoWithClipSize("videoAppTrk"), audioAppTrk).converttorgb32
+}
+
 function audioOutro
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n You have now a fully functional Symbian SDK. Now, we can get Qt for Symbian running.
 *]
@@ -374,7 +415,7 @@ function audioOutro
 
 function videoOutro
 {
-    simpleQtorialsElements("qtlogobig", 100)
+    simpleQtorialsElements("qtlogobig", 240).converttorgb32
 }
 
 function outro
@@ -387,7 +428,14 @@ function completeclip
     return
         \ Dissolve(
             \   intro
-            \ , welcome.converttorgb
+            \ , welcome.converttorgb32
+            \ , nokiaOviSuite
+            \ , carbide
+            \ , activePerl
+            \ , S60Sdk
+            \ , openC
+            \ , appTrk
+            \ , outro
             \ , gDissolveLength)
         \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
@@ -399,5 +447,5 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-Carbide
+completeclip
 #converttoyv12
