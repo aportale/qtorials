@@ -54,26 +54,26 @@ function audioQtSymbian
     #n We visit qt.nokia.com
     #t qt.nokia.com
 *]
-        \ + audioClip(0.034, 2.144, 1)
+        \ + audioClip(0.034, 2.144, 1.3)
 \[*
     #n There, we click on "Download"...
     #n ...and on the LGPL / Free Tab
 *]
-        \ + audioClip(2.702, 6.730, 1)
+        \ + audioClip(2.702, 6.730, 2)
 \[*
     #n Now, we choose the Qt libraries for the Symbian Platform and download the installer.
 *]
-        \ + audioClip(7.415, 12.234, 1)
+        \ + audioClip(7.415, 12.234, 3)
 \[*
     #n The installer will detect our previously installed S60 SDK and install the Qt libraries into it.
 *]
-        \ + audioClip(12.361, 18.236, 1)
+        \ + audioClip(12.361, 18.236, 2)
 \[*
     #n We keep in mind that we need to install Qt on the same drive on which the S60 SDK was installed.
     #n I add dash 'symbian' to the installation directory in case I want to install Qt for other platforms, later on.
     #t -symbian
 *]
-        \ + audioClip(18.596, 30.705, 1)
+        \ + audioClip(18.596, 30.705, 3.5)
 \[*
     #n Qt for Symbian is now installed on the computer.
 *]
@@ -85,7 +85,19 @@ function audioQtSymbian
 function videoQtSymbian_960x720
 {
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbiandesktop.avi")
-    footage.trim(1, 141)                                                [* Entering Url *]
+    footage.trim(90, 201)                                                [* Entering Url *]
+        \ + footage.trim(235, 425)                                       [* clicking Download/Lgpl. Hover QtSymbian installer *]
+        \ + footage.trim(425, 425).loop(80)                              [* Hover QtSymbian installer *]
+        \ + footage.trim(425, 445)                                       [* Download QtSymbian installer *]
+        \ + footage.trim(445, 6470).selectevery(100).assumefps(25)       [* Timelapse Installation until S60 SDK step *]
+        \ + footage.trim(6470, 6500)                                     [* S60 SDK step *]
+        \ + footage.trim(6500, 6500).loop(100)                           [* S60 SDK step *]
+        \ + footage.trim(6500, 6560)                                     [* S60 SDK step. Destination Path step. *]
+        \ + footage.trim(6560, 6560).loop(100)                           [* Destination Path step *]
+        \ + footage.trim(6560, 6692)                                     [* Destination Path step *]
+        \ + footage.trim(6692, 6692).loop(90)                            [* Destination Path step *]
+        \ + footage.trim(6692, 12495).selectevery(110).assumefps(25)     [* Timelapse til End *]
+        \ + footage.trim(12495, 12495).loop(115)                         [* End *]
 }
 
 function videoQtSymbian_640x360
@@ -98,7 +110,7 @@ function videoQtSymbian_640x360
 
 function qtSymbian
 {
-    AudioDub(videoWithClipSize("videoQtSymbian").urlSubTitle("qt.nokia.com"), audioNokiaOviSuite).converttorgb32
+    AudioDub(videoWithClipSize("videoQtSymbian").urlSubTitle("qt.nokia.com"), audioQtSymbian).converttorgb32
 }
 
 function audioQtSisPackage
@@ -108,12 +120,15 @@ function audioQtSisPackage
     #n We also want to install Qt on our phone
     #t qt.nokia.com
 *]
-        \ + audioClip(35.720, 38.275, 1)
+        \ + audioClip(35.720, 38.275, 1.3)
 \[*
     #n In the folder where we installed Qt for symbian we find a file called 'qt_demos.sis'
-    #n That is a one-in all installer which will install...
 *]
         \ + audioClip(39.111, 45.032, 1)
+\[*
+    #n That is a one-in all installer which will install...
+*]
+        \ + audioClip(45.404, 47.799, 1)
 
         \ + audioNoise(10)
 }
@@ -121,7 +136,9 @@ function audioQtSisPackage
 function videoQtSisPackage_960x720
 {
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
-    footage.trim(1, 141)                                                [* Entering Url *]
+    footage.trim(60, 60).loop(40)                                         [* Explorer open *]
+        \ + footage.trim(60, 240)                                         [* Navigating to qt_demos.sis *]
+        \ + footage.trim(240, 240).loop(140)                               [* Navigating to qt_demos.sis *]
 }
 
 function videoQtSisPackage_640x360
@@ -139,7 +156,7 @@ function qtSisPackage
 
 function audioQtDemoContent
 {
-    audioNoise(1)
+    audioNoise(0.7)
 \[*
     #n The required
     #n POSIX on Symbian, ...
@@ -148,7 +165,7 @@ function audioQtDemoContent
     #n The Qt libraries themselves
     #n And 'Fluidluncher', with a set of Qt examples, demonstrating different modules of Qt.
 *]
-        \ + audioClip(45.380, 62.238, 1)
+        \ + audioClip(48.011, 62.238, 1)
 
         \ + audioNoise(10)
 }
@@ -156,13 +173,13 @@ function audioQtDemoContent
 function videoQtDemoContent
 {
     Dissolve(
-        \   textClip("", 110)
-        \ , textClip("pips_s60_1_6_SS.sis\n\n\n\n", 250)
-        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\n\n\n", 250)
-        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\nSTDCPP_s60_1_6_SS.sis\n\n", 250)
-        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\nSTDCPP_s60_1_6_SS.sis\nqt.sis\n", 250)
-        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\nSTDCPP_s60_1_6_SS.sis\nqt.sis\nfluidlauncher.sis", 250)
-        \ , textClip("", 40)
+        \   textClip("", 45)
+        \ , textClip("pips.sis\n\n\n\n", 50)
+        \ , textClip("pips.sis\nopenc_ssl.sis\n\n\n", 55)
+        \ , textClip("pips.sis\nopenc_ssl.sis\nSTDCPP.sis\n\n", 70)
+        \ , textClip("pips.sis\nopenc_ssl.sis\nSTDCPP.sis\nqt.sis\n", 55)
+        \ , textClip("pips.sis\nopenc_ssl.sis\nSTDCPP.sis\nqt.sis\nfluidlauncher.sis", 150)
+        \ , textClip("", 20)
         \ , gDissolveLength)
 }
 
@@ -187,7 +204,9 @@ function audioSisExecution
 function videoSisExecution_960x720
 {
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
-    footage.trim(1, 141)                                                [* Entering Url *]
+    footage.trim(240, 240).loop(200)                                     [* On qt_demos.sis *]
+        \ + footage.trim(240, 260)                                       [* Installing qt_demos.sis *]
+        \ + footage.trim(320, 430)                                       [* Installing qt_demos.sis *]
 }
 
 function videoSisExecution_640x360
@@ -205,7 +224,7 @@ function sisExecution
 
 function audioSisInstallation
 {
-    audioNoise(1)
+    audioNoise(3)
 \[*
     #n ...confirm the installation on the phone !once! and wait until everything is installed.
 *]
@@ -220,15 +239,42 @@ function audioSisInstallation
 
 function videoSisInstallation
 {
-    appTrkInstall = 
-        \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS", audio = false)
-        \ .trim(220, 380)
+    croppedWidth = 1080
+    croppedHeight = 1280
+    ratio = float(croppedWidth) / float(croppedHeight)
+    scaledHeight = gClipHeight
+    scaledWidth = int(scaledHeight * ratio) + 1
+    bordersSide = (gClipWidth - scaledWidth) / 2
+
+    qtInstall =
+        \  DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qt.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .tweak(bright = 15)
         \ .turnright()
-        \ .crop(0, 330, 1080, 1280)
-        \ .Lanczos4Resize(304, 360)
-        \ .addborders(168, 0, 168, 0, $000000)
+        \ .crop(0, 330, croppedWidth, croppedHeight)
+        \ .Lanczos4Resize(scaledWidth, scaledHeight)
+        \ .addborders(bordersSide, 0, bordersSide, 0, $000000)
         \ .converttorgb32
+    qtInstall_cut =
+        \   qtInstall.trim(100, 260)                                        [* Preparing, Confirming *]
+        \ + qtInstall.trim(260, 1881).selectevery(20).assumefps(25)         [* Installing *]
+
+    fluidLauncherInstall =
+        \  DirectShowSource(gMediaDir + "qtsymbian_qtsetup_fluidlauncher.MTS", audio = false)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .tweak(bright = 15)
+        \ .turnright()
+        \ .crop(0, 330, croppedWidth, croppedHeight)
+        \ .Lanczos4Resize(scaledWidth, scaledHeight)
+        \ .addborders(bordersSide, 0, bordersSide, 0, $000000)
+        \ .converttorgb32
+    fluidLauncherInstall_cut =
+        \   fluidLauncherInstall.trim(1, 265).selectevery(10).assumefps(25) [* Installing Fluidlauncher *]
+        \ + fluidLauncherInstall.trim(265, 370)                             [* Using Fluidlauncher *]
+        \ + fluidLauncherInstall.trim(495, 700)                             [* Playing Raycasting *]
+        \ + fluidLauncherInstall.trim(700, 700).loop(35)                    [* End *]
+
+    Dissolve(qtInstall_cut, fluidLauncherInstall_cut, gDissolveLength)
 }
 
 function sisInstallation
@@ -248,27 +294,27 @@ function audioQtSdk
 \[*
     #n ...and install it.
 *]
-        \ + audioClip(95.443, 96.418, 1)
+        \ + audioClip(95.443, 96.418, 3.5)
 \[*
     #n After launching QtCreator, we check...
 *]
-        \ + audioClip(96.847, 99.331, 1)
+        \ + audioClip(96.847, 99.331, 0.4)
 \[*
     #n ...Tools...
 *]
-        \ + audioClip(99.354, 99.993, 1)
+        \ + audioClip(99.354, 99.993, 0.7)
 \[*
     #n ...Options...
 *]
-        \ + audioClip(100.167, 100.956, 1)
+        \ + audioClip(100.167, 100.956, 0.6)
 \[*
     #n ...Qt4...
 *]
-        \ + audioClip(101.165, 102.141, 1)
+        \ + audioClip(101.165, 102.141, 0.5)
 \[*
     #n ...Qt Versions...
 *]
-        \ + audioClip(102.245, 103.255, 1)
+        \ + audioClip(102.245, 103.255, 0.8)
 \[*
     #n ...to verify if QtCreator correctly detected the S60 SDK and Qt for Symbian.
 *]
@@ -279,22 +325,30 @@ function audioQtSdk
 
 function videoQtSdk_960x720
 {
-    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsdkinstall.avi")
-    footage.trim(1, 141)                                                [* Entering Url *]
-    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsdkcheckqtversions.avi")
+    install = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsdkinstall.avi")
+    install_cut =
+        \ + install.trim(150, 372)                                      [* Entering Url *]
+        \ + install.trim(372, 372).loop(70)                             [* Hover download *]
+        \ + install.trim(372, 17600).selectevery(260).assumefps(25)     [* Hover download *]
+    check = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsdkcheckqtversions.avi")
+    check_cut =
+        \   check.trim(15, 15).loop(75)                                 [* Creator open *]
+        \ + check.trim(15, 350)                                         [* Going to QtVersions preferences *]
+        \ + check.trim(350, 350).loop(65)                               [* Qt version info tooltip *]
+    Dissolve(install_cut, check_cut, gDissolveLength)
 }
 
 function videoQtSdk_640x360
 {
     setDetailClip(videoQtSdk_960x720)
     setDetail(0, 0)
-    showDetail(75, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+    showDetail(75, 0, 0)                                                [* Entering Url *]
+        \ + showDetail(150, -140, 0, 1240, 720)                         [* Page loads *]
 }
 
 function qtSdk
 {
-    AudioDub(videoWithClipSize("videoSisExecution").urlSubTitle("bit.ly/ovisuite"), audioSisExecution).converttorgb32
+    AudioDub(videoWithClipSize("videoQtSdk").urlSubTitle("qt.nokia.com"), audioQtSdk).converttorgb32
 }
 
 function audioOutro
@@ -311,7 +365,7 @@ function audioOutro
 
 function videoOutro
 {
-    simpleQtorialsElements("qtlogobig", 100)
+    simpleQtorialsElements("qtlogobig", 200)
 }
 
 function outro
@@ -325,6 +379,12 @@ function completeclip
         \ Dissolve(
             \   intro
             \ , welcome.converttorgb
+            \ , qtSymbian
+            \ , qtSisPackage
+            \ , qtDemoContent
+            \ , sisExecution
+            \ , qtSdk
+            \ , outro
             \ , gDissolveLength)
         \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
@@ -336,6 +396,6 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-qtDemoContent
+sisInstallation
 
 #converttoyv12
