@@ -16,11 +16,6 @@ global gClipWidth = 640
 global gClipHeight = 360
 global gTextClipFramesPerCharacter = 4
 
-function urlSubTitle(clip, string url)
-{
-    overlayRgbClip(clip.converttorgb32, QtorialsSubtitle(gClipWidth, gClipHeight, url, "", 30, 175))
-}
-
 function intro
 {
     Dissolve(

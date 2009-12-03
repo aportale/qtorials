@@ -232,3 +232,8 @@ function simpleQtorialsElements(string overlayElements, int framesCount)
         \   BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
         \ , QtorialsElements(overlayElements, gClipWidth, gClipHeight, framesCount))
 }
+
+function urlSubTitle(clip, string url)
+{
+    overlayRgbClip(clip.converttorgb32, QtorialsSubtitle(gClipWidth, gClipHeight, url, "", 30, 175))
+}
