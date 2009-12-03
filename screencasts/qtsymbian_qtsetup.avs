@@ -9,9 +9,9 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-#global gAudioClip = WAVSource(gMediaDir + "sdkinstallation_windows.wav")
-#global gAudioNoiseStart = 1829888 / 44100.0
-#global gAudioNoiseEnd = 1912832 / 44100.0
+global gAudioClip = WAVSource(gMediaDir + "qtsymbian_qtsetup_narration.wav")
+global gAudioNoiseStart = 1 / 44100.0
+global gAudioNoiseEnd = 1 / 44100.0
 global gClipWidth = 640
 global gClipHeight = 360
 global gTextClipFramesPerCharacter = 2
@@ -49,7 +49,7 @@ function welcome
 
 function audioQtSymbian
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n We visit qt.nokia.com
     #t qt.nokia.com
@@ -82,9 +82,28 @@ function audioQtSymbian
         \ + audioNoise(10)
 }
 
+function videoQtSymbian_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbiandesktop.avi")
+    footage.trim(1, 141)                                                [* Entering Url *]
+}
+
+function videoQtSymbian_640x360
+{
+    setDetailClip(videoQtSymbian_960x720)
+    setDetail(0, 0)
+    showDetail(75, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+}
+
+function qtSymbian
+{
+    AudioDub(videoWithClipSize("videoQtSymbian").urlSubTitle("qt.nokia.com"), audioNokiaOviSuite).converttorgb32
+}
+
 function audioQtSisPackage
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n We also want to install Qt on our phone
     #t qt.nokia.com
@@ -95,6 +114,32 @@ function audioQtSisPackage
     #n That is a one-in all installer which will install...
 *]
         \ + audioClip(39.111, 45.032, 1)
+
+        \ + audioNoise(10)
+}
+
+function videoQtSisPackage_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
+    footage.trim(1, 141)                                                [* Entering Url *]
+}
+
+function videoQtSisPackage_640x360
+{
+    setDetailClip(videoQtSisPackage_960x720)
+    setDetail(0, 0)
+    showDetail(75, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+}
+
+function qtSisPackage
+{
+    AudioDub(videoWithClipSize("videoQtSisPackage"), audioQtSisPackage).converttorgb32
+}
+
+function audioQtDemoContent
+{
+    audioNoise(1)
 \[*
     #n The required
     #n POSIX on Symbian, ...
@@ -104,11 +149,63 @@ function audioQtSisPackage
     #n And 'Fluidluncher', with a set of Qt examples, demonstrating different modules of Qt.
 *]
         \ + audioClip(45.380, 62.238, 1)
+
+        \ + audioNoise(10)
+}
+
+function videoQtDemoContent
+{
+    Dissolve(
+        \   textClip("", 110)
+        \ , textClip("pips_s60_1_6_SS.sis\n\n\n\n", 250)
+        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\n\n\n", 250)
+        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\nSTDCPP_s60_1_6_SS.sis\n\n", 250)
+        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\nSTDCPP_s60_1_6_SS.sis\nqt.sis\n", 250)
+        \ , textClip("pips_s60_1_6_SS.sis\nopenc_ssl_s60_1_6_SS.sis\nSTDCPP_s60_1_6_SS.sis\nqt.sis\nfluidlauncher.sis", 250)
+        \ , textClip("", 40)
+        \ , gDissolveLength)
+}
+
+function qtDemoContent
+{
+    AudioDub(videoQtDemoContent, audioQtDemoContent).converttorgb32
+}
+
+
+function audioSisExecution
+{
+    audioNoise(1)
 \[*
     #n If you have previous versions of Qt or Fluidlauncher on your phone, they need to be uninstalled before proceeding.
     #n Now, we execute the installer, ...
 *]
         \ + audioClip(62.854, 71.294, 1)
+
+        \ + audioNoise(10)
+}
+
+function videoSisExecution_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
+    footage.trim(1, 141)                                                [* Entering Url *]
+}
+
+function videoSisExecution_640x360
+{
+    setDetailClip(videoSisExecution_960x720)
+    setDetail(0, 0)
+    showDetail(75, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+}
+
+function sisExecution
+{
+    AudioDub(videoWithClipSize("videoSisExecution"), audioSisExecution).converttorgb32
+}
+
+function audioSisInstallation
+{
+    audioNoise(1)
 \[*
     #n ...confirm the installation on the phone !once! and wait until everything is installed.
 *]
@@ -121,9 +218,27 @@ function audioQtSisPackage
         \ + audioNoise(10)
 }
 
+function videoSisInstallation
+{
+    appTrkInstall = 
+        \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS", audio = false)
+        \ .trim(220, 380)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .turnright()
+        \ .crop(0, 330, 1080, 1280)
+        \ .Lanczos4Resize(304, 360)
+        \ .addborders(168, 0, 168, 0, $000000)
+        \ .converttorgb32
+}
+
+function sisInstallation
+{
+    AudioDub(videoSisInstallation, audioSisInstallation).converttorgb32
+}
+
 function audioQtSdk
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n Let's now download and install the Qt SDK for Windows which includes QtCreator.
     #n From the Qt download page we get the 'Qt SDK for Windows'...
@@ -162,13 +277,33 @@ function audioQtSdk
         \ + audioNoise(10)
 }
 
+function videoQtSdk_960x720
+{
+    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsdkinstall.avi")
+    footage.trim(1, 141)                                                [* Entering Url *]
+    footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsdkcheckqtversions.avi")
+}
+
+function videoQtSdk_640x360
+{
+    setDetailClip(videoQtSdk_960x720)
+    setDetail(0, 0)
+    showDetail(75, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+}
+
+function qtSdk
+{
+    AudioDub(videoWithClipSize("videoSisExecution").urlSubTitle("bit.ly/ovisuite"), audioSisExecution).converttorgb32
+}
+
 function audioOutro
 {
-    audioNoise(10)
+    audioNoise(1)
 \[*
     #n That's it, now we are ready to develop Qt applications for the Symbian Platform.
     #n thanks for watching
-\[*
+*]
         \ + audioClip(110.036, 115.620, 1)
 
         \ + audioNoise(10)
@@ -201,6 +336,6 @@ function completeclip
 #videoS60Sdks
 #videoOverview
 
-completeclip
+qtDemoContent
 
 #converttoyv12
