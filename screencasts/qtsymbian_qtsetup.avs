@@ -10,8 +10,8 @@ LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "qtsymbian_qtsetup_narration.wav")
-global gAudioNoiseStart = 72.026045
-global gAudioNoiseEnd = 72.309033
+global gAudioNoiseStart = 71.787906
+global gAudioNoiseEnd = 72.223758
 global gClipWidth = 640
 global gClipHeight = 360
 global gTextClipFramesPerCharacter = 2
