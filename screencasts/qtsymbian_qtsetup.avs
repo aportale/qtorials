@@ -54,31 +54,30 @@ function audioQtSymbian
     #n We visit qt.nokia.com
     #t qt.nokia.com
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(0.034, 2.144, 1)
 \[*
     #n There, we click on "Download"...
-    #n ...and on LGPL / Free
+    #n ...and on the LGPL / Free Tab
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(2.702, 6.730, 1)
 \[*
     #n Now, we choose the Qt libraries for the Symbian Platform and download the installer.
-    #n No authentification is required.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(7.415, 12.234, 1)
 \[*
     #n The installer will detect our previously installed S60 SDK and install the Qt libraries into it.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(12.361, 18.236, 1)
 \[*
     #n We keep in mind that we need to install Qt on the same drive on which the S60 SDK was installed.
-    #n I add dash 'symbian' to the installation directory in case I want to install Qt for other platforms, later.
+    #n I add dash 'symbian' to the installation directory in case I want to install Qt for other platforms, later on.
     #t -symbian
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(18.596, 30.705, 1)
 \[*
     #n Qt for Symbian is now installed on the computer.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(31.680, 34.443, 1)
 
         \ + audioNoise(10)
 }
@@ -90,36 +89,34 @@ function audioQtSisPackage
     #n We also want to install Qt on our phone
     #t qt.nokia.com
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(35.720, 38.275, 1)
 \[*
     #n In the folder where we installed Qt for symbian we find a file called 'qt_demos.sis'
     #n That is a one-in all installer which will install...
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(39.111, 45.032, 1)
 \[*
-    #n The Qt requirements:
-    #n That is a one-in all installer which will install:
     #n The required
     #n POSIX on Symbian, ...
     #n ...Secure Sockets Layer...
     #n ...and the Standard C++ and Boost libraries
     #n The Qt libraries themselves
-    #n And 'Fluidluncher', with couple of Qt examples, demonstrating different modules of Qt.
+    #n And 'Fluidluncher', with a set of Qt examples, demonstrating different modules of Qt.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(45.380, 62.238, 1)
 \[*
     #n If you have previous versions of Qt or Fluidlauncher on your phone, they need to be uninstalled before proceeding.
     #n Now, we execute the installer, ...
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(62.854, 71.294, 1)
 \[*
     #n ...confirm the installation on the phone !once! and wait until everything is installed.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(73.140, 77.691, 1)
 \[*
     #n After the installation, the Fluidlauncher opens, and we can play around a bit with the demos.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(80.443, 85.493, 1)
 
         \ + audioNoise(10)
 }
@@ -132,19 +129,35 @@ function audioQtSdk
     #n From the Qt download page we get the 'Qt SDK for Windows'...
     #t qt.nokia.com
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(85.911, 95.013, 1)
 \[*
     #n ...and install it.
 *]
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(95.443, 96.418, 1)
 \[*
-    #n After launching QtCreator, we check Tools...
+    #n After launching QtCreator, we check...
+*]
+        \ + audioClip(96.847, 99.331, 1)
+\[*
+    #n ...Tools...
+*]
+        \ + audioClip(99.354, 99.993, 1)
+\[*
     #n ...Options...
-    #n ...Qt4...
-    #n ...Qt Versions...
-    #n ...to verify if QtCreator correctly detected the S60 SDK and Qt for Symbian.
+*]
+        \ + audioClip(100.167, 100.956, 1)
 \[*
-        \ + audioClip(1.000, 2.000, 1)
+    #n ...Qt4...
+*]
+        \ + audioClip(101.165, 102.141, 1)
+\[*
+    #n ...Qt Versions...
+*]
+        \ + audioClip(102.245, 103.255, 1)
+\[*
+    #n ...to verify if QtCreator correctly detected the S60 SDK and Qt for Symbian.
+*]
+        \ + audioClip(103.545, 109.095, 1)
 
         \ + audioNoise(10)
 }
@@ -154,8 +167,9 @@ function audioOutro
     audioNoise(10)
 \[*
     #n That's it, now we are ready to develop Qt applications for the Symbian Platform.
+    #n thanks for watching
 \[*
-        \ + audioClip(1.000, 2.000, 1)
+        \ + audioClip(110.036, 115.620, 1)
 
         \ + audioNoise(10)
 }
