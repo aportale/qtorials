@@ -45,6 +45,8 @@ function welcome
     AudioDub(videoWithClipSize("videoWelcome"), WAVSource(gMediaDir + "qtsymbian_qtsetup.wav"))
         \ .DelayAudio(-1.75)
         \ .Trim(10, 325)
+        \ .overlayRgbClip(
+            \   QtorialsSubtitle(gClipWidth, gClipHeight, "Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160))
 }
 
 function audioQtSymbian
@@ -104,8 +106,15 @@ function videoQtSymbian_640x360
 {
     setDetailClip(videoQtSymbian_960x720)
     setDetail(0, 0)
-    showDetail(75, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+    showDetail(64, 0, 0)                                                 [* Entering Url *]
+        \ + showDetail(120, -140, 0, 1240, 720)                          [* Page loads *]
+        \ + showDetail(210, 150, 85)                                     [* Clicking Download/Lgpl *]
+        \ + showDetail(300, -140, 0, 1240, 720)                          [* Scrolling Down *]
+        \ + showDetail(390, 320, 88)                                     [* Clicking link *]
+        \ + showDetail(460, -140, 0, 1240, 720)                          [* Installation til SDK step *]
+        \ + showDetail(920, 164, 172)                                    [* SDK step, Destination step *]
+        \ + showDetail(1040, -140, 0, 1240, 720)                         [* Finishing Installation *]
+        \ + showDetail(1148, 43, 57)                                     [* End *]
 }
 
 function qtSymbian
@@ -138,15 +147,16 @@ function videoQtSisPackage_960x720
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
     footage.trim(60, 60).loop(40)                                         [* Explorer open *]
         \ + footage.trim(60, 240)                                         [* Navigating to qt_demos.sis *]
-        \ + footage.trim(240, 240).loop(140)                               [* Navigating to qt_demos.sis *]
+        \ + footage.trim(240, 240).loop(140)                              [* Navigating to qt_demos.sis *]
 }
 
 function videoQtSisPackage_640x360
 {
     setDetailClip(videoQtSisPackage_960x720)
-    setDetail(0, 0)
-    showDetail(75, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+    setDetail(126, 12, 809, 455)
+    showDetail(50, 126, 12, 809, 455)                                     [* Explorer open *]
+        \ + showDetail(150, 304, 12)                                      [* Navigating to qt dir *]
+        \ + showDetail(361, 304, 268)                                     [* Pointer on qt_demos.sis *]
 }
 
 function qtSisPackage
@@ -188,7 +198,6 @@ function qtDemoContent
     AudioDub(videoQtDemoContent, audioQtDemoContent).converttorgb32
 }
 
-
 function audioSisExecution
 {
     audioNoise(1)
@@ -212,9 +221,10 @@ function videoSisExecution_960x720
 function videoSisExecution_640x360
 {
     setDetailClip(videoSisExecution_960x720)
-    setDetail(0, 0)
-    showDetail(75, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
+    setDetail(304, 268)
+    showDetail(75, 304, 268)                                             [* Zoomed on qt_demos.sis *]
+        \ + showDetail(230, -140, 0, 1240, 720, 75)                      [* Zoom out *]
+        \ + showDetail(332, 100, 170)                                    [* End *]
 }
 
 function sisExecution
@@ -249,7 +259,7 @@ function videoSisInstallation
     qtInstall =
         \  DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qt.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .tweak(bright = 15)
+        \ .tweak(bright = 17)
         \ .turnright()
         \ .crop(0, 330, croppedWidth, croppedHeight)
         \ .Lanczos4Resize(scaledWidth, scaledHeight)
@@ -262,7 +272,7 @@ function videoSisInstallation
     fluidLauncherInstall =
         \  DirectShowSource(gMediaDir + "qtsymbian_qtsetup_fluidlauncher.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .tweak(bright = 15)
+        \ .tweak(bright = 17)
         \ .turnright()
         \ .crop(0, 330, croppedWidth, croppedHeight)
         \ .Lanczos4Resize(scaledWidth, scaledHeight)
@@ -341,9 +351,12 @@ function videoQtSdk_960x720
 function videoQtSdk_640x360
 {
     setDetailClip(videoQtSdk_960x720)
-    setDetail(0, 0)
-    showDetail(75, 0, 0)                                                [* Entering Url *]
-        \ + showDetail(150, -140, 0, 1240, 720)                         [* Page loads *]
+    setDetail(-140, 0, 1240, 720)
+    showDetail(80, -140, 0, 1240, 720)                                  [* Page loads *]
+        \ + showDetail(285, 22, 204)                                    [* Navigate to link *]
+        \ + showDetail(440, -140, 0, 1240, 720)                         [* Finish Installation, start Creator *]
+        \ + showDetail(610, 0, 0)                                       [* Going to QtVersions preferences *]
+        \ + showDetail(830, 195, 88)                                       [* End *]
 }
 
 function qtSdk
@@ -383,19 +396,13 @@ function completeclip
             \ , qtSisPackage
             \ , qtDemoContent
             \ , sisExecution
+            \ , sisInstallation
             \ , qtSdk
             \ , outro
             \ , gDissolveLength)
         \ .overlayQtorialsElements("qtlogosmall, oldstyle")
         \ .FadeIO(gDissolveLength)
-#        \ .creativeCommons
 }
 
-#completeclip
-#videoS60SdksVideo.overlayQtorialsElements("qtlogosmall, oldstyle")
-#videoS60Sdks
-#videoOverview
-
-sisInstallation
-
+completeclip
 #converttoyv12
