@@ -122,7 +122,7 @@ function qtSymbian
     AudioDub(videoWithClipSize("videoQtSymbian").urlSubTitle("qt.nokia.com"), audioQtSymbian).converttorgb32
 }
 
-function audioQtSisPackage
+function audioqtDemoSisPackage
 {
     audioNoise(1)
 \[*
@@ -142,7 +142,7 @@ function audioQtSisPackage
         \ + audioNoise(10)
 }
 
-function videoQtSisPackage_960x720
+function videoqtDemoSisPackage_960x720
 {
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
     footage.trim(60, 60).loop(40)                                         [* Explorer open *]
@@ -150,21 +150,21 @@ function videoQtSisPackage_960x720
         \ + footage.trim(240, 240).loop(140)                              [* Navigating to qt_demos.sis *]
 }
 
-function videoQtSisPackage_640x360
+function videoqtDemoSisPackage_640x360
 {
-    setDetailClip(videoQtSisPackage_960x720)
+    setDetailClip(videoqtDemoSisPackage_960x720)
     setDetail(126, 12, 809, 455)
     showDetail(50, 126, 12, 809, 455)                                     [* Explorer open *]
         \ + showDetail(150, 304, 12)                                      [* Navigating to qt dir *]
         \ + showDetail(361, 304, 268)                                     [* Pointer on qt_demos.sis *]
 }
 
-function qtSisPackage
+function qtDemoSisPackage
 {
-    AudioDub(videoWithClipSize("videoQtSisPackage"), audioQtSisPackage).converttorgb32
+    AudioDub(videoWithClipSize("videoqtDemoSisPackage"), audioqtDemoSisPackage).converttorgb32
 }
 
-function audioQtDemoContent
+function audioqtDemoSisContent
 {
     audioNoise(0.7)
 \[*
@@ -180,7 +180,7 @@ function audioQtDemoContent
         \ + audioNoise(10)
 }
 
-function videoQtDemoContent
+function videoqtDemoSisContent
 {
     Dissolve(
         \   textClip("", 45)
@@ -193,12 +193,12 @@ function videoQtDemoContent
         \ , gDissolveLength)
 }
 
-function qtDemoContent
+function qtDemoSisContent
 {
-    AudioDub(videoQtDemoContent, audioQtDemoContent).converttorgb32
+    AudioDub(videoqtDemoSisContent, audioqtDemoSisContent).converttorgb32
 }
 
-function audioSisExecution
+function audioqtDemoSisExecution
 {
     audioNoise(1)
 \[*
@@ -210,7 +210,7 @@ function audioSisExecution
         \ + audioNoise(10)
 }
 
-function videoSisExecution_960x720
+function videoqtDemoSisExecution_960x720
 {
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
     footage.trim(240, 240).loop(200)                                     [* On qt_demos.sis *]
@@ -218,21 +218,21 @@ function videoSisExecution_960x720
         \ + footage.trim(320, 430)                                       [* Installing qt_demos.sis *]
 }
 
-function videoSisExecution_640x360
+function videoqtDemoSisExecution_640x360
 {
-    setDetailClip(videoSisExecution_960x720)
+    setDetailClip(videoqtDemoSisExecution_960x720)
     setDetail(304, 268)
     showDetail(75, 304, 268)                                             [* Zoomed on qt_demos.sis *]
         \ + showDetail(230, -140, 0, 1240, 720, 75)                      [* Zoom out *]
         \ + showDetail(332, 100, 170)                                    [* End *]
 }
 
-function sisExecution
+function qtDemoSisExecution
 {
-    AudioDub(videoWithClipSize("videoSisExecution"), audioSisExecution).converttorgb32
+    AudioDub(videoWithClipSize("videoqtDemoSisExecution"), audioqtDemoSisExecution).converttorgb32
 }
 
-function audioSisInstallation
+function audioqtDemoSisInstallation
 {
     audioNoise(3)
 \[*
@@ -247,7 +247,7 @@ function audioSisInstallation
         \ + audioNoise(10)
 }
 
-function videoSisInstallation
+function videoqtDemoSisInstallation
 {
     croppedWidth = 1080
     croppedHeight = 1280
@@ -287,9 +287,9 @@ function videoSisInstallation
     Dissolve(qtInstall_cut, fluidLauncherInstall_cut, gDissolveLength)
 }
 
-function sisInstallation
+function qtDemoSisInstallation
 {
-    AudioDub(videoSisInstallation, audioSisInstallation).converttorgb32
+    AudioDub(videoqtDemoSisInstallation, audioqtDemoSisInstallation).converttorgb32
 }
 
 function audioQtSdk
@@ -393,10 +393,10 @@ function completeclip
             \   intro
             \ , welcome.converttorgb
             \ , qtSymbian
-            \ , qtSisPackage
-            \ , qtDemoContent
-            \ , sisExecution
-            \ , sisInstallation
+            \ , qtDemoSisPackage
+            \ , qtDemoSisContent
+            \ , qtDemoSisExecution
+            \ , qtDemoSisInstallation
             \ , qtSdk
             \ , outro
             \ , gDissolveLength)
