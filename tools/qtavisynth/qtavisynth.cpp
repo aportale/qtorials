@@ -122,6 +122,46 @@ protected:
     QList<TitleData> m_titleData;
 };
 
+class QtorialsZoomNPan : public IClip
+{
+public:
+    QtorialsZoomNPan(PClip originClip, int width, int height,
+                     int extensionColor, int defaultTransitionFrames,
+                     int zoomNPanArgumentsCount, const AVSValue* zoomNPanArguments,
+                     IScriptEnvironment* env)
+        : m_originClip(originClip)
+    {
+        m_targetVideoInfo = originClip->GetVideoInfo();
+        m_targetVideoInfo.width = width;
+        m_targetVideoInfo.height = height;
+    }
+
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
+    {
+        Q_UNUSED(n)
+        Q_UNUSED(env)
+        int target_width = m_targetVideoInfo.width;
+        int target_height = m_targetVideoInfo.height;
+        float src_top = 40 + n;
+        float src_left = 40 + n;
+        float src_width = 400 + n;
+        float src_Height = 400 + n;
+        AVSValue resizedParams[] = { m_originClip, target_width, target_height, src_top, src_left, src_width, src_Height };
+        PClip resizedClip = env->Invoke("BlackmanResize", AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
+        return resizedClip->GetFrame(n, env);
+    }
+    bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
+    const VideoInfo& __stdcall GetVideoInfo() { return m_targetVideoInfo; }
+    void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
+    { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
+
+protected:
+    PClip m_originClip;
+    VideoInfo m_targetVideoInfo;
+    int m_extensionWidth;
+};
+
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
@@ -179,6 +219,19 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
     return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 
+AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+    return new QtorialsZoomNPan(args[0].AsClip(),
+                                args[1].AsInt(defaultClipWidth),
+                                args[2].AsInt(defaultClipHeight),
+                                args[3].AsInt(0xffffff),
+                                args[4].AsInt(15),
+                                args[5].ArraySize(),
+                                &args[5][0],
+                                env);
+}
+
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
@@ -187,5 +240,7 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
     env->AddFunction("QtorialsSubtitle", "[width]i[height]i.*", CreateSubtitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i", CreateSvg, 0);
+    env->AddFunction("QtorialsZoomNPan",
+                     "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i.*", CreateZoomNPan, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
