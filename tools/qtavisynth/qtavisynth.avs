@@ -6,12 +6,7 @@
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
 
-LoadPlugin("qtavisynth.dll")
+LoadPlugin("..\..\screencasts\qtavisynth.dll")
 
-QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", 640, 360)
-\ .overlayRgbClip(QtorialsSvg("artwork.svg", "qtlogobig", 640, 360))
-\ .overlayRgbClip(QtorialsElements("qtlogosmall", 640, 360))
-\ .overlayRgbClip(QtorialsSubtitle(640, 360,
-   \ "Alessandro", "Funny guy with long name", 20, 80,
-   \ "Alessandro", "", 120, 180,
-   \ "Alessandro", "Funny guy with long name", 250, 280))
+QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", $ffffff, 640, 360)
+QtorialsZoomNPan(100, 100, $ffffff, 20)
