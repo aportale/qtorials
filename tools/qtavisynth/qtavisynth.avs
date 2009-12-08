@@ -8,5 +8,8 @@
 
 LoadPlugin("..\..\screencasts\qtavisynth.dll")
 
-QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", $ffffff, 640, 360)
-QtorialsZoomNPan(100, 100, $ffffff, 20)
+QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", $ffffff, 640, 360, 500)
+\.QtorialsZoomNPan(100, 100, $ffffff, 10
+    \ ,  30,  -1,     0,   0, 400, 400
+    \ ,  70,  -1,   100, 100, 400, 400
+    \ )
