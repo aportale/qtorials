@@ -130,22 +130,35 @@ public:
                      int zoomNPanArgumentsCount, const AVSValue* zoomNPanArguments,
                      IScriptEnvironment* env)
         : m_originClip(originClip)
+        , m_animation(&m_animationObject, m_animationPropertyName)
     {
+        if (zoomNPanArgumentsCount % 6 != 0)
+            env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThe title arguments must be dividable by 6.");
         m_targetVideoInfo = originClip->GetVideoInfo();
         m_targetVideoInfo.width = width;
         m_targetVideoInfo.height = height;
+        m_animation.setDuration(m_targetVideoInfo.num_frames);
+        for (int i = 0; i < zoomNPanArgumentsCount; i += 6) {
+            const int keyFramePosition = zoomNPanArguments[i].AsInt();
+            const int transitionFrames = zoomNPanArguments[i + 1].AsInt() != -1 ?
+                                         zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames;
+            const QRectF rect(zoomNPanArguments[i + 2].AsFloat(), zoomNPanArguments[i + 3].AsFloat(),
+                              zoomNPanArguments[i + 3].AsFloat(), zoomNPanArguments[i + 4].AsFloat());
+            m_animation.setKeyValueAt(1.0 / m_targetVideoInfo.num_frames * keyFramePosition, rect);
+        }
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
     {
-        Q_UNUSED(n)
         Q_UNUSED(env)
         int target_width = m_targetVideoInfo.width;
         int target_height = m_targetVideoInfo.height;
-        float src_top = 40 + n;
-        float src_left = 40 + n;
-        float src_width = 400 + n;
-        float src_Height = 400 + n;
+        m_animation.setCurrentTime(n);
+        QRectF rect = m_animation.currentValue().toRectF();
+        float src_top = rect.top();
+        float src_left = rect.left();
+        float src_width = rect.width();
+        float src_Height = rect.height();
         AVSValue resizedParams[] = { m_originClip, target_width, target_height, src_top, src_left, src_width, src_Height };
         PClip resizedClip = env->Invoke("BlackmanResize", AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
         return resizedClip->GetFrame(n, env);
@@ -160,7 +173,13 @@ protected:
     PClip m_originClip;
     VideoInfo m_targetVideoInfo;
     int m_extensionWidth;
+    QObject m_animationObject;
+    QPropertyAnimation m_animation;
+
+    static const const QByteArray m_animationPropertyName;
 };
+
+const QByteArray QtorialsZoomNPan::m_animationPropertyName = "zoomnpanrect";
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
