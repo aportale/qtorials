@@ -122,6 +122,30 @@ protected:
     QList<TitleData> m_titleData;
 };
 
+class RectAnimation : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QRectF rect READ rect WRITE setRect);
+
+public:
+    QRectF rect() const
+    {
+        return m_rect;
+    }
+
+    void setRect(const QRectF &rect)
+    {
+        m_rect = rect;
+    }
+
+    static const QByteArray propertyName;
+
+protected:
+    QRectF m_rect;
+};
+
+const QByteArray RectAnimation::propertyName = "rect";
+
 class QtorialsZoomNPan : public IClip
 {
 public:
@@ -130,21 +154,46 @@ public:
                      int zoomNPanArgumentsCount, const AVSValue* zoomNPanArguments,
                      IScriptEnvironment* env)
         : m_originClip(originClip)
-        , m_animation(&m_animationObject, m_animationPropertyName)
+        , m_targetVideoInfo(originClip->GetVideoInfo())
     {
-        if (zoomNPanArgumentsCount % 6 != 0)
-            env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThe title arguments must be dividable by 6.");
-        m_targetVideoInfo = originClip->GetVideoInfo();
+        if (zoomNPanArgumentsCount % 6 != 4)
+            env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThere must be one start size and consecutive values (dividible by 6)");
         m_targetVideoInfo.width = width;
         m_targetVideoInfo.height = height;
-        m_animation.setDuration(m_targetVideoInfo.num_frames);
-        for (int i = 0; i < zoomNPanArgumentsCount; i += 6) {
-            const int keyFramePosition = zoomNPanArguments[i].AsInt();
-            const int transitionFrames = zoomNPanArguments[i + 1].AsInt() != -1 ?
-                                         zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames;
+        int previousFrame = 0;
+        QRectF previousRect;
+        for (int i = -2; i < zoomNPanArgumentsCount; i += 6) {
+            const bool isStart = i < 0;
+            const bool isEnd = i + 6 >= zoomNPanArgumentsCount;
+            const int frame = isStart? 0 : zoomNPanArguments[i].AsInt();
+            if (frame < previousFrame)
+                env->ThrowError("QtorialsZoomNPan: Wrong order of keypoints.\nThere is a %d followed by a %d.", previousFrame, frame);
+            const int transitionFrames = isStart? 0 : (zoomNPanArguments[i + 1].AsInt() != -1 ?
+                                         zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames);
             const QRectF rect(zoomNPanArguments[i + 2].AsFloat(), zoomNPanArguments[i + 3].AsFloat(),
-                              zoomNPanArguments[i + 3].AsFloat(), zoomNPanArguments[i + 4].AsFloat());
-            m_animation.setKeyValueAt(1.0 / m_targetVideoInfo.num_frames * keyFramePosition, rect);
+                              zoomNPanArguments[i + 4].AsFloat(), zoomNPanArguments[i + 5].AsFloat());
+
+            if (isStart) {
+                QPropertyAnimation *start =
+                        new QPropertyAnimation(&m_animationTarget, RectAnimation::propertyName);
+                start->setDuration(0);
+                start->setStartValue(rect);
+                start->setEndValue(rect);
+                m_animation.addAnimation(start);
+            } else {
+                const int pauseLength = frame - transitionFrames - previousFrame;
+                if (pauseLength > 0)
+                    m_animation.addPause(pauseLength);
+                QPropertyAnimation *rectAnimation =
+                        new QPropertyAnimation(&m_animationTarget, RectAnimation::propertyName);
+                rectAnimation->setDuration(transitionFrames);
+                rectAnimation->setStartValue(previousRect);
+                rectAnimation->setEndValue(rect);
+                rectAnimation->setEasingCurve(QEasingCurve::InOutQuad);
+                m_animation.addAnimation(rectAnimation);
+            }
+            previousFrame = frame;
+            previousRect = rect;
         }
     }
 
@@ -153,8 +202,10 @@ public:
         Q_UNUSED(env)
         int target_width = m_targetVideoInfo.width;
         int target_height = m_targetVideoInfo.height;
+        m_animation.start();
+        m_animation.pause();
         m_animation.setCurrentTime(n);
-        QRectF rect = m_animation.currentValue().toRectF();
+        QRectF rect = m_animationTarget.rect();
         float src_top = rect.top();
         float src_left = rect.left();
         float src_width = rect.width();
@@ -173,13 +224,9 @@ protected:
     PClip m_originClip;
     VideoInfo m_targetVideoInfo;
     int m_extensionWidth;
-    QObject m_animationObject;
-    QPropertyAnimation m_animation;
-
-    static const const QByteArray m_animationPropertyName;
+    QSequentialAnimationGroup m_animation;
+    RectAnimation m_animationTarget;
 };
-
-const QByteArray QtorialsZoomNPan::m_animationPropertyName = "zoomnpanrect";
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
@@ -191,7 +238,7 @@ AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment*
     QPainter p(&image);
     Filters::paintTitle(&p, image.rect(), title,
                         args[1].AsInt(qRgba(0x0, 0x0, 0x0, 0xff)));
-    return new QtorialsStillImage(image, args[5].AsInt(100), env);
+    return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 
 AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
@@ -263,3 +310,5 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
                      "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i.*", CreateZoomNPan, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
+
+#include "qtavisynth.moc"
