@@ -150,12 +150,17 @@ class QtorialsZoomNPan : public IClip
 {
 public:
     QtorialsZoomNPan(PClip originClip, int width, int height,
-                     int extensionColor, int defaultTransitionFrames,
+                     int extensionColor, int defaultTransitionFrames, const char *resizeFilter,
                      int zoomNPanArgumentsCount, const AVSValue* zoomNPanArguments,
                      IScriptEnvironment* env)
-        : m_originClip(originClip)
-        , m_targetVideoInfo(originClip->GetVideoInfo())
+        : m_targetVideoInfo(originClip->GetVideoInfo())
+        , m_resizeFilter(resizeFilter)
     {
+        AVSValue extensionParams[] =
+            { originClip, m_extensionWidth, m_extensionWidth, m_extensionWidth, m_extensionWidth, extensionColor };
+        m_extendedClip =
+            env->Invoke("AddBorders", AVSValue(extensionParams, sizeof extensionParams / sizeof extensionParams[0])).AsClip();
+
         if (zoomNPanArgumentsCount % 6 != 4)
             env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThere must be one start size and consecutive values (dividible by 6)");
         m_targetVideoInfo.width = width;
@@ -170,8 +175,12 @@ public:
                 env->ThrowError("QtorialsZoomNPan: Wrong order of keypoints.\nThere is a %d followed by a %d.", previousFrame, frame);
             const int transitionFrames = isStart? 0 : (zoomNPanArguments[i + 1].AsInt() != -1 ?
                                          zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames);
-            const QRectF rect(zoomNPanArguments[i + 2].AsFloat(), zoomNPanArguments[i + 3].AsFloat(),
-                              zoomNPanArguments[i + 4].AsFloat(), zoomNPanArguments[i + 5].AsFloat());
+            const QRectF rect =
+                    QRectF(zoomNPanArguments[i + 2].AsFloat(),
+                           zoomNPanArguments[i + 3].AsFloat(),
+                           zoomNPanArguments[i + 4].AsFloat(),
+                           zoomNPanArguments[i + 5].AsFloat())
+                    .translated(m_extensionWidth, m_extensionWidth);
 
             if (isStart) {
                 QPropertyAnimation *start =
@@ -210,8 +219,8 @@ public:
         float src_left = rect.left();
         float src_width = rect.width();
         float src_Height = rect.height();
-        AVSValue resizedParams[] = { m_originClip, target_width, target_height, src_top, src_left, src_width, src_Height };
-        PClip resizedClip = env->Invoke("BlackmanResize", AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
+        AVSValue resizedParams[] = { m_extendedClip, target_width, target_height, src_top, src_left, src_width, src_Height };
+        PClip resizedClip = env->Invoke( m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
         return resizedClip->GetFrame(n, env);
     }
     bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
@@ -221,9 +230,10 @@ public:
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
 protected:
-    PClip m_originClip;
+    static const int m_extensionWidth = 16;
     VideoInfo m_targetVideoInfo;
-    int m_extensionWidth;
+    QByteArray m_resizeFilter;
+    PClip m_extendedClip;
     QSequentialAnimationGroup m_animation;
     RectAnimation m_animationTarget;
 };
@@ -293,8 +303,9 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
                                 args[2].AsInt(defaultClipHeight),
                                 args[3].AsInt(0xffffff),
                                 args[4].AsInt(15),
-                                args[5].ArraySize(),
-                                &args[5][0],
+                                args[5].AsString("Lanczos4Resize"),
+                                args[6].ArraySize(),
+                                &args[6][0],
                                 env);
 }
 
@@ -307,7 +318,7 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i", CreateSvg, 0);
     env->AddFunction("QtorialsZoomNPan",
-                     "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i.*", CreateZoomNPan, 0);
+                     "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i[resizefiter]s.*", CreateZoomNPan, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
 
