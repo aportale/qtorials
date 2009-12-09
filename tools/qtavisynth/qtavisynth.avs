@@ -8,8 +8,9 @@
 
 LoadPlugin("..\..\screencasts\qtavisynth.dll")
 
-QtorialsTitle("asdfasd fahsdkjlfh asjkldfasdfas fasd asd", $ffffff, 640, 360, 500)
-\.QtorialsZoomNPan(100, 100, $ffffff, 10
-    \ ,  30,  -1,     0,   0, 400, 400
-    \ ,  70,  -1,   100, 100, 400, 400
+QtorialsElements("rgbpatterns", 800, 800, 500)
+\.QtorialsZoomNPan(800, 800, $00ffff, 100, "BilinearResize"
+    \ ,               0,   0, 400, 400
+                      \ ,  120,  -1,    0,  0, 800, 800
+                      \ ,  360,  -1,    0,  0, 1400, 1400
     \ )
