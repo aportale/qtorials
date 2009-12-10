@@ -169,18 +169,31 @@ public:
         QRectF previousRect;
         for (int i = -2; i < zoomNPanArgumentsCount; i += 6) {
             const bool isStart = i < 0;
-            const bool isEnd = i + 6 >= zoomNPanArgumentsCount;
             const int frame = isStart? 0 : zoomNPanArguments[i].AsInt();
             if (frame < previousFrame)
                 env->ThrowError("QtorialsZoomNPan: Wrong order of keypoints.\nThere is a %d followed by a %d.", previousFrame, frame);
             const int transitionFrames = isStart? 0 : (zoomNPanArguments[i + 1].AsInt() != -1 ?
                                          zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames);
-            const QRectF rect =
-                    QRectF(zoomNPanArguments[i + 2].AsFloat(),
-                           zoomNPanArguments[i + 3].AsFloat(),
-                           zoomNPanArguments[i + 4].AsFloat(),
-                           zoomNPanArguments[i + 5].AsFloat())
-                    .translated(m_extensionWidth, m_extensionWidth);
+            qreal rectLeft = zoomNPanArguments[i + 2].AsFloat();
+            qreal rectTop = zoomNPanArguments[i + 3].AsFloat();
+            qreal rectWidth = zoomNPanArguments[i + 4].AsFloat();
+            qreal rectHeight = zoomNPanArguments[i + 5].AsFloat();
+            if (rectLeft == -1 || rectTop == -1) {
+                // Fullscreen
+                const VideoInfo &originVideoInfo = originClip->GetVideoInfo();
+                QSizeF zoomNPanSize(width, height);
+                zoomNPanSize.scale(originVideoInfo.width, originVideoInfo.height, Qt::KeepAspectRatioByExpanding);
+                rectWidth = zoomNPanSize.width();
+                rectHeight = zoomNPanSize.height();
+                rectLeft = (originVideoInfo.width - rectWidth) / 2;
+                rectTop = (originVideoInfo.height - rectHeight) / 2;
+            } else if (rectWidth == -1 || rectHeight == -1) {
+                // Native resolution
+                rectWidth = width;
+                rectHeight = height;
+            }
+            const QRectF rect = QRectF(rectLeft, rectTop, rectWidth, rectHeight)
+                                .translated(m_extensionWidth, m_extensionWidth);
 
             if (isStart) {
                 QPropertyAnimation *start =
@@ -215,11 +228,13 @@ public:
         m_animation.pause();
         m_animation.setCurrentTime(n);
         QRectF rect = m_animationTarget.rect();
-        float src_top = rect.top();
+        if (rect.size() == QSizeF(target_width, target_height))
+            rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
         float src_left = rect.left();
+        float src_top = rect.top();
         float src_width = rect.width();
-        float src_Height = rect.height();
-        AVSValue resizedParams[] = { m_extendedClip, target_width, target_height, src_top, src_left, src_width, src_Height };
+        float src_height = rect.height();
+        AVSValue resizedParams[] = { m_extendedClip, target_width, target_height, src_left, src_top, src_width, src_height };
         PClip resizedClip = env->Invoke( m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
         return resizedClip->GetFrame(n, env);
     }
