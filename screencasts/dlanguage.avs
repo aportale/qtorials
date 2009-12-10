@@ -13,6 +13,8 @@ Import("tools.avsi")
 global gClipWidth = 920
 global gClipHeight = 520
 
+SetMemoryMax(128)
+
 function RawFootage
 {
     DirectShowSource(gMediaDir + "dlanguage.01.MTS", audio = false)
@@ -27,11 +29,9 @@ function TweakedFootage
 {
     RawFootage
         \ .Converttoyuy2
-        \ .SpatialSoften(2, 2, 4)
-        \ .TemporalSoften(4, 8, 12)
-        \ .Spline64Resize(gClipWidth, gClipHeight, 404, 204, 1280, 720)
+        \ .TemporalSoften(4, 8, 8)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight, 404, 204, 1280, 720)
         \ .Levels(0, 0.9, 190, 0, 255)
-        \ .SpatialSoften(2, 2, 8)
         \ .Sharpen(0.2)
 }
 
