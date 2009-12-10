@@ -155,12 +155,8 @@ public:
                      IScriptEnvironment* env)
         : m_targetVideoInfo(originClip->GetVideoInfo())
         , m_resizeFilter(resizeFilter)
+        , m_extendedClip(extendedClip(originClip, extensionColor, env))
     {
-        AVSValue extensionParams[] =
-            { originClip, m_extensionWidth, m_extensionWidth, m_extensionWidth, m_extensionWidth, extensionColor };
-        m_extendedClip =
-            env->Invoke("AddBorders", AVSValue(extensionParams, sizeof extensionParams / sizeof extensionParams[0])).AsClip();
-
         if (zoomNPanArgumentsCount % 6 != 4)
             env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThere must be one start size and consecutive values (dividible by 6)");
         m_targetVideoInfo.width = width;
@@ -169,31 +165,17 @@ public:
         QRectF previousRect;
         for (int i = -2; i < zoomNPanArgumentsCount; i += 6) {
             const bool isStart = i < 0;
+            const bool isEnd = i + 6 >= zoomNPanArgumentsCount;
             const int frame = isStart? 0 : zoomNPanArguments[i].AsInt();
             if (frame < previousFrame)
                 env->ThrowError("QtorialsZoomNPan: Wrong order of keypoints.\nThere is a %d followed by a %d.", previousFrame, frame);
-            const int transitionFrames = isStart? 0 : (zoomNPanArguments[i + 1].AsInt() != -1 ?
-                                         zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames);
-            qreal rectLeft = zoomNPanArguments[i + 2].AsFloat();
-            qreal rectTop = zoomNPanArguments[i + 3].AsFloat();
-            qreal rectWidth = zoomNPanArguments[i + 4].AsFloat();
-            qreal rectHeight = zoomNPanArguments[i + 5].AsFloat();
-            if (rectLeft == -1 || rectTop == -1) {
-                // Fullscreen
-                const VideoInfo &originVideoInfo = originClip->GetVideoInfo();
-                QSizeF zoomNPanSize(width, height);
-                zoomNPanSize.scale(originVideoInfo.width, originVideoInfo.height, Qt::KeepAspectRatioByExpanding);
-                rectWidth = zoomNPanSize.width();
-                rectHeight = zoomNPanSize.height();
-                rectLeft = (originVideoInfo.width - rectWidth) / 2;
-                rectTop = (originVideoInfo.height - rectHeight) / 2;
-            } else if (rectWidth == -1 || rectHeight == -1) {
-                // Native resolution
-                rectWidth = width;
-                rectHeight = height;
-            }
-            const QRectF rect = QRectF(rectLeft, rectTop, rectWidth, rectHeight)
-                                .translated(m_extensionWidth, m_extensionWidth);
+
+            const QRectF specifiedRect(zoomNPanArguments[i + 2].AsFloat(),
+                                       zoomNPanArguments[i + 3].AsFloat(),
+                                       zoomNPanArguments[i + 4].AsFloat(),
+                                       zoomNPanArguments[i + 5].AsFloat());
+            const QRectF rect =
+                    detailRect(originClip->GetVideoInfo(), QSize(width, height), specifiedRect);
 
             if (isStart) {
                 QPropertyAnimation *start =
@@ -203,6 +185,8 @@ public:
                 start->setEndValue(rect);
                 m_animation.addAnimation(start);
             } else {
+                const int transitionFrames = isStart? 0 : (zoomNPanArguments[i + 1].AsInt() != -1 ?
+                                             zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames);
                 const int pauseLength = frame - transitionFrames - previousFrame;
                 if (pauseLength > 0)
                     m_animation.addPause(pauseLength);
@@ -214,9 +198,16 @@ public:
                 rectAnimation->setEasingCurve(QEasingCurve::InOutQuad);
                 m_animation.addAnimation(rectAnimation);
             }
-            previousFrame = frame;
-            previousRect = rect;
+
+            if (isEnd) {
+                m_animation.addPause(m_targetVideoInfo.num_frames - frame);
+            } else {
+                previousFrame = frame;
+                previousRect = rect;
+            }
         }
+        m_animation.start();
+        m_animation.pause();
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
@@ -224,8 +215,6 @@ public:
         Q_UNUSED(env)
         int target_width = m_targetVideoInfo.width;
         int target_height = m_targetVideoInfo.height;
-        m_animation.start();
-        m_animation.pause();
         m_animation.setCurrentTime(n);
         QRectF rect = m_animationTarget.rect();
         if (rect.size() == QSizeF(target_width, target_height))
@@ -245,6 +234,34 @@ public:
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
 protected:
+    static const PClip extendedClip(const PClip &originClip, int extensionColor, IScriptEnvironment* env)
+    {
+        AVSValue extensionParams[] =
+            { originClip, m_extensionWidth, m_extensionWidth, m_extensionWidth, m_extensionWidth, extensionColor };
+        return env->Invoke("AddBorders",
+                           AVSValue(extensionParams, sizeof extensionParams / sizeof extensionParams[0])).AsClip();
+    }
+
+    static QRectF detailRect(const VideoInfo &originVideoInfo,
+                             const QSize &detailClipSize,
+                             const QRectF &specifiedDetailRect)
+    {
+        QRectF result = specifiedDetailRect;
+        if (result.left() == -1 || result.top() == -1) {
+            // Fullscreen
+            QSizeF zoomNPanSize(detailClipSize);
+            zoomNPanSize.scale(originVideoInfo.width, originVideoInfo.height,
+                               Qt::KeepAspectRatioByExpanding);
+            result.setSize(zoomNPanSize);
+            result.moveLeft((originVideoInfo.width - result.width()) / 2);
+            result.moveTop((originVideoInfo.height - result.height()) / 2);
+        } else if (result.width() == -1 || result.height() == -1) {
+            // Native resolution
+            result.setSize(detailClipSize);
+        }
+        return result.translated(m_extensionWidth, m_extensionWidth);
+    }
+
     static const int m_extensionWidth = 16;
     VideoInfo m_targetVideoInfo;
     QByteArray m_resizeFilter;
