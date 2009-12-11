@@ -56,6 +56,65 @@ protected:
     VideoInfo m_videoInfo;
 };
 
+class TitleData : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(qreal slipin READ slipin WRITE setSlipin);
+    Q_PROPERTY(qreal blendin READ blendin WRITE setBlendin);
+
+public:
+    TitleData(const QString &title, const QString &subTitle)
+        : QObject()
+        , m_title(title)
+        , m_subTitle(subTitle)
+        , m_slipin(0.0)
+        , m_blendin(0.0)
+    {
+    }
+
+    QString title() const
+    {
+        return m_title;
+    }
+
+    QString subTitle() const
+    {
+        return m_subTitle;
+    }
+
+    qreal slipin() const
+    {
+        return m_slipin;
+    }
+
+    void setSlipin(qreal slipin)
+    {
+        m_slipin = slipin;
+    }
+
+    qreal blendin() const
+    {
+        return m_blendin;
+    }
+
+    void setBlendin(qreal blendin)
+    {
+        m_blendin = blendin;
+    }
+
+    static const QByteArray slipinPropertyName;
+    static const QByteArray blendinPropertyName;
+
+protected:
+    QString m_title;
+    QString m_subTitle;
+    qreal m_slipin;
+    qreal m_blendin;
+};
+
+const QByteArray TitleData::slipinPropertyName = "slipin";
+const QByteArray TitleData::blendinPropertyName = "blendin";
+
 class QtorialsSubtitle : public IClip
 {
 public:
@@ -70,19 +129,71 @@ public:
             if (!(titleArguments[i].IsString() && titleArguments[i+1].IsString()
                   && titleArguments[i+2].IsInt() && titleArguments[i+3].IsInt()))
                 env->ThrowError("QtorialsSubtitle: Wrong title argument data type in title set %i.", i / 4 + 1);
-            const TitleData data = {
+            TitleData *data = new TitleData(
                 QLatin1String(titleArguments[i].AsString()),
-                QLatin1String(titleArguments[i+1].AsString()),
-                titleArguments[i+2].AsInt(),
-                titleArguments[i+3].AsInt()};
+                QLatin1String(titleArguments[i+1].AsString()));
+            const int startFrame = titleArguments[i+2].AsInt();
+            const int endFrame = titleArguments[i+3].AsInt();
+            const int slipFrames = 10;
+            const int blendDelayFrames = 6;
+            const int blendFrames = 8;
+
+            QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
+            slipSequence->addPause(startFrame);
+            QPropertyAnimation *slipIn =
+                    new QPropertyAnimation(data, TitleData::slipinPropertyName);
+            slipIn->setDuration(slipFrames);
+            slipIn->setEasingCurve(QEasingCurve::InOutQuad);
+            slipIn->setStartValue(0.0);
+            slipIn->setEndValue(1.0);
+            slipSequence->addAnimation(slipIn);
+            QPropertyAnimation *slipOut =
+                    new QPropertyAnimation(data, TitleData::slipinPropertyName);
+            slipSequence->addPause(endFrame - startFrame - 2*slipFrames);
+            slipOut->setDuration(slipFrames);
+            slipOut->setEasingCurve(QEasingCurve::InOutQuad);
+            slipOut->setStartValue(1.0);
+            slipOut->setEndValue(0.0);
+            slipSequence->addAnimation(slipOut);
+            slipSequence->addPause(100000);
+            m_titleAnimations.addAnimation(slipSequence);
+
+            QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
+            blendSequence->addPause(startFrame + blendDelayFrames);
+            QPropertyAnimation *blendIn =
+                    new QPropertyAnimation(data, TitleData::blendinPropertyName);
+            blendIn->setDuration(blendFrames);
+            blendIn->setEasingCurve(QEasingCurve::InOutQuad);
+            blendIn->setStartValue(0.0);
+            blendIn->setEndValue(1.0);
+            blendSequence->addAnimation(blendIn);
+            QPropertyAnimation *blendOut =
+                    new QPropertyAnimation(data, TitleData::blendinPropertyName);
+            blendSequence->addPause(endFrame - startFrame - 2*blendDelayFrames - 2*blendFrames);
+            blendOut->setDuration(blendFrames);
+            blendOut->setEasingCurve(QEasingCurve::InOutQuad);
+            blendOut->setStartValue(1.0);
+            blendOut->setEndValue(0.0);
+            blendSequence->addAnimation(blendOut);
+            blendSequence->addPause(100000);
+            m_titleAnimations.addAnimation(blendSequence);
+
             m_titleData.append(data);
-            m_videoInfo.num_frames = qMax(data.endFrame, m_videoInfo.num_frames);
+            m_videoInfo.num_frames = qMax(endFrame, m_videoInfo.num_frames);
         }
         m_videoInfo.width = width;
         m_videoInfo.height = height;
         m_videoInfo.fps_numerator = 25;
         m_videoInfo.fps_denominator = 1;
         m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+
+        m_titleAnimations.start();
+        m_titleAnimations.pause();
+    }
+
+    ~QtorialsSubtitle()
+    {
+        qDeleteAll(m_titleData);
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
@@ -92,14 +203,12 @@ public:
         QImage image(m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
         image.fill(0);
         QPainter p(&image);
-        foreach (const TitleData &titleData, m_titleData) {
-            if (n >= titleData.startFrame && n <= titleData.endFrame) {
-                Filters::paintAnimatedSubTitle(
-                        &p, titleData.title, titleData.subTitle,
-                        n - titleData.startFrame,
-                        titleData.endFrame - titleData.startFrame,
-                        image.rect());
-            }
+        m_titleAnimations.setCurrentTime(n);
+        foreach (const TitleData *titleData, m_titleData) {
+            Filters::paintAnimatedSubTitle(
+                    &p, titleData->title(), titleData->subTitle(),
+                    titleData->slipin(), titleData->blendin(),
+                    image.rect());
         }
         env->BitBlt(frameBits, frame->GetPitch(), image.mirrored(false, true).bits(), frame->GetPitch(), image.bytesPerLine(), image.height());
         return frame;
@@ -112,14 +221,9 @@ public:
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
 protected:
-    struct TitleData {
-        QString title;
-        QString subTitle;
-        int startFrame;
-        int endFrame;
-    };
     VideoInfo m_videoInfo;
-    QList<TitleData> m_titleData;
+    QList<TitleData*> m_titleData;
+    QParallelAnimationGroup m_titleAnimations;
 };
 
 class RectAnimation : public QObject

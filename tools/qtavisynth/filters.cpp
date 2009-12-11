@@ -271,32 +271,10 @@ void Filters::paintElements(QPainter *p, const QString &elementsCSV, const QRect
     }
 }
 
-qreal inOutAnimationValue(int inOffset, int inLength, QEasingCurve::Type inType,
-                          int outOffset, int outLength, QEasingCurve::Type outType,
-                          int frame, int framesCount)
-{
-    qreal result = qreal(1);
-    if (frame < inOffset || frame > framesCount - outOffset)
-        result = 0;
-    if (frame <= inOffset + inLength)
-        result = QEasingCurve(inType)
-            .valueForProgress(qreal(1) / inLength * (frame - inOffset));
-    else if (frame >= framesCount - outOffset - outLength)
-        result = QEasingCurve(outType)
-            .valueForProgress(qreal(1) / outLength * (framesCount - frame - outOffset - 1));
-    return result;
-}
-
 void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
-                           int frame, int framesCount, const QRect &rect)
+                           qreal slipIn, qreal blendIn, const QRect &rect)
 {
-    static const int slideInFrames = 7;
-    const qreal slideInFactor =
-            inOutAnimationValue(0, slideInFrames, QEasingCurve::OutQuad,
-                                0, slideInFrames, QEasingCurve::OutQuad,
-                                frame, framesCount);
-
-    if (slideInFactor <= 0)
+    if (slipIn <= 0)
         return;
 
     QFont titleFont(QLatin1String("Verdana"));
@@ -316,7 +294,7 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
         tweakedPadding -= textLineDistance + subTitleFont.pixelSize();
     tweakedPadding /= 2;
 
-    const int backgroundTop = rect.height() - slideInFactor * backgroundHeight;
+    const int backgroundTop = rect.height() - slipIn * backgroundHeight;
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     QLinearGradient gradient(background.topLeft(), background.topRight());
     gradient.setColorAt(0.65, QColor(64, 64, 64, 192));
@@ -324,16 +302,11 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
     p->fillRect(background, gradient);
 
 
-    static const int blendInFrames = 6;
-    const qreal textOpacity =
-            inOutAnimationValue(slideInFrames * 0.7, blendInFrames, QEasingCurve::Linear,
-                                slideInFrames * 0.7, blendInFrames, QEasingCurve::Linear,
-                                frame, framesCount);
     QApplication *a = createQApplicationIfNeeded();
     p->save();
     p->setPen(QColor(245, 235, 170));
     p->setCompositionMode(QPainter::CompositionMode_Lighten);
-    p->setOpacity(textOpacity + 0.2);
+    p->setOpacity(blendIn + 0.2);
     p->translate(background.topLeft());
     p->setFont(titleFont);
     int titleTextTop = tweakedPadding + titleFont.pixelSize();
