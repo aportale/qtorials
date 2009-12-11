@@ -173,7 +173,8 @@ public:
             m_titleAnimations.addAnimation(blendSequence);
 
             m_titleData.append(data);
-            m_videoInfo.num_frames = qMax(endFrame, m_videoInfo.num_frames);
+            m_videoInfo.num_frames = qMax(endFrame + 1 // +1, so that we have a clear fram at the end
+                                          , m_videoInfo.num_frames);
         }
         m_videoInfo.width = width;
         m_videoInfo.height = height;
