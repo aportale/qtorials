@@ -139,43 +139,37 @@ public:
             const int blendFrames = 8;
 
             QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
-            slipSequence->addPause(startFrame);
-            QPropertyAnimation *slipIn =
-                    new QPropertyAnimation(data, TitleData::slipinPropertyName);
-            slipIn->setDuration(slipFrames);
-            slipIn->setEasingCurve(QEasingCurve::InOutQuad);
-            slipIn->setStartValue(0.0);
-            slipIn->setEndValue(1.0);
-            slipSequence->addAnimation(slipIn);
-            QPropertyAnimation *slipOut =
-                    new QPropertyAnimation(data, TitleData::slipinPropertyName);
-            slipSequence->addPause(endFrame - startFrame - 2*slipFrames);
-            slipOut->setDuration(slipFrames);
-            slipOut->setEasingCurve(QEasingCurve::InOutQuad);
-            slipOut->setStartValue(1.0);
-            slipOut->setEndValue(0.0);
-            slipSequence->addAnimation(slipOut);
-            slipSequence->addPause(100000);
-            m_titleAnimations.addAnimation(slipSequence);
-
             QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
-            blendSequence->addPause(startFrame + blendDelayFrames);
-            QPropertyAnimation *blendIn =
-                    new QPropertyAnimation(data, TitleData::blendinPropertyName);
-            blendIn->setDuration(blendFrames);
-            blendIn->setEasingCurve(QEasingCurve::InOutQuad);
-            blendIn->setStartValue(0.0);
-            blendIn->setEndValue(1.0);
-            blendSequence->addAnimation(blendIn);
-            QPropertyAnimation *blendOut =
-                    new QPropertyAnimation(data, TitleData::blendinPropertyName);
-            blendSequence->addPause(endFrame - startFrame - 2*blendDelayFrames - 2*blendFrames);
-            blendOut->setDuration(blendFrames);
-            blendOut->setEasingCurve(QEasingCurve::InOutQuad);
-            blendOut->setStartValue(1.0);
-            blendOut->setEndValue(0.0);
-            blendSequence->addAnimation(blendOut);
+
+            const struct Animation {
+                QSequentialAnimationGroup *sequence;
+                const QByteArray &propertyName;
+                int pauseBefore;
+                int duration;
+                qreal startValue;
+                qreal endValue;
+            } animations[] = {
+                { slipSequence, TitleData::slipinPropertyName, startFrame, slipFrames, 0.0, 1.0 },
+                { slipSequence, TitleData::slipinPropertyName, endFrame - startFrame - 2*slipFrames, slipFrames, 1.0, 0.0 },
+                { blendSequence, TitleData::blendinPropertyName, startFrame + blendDelayFrames, blendFrames, 0.0, 1.0 },
+                { blendSequence, TitleData::blendinPropertyName, endFrame - startFrame - 2*blendDelayFrames - 2*blendFrames, blendFrames, 1.0, 0.0 },
+            };
+
+            for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
+                const struct Animation &a = animations[i];
+                a.sequence->addPause(a.pauseBefore);
+                QPropertyAnimation *animation =
+                        new QPropertyAnimation(data, a.propertyName);
+                animation->setDuration(a.duration);
+                animation->setStartValue(a.startValue);
+                animation->setEndValue(a.endValue);
+                animation->setEasingCurve(QEasingCurve::InOutQuad);
+                a.sequence->addAnimation(animation);
+            }
+
+            slipSequence->addPause(100000);
             blendSequence->addPause(100000);
+            m_titleAnimations.addAnimation(slipSequence);
             m_titleAnimations.addAnimation(blendSequence);
 
             m_titleData.append(data);
