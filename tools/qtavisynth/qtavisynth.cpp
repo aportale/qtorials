@@ -59,16 +59,16 @@ protected:
 class TitleData : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qreal slipin READ slipin WRITE setSlipin);
-    Q_PROPERTY(qreal blendin READ blendin WRITE setBlendin);
+    Q_PROPERTY(qreal slip READ slip WRITE setSlip);
+    Q_PROPERTY(qreal blend READ blend WRITE setBlend);
 
 public:
     TitleData(const QString &title, const QString &subTitle)
         : QObject()
         , m_title(title)
         , m_subTitle(subTitle)
-        , m_slipin(0.0)
-        , m_blendin(0.0)
+        , m_slip(0.0)
+        , m_blend(0.0)
     {
     }
 
@@ -82,38 +82,38 @@ public:
         return m_subTitle;
     }
 
-    qreal slipin() const
+    qreal slip() const
     {
-        return m_slipin;
+        return m_slip;
     }
 
-    void setSlipin(qreal slipin)
+    void setSlip(qreal slipin)
     {
-        m_slipin = slipin;
+        m_slip = slipin;
     }
 
-    qreal blendin() const
+    qreal blend() const
     {
-        return m_blendin;
+        return m_blend;
     }
 
-    void setBlendin(qreal blendin)
+    void setBlend(qreal blendin)
     {
-        m_blendin = blendin;
+        m_blend = blendin;
     }
 
-    static const QByteArray slipinPropertyName;
-    static const QByteArray blendinPropertyName;
+    static const QByteArray slipPropertyName;
+    static const QByteArray blendPropertyName;
 
 protected:
     QString m_title;
     QString m_subTitle;
-    qreal m_slipin;
-    qreal m_blendin;
+    qreal m_slip;
+    qreal m_blend;
 };
 
-const QByteArray TitleData::slipinPropertyName = "slipin";
-const QByteArray TitleData::blendinPropertyName = "blendin";
+const QByteArray TitleData::slipPropertyName = "slip";
+const QByteArray TitleData::blendPropertyName = "blend";
 
 class QtorialsSubtitle : public IClip
 {
@@ -149,10 +149,10 @@ public:
                 qreal startValue;
                 qreal endValue;
             } animations[] = {
-                { slipSequence, TitleData::slipinPropertyName, startFrame, slipFrames, 0.0, 1.0 },
-                { slipSequence, TitleData::slipinPropertyName, endFrame - startFrame - 2*slipFrames, slipFrames, 1.0, 0.0 },
-                { blendSequence, TitleData::blendinPropertyName, startFrame + blendDelayFrames, blendFrames, 0.0, 1.0 },
-                { blendSequence, TitleData::blendinPropertyName, endFrame - startFrame - 2*blendDelayFrames - 2*blendFrames, blendFrames, 1.0, 0.0 },
+                { slipSequence, TitleData::slipPropertyName, startFrame, slipFrames, 0.0, 1.0 },
+                { slipSequence, TitleData::slipPropertyName, endFrame - startFrame - 2*slipFrames, slipFrames, 1.0, 0.0 },
+                { blendSequence, TitleData::blendPropertyName, startFrame + blendDelayFrames, blendFrames, 0.0, 1.0 },
+                { blendSequence, TitleData::blendPropertyName, endFrame - startFrame - 2*blendDelayFrames - 2*blendFrames, blendFrames, 1.0, 0.0 },
             };
 
             for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
@@ -201,7 +201,7 @@ public:
         foreach (const TitleData *titleData, m_titleData) {
             Filters::paintAnimatedSubTitle(
                     &p, titleData->title(), titleData->subTitle(),
-                    titleData->slipin(), titleData->blendin(),
+                    titleData->slip(), titleData->blend(),
                     image.rect());
         }
         env->BitBlt(frameBits, frame->GetPitch(), image.mirrored(false, true).bits(), frame->GetPitch(), image.bytesPerLine(), image.height());
