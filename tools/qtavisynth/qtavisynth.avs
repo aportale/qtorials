@@ -7,10 +7,15 @@
 # California, 94105, USA.
 
 LoadPlugin("..\..\screencasts\qtavisynth.dll")
+Import("..\..\screencasts\tools.avsi")
+
+gClipWidth = 640
+gClipHeight = 360
 
 QtorialsElements("rgbpatterns", 800, 800, 500)
-\.QtorialsZoomNPan(800, 800, $00ffff, 100, "BilinearResize"
-    \ ,               0,   0, 400, 400
-                      \ ,  120,  -1,    0,  0, 800, 800
-                      \ ,  360,  -1,    0,  0, 1400, 1400
+\.QtorialsZoomNPan(gClipWidth, gClipHeight, $00ffff, 100, "BilinearResize"
+    \ ,               0,   0, gClipWidth * 2, gClipHeight * 2
+                      \ ,  120,  -1,    0,  0, -1, -1
+                      \ ,  360,  -1,    -1, -1, -1, -1
     \ )
+\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 10, 200))
