@@ -21,13 +21,14 @@ public:
         PaintSvgFileNotValid,
         PaintSvgElementNotFound
     };
+    static PaintSvgResult checkSvg(const QString &svgFileName, const QStringList &elementsCSV);
     static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                            const QColor &textColor);
     static void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
     static PaintSvgResult paintSvg(QPainter *p, const QString &svgFileName,
                                    const QString &elementsCSV, const QRect &rect);
     static void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
-                                      qreal slipIn, qreal blendIn, const QRect &rect);\
+                                      qreal slipIn, qreal blendIn, const QRect &rect);
 };
 
 #endif // FILTERS_H

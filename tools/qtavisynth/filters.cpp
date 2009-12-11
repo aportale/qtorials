@@ -84,6 +84,18 @@ void deleteQApplicationIfNeeded(QApplication* &app)
     }
 }
 
+Filters::PaintSvgResult Filters::checkSvg(const QString &svgFileName, const QStringList &elements)
+{
+    PaintSvgResult result;
+    const QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
+    if (result != PaintSvgOk)
+        return result;
+    foreach (const QString &element, elements)
+        if (!renderer->elementExists(element))
+            return PaintSvgElementNotFound;
+    return PaintSvgOk;
+}
+
 void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                          const QColor &textColor)
 {
