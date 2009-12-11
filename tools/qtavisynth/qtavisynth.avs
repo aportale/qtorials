@@ -19,3 +19,6 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
 \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 10, 200))
+  \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 40, 100))
+    \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 50, 80))
+      \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 60, 90))
