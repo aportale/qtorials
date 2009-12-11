@@ -248,63 +248,58 @@ const QByteArray RectAnimation::propertyName = "rect";
 class QtorialsZoomNPan : public IClip
 {
 public:
+    struct Detail {
+        int keyFrame;
+        int transitionLength;
+        QRectF detail;
+    };
+
     QtorialsZoomNPan(PClip originClip, int width, int height,
                      int extensionColor, int defaultTransitionFrames, const char *resizeFilter,
-                     int zoomNPanArgumentsCount, const AVSValue* zoomNPanArguments,
+                     const QRectF &startDetail, const QList<Detail> &details,
                      IScriptEnvironment* env)
         : m_targetVideoInfo(originClip->GetVideoInfo())
         , m_resizeFilter(resizeFilter)
         , m_extendedClip(extendedClip(originClip, extensionColor, env))
     {
-        if (zoomNPanArgumentsCount % 6 != 4)
-            env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThere must be one start size and consecutive values (dividible by 6)");
         m_targetVideoInfo.width = width;
         m_targetVideoInfo.height = height;
-        int previousFrame = 0;
-        QRectF previousRect;
-        for (int i = -2; i < zoomNPanArgumentsCount; i += 6) {
-            const bool isStart = i < 0;
-            const bool isEnd = i + 6 >= zoomNPanArgumentsCount;
-            const int frame = isStart? 0 : zoomNPanArguments[i].AsInt();
-            if (frame < previousFrame)
-                env->ThrowError("QtorialsZoomNPan: Wrong order of keypoints.\nThere is a %d followed by a %d.", previousFrame, frame);
 
-            const QRectF specifiedRect(zoomNPanArguments[i + 2].AsFloat(),
-                                       zoomNPanArguments[i + 3].AsFloat(),
-                                       zoomNPanArguments[i + 4].AsFloat(),
-                                       zoomNPanArguments[i + 5].AsFloat());
-            const QRectF rect =
-                    detailRect(originClip->GetVideoInfo(), QSize(width, height), specifiedRect);
+        Detail previousDetail = { 0, 0, QRectF() };
 
-            if (isStart) {
-                QPropertyAnimation *start =
-                        new QPropertyAnimation(&m_animationTarget, RectAnimation::propertyName);
-                start->setDuration(0);
-                start->setStartValue(rect);
-                start->setEndValue(rect);
-                m_animation.addAnimation(start);
-            } else {
-                const int transitionFrames = isStart? 0 : (zoomNPanArguments[i + 1].AsInt() != -1 ?
-                                             zoomNPanArguments[i + 1].AsInt() : defaultTransitionFrames);
-                const int pauseLength = frame - transitionFrames - previousFrame;
-                if (pauseLength > 0)
-                    m_animation.addPause(pauseLength);
-                QPropertyAnimation *rectAnimation =
-                        new QPropertyAnimation(&m_animationTarget, RectAnimation::propertyName);
-                rectAnimation->setDuration(transitionFrames);
-                rectAnimation->setStartValue(previousRect);
-                rectAnimation->setEndValue(rect);
-                rectAnimation->setEasingCurve(QEasingCurve::InOutQuad);
-                m_animation.addAnimation(rectAnimation);
-            }
-
-            if (isEnd) {
-                m_animation.addPause(m_targetVideoInfo.num_frames - frame);
-            } else {
-                previousFrame = frame;
-                previousRect = rect;
-            }
+        {
+            QPropertyAnimation *start =
+                    new QPropertyAnimation(&m_animationTarget, RectAnimation::propertyName);
+            start->setDuration(0);
+            previousDetail.detail =
+                    fixedDetailRect(originClip->GetVideoInfo(), QSize(width, height), startDetail);
+            start->setStartValue(previousDetail.detail);
+            start->setEndValue(previousDetail.detail);
+            m_animation.addAnimation(start);
         }
+
+        foreach (const Detail &detail, details) {
+            const QRectF detailRect =
+                    fixedDetailRect(originClip->GetVideoInfo(), QSize(width, height), detail.detail);
+            const int transitionFrames =
+                    detail.transitionLength > -1 ? detail.transitionLength : defaultTransitionFrames;
+            const int pauseLength = detail.keyFrame - transitionFrames - previousDetail.keyFrame;
+            if (pauseLength > 0)
+                m_animation.addPause(pauseLength);
+            QPropertyAnimation *rectAnimation =
+                    new QPropertyAnimation(&m_animationTarget, RectAnimation::propertyName);
+            rectAnimation->setDuration(transitionFrames);
+            rectAnimation->setStartValue(previousDetail.detail);
+            rectAnimation->setEndValue(detailRect);
+            rectAnimation->setEasingCurve(QEasingCurve::InOutQuad);
+            m_animation.addAnimation(rectAnimation);
+
+            previousDetail.keyFrame = detail.keyFrame;
+            previousDetail.detail = detailRect;
+        }
+
+        m_animation.addPause(m_targetVideoInfo.num_frames - previousDetail.keyFrame);
+
         m_animation.start();
         m_animation.pause();
     }
@@ -341,9 +336,9 @@ protected:
                            AVSValue(extensionParams, sizeof extensionParams / sizeof extensionParams[0])).AsClip();
     }
 
-    static QRectF detailRect(const VideoInfo &originVideoInfo,
-                             const QSize &detailClipSize,
-                             const QRectF &specifiedDetailRect)
+    static QRectF fixedDetailRect(const VideoInfo &originVideoInfo,
+                                  const QSize &detailClipSize,
+                                  const QRectF &specifiedDetailRect)
     {
         QRectF result = specifiedDetailRect;
         if (result.left() == -1 || result.top() == -1) {
@@ -429,15 +424,56 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
 AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
+
+    if (args[10].ArraySize() % 6 != 0)
+        env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThey need to be 6 per keyframe.");
+
+    const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
+
+    QList<QtorialsZoomNPan::Detail> details;
+    for (int i = 0; i < args[10].ArraySize(); i += 6) {
+        const int keyFrame = args[10][i].AsInt();
+        const int transitionLength = args[10][i+1].AsInt();
+        const QRectF rect(args[10][i+2].AsFloat(), args[10][i+3].AsFloat(),
+                          args[10][i+4].AsFloat(), args[10][i+5].AsFloat());
+        const QtorialsZoomNPan::Detail detail =
+            {keyFrame, transitionLength, rect};
+        details.append(detail);
+    }
+
     return new QtorialsZoomNPan(args[0].AsClip(),
                                 args[1].AsInt(defaultClipWidth),
                                 args[2].AsInt(defaultClipHeight),
                                 args[3].AsInt(0xffffff),
                                 args[4].AsInt(15),
                                 args[5].AsString("Lanczos4Resize"),
-                                args[6].ArraySize(),
-                                &args[6][0],
+                                start,
+                                details,
                                 env);
+}
+
+AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+    image.fill(transparentColor);
+    QPainter p(&image);
+    const Filters::PaintSvgResult result =
+            Filters::paintSvg(&p, QString::fromLatin1(args[0].AsString()),
+                              QString::fromLatin1(args[1].AsString()), image.rect());
+    switch (result) {
+        case Filters::PaintSvgFileNotValid:
+                env->ThrowError("QtorialsSvg: File '%s'' was not found or is invalid.",
+                                args[0].AsString());
+            break;
+        case Filters::PaintSvgElementNotFound:
+                env->ThrowError("QtorialsSvg: One of the Svg elements '%s' was not found.",
+                                args[1].AsString());
+            break;
+        default:
+            break;
+    }
+    return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 
 extern "C" __declspec(dllexport)
@@ -449,7 +485,10 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i", CreateSvg, 0);
     env->AddFunction("QtorialsZoomNPan",
-                     "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i[resizefiter]s.*", CreateZoomNPan, 0);
+                     "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i[resizefiter]s"
+                     "[startleft]i[starttop]i[starwidth]i[startheight]ii*", CreateZoomNPan, 0);
+    env->AddFunction("QtorialsSvgAnimation",
+                     "[svgfile]s[width]i[height]i[frames]i.*", CreateSvgAnimation, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
 
