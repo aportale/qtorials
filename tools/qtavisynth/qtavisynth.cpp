@@ -307,19 +307,21 @@ public:
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
     {
         Q_UNUSED(env)
-        int target_width = m_targetVideoInfo.width;
-        int target_height = m_targetVideoInfo.height;
         m_animation.setCurrentTime(n);
         QRectF rect = m_animationTarget.rect();
-        if (rect.size() == QSizeF(target_width, target_height))
-            rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
-        float src_left = rect.left();
-        float src_top = rect.top();
-        float src_width = rect.width();
-        float src_height = rect.height();
-        AVSValue resizedParams[] = { m_extendedClip, target_width, target_height, src_left, src_top, src_width, src_height };
-        PClip resizedClip = env->Invoke( m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
-        return resizedClip->GetFrame(n, env);
+        if (rect != m_resizedRect) {
+            int target_width = m_targetVideoInfo.width;
+            int target_height = m_targetVideoInfo.height;
+            if (rect.size() == QSizeF(target_width, target_height))
+                rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
+            float src_left = rect.left();
+            float src_top = rect.top();
+            float src_width = rect.width();
+            float src_height = rect.height();
+            AVSValue resizedParams[] = { m_extendedClip, target_width, target_height, src_left, src_top, src_width, src_height };
+            m_resizedClip = env->Invoke( m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
+        }
+        return m_resizedClip->GetFrame(n, env);
     }
     bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
     const VideoInfo& __stdcall GetVideoInfo() { return m_targetVideoInfo; }
@@ -362,6 +364,8 @@ protected:
     PClip m_extendedClip;
     QSequentialAnimationGroup m_animation;
     RectAnimation m_animationTarget;
+    PClip m_resizedClip;
+    QRectF m_resizedRect;
 };
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
