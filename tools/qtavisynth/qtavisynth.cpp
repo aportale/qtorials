@@ -131,10 +131,6 @@ public:
         memset(&m_videoInfo, 0, sizeof(VideoInfo));
         foreach (const TitleData &title, titles) {
             TitleAnimation *data = new TitleAnimation(title);
-            const int slipFrames = 10;
-            const int blendDelayFrames = 6;
-            const int blendFrames = 8;
-
             QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
             QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
 
@@ -146,10 +142,10 @@ public:
                 qreal startValue;
                 qreal endValue;
             } animations[] = {
-                { slipSequence, TitleAnimation::slipPropertyName, title.startFrame, slipFrames, 0.0, 1.0 },
-                { slipSequence, TitleAnimation::slipPropertyName, title.endFrame - title.startFrame - 2*slipFrames, slipFrames, 1.0, 0.0 },
-                { blendSequence, TitleAnimation::blendPropertyName, title.startFrame + blendDelayFrames, blendFrames, 0.0, 1.0 },
-                { blendSequence, TitleAnimation::blendPropertyName, title.endFrame - title.startFrame - 2*blendDelayFrames - 2*blendFrames, blendFrames, 1.0, 0.0 },
+                { slipSequence, TitleAnimation::slipPropertyName, title.startFrame, m_slipFrames, 0.0, 1.0 },
+                { slipSequence, TitleAnimation::slipPropertyName, title.endFrame - title.startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0 },
+                { blendSequence, TitleAnimation::blendPropertyName, title.startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0 },
+                { blendSequence, TitleAnimation::blendPropertyName, title.endFrame - title.startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
             };
 
             for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
@@ -216,6 +212,9 @@ protected:
     VideoInfo m_videoInfo;
     QList<TitleAnimation*> m_titleData;
     QParallelAnimationGroup m_titleAnimations;
+    static const int m_slipFrames = 10;
+    static const int m_blendDelayFrames = 6;
+    static const int m_blendFrames = 8;
 };
 
 class RectAnimation : public QObject
