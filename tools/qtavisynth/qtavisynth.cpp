@@ -425,6 +425,9 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
 {
     Q_UNUSED(user_data)
 
+    if (!env->FunctionExists(args[5].AsString()))
+        env->ThrowError("QtorialsZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
+
     if (args[10].ArraySize() % 6 != 0)
         env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThey need to be 6 per keyframe.");
 
@@ -446,7 +449,7 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
                                 args[2].AsInt(defaultClipHeight),
                                 args[3].AsInt(0xffffff),
                                 args[4].AsInt(15),
-                                args[5].AsString("Lanczos4Resize"),
+                                args[5].AsString(),
                                 start,
                                 details,
                                 env);
