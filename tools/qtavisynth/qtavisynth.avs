@@ -13,12 +13,12 @@ gClipWidth = 640
 gClipHeight = 360
 
 QtorialsElements("rgbpatterns", 800, 800, 500)
-\.QtorialsZoomNPan(gClipWidth, gClipHeight, $00ffff, 100, "BilinearResize"
+\.QtorialsZoomNPan(gClipWidth, gClipHeight, $ffffff, 100, "BilinearResize"
     \ ,               0,   0, gClipWidth * 2, gClipHeight * 2
                       \ ,  120,  -1,    0,  0, -1, -1
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
 \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 10, 200))
-  \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 40, 100))
-    \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 50, 80))
-      \.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 60, 90))
+\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 40, 100))
+\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 50, 80))
+\.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "listwidget, pushbutton", gClipWidth, gClipHeight, 100))
