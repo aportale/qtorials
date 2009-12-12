@@ -18,7 +18,9 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
                       \ ,  120,  -1,    0,  0, -1, -1
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
-\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 10, 200))
-\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 40, 100))
-\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight, "Title", "Subtitle", 50, 80))
+\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight
+  \ , "Title1", "Subtitle", 10, 110
+  \ , "Title2", "Subtitle", 20, 120
+  \ , "Title3", "Subtitle", 30, 130
+\))
 \.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "listwidget, pushbutton", gClipWidth, gClipHeight, 100))
