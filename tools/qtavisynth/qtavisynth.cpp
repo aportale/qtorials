@@ -56,17 +56,24 @@ protected:
     VideoInfo m_videoInfo;
 };
 
-class TitleData : public QObject
+struct TitleData
+{
+    QString title;
+    QString subtitle;
+    int startFrame;
+    int endFrame;
+};
+
+class TitleAnimation : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(qreal slip READ slip WRITE setSlip);
     Q_PROPERTY(qreal blend READ blend WRITE setBlend);
 
 public:
-    TitleData(const QString &title, const QString &subTitle)
+    TitleAnimation(const TitleData &data)
         : QObject()
-        , m_title(title)
-        , m_subTitle(subTitle)
+        , m_titleData(data)
         , m_slip(0.0)
         , m_blend(0.0)
     {
@@ -74,12 +81,12 @@ public:
 
     QString title() const
     {
-        return m_title;
+        return m_titleData.title;
     }
 
     QString subTitle() const
     {
-        return m_subTitle;
+        return m_titleData.subtitle;
     }
 
     qreal slip() const
@@ -106,34 +113,24 @@ public:
     static const QByteArray blendPropertyName;
 
 protected:
-    QString m_title;
-    QString m_subTitle;
+    TitleData m_titleData;
     qreal m_slip;
     qreal m_blend;
 };
 
-const QByteArray TitleData::slipPropertyName = "slip";
-const QByteArray TitleData::blendPropertyName = "blend";
+const QByteArray TitleAnimation::slipPropertyName = "slip";
+const QByteArray TitleAnimation::blendPropertyName = "blend";
 
 class QtorialsSubtitle : public IClip
 {
 public:
     QtorialsSubtitle(int width, int height,
-                     int titleArumentsCount, const AVSValue* titleArguments,
+                     const QList<TitleData> &titles,
                      IScriptEnvironment* env)
     {
         memset(&m_videoInfo, 0, sizeof(VideoInfo));
-        if (titleArumentsCount % 4 != 0)
-            env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
-        for (int i = 0; i < titleArumentsCount; i += 4) {
-            if (!(titleArguments[i].IsString() && titleArguments[i+1].IsString()
-                  && titleArguments[i+2].IsInt() && titleArguments[i+3].IsInt()))
-                env->ThrowError("QtorialsSubtitle: Wrong title argument data type in title set %i.", i / 4 + 1);
-            TitleData *data = new TitleData(
-                QLatin1String(titleArguments[i].AsString()),
-                QLatin1String(titleArguments[i+1].AsString()));
-            const int startFrame = titleArguments[i+2].AsInt();
-            const int endFrame = titleArguments[i+3].AsInt();
+        foreach (const TitleData &title, titles) {
+            TitleAnimation *data = new TitleAnimation(title);
             const int slipFrames = 10;
             const int blendDelayFrames = 6;
             const int blendFrames = 8;
@@ -149,10 +146,10 @@ public:
                 qreal startValue;
                 qreal endValue;
             } animations[] = {
-                { slipSequence, TitleData::slipPropertyName, startFrame, slipFrames, 0.0, 1.0 },
-                { slipSequence, TitleData::slipPropertyName, endFrame - startFrame - 2*slipFrames, slipFrames, 1.0, 0.0 },
-                { blendSequence, TitleData::blendPropertyName, startFrame + blendDelayFrames, blendFrames, 0.0, 1.0 },
-                { blendSequence, TitleData::blendPropertyName, endFrame - startFrame - 2*blendDelayFrames - 2*blendFrames, blendFrames, 1.0, 0.0 },
+                { slipSequence, TitleAnimation::slipPropertyName, title.startFrame, slipFrames, 0.0, 1.0 },
+                { slipSequence, TitleAnimation::slipPropertyName, title.endFrame - title.startFrame - 2*slipFrames, slipFrames, 1.0, 0.0 },
+                { blendSequence, TitleAnimation::blendPropertyName, title.startFrame + blendDelayFrames, blendFrames, 0.0, 1.0 },
+                { blendSequence, TitleAnimation::blendPropertyName, title.endFrame - title.startFrame - 2*blendDelayFrames - 2*blendFrames, blendFrames, 1.0, 0.0 },
             };
 
             for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
@@ -173,7 +170,7 @@ public:
             m_titleAnimations.addAnimation(blendSequence);
 
             m_titleData.append(data);
-            m_videoInfo.num_frames = qMax(endFrame + 1 // +1, so that we have a clear fram at the end
+            m_videoInfo.num_frames = qMax(title.endFrame + 1 // +1, so that we have a clear frame at the end
                                           , m_videoInfo.num_frames);
         }
         m_videoInfo.width = width;
@@ -199,7 +196,7 @@ public:
         image.fill(0);
         QPainter p(&image);
         m_titleAnimations.setCurrentTime(n);
-        foreach (const TitleData *titleData, m_titleData) {
+        foreach (const TitleAnimation *titleData, m_titleData) {
             Filters::paintAnimatedSubTitle(
                     &p, titleData->title(), titleData->subTitle(),
                     titleData->slip(), titleData->blend(),
@@ -217,7 +214,7 @@ public:
 
 protected:
     VideoInfo m_videoInfo;
-    QList<TitleData*> m_titleData;
+    QList<TitleAnimation*> m_titleData;
     QParallelAnimationGroup m_titleAnimations;
 };
 
@@ -384,10 +381,25 @@ AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment*
 AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
+
+    if (args[2].ArraySize() % 4 != 0)
+        env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
+
+    QList<TitleData> titles;
+    for (int i = 0; i < args[2].ArraySize(); i += 4) {
+        if (!(args[2][i].IsString() && args[2][i+1].IsString()
+              && args[2][i+2].IsInt() && args[2][i+3].IsInt()))
+            env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.", i / 4 + 1);
+        TitleData title = {
+            QLatin1String(args[2][i].AsString()),
+            QLatin1String(args[2][i+1].AsString()),
+            args[2][i+2].AsInt(),
+            args[2][i+3].AsInt()};
+        titles.append(title);
+    }
     return new QtorialsSubtitle(args[0].AsInt(defaultClipWidth),
                                 args[1].AsInt(defaultClipHeight),
-                                args[2].ArraySize(),
-                                &args[2][0],
+                                titles,
                                 env);
 }
 
