@@ -16,17 +16,17 @@
 class Filters
 {
 public:
-    enum PaintSvgResult {
-        PaintSvgOk,
-        PaintSvgFileNotValid,
-        PaintSvgElementNotFound
+    enum SvgResult {
+        SvgOk,
+        SvgFileNotValid,
+        SvgElementNotFound
     };
-    static PaintSvgResult checkSvg(const QString &svgFileName, const QStringList &elementsCSV);
+    static SvgResult checkSvg(const QString &svgFileName, const QString &element);
     static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                            const QColor &textColor);
     static void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
-    static PaintSvgResult paintSvg(QPainter *p, const QString &svgFileName,
-                                   const QString &elementsCSV, const QRect &rect);
+    static SvgResult paintSvg(QPainter *p, const QString &svgFileName,
+                              const QStringList &svgElements, const QRect &rect);
     static void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                                       qreal slipIn, qreal blendIn, const QRect &rect);
 };

@@ -401,27 +401,42 @@ AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironme
     return new QtorialsStillImage(image, args[3].AsInt(100), env);
 }
 
-AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
+void CheckSvgAndThrow(const QString &svgFileName, const QString &svgElement, IScriptEnvironment* env)
 {
-    Q_UNUSED(user_data)
-    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(transparentColor);
-    QPainter p(&image);
-    const Filters::PaintSvgResult result =
-            Filters::paintSvg(&p, QString::fromLatin1(args[0].AsString()),
-                              QString::fromLatin1(args[1].AsString()), image.rect());
+    const Filters::SvgResult result =
+            Filters::checkSvg(svgFileName, svgElement);
     switch (result) {
-        case Filters::PaintSvgFileNotValid:
-                env->ThrowError("QtorialsSvg: File '%s'' was not found or is invalid.",
-                                args[0].AsString());
+        case Filters::SvgFileNotValid:
+                env->ThrowError("Svg: File '%s'' was not found or is invalid SVG.",
+                                svgFileName.toAscii().data());
             break;
-        case Filters::PaintSvgElementNotFound:
-                env->ThrowError("QtorialsSvg: One of the Svg elements '%s' was not found.",
-                                args[1].AsString());
+        case Filters::SvgElementNotFound:
+                env->ThrowError("Svg: Svg element '%s' was not found.",
+                                svgElement.toAscii().data());
             break;
         default:
             break;
     }
+}
+
+AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+
+    const QString svgFileName = QString::fromLatin1(args[0].AsString());
+    const QString svgElementsCSV =
+            QString::fromLatin1(args[1].AsString());
+    QStringList svgElements;
+    foreach(const QString &element, svgElementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+        const QString trimmedElement = element.trimmed();
+        CheckSvgAndThrow(svgFileName, trimmedElement, env);
+        svgElements.append(trimmedElement);
+    }
+
+    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+    image.fill(transparentColor);
+    QPainter p(&image);
+    Filters::paintSvg(&p, svgFileName, svgElements, image.rect());
     return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 
@@ -465,21 +480,6 @@ AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvir
     QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
     image.fill(transparentColor);
     QPainter p(&image);
-    const Filters::PaintSvgResult result =
-            Filters::paintSvg(&p, QString::fromLatin1(args[0].AsString()),
-                              QString::fromLatin1(args[1].AsString()), image.rect());
-    switch (result) {
-        case Filters::PaintSvgFileNotValid:
-                env->ThrowError("QtorialsSvg: File '%s'' was not found or is invalid.",
-                                args[0].AsString());
-            break;
-        case Filters::PaintSvgElementNotFound:
-                env->ThrowError("QtorialsSvg: One of the Svg elements '%s' was not found.",
-                                args[1].AsString());
-            break;
-        default:
-            break;
-    }
     return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 

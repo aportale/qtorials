@@ -33,11 +33,11 @@ public:
     }
 
     QSvgRenderer* svgRenderer(const QString &svgFileName,
-                              Filters::PaintSvgResult &error)
+                              Filters::SvgResult &error)
     {
         const QFileInfo fileInfo(svgFileName);
         if (!fileInfo.exists()) {
-            error = Filters::PaintSvgFileNotValid;
+            error = Filters::SvgFileNotValid;
             return 0;
         }
         const QString saneSvgFileName =
@@ -45,12 +45,12 @@ public:
         if (!m_svgRenderers.contains(saneSvgFileName)) {
             QSvgRenderer *renderer = new QSvgRenderer(svgFileName);
             if (!renderer->isValid()) {
-                error = Filters::PaintSvgFileNotValid;
+                error = Filters::SvgFileNotValid;
                 return 0;
             }
             m_svgRenderers.insert(saneSvgFileName, renderer);
         }
-        error = Filters::PaintSvgOk;
+        error = Filters::SvgOk;
         return m_svgRenderers.value(saneSvgFileName);
     }
 
@@ -64,7 +64,7 @@ Q_GLOBAL_STATIC(SvgRendererStore, svgRendererStore);
 
 QSvgRenderer* SvgRendererStore::artworkSvgRenderer()
 {
-    Filters::PaintSvgResult error;
+    Filters::SvgResult error;
     return svgRendererStore()->svgRenderer(QLatin1String(":/artwork.svg"), error);
 }
 
@@ -84,16 +84,15 @@ void deleteQApplicationIfNeeded(QApplication* &app)
     }
 }
 
-Filters::PaintSvgResult Filters::checkSvg(const QString &svgFileName, const QStringList &elements)
+Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &element)
 {
-    PaintSvgResult result;
+    SvgResult result;
     const QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
-    if (result != PaintSvgOk)
+    if (result != SvgOk)
         return result;
-    foreach (const QString &element, elements)
-        if (!renderer->elementExists(element))
-            return PaintSvgElementNotFound;
-    return PaintSvgOk;
+    if (!renderer->elementExists(element))
+        return SvgElementNotFound;
+    return SvgOk;
 }
 
 void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
@@ -230,12 +229,12 @@ void paintCodecBlockPattern(QPainter *p, const QRect &rect)
     p->fillRect(rect, QBrush(brush));
 }
 
-Filters::PaintSvgResult Filters::paintSvg(QPainter *p, const QString &svgFileName,
-                        const QString &elementsCSV, const QRect &rect)
+Filters::SvgResult Filters::paintSvg(QPainter *p, const QString &svgFileName,
+                        const QStringList &svgElements, const QRect &rect)
 {
-    PaintSvgResult result;
+    SvgResult result;
     QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
-    if (result != PaintSvgOk)
+    if (result != SvgOk)
         return result;
     const QRectF viewBox = renderer->viewBoxF();
     const qreal widthFactor = rect.width() / viewBox.width();
@@ -246,15 +245,15 @@ Filters::PaintSvgResult Filters::paintSvg(QPainter *p, const QString &svgFileNam
     p->scale(sizeFactor, sizeFactor);
     p->translate((rect.width() / sizeFactor - viewBox.width()) / 2,
                  (rect.height() / sizeFactor - viewBox.height()) / 2);
-    foreach (const QString &element, elementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+    foreach (const QString &element, svgElements) {
         const QString cleanElement = element.trimmed();
         if (!renderer->elementExists(cleanElement))
-            return PaintSvgElementNotFound;
+            return SvgElementNotFound;
         const QRectF elementBounds = renderer->boundsOnElement(cleanElement);
         renderer->render(p, cleanElement, elementBounds);
     }
     p->restore();
-    return PaintSvgOk;
+    return SvgOk;
 }
 
 void Filters::paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect)
