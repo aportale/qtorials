@@ -190,9 +190,11 @@ public:
     {
         PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
         unsigned char* frameBits = frame->GetWritePtr();
-        QImage image(m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
+        QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
         image.fill(0);
         QPainter p(&image);
+        p.scale(1, -1);
+        p.translate(0, -image.height());
         m_titleAnimations.setCurrentTime(n);
         foreach (const SubtitleProperties *titleData, m_titleData) {
             Filters::paintAnimatedSubTitle(
@@ -200,7 +202,6 @@ public:
                     titleData->slip(), titleData->blend(),
                     image.rect());
         }
-        env->BitBlt(frameBits, frame->GetPitch(), image.mirrored(false, true).bits(), frame->GetPitch(), image.bytesPerLine(), image.height());
         return frame;
     }
 
