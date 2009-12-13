@@ -27,7 +27,9 @@ public:
 //        paintRgbPatterns(&p, rect());
 //        paintTitle(&p, rect(), "Hallo AviSynth sdfg<b>sdf</b>gsdf gsdfgsd fgsdfg sdfgsd fgs dfg");
         Filters::paintElements(&p, "qtlogosmall", rect());
-        Filters::paintSvg(&p, "../artwork.svg", "qtlogo", rect());
+        Filters::paintSvgElements(&p, "../../../screencasts/qtsymbian_development.svg",
+                                  QString::fromLatin1("pushbutton").split(QLatin1Char(',')),
+                                  rect());
         Filters::paintAnimatedSubTitle(&p, "huhu", "huih iuh iuhi", 50, 100, rect());
     }
 };

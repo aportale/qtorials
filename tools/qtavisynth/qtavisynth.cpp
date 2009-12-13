@@ -370,8 +370,8 @@ protected:
 struct SvgAnimationData
 {
     QString svgElement;
-    QString startFrame;
-    QString endFrame;
+    int startFrame;
+    int endFrame;
 };
 
 class SvgAnimationProperties : public QObject
@@ -450,7 +450,17 @@ public:
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
     {
         Q_UNUSED(env)
+        PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
+        unsigned char* frameBits = frame->GetWritePtr();
+        QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
+        image.fill(0);
+        QPainter p(&image);
+        p.scale(1, -1);
+        p.translate(0, -image.height());
+        p.fillRect(20, 20, 100, 100, Qt::gray);
+
         m_animation.setCurrentTime(n);
+        return frame;
     }
     bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
     const VideoInfo& __stdcall GetVideoInfo() { return m_videoInfo; }
@@ -549,24 +559,26 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
     QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
     image.fill(transparentColor);
     QPainter p(&image);
-    Filters::paintSvg(&p, svgFileName, svgElements, image.rect());
+    Filters::paintSvgElements(&p, svgFileName, svgElements, image.rect());
     return new QtorialsStillImage(image, args[4].AsInt(100), env);
 }
 
 AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
+    static const int valuesPerDetail = 6;
 
     if (!env->FunctionExists(args[5].AsString()))
         env->ThrowError("QtorialsZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
 
-    if (args[10].ArraySize() % 6 != 0)
-        env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\nThey need to be 6 per keyframe.");
+    if (args[10].ArraySize() % valuesPerDetail != 0)
+        env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\n"
+                        "They need to be %d per detail.", valuesPerDetail);
 
     const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
 
     QList<QtorialsZoomNPan::Detail> details;
-    for (int i = 0; i < args[10].ArraySize(); i += 6) {
+    for (int i = 0; i < args[10].ArraySize(); i += valuesPerDetail) {
         const int keyFrame = args[10][i].AsInt();
         const int transitionLength = args[10][i+1].AsInt();
         const QRectF rect(args[10][i+2].AsFloat(), args[10][i+3].AsFloat(),
@@ -590,10 +602,31 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
 AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(transparentColor);
-    QPainter p(&image);
-    return new QtorialsStillImage(image, args[4].AsInt(100), env);
+    static const int valuesPerDetail = 4;
+
+    if (args[10].ArraySize() % valuesPerDetail != 0)
+        env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
+                        "They need to be %d per keyframe.", valuesPerDetail);
+
+    const QString svgFileName = QLatin1String(args[0].AsString());
+
+    QList<SvgAnimationData> details;
+    for (int i = 0; i < args[3].ArraySize(); i += valuesPerDetail) {
+        const AVSValue &dataAvsValue = args[3][0];
+        const SvgAnimationData animationDetail = {
+            QLatin1String(dataAvsValue[0].AsString()),
+            dataAvsValue[1].AsInt(),
+            dataAvsValue[2].AsInt()
+        };
+        CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
+        details.append(animationDetail);
+    }
+
+    return new QtorialsSvgAnimation(args[1].AsInt(),
+                                    args[2].AsInt(),
+                                    svgFileName,
+                                    details,
+                                    env);
 }
 
 extern "C" __declspec(dllexport)
@@ -606,9 +639,9 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i", CreateSvg, 0);
     env->AddFunction("QtorialsZoomNPan",
                      "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i[resizefiter]s"
-                     "[startleft]i[starttop]i[starwidth]i[startheight]ii*", CreateZoomNPan, 0);
+                     "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*", CreateZoomNPan, 0);
     env->AddFunction("QtorialsSvgAnimation",
-                     "[svgfile]s[width]i[height]i[frames]i.*", CreateSvgAnimation, 0);
+                     "[svgfile]s[width]i[height]i.*", CreateSvgAnimation, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
 

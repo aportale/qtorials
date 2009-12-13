@@ -229,7 +229,7 @@ void paintCodecBlockPattern(QPainter *p, const QRect &rect)
     p->fillRect(rect, QBrush(brush));
 }
 
-Filters::SvgResult Filters::paintSvg(QPainter *p, const QString &svgFileName,
+Filters::SvgResult Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
                         const QStringList &svgElements, const QRect &rect)
 {
     SvgResult result;
@@ -253,6 +253,17 @@ Filters::SvgResult Filters::paintSvg(QPainter *p, const QString &svgFileName,
         renderer->render(p, cleanElement, elementBounds);
     }
     p->restore();
+    return SvgOk;
+}
+
+Filters::SvgResult Filters::paintBlendedSvgElement(QPainter *p, const QString &svgFileName,
+                                                 const QString &svgElement, qreal opacity,
+                                                 const QRectF &elementRect)
+{
+    SvgResult result;
+    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
+    if (result != SvgOk)
+        return result;
     return SvgOk;
 }
 
