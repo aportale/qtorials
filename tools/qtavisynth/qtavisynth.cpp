@@ -128,7 +128,15 @@ public:
                      const QList<SubtitleData> &titles,
                      IScriptEnvironment* env)
     {
+        Q_UNUSED(env)
+
         memset(&m_videoInfo, 0, sizeof(VideoInfo));
+        m_videoInfo.width = width;
+        m_videoInfo.height = height;
+        m_videoInfo.fps_numerator = 25;
+        m_videoInfo.fps_denominator = 1;
+        m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+
         foreach (const SubtitleData &data, titles) {
             SubtitleProperties *properties = new SubtitleProperties(data);
             QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
@@ -169,12 +177,6 @@ public:
             m_videoInfo.num_frames = qMax(data.endFrame + 1 // +1, so that we have a clear frame at the end
                                           , m_videoInfo.num_frames);
         }
-        m_videoInfo.width = width;
-        m_videoInfo.height = height;
-        m_videoInfo.fps_numerator = 25;
-        m_videoInfo.fps_denominator = 1;
-        m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
-
         m_titleAnimations.start();
         m_titleAnimations.pause();
     }
@@ -265,7 +267,7 @@ public:
 
         {
             QPropertyAnimation *start =
-                    new QPropertyAnimation(&m_animationTarget, ZoomNPanProperties::propertyName);
+                    new QPropertyAnimation(&m_animationProperties, ZoomNPanProperties::propertyName);
             start->setDuration(0);
             previousDetail.detail =
                     fixedDetailRect(originClip->GetVideoInfo(), QSize(width, height), startDetail);
@@ -283,7 +285,7 @@ public:
             if (pauseLength > 0)
                 m_animation.addPause(pauseLength);
             QPropertyAnimation *rectAnimation =
-                    new QPropertyAnimation(&m_animationTarget, ZoomNPanProperties::propertyName);
+                    new QPropertyAnimation(&m_animationProperties, ZoomNPanProperties::propertyName);
             rectAnimation->setDuration(transitionFrames);
             rectAnimation->setStartValue(previousDetail.detail);
             rectAnimation->setEndValue(detailRect);
@@ -304,7 +306,7 @@ public:
     {
         Q_UNUSED(env)
         m_animation.setCurrentTime(n);
-        QRectF rect = m_animationTarget.rect();
+        QRectF rect = m_animationProperties.rect();
         if (rect != m_resizedRect) {
             int target_width = m_targetVideoInfo.width;
             int target_height = m_targetVideoInfo.height;
@@ -359,10 +361,109 @@ protected:
     QByteArray m_resizeFilter;
     PClip m_extendedClip;
     QSequentialAnimationGroup m_animation;
-    ZoomNPanProperties m_animationTarget;
+    ZoomNPanProperties m_animationProperties;
     PClip m_resizedClip;
     QRectF m_resizedRect;
 };
+
+struct SvgAnimationData
+{
+    QString svgElement;
+    QString startFrame;
+    QString endFrame;
+};
+
+class SvgAnimationProperties : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QRectF rect READ rect WRITE setRect);
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity);
+
+public:
+    SvgAnimationProperties(const SvgAnimationData &data)
+        : QObject()
+        , m_data(data)
+    {
+    }
+
+    QRectF rect() const
+    {
+        return m_rect;
+    }
+
+    void setRect(const QRectF &rect)
+    {
+        m_rect = rect;
+    }
+
+    qreal opacity() const
+    {
+        return m_opacity;
+    }
+
+    void setOpacity(qreal opacity)
+    {
+        m_opacity = opacity;
+    }
+
+    static const QByteArray rectPropertyName;
+    static const QByteArray opacityPropertyName;
+
+protected:
+    QRectF m_rect;
+    SvgAnimationData m_data;
+    qreal m_opacity;
+};
+
+const QByteArray SvgAnimationProperties::rectPropertyName = "rect";
+const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
+
+class QtorialsSvgAnimation : public IClip
+{
+public:
+    QtorialsSvgAnimation(int width, int height,
+                         const QString &svgFile, const QList<SvgAnimationData> &dataSets,
+                         IScriptEnvironment* env)
+    {
+        memset(&m_videoInfo, 0, sizeof(VideoInfo));
+        m_videoInfo.width = width;
+        m_videoInfo.height = height;
+        m_videoInfo.fps_numerator = 25;
+        m_videoInfo.fps_denominator = 1;
+        m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+
+        foreach(const SvgAnimationData &dataSet, dataSets) {
+            SvgAnimationProperties *properties = new SvgAnimationProperties(dataSet);
+            m_properties.append(properties);
+        }
+
+        m_animation.start();
+        m_animation.pause();
+    }
+
+    ~QtorialsSvgAnimation()
+    {
+        qDeleteAll(m_properties);
+    }
+
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
+    {
+        Q_UNUSED(env)
+        m_animation.setCurrentTime(n);
+    }
+    bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
+    const VideoInfo& __stdcall GetVideoInfo() { return m_videoInfo; }
+    void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
+    { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
+
+protected:
+
+    VideoInfo m_videoInfo;
+    QParallelAnimationGroup m_animation;
+    QList<SvgAnimationProperties*> m_properties;
+};
+
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
