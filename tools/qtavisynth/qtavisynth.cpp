@@ -26,7 +26,8 @@ const QRgb transparentColor = qRgba(0x00, 0x00, 0x00, 0x00);
 
 static QString cleanFileName(const QString &file)
 {
-    return QFileInfo(file).canonicalFilePath();
+    const QString cleanFilePath = QFileInfo(file).canonicalFilePath();
+    return cleanFilePath.isEmpty() ? file : cleanFilePath;
 }
 
 class QtorialsStillImage : public IClip
@@ -384,13 +385,20 @@ class SvgAnimationProperties : public QObject
     Q_OBJECT
     Q_PROPERTY(qreal scale READ scale WRITE setScale);
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity);
+    Q_ENUMS(Blending);
 
 public:
+    enum Blending {
+        immediate,
+        fade,
+        fadeandscale
+    };
+
     SvgAnimationProperties(const SvgAnimationData &data)
         : QObject()
         , m_data(data)
-        , m_scale(1.0)
-        , m_opacity(1.0)
+        , m_scale(scaleStart)
+        , m_opacity(opacityStart)
     {
     }
 
@@ -422,6 +430,13 @@ public:
     static const QByteArray scalePropertyName;
     static const QByteArray opacityPropertyName;
 
+    static const int scaleDuration;
+    static const qreal scaleStart;
+    static const qreal scaleEnd;
+    static const int opacityDuration;
+    static const qreal opacityStart;
+    static const qreal opacityEnd;
+
 protected:
     SvgAnimationData m_data;
     qreal m_scale;
@@ -430,6 +445,13 @@ protected:
 
 const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
+
+const int SvgAnimationProperties::scaleDuration = 5;
+const qreal SvgAnimationProperties::scaleStart = 0.2;
+const qreal SvgAnimationProperties::scaleEnd = 1.0;
+const int SvgAnimationProperties::opacityDuration = SvgAnimationProperties::scaleDuration;
+const qreal SvgAnimationProperties::opacityStart = 0.0;
+const qreal SvgAnimationProperties::opacityEnd = 1.0;
 
 class QtorialsSvgAnimation : public IClip
 {
@@ -451,41 +473,74 @@ public:
             SvgAnimationProperties *properties = new SvgAnimationProperties(dataSet);
             m_properties.append(properties);
 
-            static const int scaleDuration = 5;
-            static const qreal startScale = 0.2;
-            static const qreal endScale = 1.0;
             QSequentialAnimationGroup *scaleSequence = new QSequentialAnimationGroup;
-            {
-                QPropertyAnimation *scaleStart =
-                        new QPropertyAnimation(properties, SvgAnimationProperties::scalePropertyName);
-                scaleStart->setStartValue(startScale);
-                scaleStart->setEndValue(startScale);
-                scaleStart->setDuration(0);
-                scaleSequence->addAnimation(scaleStart);
+            QSequentialAnimationGroup *opacitySequence = new QSequentialAnimationGroup;
+            QEasingCurve scaleInEasingCurve(QEasingCurve::OutBack);
+            scaleInEasingCurve.setOvershoot(2.5);
+
+            const struct Animation {
+                QSequentialAnimationGroup *sequence;
+                const QByteArray &propertyName;
+                int pauseBefore;
+                int duration;
+                QEasingCurve easingCurve;
+                qreal startValue;
+                qreal endValue;
+            } animations[] = {
+                {
+                    scaleSequence,
+                    SvgAnimationProperties::scalePropertyName,
+                    dataSet.startFrame - SvgAnimationProperties::scaleDuration,
+                    SvgAnimationProperties::scaleDuration,
+                    scaleInEasingCurve,
+                    SvgAnimationProperties::scaleStart,
+                    SvgAnimationProperties::scaleEnd
+                }, {
+                    scaleSequence,
+                    SvgAnimationProperties::scalePropertyName,
+                    dataSet.endFrame - dataSet.startFrame,
+                    SvgAnimationProperties::scaleDuration,
+                    QEasingCurve::InCubic,
+                    SvgAnimationProperties::scaleEnd,
+                    SvgAnimationProperties::scaleStart
+                }, {
+                    opacitySequence,
+                    SvgAnimationProperties::opacityPropertyName,
+                    dataSet.startFrame - SvgAnimationProperties::opacityDuration,
+                    SvgAnimationProperties::opacityDuration,
+                    QEasingCurve::Linear,
+                    SvgAnimationProperties::opacityStart,
+                    SvgAnimationProperties::opacityEnd
+                }, {
+                    opacitySequence,
+                    SvgAnimationProperties::opacityPropertyName,
+                    dataSet.endFrame - dataSet.startFrame,
+                    SvgAnimationProperties::opacityDuration,
+                    QEasingCurve::Linear,
+                    SvgAnimationProperties::opacityEnd,
+                    SvgAnimationProperties::opacityStart
+                }
+            };
+
+            for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
+                const struct Animation &a = animations[i];
+                a.sequence->addPause(a.pauseBefore);
+                QPropertyAnimation *animation =
+                        new QPropertyAnimation(properties, a.propertyName);
+                animation->setDuration(a.duration);
+                animation->setEasingCurve(a.easingCurve);
+                animation->setStartValue(a.startValue);
+                animation->setEndValue(a.endValue);
+                a.sequence->addAnimation(animation);
             }
-            scaleSequence->addPause(dataSet.startFrame - scaleDuration);
-            {
-                QPropertyAnimation *scaleAppear =
-                        new QPropertyAnimation(properties, SvgAnimationProperties::scalePropertyName);
-                scaleAppear->setStartValue(startScale);
-                scaleAppear->setEndValue(endScale);
-                scaleAppear->setDuration(scaleDuration);
-                scaleSequence->addAnimation(scaleAppear);
-            }
-            scaleSequence->addPause(dataSet.endFrame - dataSet.startFrame);
-            {
-                QPropertyAnimation *scaleDisappear =
-                        new QPropertyAnimation(properties, SvgAnimationProperties::scalePropertyName);
-                scaleDisappear->setStartValue(endScale);
-                scaleDisappear->setEndValue(startScale);
-                scaleDisappear->setDuration(scaleDuration);
-                scaleSequence->addAnimation(scaleDisappear);
-            }
+
             scaleSequence->addPause(10000);
+            opacitySequence->addPause(10000);
 
             m_animation.addAnimation(scaleSequence);
+            m_animation.addAnimation(opacitySequence);
 
-            m_videoInfo.num_frames = qMax(dataSet.endFrame + scaleDuration + 1 // +1, so that we have a clear frame at the end
+            m_videoInfo.num_frames = qMax(dataSet.endFrame + qMax(SvgAnimationProperties::opacityDuration, SvgAnimationProperties::scaleDuration) + 1 // +1, so that we have a clear frame at the end
                                           , m_videoInfo.num_frames);
         }
 
@@ -510,13 +565,14 @@ public:
         p.translate(0, -image.height());
         m_animation.setCurrentTime(n);
         foreach (const SvgAnimationProperties *properties, m_properties) {
-            Filters::paintBlendedSvgElement(&p,
-                                            m_svgFile,
-                                            properties->svgElement(),
-                                            properties->opacity(),
-                                            properties->scale(),
-                                            image.rect()
-                                            );
+            if (properties->opacity() > SvgAnimationProperties::opacityStart)
+                Filters::paintBlendedSvgElement(&p,
+                                                m_svgFile,
+                                                properties->svgElement(),
+                                                properties->opacity(),
+                                                properties->scale(),
+                                                image.rect()
+                                                );
         }
 
         return frame;
@@ -533,7 +589,6 @@ protected:
     QParallelAnimationGroup m_animation;
     QList<SvgAnimationProperties*> m_properties;
 };
-
 
 AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
