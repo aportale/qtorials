@@ -377,24 +377,31 @@ struct SvgAnimationData
 class SvgAnimationProperties : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRectF rect READ rect WRITE setRect);
+    Q_PROPERTY(qreal scale READ scale WRITE setScale);
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity);
 
 public:
     SvgAnimationProperties(const SvgAnimationData &data)
         : QObject()
         , m_data(data)
+        , m_scale(1.0)
+        , m_opacity(1.0)
     {
     }
 
-    QRectF rect() const
+    QString svgElement() const
     {
-        return m_rect;
+        return m_data.svgElement;
     }
 
-    void setRect(const QRectF &rect)
+    qreal scale() const
     {
-        m_rect = rect;
+        return m_scale;
+    }
+
+    void setScale(qreal scale)
+    {
+        m_scale = scale;
     }
 
     qreal opacity() const
@@ -407,16 +414,16 @@ public:
         m_opacity = opacity;
     }
 
-    static const QByteArray rectPropertyName;
+    static const QByteArray scalePropertyName;
     static const QByteArray opacityPropertyName;
 
 protected:
-    QRectF m_rect;
     SvgAnimationData m_data;
+    qreal m_scale;
     qreal m_opacity;
 };
 
-const QByteArray SvgAnimationProperties::rectPropertyName = "rect";
+const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
 
 class QtorialsSvgAnimation : public IClip
@@ -425,7 +432,9 @@ public:
     QtorialsSvgAnimation(int width, int height,
                          const QString &svgFile, const QList<SvgAnimationData> &dataSets,
                          IScriptEnvironment* env)
+        : m_svgFile(svgFile)
     {
+        Q_UNUSED(env)
         memset(&m_videoInfo, 0, sizeof(VideoInfo));
         m_videoInfo.width = width;
         m_videoInfo.height = height;
@@ -436,6 +445,43 @@ public:
         foreach(const SvgAnimationData &dataSet, dataSets) {
             SvgAnimationProperties *properties = new SvgAnimationProperties(dataSet);
             m_properties.append(properties);
+
+            static const int scaleDuration = 5;
+            static const qreal startScale = 0.2;
+            static const qreal endScale = 1.0;
+            QSequentialAnimationGroup *scaleSequence = new QSequentialAnimationGroup;
+            {
+                QPropertyAnimation *scaleStart =
+                        new QPropertyAnimation(properties, SvgAnimationProperties::scalePropertyName);
+                scaleStart->setStartValue(startScale);
+                scaleStart->setEndValue(startScale);
+                scaleStart->setDuration(0);
+                scaleSequence->addAnimation(scaleStart);
+            }
+            scaleSequence->addPause(dataSet.startFrame - scaleDuration);
+            {
+                QPropertyAnimation *scaleAppear =
+                        new QPropertyAnimation(properties, SvgAnimationProperties::scalePropertyName);
+                scaleAppear->setStartValue(startScale);
+                scaleAppear->setEndValue(endScale);
+                scaleAppear->setDuration(scaleDuration);
+                scaleSequence->addAnimation(scaleAppear);
+            }
+            scaleSequence->addPause(dataSet.endFrame - dataSet.startFrame);
+            {
+                QPropertyAnimation *scaleDisappear =
+                        new QPropertyAnimation(properties, SvgAnimationProperties::scalePropertyName);
+                scaleDisappear->setStartValue(endScale);
+                scaleDisappear->setEndValue(startScale);
+                scaleDisappear->setDuration(scaleDuration);
+                scaleSequence->addAnimation(scaleDisappear);
+            }
+            scaleSequence->addPause(10000);
+
+            m_animation.addAnimation(scaleSequence);
+
+            m_videoInfo.num_frames = qMax(dataSet.endFrame + scaleDuration + 1 // +1, so that we have a clear frame at the end
+                                          , m_videoInfo.num_frames);
         }
 
         m_animation.start();
@@ -457,9 +503,17 @@ public:
         QPainter p(&image);
         p.scale(1, -1);
         p.translate(0, -image.height());
-        p.fillRect(20, 20, 100, 100, Qt::gray);
-
         m_animation.setCurrentTime(n);
+        foreach (const SvgAnimationProperties *properties, m_properties) {
+            Filters::paintBlendedSvgElement(&p,
+                                            m_svgFile,
+                                            properties->svgElement(),
+                                            properties->opacity(),
+                                            properties->scale(),
+                                            image.rect()
+                                            );
+        }
+
         return frame;
     }
     bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
@@ -469,7 +523,7 @@ public:
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
 protected:
-
+    QString m_svgFile;
     VideoInfo m_videoInfo;
     QParallelAnimationGroup m_animation;
     QList<SvgAnimationProperties*> m_properties;
@@ -602,9 +656,9 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
 AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    static const int valuesPerDetail = 4;
+    static const int valuesPerDetail = 3;
 
-    if (args[10].ArraySize() % valuesPerDetail != 0)
+    if (args[3].ArraySize() % valuesPerDetail != 0)
         env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
                         "They need to be %d per keyframe.", valuesPerDetail);
 
@@ -612,11 +666,10 @@ AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvir
 
     QList<SvgAnimationData> details;
     for (int i = 0; i < args[3].ArraySize(); i += valuesPerDetail) {
-        const AVSValue &dataAvsValue = args[3][0];
         const SvgAnimationData animationDetail = {
-            QLatin1String(dataAvsValue[0].AsString()),
-            dataAvsValue[1].AsInt(),
-            dataAvsValue[2].AsInt()
+            QLatin1String(args[3][i].AsString()),
+            args[3][i+1].AsInt(),
+            args[3][i+2].AsInt()
         };
         CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
         details.append(animationDetail);
