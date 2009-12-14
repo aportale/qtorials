@@ -547,19 +547,20 @@ AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironme
 {
     Q_UNUSED(user_data)
 
-    if (args[2].ArraySize() % 4 != 0)
+    const AVSValue &titleValues = args[2];
+    if (titleValues.ArraySize() % 4 != 0)
         env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
 
     QList<SubtitleData> titles;
-    for (int i = 0; i < args[2].ArraySize(); i += 4) {
-        if (!(args[2][i].IsString() && args[2][i+1].IsString()
-              && args[2][i+2].IsInt() && args[2][i+3].IsInt()))
+    for (int i = 0; i < titleValues.ArraySize(); i += 4) {
+        if (!(titleValues[i].IsString() && titleValues[i+1].IsString()
+              && titleValues[i+2].IsInt() && titleValues[i+3].IsInt()))
             env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.", i / 4 + 1);
         SubtitleData title = {
-            QLatin1String(args[2][i].AsString()),
-            QLatin1String(args[2][i+1].AsString()),
-            args[2][i+2].AsInt(),
-            args[2][i+3].AsInt()};
+            QLatin1String(titleValues[i].AsString()),
+            QLatin1String(titleValues[i+1].AsString()),
+            titleValues[i+2].AsInt(),
+            titleValues[i+3].AsInt()};
         titles.append(title);
     }
     return new QtorialsSubtitle(args[0].AsInt(defaultClipWidth),
@@ -625,18 +626,19 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
     if (!env->FunctionExists(args[5].AsString()))
         env->ThrowError("QtorialsZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
 
-    if (args[10].ArraySize() % valuesPerDetail != 0)
+    const AVSValue &detailValues = args[10];
+    if (detailValues.ArraySize() % valuesPerDetail != 0)
         env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\n"
                         "They need to be %d per detail.", valuesPerDetail);
 
     const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
 
     QList<QtorialsZoomNPan::Detail> details;
-    for (int i = 0; i < args[10].ArraySize(); i += valuesPerDetail) {
-        const int keyFrame = args[10][i].AsInt();
-        const int transitionLength = args[10][i+1].AsInt();
-        const QRectF rect(args[10][i+2].AsFloat(), args[10][i+3].AsFloat(),
-                          args[10][i+4].AsFloat(), args[10][i+5].AsFloat());
+    for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
+        const int keyFrame = detailValues[i+0].AsInt();
+        const int transitionLength = detailValues[1].AsInt();
+        const QRectF rect(detailValues[i+2].AsFloat(), detailValues[i+3].AsFloat(),
+                          detailValues[i+4].AsFloat(), detailValues[i+5].AsFloat());
         const QtorialsZoomNPan::Detail detail =
             {keyFrame, transitionLength, rect};
         details.append(detail);
@@ -658,18 +660,19 @@ AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvir
     Q_UNUSED(user_data)
     static const int valuesPerDetail = 3;
 
-    if (args[3].ArraySize() % valuesPerDetail != 0)
+    const AVSValue &detailValues = args[3];
+    if (detailValues.ArraySize() % valuesPerDetail != 0)
         env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
                         "They need to be %d per keyframe.", valuesPerDetail);
 
     const QString svgFileName = QLatin1String(args[0].AsString());
 
     QList<SvgAnimationData> details;
-    for (int i = 0; i < args[3].ArraySize(); i += valuesPerDetail) {
+    for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
         const SvgAnimationData animationDetail = {
-            QLatin1String(args[3][i].AsString()),
-            args[3][i+1].AsInt(),
-            args[3][i+2].AsInt()
+            QLatin1String(detailValues[i].AsString()),
+            detailValues[i+1].AsInt(),
+            detailValues[i+2].AsInt()
         };
         CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
         details.append(animationDetail);
