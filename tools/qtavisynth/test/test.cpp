@@ -27,9 +27,13 @@ public:
 //        paintRgbPatterns(&p, rect());
 //        paintTitle(&p, rect(), "Hallo AviSynth sdfg<b>sdf</b>gsdf gsdfgsd fgsdfg sdfgsd fgs dfg");
         Filters::paintElements(&p, "qtlogosmall", rect());
+        QStringList svgElements;
+        svgElements << QLatin1String("mainwindow")
+                << QLatin1String("listwidget");
         Filters::paintSvgElements(&p, "../../../screencasts/qtsymbian_development.svg",
-                                  QString::fromLatin1("pushbutton").split(QLatin1Char(',')),
-                                  rect());
+                                  svgElements, rect());
+        Filters::paintBlendedSvgElement(&p, "../../../screencasts/qtsymbian_development.svg",
+                                        QLatin1String("pushbutton"), 0.9, 3.0, rect());
         Filters::paintAnimatedSubTitle(&p, "huhu", "huih iuh iuhi", 50, 100, rect());
     }
 };
