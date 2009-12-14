@@ -26,10 +26,12 @@ public:
                            const QColor &textColor);
     static void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
     static SvgResult paintSvgElements(QPainter *p, const QString &svgFileName,
-                                      const QStringList &svgElements, const QRect &rect);
-    static SvgResult paintBlendedSvgElement(QPainter *p, const QString &svgFileName,
-                                            const QString &svgElement, qreal opacity,
-                                            const QRectF &elementRect);
+                                      const QStringList &svgElements, const QRect &rect,
+                                      const QRectF &viewBox = QRectF());
+    static SvgResult paintBlendedSvgElement(QPainter *p,
+                                            const QString &svgFileName, const QString &svgElement,
+                                            qreal opacity, qreal scale,
+                                            const QRect &rect, const QRectF &viewBox = QRectF());
     static void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                                       qreal slipIn, qreal blendIn, const QRect &rect);
 };

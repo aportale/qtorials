@@ -229,41 +229,71 @@ void paintCodecBlockPattern(QPainter *p, const QRect &rect)
     p->fillRect(rect, QBrush(brush));
 }
 
-Filters::SvgResult Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
-                        const QStringList &svgElements, const QRect &rect)
+QTransform fitRect1InRect2Centered(const QRectF &rect1, const QRectF &rect2)
+{
+    const qreal widthFactor = rect2.width() / rect1.width();
+    const qreal heightFactor = rect2.height() / rect1.height();
+    const qreal sizeFactor = qMin(widthFactor, heightFactor);
+    return QTransform()
+            .translate(-rect1.top(), -rect1.left())
+            .scale(sizeFactor, sizeFactor)
+            .translate((rect2.width() / sizeFactor - rect1.width()) / 2,
+                       (rect2.height() / sizeFactor - rect1.height()) / 2);
+}
+
+Filters::SvgResult
+Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
+                          const QStringList &svgElements, const QRect &rect,
+                          const QRectF &viewBox)
 {
     SvgResult result;
     QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
     if (result != SvgOk)
         return result;
-    const QRectF viewBox = renderer->viewBoxF();
-    const qreal widthFactor = rect.width() / viewBox.width();
-    const qreal heightFactor = rect.height() / viewBox.height();
-    const qreal sizeFactor = qMin(widthFactor, heightFactor);
+    const QTransform painterTransform = fitRect1InRect2Centered(
+            (viewBox.isValid() ? viewBox : renderer->viewBoxF()), rect);
     p->save();
-    p->translate(-viewBox.topLeft());
-    p->scale(sizeFactor, sizeFactor);
-    p->translate((rect.width() / sizeFactor - viewBox.width()) / 2,
-                 (rect.height() / sizeFactor - viewBox.height()) / 2);
+    p->setTransform(painterTransform);
     foreach (const QString &element, svgElements) {
-        const QString cleanElement = element.trimmed();
-        if (!renderer->elementExists(cleanElement))
+        if (!renderer->elementExists(element))
             return SvgElementNotFound;
-        const QRectF elementBounds = renderer->boundsOnElement(cleanElement);
-        renderer->render(p, cleanElement, elementBounds);
+        const QRectF elementBounds = renderer->boundsOnElement(element);
+        renderer->render(p, element, elementBounds);
     }
     p->restore();
     return SvgOk;
 }
 
-Filters::SvgResult Filters::paintBlendedSvgElement(QPainter *p, const QString &svgFileName,
-                                                 const QString &svgElement, qreal opacity,
-                                                 const QRectF &elementRect)
+Filters::SvgResult
+Filters::paintBlendedSvgElement(QPainter *p,
+                                const QString &svgFileName, const QString &svgElement,
+                                qreal opacity, qreal scale, const QRect &rect, const QRectF &viewBox)
 {
     SvgResult result;
     QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
     if (result != SvgOk)
         return result;
+    if (!renderer->elementExists(svgElement))
+        return SvgElementNotFound;
+    const QTransform painterTransform = fitRect1InRect2Centered(
+            (viewBox.isValid() ? viewBox : renderer->viewBoxF()), rect);
+    const QRectF elementBounds = renderer->boundsOnElement(svgElement);
+    QRectF scaledBounds(elementBounds.topLeft(), elementBounds.size() * scale);
+    scaledBounds.moveCenter(elementBounds.center());
+    if (opacity < 1.0) {
+        QImage elementImage(rect.size(), QImage::Format_ARGB32);
+        elementImage.fill(0);
+        QPainter elementPainter(&elementImage);
+        elementPainter.setOpacity(opacity);
+        elementPainter.setTransform(painterTransform);
+        renderer->render(&elementPainter, svgElement, scaledBounds);
+        p->drawImage(0, 0, elementImage);
+    } else {
+        p->save();
+        p->setTransform(painterTransform);
+        renderer->render(p, svgElement, scaledBounds);
+        p->restore();
+    }
     return SvgOk;
 }
 
