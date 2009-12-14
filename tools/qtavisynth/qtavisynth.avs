@@ -25,5 +25,7 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
 \))
 \.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow", gClipWidth, gClipHeight, 100))
 \.overlayRgbClip(QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg", gClipWidth, gClipHeight
-  \ , "pushbutton",     100, 200
+  \ , "lineedit",       60, 100, "fadeandscale", "fade"
+  \ , "pushbutton",     100, 200, "fade", "immediate"
+  \ , "listwidget",     120, 200, "immediate", "fadeandscale"
 \))
