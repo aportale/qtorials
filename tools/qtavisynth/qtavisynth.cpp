@@ -30,6 +30,24 @@ static QString cleanFileName(const QString &file)
     return cleanFilePath.isEmpty() ? file : cleanFilePath;
 }
 
+static void CheckSvgAndThrow(const QString &svgFileName, const QString &svgElement, IScriptEnvironment* env)
+{
+    const Filters::SvgResult result =
+            Filters::checkSvg(svgFileName, svgElement);
+    switch (result) {
+        case Filters::SvgFileNotValid:
+                env->ThrowError("Svg: File '%s'' was not found or is invalid SVG.",
+                                svgFileName.toAscii().data());
+            break;
+        case Filters::SvgElementNotFound:
+                env->ThrowError("Svg: Svg element '%s' was not found.",
+                                svgElement.toAscii().data());
+            break;
+        default:
+            break;
+    }
+}
+
 class QtorialsStillImage : public IClip
 {
 public:
@@ -57,17 +75,53 @@ public:
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
+    static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
+    {
+        Q_UNUSED(user_data)
+        const QString title =
+            QString::fromLatin1(args[0].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
+        QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+        image.fill(transparentColor);
+        QPainter p(&image);
+        Filters::paintTitle(&p, image.rect(), title,
+                            args[1].AsInt(qRgba(0x0, 0x0, 0x0, 0xff)));
+        return new QtorialsStillImage(image, args[4].AsInt(100), env);
+    }
+
+    static AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
+    {
+        Q_UNUSED(user_data)
+        QImage image(args[1].AsInt(defaultClipWidth), args[2].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+        image.fill(transparentColor);
+        QPainter p(&image);
+        Filters::paintElements(&p, QString::fromLatin1(args[0].AsString("qtlogosmall")), image.rect());
+        return new QtorialsStillImage(image, args[3].AsInt(100), env);
+    }
+
+    static AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
+    {
+        Q_UNUSED(user_data)
+
+        const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
+        const QString svgElementsCSV =
+                QString::fromLatin1(args[1].AsString());
+        QStringList svgElements;
+        foreach(const QString &element, svgElementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+            const QString trimmedElement = element.trimmed();
+            CheckSvgAndThrow(svgFileName, trimmedElement, env);
+            svgElements.append(trimmedElement);
+        }
+
+        QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
+        image.fill(transparentColor);
+        QPainter p(&image);
+        Filters::paintSvgElements(&p, svgFileName, svgElements, image.rect());
+        return new QtorialsStillImage(image, args[4].AsInt(100), env);
+    }
+
 protected:
     PVideoFrame m_frame;
     VideoInfo m_videoInfo;
-};
-
-struct SubtitleData
-{
-    QString title;
-    QString subtitle;
-    int startFrame;
-    int endFrame;
 };
 
 class SubtitleProperties : public QObject
@@ -77,7 +131,15 @@ class SubtitleProperties : public QObject
     Q_PROPERTY(qreal blend READ blend WRITE setBlend);
 
 public:
-    SubtitleProperties(const SubtitleData &data)
+    struct Data
+    {
+        QString title;
+        QString subtitle;
+        int startFrame;
+        int endFrame;
+    };
+    
+    SubtitleProperties(const Data &data)
         : QObject()
         , m_subtitleData(data)
         , m_slip(0.0)
@@ -119,7 +181,7 @@ public:
     static const QByteArray blendPropertyName;
 
 protected:
-    SubtitleData m_subtitleData;
+    Data m_subtitleData;
     qreal m_slip;
     qreal m_blend;
 };
@@ -131,7 +193,7 @@ class QtorialsSubtitle : public IClip
 {
 public:
     QtorialsSubtitle(int width, int height,
-                     const QList<SubtitleData> &titles,
+                     const QList<SubtitleProperties::Data> &titles,
                      IScriptEnvironment* env)
     {
         Q_UNUSED(env)
@@ -143,7 +205,7 @@ public:
         m_videoInfo.fps_denominator = 1;
         m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-        foreach (const SubtitleData &data, titles) {
+        foreach (const SubtitleProperties::Data &data, titles) {
             SubtitleProperties *properties = new SubtitleProperties(data);
             QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
             QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
@@ -216,6 +278,32 @@ public:
     void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
+
+    static AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
+    {
+        Q_UNUSED(user_data)
+
+        const AVSValue &titleValues = args[2];
+        if (titleValues.ArraySize() % 4 != 0)
+            env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
+
+        QList<SubtitleProperties::Data> titles;
+        for (int i = 0; i < titleValues.ArraySize(); i += 4) {
+            if (!(titleValues[i].IsString() && titleValues[i+1].IsString()
+                  && titleValues[i+2].IsInt() && titleValues[i+3].IsInt()))
+                env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.", i / 4 + 1);
+            const SubtitleProperties::Data title = {
+                QLatin1String(titleValues[i].AsString()),
+                QLatin1String(titleValues[i+1].AsString()),
+                titleValues[i+2].AsInt(),
+                titleValues[i+3].AsInt()};
+            titles.append(title);
+        }
+        return new QtorialsSubtitle(args[0].AsInt(defaultClipWidth),
+                                    args[1].AsInt(defaultClipHeight),
+                                    titles,
+                                    env);
+    }
 
 protected:
     VideoInfo m_videoInfo;
@@ -333,6 +421,44 @@ public:
     void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
+
+
+    static AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironment* env)
+    {
+        Q_UNUSED(user_data)
+        static const int valuesPerDetail = 6;
+
+        if (!env->FunctionExists(args[5].AsString()))
+            env->ThrowError("QtorialsZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
+
+        const AVSValue &detailValues = args[10];
+        if (detailValues.ArraySize() % valuesPerDetail != 0)
+            env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\n"
+                            "They need to be %d per detail.", valuesPerDetail);
+
+        const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
+
+        QList<QtorialsZoomNPan::Detail> details;
+        for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
+            const int keyFrame = detailValues[i+0].AsInt();
+            const int transitionLength = detailValues[1].AsInt();
+            const QRectF rect(detailValues[i+2].AsFloat(), detailValues[i+3].AsFloat(),
+                              detailValues[i+4].AsFloat(), detailValues[i+5].AsFloat());
+            const QtorialsZoomNPan::Detail detail =
+                {keyFrame, transitionLength, rect};
+            details.append(detail);
+        }
+
+        return new QtorialsZoomNPan(args[0].AsClip(),
+                                    args[1].AsInt(defaultClipWidth),
+                                    args[2].AsInt(defaultClipHeight),
+                                    args[3].AsInt(0xffffff),
+                                    args[4].AsInt(15),
+                                    args[5].AsString(),
+                                    start,
+                                    details,
+                                    env);
+    }
 
 protected:
     static const PClip extendedClip(const PClip &originClip, int extensionColor, IScriptEnvironment* env)
@@ -589,6 +715,49 @@ public:
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
     { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
 
+    static SvgAnimationProperties::Blending blendingForStringOrThrow(const char *blendingKey, IScriptEnvironment* env)
+    {
+        static const int enumIndex = SvgAnimationProperties::staticMetaObject.indexOfEnumerator("Blending");
+        Q_ASSERT(enumIndex);
+        static const QMetaEnum &blendEnum = SvgAnimationProperties::staticMetaObject.enumerator(enumIndex);
+        const int blending = blendEnum.keysToValue(blendingKey);
+        if (blending == -1)
+            env->ThrowError("QtorialsSvgAnimation: Invalid blending type '%s'.", blendingKey);
+        return SvgAnimationProperties::Blending(blending);
+    }
+
+    static AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvironment* env)
+    {
+        Q_UNUSED(user_data)
+        static const int valuesPerDetail = 5;
+
+        const AVSValue &detailValues = args[3];
+        if (detailValues.ArraySize() % valuesPerDetail != 0)
+            env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
+                            "They need to be %d per keyframe.", valuesPerDetail);
+
+        const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
+
+        QList<SvgAnimationProperties::Data> details;
+        for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
+            const SvgAnimationProperties::Data animationDetail = {
+                QLatin1String(detailValues[i].AsString()),
+                detailValues[i+1].AsInt(),
+                detailValues[i+2].AsInt(),
+                blendingForStringOrThrow(detailValues[i+3].AsString(), env),
+                blendingForStringOrThrow(detailValues[i+4].AsString(), env)
+            };
+            CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
+            details.append(animationDetail);
+        }
+
+        return new QtorialsSvgAnimation(args[1].AsInt(),
+                                        args[2].AsInt(),
+                                        svgFileName,
+                                        details,
+                                        env);
+    }
+
 protected:
     QString m_svgFile;
     VideoInfo m_videoInfo;
@@ -596,187 +765,24 @@ protected:
     QList<SvgAnimationProperties*> m_properties;
 };
 
-AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    const QString title =
-        QString::fromLatin1(args[0].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
-    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(transparentColor);
-    QPainter p(&image);
-    Filters::paintTitle(&p, image.rect(), title,
-                        args[1].AsInt(qRgba(0x0, 0x0, 0x0, 0xff)));
-    return new QtorialsStillImage(image, args[4].AsInt(100), env);
-}
-
-AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-
-    const AVSValue &titleValues = args[2];
-    if (titleValues.ArraySize() % 4 != 0)
-        env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
-
-    QList<SubtitleData> titles;
-    for (int i = 0; i < titleValues.ArraySize(); i += 4) {
-        if (!(titleValues[i].IsString() && titleValues[i+1].IsString()
-              && titleValues[i+2].IsInt() && titleValues[i+3].IsInt()))
-            env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.", i / 4 + 1);
-        SubtitleData title = {
-            QLatin1String(titleValues[i].AsString()),
-            QLatin1String(titleValues[i+1].AsString()),
-            titleValues[i+2].AsInt(),
-            titleValues[i+3].AsInt()};
-        titles.append(title);
-    }
-    return new QtorialsSubtitle(args[0].AsInt(defaultClipWidth),
-                                args[1].AsInt(defaultClipHeight),
-                                titles,
-                                env);
-}
-
-AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    QImage image(args[1].AsInt(defaultClipWidth), args[2].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(transparentColor);
-    QPainter p(&image);
-    Filters::paintElements(&p, QString::fromLatin1(args[0].AsString("qtlogosmall")), image.rect());
-    return new QtorialsStillImage(image, args[3].AsInt(100), env);
-}
-
-void CheckSvgAndThrow(const QString &svgFileName, const QString &svgElement, IScriptEnvironment* env)
-{
-    const Filters::SvgResult result =
-            Filters::checkSvg(svgFileName, svgElement);
-    switch (result) {
-        case Filters::SvgFileNotValid:
-                env->ThrowError("Svg: File '%s'' was not found or is invalid SVG.",
-                                svgFileName.toAscii().data());
-            break;
-        case Filters::SvgElementNotFound:
-                env->ThrowError("Svg: Svg element '%s' was not found.",
-                                svgElement.toAscii().data());
-            break;
-        default:
-            break;
-    }
-}
-
-AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-
-    const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
-    const QString svgElementsCSV =
-            QString::fromLatin1(args[1].AsString());
-    QStringList svgElements;
-    foreach(const QString &element, svgElementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
-        const QString trimmedElement = element.trimmed();
-        CheckSvgAndThrow(svgFileName, trimmedElement, env);
-        svgElements.append(trimmedElement);
-    }
-
-    QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-    image.fill(transparentColor);
-    QPainter p(&image);
-    Filters::paintSvgElements(&p, svgFileName, svgElements, image.rect());
-    return new QtorialsStillImage(image, args[4].AsInt(100), env);
-}
-
-AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    static const int valuesPerDetail = 6;
-
-    if (!env->FunctionExists(args[5].AsString()))
-        env->ThrowError("QtorialsZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
-
-    const AVSValue &detailValues = args[10];
-    if (detailValues.ArraySize() % valuesPerDetail != 0)
-        env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\n"
-                        "They need to be %d per detail.", valuesPerDetail);
-
-    const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
-
-    QList<QtorialsZoomNPan::Detail> details;
-    for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
-        const int keyFrame = detailValues[i+0].AsInt();
-        const int transitionLength = detailValues[1].AsInt();
-        const QRectF rect(detailValues[i+2].AsFloat(), detailValues[i+3].AsFloat(),
-                          detailValues[i+4].AsFloat(), detailValues[i+5].AsFloat());
-        const QtorialsZoomNPan::Detail detail =
-            {keyFrame, transitionLength, rect};
-        details.append(detail);
-    }
-
-    return new QtorialsZoomNPan(args[0].AsClip(),
-                                args[1].AsInt(defaultClipWidth),
-                                args[2].AsInt(defaultClipHeight),
-                                args[3].AsInt(0xffffff),
-                                args[4].AsInt(15),
-                                args[5].AsString(),
-                                start,
-                                details,
-                                env);
-}
-
-SvgAnimationProperties::Blending blendingForStringOrThrow(const char *blendingKey, IScriptEnvironment* env)
-{
-    static const int enumIndex = SvgAnimationProperties::staticMetaObject.indexOfEnumerator("Blending");
-    Q_ASSERT(enumIndex);
-    static const QMetaEnum &blendEnum = SvgAnimationProperties::staticMetaObject.enumerator(enumIndex);
-    const int blending = blendEnum.keysToValue(blendingKey);
-    if (blending == -1)
-        env->ThrowError("QtorialsSvgAnimation: Invalid blending type '%s'.", blendingKey);
-    return SvgAnimationProperties::Blending(blending);
-}
-
-AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    static const int valuesPerDetail = 5;
-
-    const AVSValue &detailValues = args[3];
-    if (detailValues.ArraySize() % valuesPerDetail != 0)
-        env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
-                        "They need to be %d per keyframe.", valuesPerDetail);
-
-    const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
-
-    QList<SvgAnimationProperties::Data> details;
-    for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
-        const SvgAnimationProperties::Data animationDetail = {
-            QLatin1String(detailValues[i].AsString()),
-            detailValues[i+1].AsInt(),
-            detailValues[i+2].AsInt(),
-            blendingForStringOrThrow(detailValues[i+3].AsString(), env),
-            blendingForStringOrThrow(detailValues[i+4].AsString(), env)
-        };
-        CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
-        details.append(animationDetail);
-    }
-
-    return new QtorialsSvgAnimation(args[1].AsInt(),
-                                    args[2].AsInt(),
-                                    svgFileName,
-                                    details,
-                                    env);
-}
-
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsTitle",
-                     "[text]s[textcolor]i[width]i[height]i[frames]i", CreateTitle, 0);
-    env->AddFunction("QtorialsSubtitle", "[width]i[height]i.*", CreateSubtitle, 0);
-    env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i", CreateElements, 0);
-    env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i", CreateSvg, 0);
+                     "[text]s[textcolor]i[width]i[height]i[frames]i",
+                     QtorialsStillImage::CreateTitle, 0);
+    env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i",
+                     QtorialsStillImage::CreateElements, 0);
+    env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i",
+                     QtorialsStillImage::CreateSvg, 0);
+    env->AddFunction("QtorialsSubtitle", "[width]i[height]i.*",
+                     QtorialsSubtitle::CreateSubtitle, 0);
     env->AddFunction("QtorialsZoomNPan",
                      "[clip]c[width]i[height]i[extensioncolor]i[defaulttransitionframes]i[resizefiter]s"
-                     "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*", CreateZoomNPan, 0);
-    env->AddFunction("QtorialsSvgAnimation",
-                     "[svgfile]s[width]i[height]i.*", CreateSvgAnimation, 0);
+                     "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
+                     QtorialsZoomNPan::CreateZoomNPan, 0);
+    env->AddFunction("QtorialsSvgAnimation", "[svgfile]s[width]i[height]i.*",
+                     QtorialsSvgAnimation::CreateSvgAnimation, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }
 
