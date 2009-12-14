@@ -253,7 +253,7 @@ Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
     const QTransform painterTransform = fitRect1InRect2Centered(
             (viewBox.isValid() ? viewBox : renderer->viewBoxF()), rect);
     p->save();
-    p->setTransform(painterTransform);
+    p->setTransform(p->transform() * painterTransform);
     foreach (const QString &element, svgElements) {
         if (!renderer->elementExists(element))
             return SvgElementNotFound;
@@ -290,7 +290,7 @@ Filters::paintBlendedSvgElement(QPainter *p,
         p->drawImage(0, 0, elementImage);
     } else {
         p->save();
-        p->setTransform(painterTransform);
+        p->setTransform(p->transform() * painterTransform);
         renderer->render(p, svgElement, scaledBounds);
         p->restore();
     }
