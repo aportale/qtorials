@@ -11,10 +11,12 @@ TARGET = ../../screencasts/qtavisynth
 SOURCES = qtavisynth.cpp \
     filters.cpp \
     stillimage.cpp \
-    tools.cpp
+    tools.cpp \
+    subtitle.cpp
 HEADERS = filters.h \
     stillimage.h \
-    tools.h
+    tools.h \
+    subtitle.h
 CONFIG += dll \
     qt
 DESTDIR = ./
