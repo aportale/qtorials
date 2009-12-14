@@ -21,10 +21,11 @@ public:
         SvgFileNotValid,
         SvgElementNotFound
     };
-    static SvgResult checkSvg(const QString &svgFileName, const QString &element);
     static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                            const QColor &textColor);
-    static void paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect);
+    static bool elementAvailable(const QString &element);
+    static void paintElements(QPainter *p, const QStringList &elements, const QRect &rect);
+    static SvgResult checkSvg(const QString &svgFileName, const QString &element);
     static SvgResult paintSvgElements(QPainter *p, const QString &svgFileName,
                                       const QStringList &svgElements, const QRect &rect,
                                       const QRectF &viewBox = QRectF());

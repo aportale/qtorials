@@ -91,10 +91,21 @@ public:
     static AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
     {
         Q_UNUSED(user_data)
+
+        const QStringList elements = QString::fromLatin1(args[0].AsString())
+                               .split(QLatin1Char(','), QString::SkipEmptyParts);
+        QStringList trimmedElements;
+        foreach (const QString &element, elements) {
+            const QString trimmedElement = element.trimmed();
+            if (Filters::elementAvailable(trimmedElement))
+                env->ThrowError("QtorialsElements: Invalid element '%s'.", trimmedElement.toLatin1().constData());
+            trimmedElements.append(trimmedElement);
+        }
+
         QImage image(args[1].AsInt(defaultClipWidth), args[2].AsInt(defaultClipHeight), QImage::Format_ARGB32);
         image.fill(transparentColor);
         QPainter p(&image);
-        Filters::paintElements(&p, QString::fromLatin1(args[0].AsString("qtlogosmall")), image.rect());
+        Filters::paintElements(&p, trimmedElements, image.rect());
         return new QtorialsStillImage(image, args[3].AsInt(100), env);
     }
 

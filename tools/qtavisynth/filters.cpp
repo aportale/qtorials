@@ -312,31 +312,39 @@ Filters::paintBlendedSvgElement(QPainter *p,
     return SvgOk;
 }
 
-void Filters::paintElements(QPainter *p, const QString &elementsCSV, const QRect &rect)
+static const struct ElementAndPainter {
+    QString name;
+    void (*function)(QPainter *, const QRect&);
+} elementsAndPainters[] = {
+    { QLatin1String("oldstyle"),            paintOldStyle },
+    { QLatin1String("rgbpatterns"),         paintRgbPatterns },
+    { QLatin1String("blockpattern"),        paintCodecBlockPattern },
+    { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
+    { QLatin1String("qtlogobig"),           paintQtLogoBig },
+    { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
+    { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
+    { QLatin1String("codecblockpattern"),   paintCodecBlockPattern }
+};
+static const int elementsAndPaintersCount =
+        int(sizeof elementsAndPainters / sizeof elementsAndPainters[0]);
+
+typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
+
+Q_GLOBAL_STATIC_WITH_INITIALIZER(ElementAndPainterHash, elementsAndPaintersHash, {
+    for (int i = 0; i < elementsAndPaintersCount; ++i)
+        x->insert(elementsAndPainters[i].name, elementsAndPainters[i].function);
+});
+
+bool Filters::elementAvailable(const QString &element)
 {
-    static QHash<QString, void (*)(QPainter *, const QRect&)> elementFunctions;
-    if (elementFunctions.isEmpty()) {
-        static const struct {
-            QString name;
-            void (*function)(QPainter *, const QRect&);
-        } elementFunctionArray [] = {
-            { QLatin1String("oldstyle"),            paintOldStyle },
-            { QLatin1String("rgbpatterns"),         paintRgbPatterns },
-            { QLatin1String("blockpattern"),        paintCodecBlockPattern },
-            { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
-            { QLatin1String("qtlogobig"),           paintQtLogoBig },
-            { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
-            { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
-            { QLatin1String("codecblockpattern"),   paintCodecBlockPattern }
-        };
-        for (int i = 0; i < int(sizeof elementFunctionArray / sizeof elementFunctionArray[0]); i++)
-            elementFunctions.insert(elementFunctionArray[i].name, elementFunctionArray[i].function);
-    }
-    foreach (const QString &element, elementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
-        const QString cleanElement = element.toLower().trimmed();
-        if (elementFunctions.contains(cleanElement))
-            elementFunctions.value(cleanElement)(p, rect);
-    }
+    return !elementsAndPaintersHash()->contains(element);
+}
+
+void Filters::paintElements(QPainter *p, const QStringList &elements, const QRect &rect)
+{
+    foreach (const QString &element, elements)
+        if (elementsAndPaintersHash()->contains(element))
+            elementsAndPaintersHash()->value(element)(p, rect);
 }
 
 void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
