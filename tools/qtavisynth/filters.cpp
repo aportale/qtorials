@@ -217,6 +217,21 @@ void paintSymbianLogoBig(QPainter *p, const QRect &rect)
     SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
+void paintMaeomoOrgLogoBig(QPainter *p, const QRect &rect)
+{
+    const QLatin1String svgId("maemoorglogo");
+    const int logoHeightForRectHeight = int(qMin(rect.height() / 4.0, rect.width() * 0.15));
+    const int logoY = (rect.height() - logoHeightForRectHeight)
+             / 2 / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
+    const int logoHeight = (rect.height() - 2*logoY)
+             / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
+    const QRectF logoElementBounds =
+            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
+    const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
+    const int logoX = (rect.width() - logoWidth) / 2;
+    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
+}
+
 void paintCodecBlockPattern(QPainter *p, const QRect &rect)
 {
     QImage brush(codecBlockSize(rect.height()) * 2, codecBlockSize(rect.height()) * 2,
@@ -311,6 +326,7 @@ void Filters::paintElements(QPainter *p, const QString &elementsCSV, const QRect
             { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
             { QLatin1String("qtlogobig"),           paintQtLogoBig },
             { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
+            { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
             { QLatin1String("codecblockpattern"),   paintCodecBlockPattern }
         };
         for (int i = 0; i < int(sizeof elementFunctionArray / sizeof elementFunctionArray[0]); i++)
