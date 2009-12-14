@@ -5,48 +5,34 @@
 # or send a letter to Creative Commons,
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
-
-#DEFINES += AVISYNTH26
-
+# DEFINES += AVISYNTH26
 TEMPLATE = lib
-
 TARGET = ../../screencasts/qtavisynth
-
-SOURCES = \
-    qtavisynth.cpp \
-    filters.cpp
-
-HEADERS = filters.h
-
-CONFIG += \
-    dll \
+SOURCES = qtavisynth.cpp \
+    filters.cpp \
+    stillimage.cpp \
+    tools.cpp
+HEADERS = filters.h \
+    stillimage.h \
+    tools.h
+CONFIG += dll \
     qt
-
 DESTDIR = ./
-
 INCLUDEPATH = .
-
 RESOURCES = qtavisynth.qrc
-
 QT += svg
-
-OTHER_FILES = \
-    qtavisynth.avs \
+OTHER_FILES = qtavisynth.avs \
     ../../screencasts/tools.avsi
-
-contains (DEFINES, AVISYNTH26) {
+contains (DEFINES, AVISYNTH26) { 
     SOURCES += avisynth26\interface.cpp
     HEADERS += avisynth26\avisynth.h
     INCLUDEPATH += avisynth26
-} else {
+}
+else { 
     HEADERS += avisynth25\avisynth.h
     INCLUDEPATH += avisynth25
 }
-
-contains(CONFIG, static) {
-    QTPLUGIN += \
-        qgif \
-        qjpeg \
-        qsvg \
-        qtiff
-}
+contains(CONFIG, static):QTPLUGIN += qgif \
+    qjpeg \
+    qsvg \
+    qtiff

@@ -11,6 +11,8 @@
 #include "windows.h"
 #include "avisynth.h"
 #include "filters.h"
+#include "stillimage.h"
+#include "tools.h"
 #include <QtGui>
 
 #if !defined(QT_SHARED) && !defined(QT_DLL)
@@ -19,121 +21,6 @@ Q_IMPORT_PLUGIN(qjpeg)
 Q_IMPORT_PLUGIN(qtiff)
 Q_IMPORT_PLUGIN(qsvg)
 #endif
-
-const int defaultClipWidth = 640;
-const int defaultClipHeight = 480;
-const QRgb transparentColor = qRgba(0x00, 0x00, 0x00, 0x00);
-
-static QString cleanFileName(const QString &file)
-{
-    const QString cleanFilePath = QFileInfo(file).canonicalFilePath();
-    return cleanFilePath.isEmpty() ? file : cleanFilePath;
-}
-
-static void CheckSvgAndThrow(const QString &svgFileName, const QString &svgElement, IScriptEnvironment* env)
-{
-    const Filters::SvgResult result =
-            Filters::checkSvg(svgFileName, svgElement);
-    switch (result) {
-        case Filters::SvgFileNotValid:
-                env->ThrowError("Svg: File '%s'' was not found or is invalid SVG.",
-                                svgFileName.toAscii().data());
-            break;
-        case Filters::SvgElementNotFound:
-                env->ThrowError("Svg: Svg element '%s' was not found.",
-                                svgElement.toAscii().data());
-            break;
-        default:
-            break;
-    }
-}
-
-class QtorialsStillImage : public IClip
-{
-public:
-    QtorialsStillImage(const QImage &image, int frames, IScriptEnvironment* env)
-    {
-        memset(&m_videoInfo, 0, sizeof(VideoInfo));
-        m_videoInfo.width = image.width();
-        m_videoInfo.height = image.height();
-        m_videoInfo.fps_numerator = 25;
-        m_videoInfo.fps_denominator = 1;
-        m_videoInfo.num_frames = frames;
-        m_videoInfo.pixel_type =
-                (image.format() == QImage::Format_ARGB32
-                    || image.format() == QImage::Format_ARGB32_Premultiplied) ?
-                        VideoInfo::CS_BGR32 : VideoInfo::CS_BGR24;
-        m_frame = env->NewVideoFrame(m_videoInfo);
-        unsigned char* frameBits = m_frame->GetWritePtr();
-        env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).bits(), m_frame->GetPitch(), image.bytesPerLine(), image.height());
-    }
-
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) { Q_UNUSED(n) Q_UNUSED(env) return m_frame; }
-    bool __stdcall GetParity(int n) { Q_UNUSED(n) return false; }
-    const VideoInfo& __stdcall GetVideoInfo() { return m_videoInfo; }
-    void __stdcall SetCacheHints(int cachehints, int frame_range) { Q_UNUSED(cachehints) Q_UNUSED(frame_range) }
-    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
-    { Q_UNUSED(buf) Q_UNUSED(start) Q_UNUSED(count) Q_UNUSED(env) }
-
-    static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
-    {
-        Q_UNUSED(user_data)
-        const QString title =
-            QString::fromLatin1(args[0].AsString("Title")).replace(QLatin1String("\\n"), QLatin1String("\n"));
-        QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-        image.fill(transparentColor);
-        QPainter p(&image);
-        Filters::paintTitle(&p, image.rect(), title,
-                            args[1].AsInt(qRgba(0x0, 0x0, 0x0, 0xff)));
-        return new QtorialsStillImage(image, args[4].AsInt(100), env);
-    }
-
-    static AVSValue __cdecl CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
-    {
-        Q_UNUSED(user_data)
-
-        const QStringList elements = QString::fromLatin1(args[0].AsString())
-                               .split(QLatin1Char(','), QString::SkipEmptyParts);
-        QStringList trimmedElements;
-        foreach (const QString &element, elements) {
-            const QString trimmedElement = element.trimmed();
-            if (Filters::elementAvailable(trimmedElement))
-                env->ThrowError("QtorialsElements: Invalid element '%s'.", trimmedElement.toLatin1().constData());
-            trimmedElements.append(trimmedElement);
-        }
-
-        QImage image(args[1].AsInt(defaultClipWidth), args[2].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-        image.fill(transparentColor);
-        QPainter p(&image);
-        Filters::paintElements(&p, trimmedElements, image.rect());
-        return new QtorialsStillImage(image, args[3].AsInt(100), env);
-    }
-
-    static AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
-    {
-        Q_UNUSED(user_data)
-
-        const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
-        const QString svgElementsCSV =
-                QString::fromLatin1(args[1].AsString());
-        QStringList svgElements;
-        foreach(const QString &element, svgElementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
-            const QString trimmedElement = element.trimmed();
-            CheckSvgAndThrow(svgFileName, trimmedElement, env);
-            svgElements.append(trimmedElement);
-        }
-
-        QImage image(args[2].AsInt(defaultClipWidth), args[3].AsInt(defaultClipHeight), QImage::Format_ARGB32);
-        image.fill(transparentColor);
-        QPainter p(&image);
-        Filters::paintSvgElements(&p, svgFileName, svgElements, image.rect());
-        return new QtorialsStillImage(image, args[4].AsInt(100), env);
-    }
-
-protected:
-    PVideoFrame m_frame;
-    VideoInfo m_videoInfo;
-};
 
 class SubtitleProperties : public QObject
 {
@@ -310,8 +197,8 @@ public:
                 titleValues[i+3].AsInt()};
             titles.append(title);
         }
-        return new QtorialsSubtitle(args[0].AsInt(defaultClipWidth),
-                                    args[1].AsInt(defaultClipHeight),
+        return new QtorialsSubtitle(args[0].AsInt(Tools::defaultClipWidth),
+                                    args[1].AsInt(Tools::defaultClipHeight),
                                     titles,
                                     env);
     }
@@ -461,8 +348,8 @@ public:
         }
 
         return new QtorialsZoomNPan(args[0].AsClip(),
-                                    args[1].AsInt(defaultClipWidth),
-                                    args[2].AsInt(defaultClipHeight),
+                                    args[1].AsInt(Tools::defaultClipWidth),
+                                    args[2].AsInt(Tools::defaultClipHeight),
                                     args[3].AsInt(0xffffff),
                                     args[4].AsInt(15),
                                     args[5].AsString(),
@@ -747,7 +634,8 @@ public:
             env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
                             "They need to be %d per keyframe.", valuesPerDetail);
 
-        const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
+        const QString svgFileName =
+                Tools::cleanFileName(QLatin1String(args[0].AsString()));
 
         QList<SvgAnimationProperties::Data> details;
         for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
@@ -758,7 +646,7 @@ public:
                 blendingForStringOrThrow(detailValues[i+3].AsString(), env),
                 blendingForStringOrThrow(detailValues[i+4].AsString(), env)
             };
-            CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
+            Tools::CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
             details.append(animationDetail);
         }
 
@@ -781,11 +669,11 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsTitle",
                      "[text]s[textcolor]i[width]i[height]i[frames]i",
-                     QtorialsStillImage::CreateTitle, 0);
+                     StillImage::CreateTitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i",
-                     QtorialsStillImage::CreateElements, 0);
+                     StillImage::CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i",
-                     QtorialsStillImage::CreateSvg, 0);
+                     StillImage::CreateSvg, 0);
     env->AddFunction("QtorialsSubtitle", "[width]i[height]i.*",
                      QtorialsSubtitle::CreateSubtitle, 0);
     env->AddFunction("QtorialsZoomNPan",
