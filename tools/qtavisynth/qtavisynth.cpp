@@ -373,13 +373,6 @@ protected:
     QRectF m_resizedRect;
 };
 
-struct SvgAnimationData
-{
-    QString svgElement;
-    int startFrame;
-    int endFrame;
-};
-
 class SvgAnimationProperties : public QObject
 {
     Q_OBJECT
@@ -394,7 +387,16 @@ public:
         fadeandscale
     };
 
-    SvgAnimationProperties(const SvgAnimationData &data)
+    struct Data
+    {
+        QString svgElement;
+        int startFrame;
+        int endFrame;
+        Blending blendingIn;
+        Blending blendingOut;
+    };
+
+    SvgAnimationProperties(const Data &data)
         : QObject()
         , m_data(data)
         , m_scale(scaleStart)
@@ -438,7 +440,7 @@ public:
     static const qreal opacityEnd;
 
 protected:
-    SvgAnimationData m_data;
+    Data m_data;
     qreal m_scale;
     qreal m_opacity;
 };
@@ -457,7 +459,7 @@ class QtorialsSvgAnimation : public IClip
 {
 public:
     QtorialsSvgAnimation(int width, int height,
-                         const QString &svgFile, const QList<SvgAnimationData> &dataSets,
+                         const QString &svgFile, const QList<SvgAnimationProperties::Data> &dataSets,
                          IScriptEnvironment* env)
         : m_svgFile(svgFile)
     {
@@ -469,7 +471,7 @@ public:
         m_videoInfo.fps_denominator = 1;
         m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-        foreach(const SvgAnimationData &dataSet, dataSets) {
+        foreach(const SvgAnimationProperties::Data &dataSet, dataSets) {
             SvgAnimationProperties *properties = new SvgAnimationProperties(dataSet);
             m_properties.append(properties);
 
@@ -478,6 +480,8 @@ public:
             QEasingCurve scaleInEasingCurve(QEasingCurve::OutBack);
             scaleInEasingCurve.setOvershoot(2.5);
 
+            const bool immediateIn = (dataSet.blendingIn == SvgAnimationProperties::immediate);
+            const bool immediateOut = (dataSet.blendingOut == SvgAnimationProperties::immediate);
             const struct Animation {
                 QSequentialAnimationGroup *sequence;
                 const QByteArray &propertyName;
@@ -493,7 +497,8 @@ public:
                     dataSet.startFrame - SvgAnimationProperties::scaleDuration,
                     SvgAnimationProperties::scaleDuration,
                     scaleInEasingCurve,
-                    SvgAnimationProperties::scaleStart,
+                    (dataSet.blendingIn == SvgAnimationProperties::fadeandscale) ?
+                         SvgAnimationProperties::scaleStart : SvgAnimationProperties::scaleEnd,
                     SvgAnimationProperties::scaleEnd
                 }, {
                     scaleSequence,
@@ -502,12 +507,13 @@ public:
                     SvgAnimationProperties::scaleDuration,
                     QEasingCurve::InCubic,
                     SvgAnimationProperties::scaleEnd,
-                    SvgAnimationProperties::scaleStart
+                    (dataSet.blendingOut == SvgAnimationProperties::fadeandscale) ?
+                         SvgAnimationProperties::scaleStart : SvgAnimationProperties::scaleEnd
                 }, {
                     opacitySequence,
                     SvgAnimationProperties::opacityPropertyName,
-                    dataSet.startFrame - SvgAnimationProperties::opacityDuration,
-                    SvgAnimationProperties::opacityDuration,
+                    dataSet.startFrame - (immediateIn ? 1 : SvgAnimationProperties::opacityDuration),
+                    (immediateIn ? 1 : SvgAnimationProperties::opacityDuration),
                     QEasingCurve::Linear,
                     SvgAnimationProperties::opacityStart,
                     SvgAnimationProperties::opacityEnd
@@ -515,10 +521,10 @@ public:
                     opacitySequence,
                     SvgAnimationProperties::opacityPropertyName,
                     dataSet.endFrame - dataSet.startFrame,
-                    SvgAnimationProperties::opacityDuration,
+                    (immediateOut ? 1 : SvgAnimationProperties::opacityDuration),
                     QEasingCurve::Linear,
                     SvgAnimationProperties::opacityEnd,
-                    SvgAnimationProperties::opacityStart
+                    SvgAnimationProperties::opacityStart,
                 }
             };
 
@@ -715,10 +721,21 @@ AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data, IScriptEnvironme
                                 env);
 }
 
+SvgAnimationProperties::Blending blendingForStringOrThrow(const char *blendingKey, IScriptEnvironment* env)
+{
+    static const int enumIndex = SvgAnimationProperties::staticMetaObject.indexOfEnumerator("Blending");
+    Q_ASSERT(enumIndex);
+    static const QMetaEnum &blendEnum = SvgAnimationProperties::staticMetaObject.enumerator(enumIndex);
+    const int blending = blendEnum.keysToValue(blendingKey);
+    if (blending == -1)
+        env->ThrowError("QtorialsSvgAnimation: Invalid blending type '%s'.", blendingKey);
+    return SvgAnimationProperties::Blending(blending);
+}
+
 AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    static const int valuesPerDetail = 3;
+    static const int valuesPerDetail = 5;
 
     const AVSValue &detailValues = args[3];
     if (detailValues.ArraySize() % valuesPerDetail != 0)
@@ -727,12 +744,14 @@ AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvir
 
     const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
 
-    QList<SvgAnimationData> details;
+    QList<SvgAnimationProperties::Data> details;
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
-        const SvgAnimationData animationDetail = {
+        const SvgAnimationProperties::Data animationDetail = {
             QLatin1String(detailValues[i].AsString()),
             detailValues[i+1].AsInt(),
-            detailValues[i+2].AsInt()
+            detailValues[i+2].AsInt(),
+            blendingForStringOrThrow(detailValues[i+3].AsString(), env),
+            blendingForStringOrThrow(detailValues[i+4].AsString(), env)
         };
         CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
         details.append(animationDetail);
