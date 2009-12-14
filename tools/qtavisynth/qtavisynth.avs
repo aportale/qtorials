@@ -23,7 +23,7 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
   \ , "Title2", "Subtitle", 20, 120
   \ , "Title3", "Subtitle", 30, 130
 \))
-\.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "pushbutton", gClipWidth, gClipHeight, 100))
+\.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow", gClipWidth, gClipHeight, 100))
 \.overlayRgbClip(QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg", gClipWidth, gClipHeight
   \ , "pushbutton",     100, 200
 \))
