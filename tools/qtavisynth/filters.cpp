@@ -348,11 +348,7 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
 
     const int backgroundTop = rect.height() - slipIn * backgroundHeight;
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
-    QLinearGradient gradient(background.topLeft(), background.topRight());
-    gradient.setColorAt(0.65, QColor(64, 64, 64, 192));
-    gradient.setColorAt(0.85, QColor(64, 64, 64, 0));
-    p->fillRect(background, gradient);
-
+    SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("subtitlebackground"), background);
 
     QApplication *a = createQApplicationIfNeeded();
     p->save();
