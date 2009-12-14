@@ -24,6 +24,11 @@ const int defaultClipWidth = 640;
 const int defaultClipHeight = 480;
 const QRgb transparentColor = qRgba(0x00, 0x00, 0x00, 0x00);
 
+static QString cleanFileName(const QString &file)
+{
+    return QFileInfo(file).canonicalFilePath();
+}
+
 class QtorialsStillImage : public IClip
 {
 public:
@@ -601,7 +606,7 @@ AVSValue __cdecl CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* e
 {
     Q_UNUSED(user_data)
 
-    const QString svgFileName = QString::fromLatin1(args[0].AsString());
+    const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
     const QString svgElementsCSV =
             QString::fromLatin1(args[1].AsString());
     QStringList svgElements;
@@ -665,7 +670,7 @@ AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data, IScriptEnvir
         env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
                         "They need to be %d per keyframe.", valuesPerDetail);
 
-    const QString svgFileName = QLatin1String(args[0].AsString());
+    const QString svgFileName = cleanFileName(QLatin1String(args[0].AsString()));
 
     QList<SvgAnimationData> details;
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
