@@ -6,6 +6,12 @@
 #include <QSequentialAnimationGroup>
 #include <QPropertyAnimation>
 
+const QByteArray SubtitleProperties::slipPropertyName = "slip";
+const QByteArray SubtitleProperties::blendPropertyName = "blend";
+const int Subtitle::m_slipFrames = 10;
+const int Subtitle::m_blendDelayFrames = 6;
+const int Subtitle::m_blendFrames = 8;
+
 SubtitleProperties::SubtitleProperties(const Data &data)
     : QObject()
     , m_subtitleData(data)
@@ -29,9 +35,9 @@ qreal SubtitleProperties::slip() const
     return m_slip;
 }
 
-void SubtitleProperties::setSlip(qreal slipin)
+void SubtitleProperties::setSlip(qreal slip)
 {
-    m_slip = slipin;
+    m_slip = slip;
 }
 
 qreal SubtitleProperties::blend() const
@@ -39,18 +45,14 @@ qreal SubtitleProperties::blend() const
     return m_blend;
 }
 
-void SubtitleProperties::setBlend(qreal blendin)
+void SubtitleProperties::setBlend(qreal blend)
 {
-    m_blend = blendin;
+    m_blend = blend;
 }
 
-const QByteArray SubtitleProperties::slipPropertyName = "slip";
-const QByteArray SubtitleProperties::blendPropertyName = "blend";
-
-
 Subtitle::Subtitle(int width, int height,
-                 const QList<SubtitleProperties::Data> &titles,
-                 IScriptEnvironment* env)
+                   const QList<SubtitleProperties::Data> &titles,
+                   IScriptEnvironment* env)
 {
     Q_UNUSED(env)
 
@@ -129,7 +131,8 @@ PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)
     return frame;
 }
 
-AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data, IScriptEnvironment* env)
+AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
+                                          IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
 
@@ -155,10 +158,6 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data, IScrip
                                 env);
 }
 
-const int Subtitle::m_slipFrames = 10;
-const int Subtitle::m_blendDelayFrames = 6;
-const int Subtitle::m_blendFrames = 8;
-
 bool __stdcall Subtitle::GetParity(int n)
 {
     Q_UNUSED(n)
@@ -177,7 +176,7 @@ void __stdcall Subtitle::SetCacheHints(int cachehints, int frame_range)
 }
 
 void __stdcall Subtitle::GetAudio(void* buf, __int64 start, __int64 count,
-                                          IScriptEnvironment* env)
+                                  IScriptEnvironment* env)
 {
     Q_UNUSED(buf)
     Q_UNUSED(start)

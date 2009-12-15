@@ -24,9 +24,9 @@ public:
     QString title() const;
     QString subTitle() const;
     qreal slip() const;
-    void setSlip(qreal slipin);
+    void setSlip(qreal slip);
     qreal blend() const;
-    void setBlend(qreal blendin);
+    void setBlend(qreal blend);
 
     static const QByteArray slipPropertyName;
     static const QByteArray blendPropertyName;
