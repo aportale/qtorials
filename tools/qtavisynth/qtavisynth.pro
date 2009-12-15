@@ -12,11 +12,13 @@ SOURCES = qtavisynth.cpp \
     filters.cpp \
     stillimage.cpp \
     tools.cpp \
-    subtitle.cpp
+    subtitle.cpp \
+    zoomnpan.cpp
 HEADERS = filters.h \
     stillimage.h \
     tools.h \
-    subtitle.h
+    subtitle.h \
+    zoomnpan.h
 CONFIG += dll \
     qt
 DESTDIR = ./
