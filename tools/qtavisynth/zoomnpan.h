@@ -30,7 +30,7 @@ public:
     };
 
     ZoomNPan(PClip originClip, int width, int height,
-                     int extensionColor, int defaultTransitionFrames, const char *resizeFilter,
+                     int extensionColor, int defaultTransitionLength, const char *resizeFilter,
                      const QRectF &startDetail, const QList<Detail> &details,
                      IScriptEnvironment* env);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
