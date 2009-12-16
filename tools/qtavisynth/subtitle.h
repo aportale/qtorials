@@ -5,12 +5,10 @@
 #include "avisynth.h"
 #include <QParallelAnimationGroup>
 
-class SubtitleProperties : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(qreal slip READ slip WRITE setSlip);
-    Q_PROPERTY(qreal blend READ blend WRITE setBlend);
+class SubtitleProperties;
 
+class Subtitle : public IClip
+{
 public:
     struct Data
     {
@@ -20,28 +18,8 @@ public:
         int endFrame;
     };
 
-    SubtitleProperties(const Data &data);
-    QString title() const;
-    QString subTitle() const;
-    qreal slip() const;
-    void setSlip(qreal slip);
-    qreal blend() const;
-    void setBlend(qreal blend);
-
-    static const QByteArray slipPropertyName;
-    static const QByteArray blendPropertyName;
-
-protected:
-    Data m_subtitleData;
-    qreal m_slip;
-    qreal m_blend;
-};
-
-class Subtitle : public IClip
-{
-public:
     Subtitle(int width, int height,
-                     const QList<SubtitleProperties::Data> &titles,
+                     const QList<Data> &titles,
                      IScriptEnvironment* env);
     ~Subtitle();
 

@@ -12,7 +12,9 @@ QString Tools::cleanFileName(const QString &file)
     return cleanFilePath.isEmpty() ? file : cleanFilePath;
 }
 
-void Tools::CheckSvgAndThrow(const QString &svgFileName, const QString &svgElement, IScriptEnvironment* env)
+void Tools::checkSvgAndThrow(const QString &svgFileName,
+                             const QString &svgElement,
+                             IScriptEnvironment* env)
 {
     const Filters::SvgResult result =
             Filters::checkSvg(svgFileName, svgElement);

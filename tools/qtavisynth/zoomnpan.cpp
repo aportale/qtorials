@@ -2,8 +2,28 @@
 #include "filters.h"
 #include "tools.h"
 
+class ZoomNPanProperties : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QRectF rect READ rect WRITE setRect);
+
+public:
+    ZoomNPanProperties(QObject *parent = 0);
+    QRectF rect() const;
+    void setRect(const QRectF &rect);
+    static const QByteArray propertyName;
+
+protected:
+    QRectF m_rect;
+};
+
 const QByteArray ZoomNPanProperties::propertyName = "rect";
 const int ZoomNPan::m_extensionWidth = 16;
+
+ZoomNPanProperties::ZoomNPanProperties(QObject *parent)
+    : QObject(parent)
+{
+}
 
 QRectF ZoomNPanProperties::rect() const
 {
@@ -23,6 +43,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
     , m_resizeFilter(resizeFilter)
     , m_extendedClip(extendedClip(originClip, extensionColor, env))
 {
+    m_animationProperties = new ZoomNPanProperties(&m_animation);
     m_targetVideoInfo.width = width;
     m_targetVideoInfo.height = height;
 
@@ -30,7 +51,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
 
     {
         QPropertyAnimation *start =
-                new QPropertyAnimation(&m_animationProperties, ZoomNPanProperties::propertyName);
+                new QPropertyAnimation(m_animationProperties, ZoomNPanProperties::propertyName);
         start->setDuration(0);
         previousDetail.detail =
                 fixedDetailRect(originClip->GetVideoInfo(), QSize(width, height), startDetail);
@@ -48,7 +69,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
         if (pauseLength > 0)
             m_animation.addPause(pauseLength);
         QPropertyAnimation *rectAnimation =
-                new QPropertyAnimation(&m_animationProperties, ZoomNPanProperties::propertyName);
+                new QPropertyAnimation(m_animationProperties, ZoomNPanProperties::propertyName);
         rectAnimation->setDuration(transitionLength);
         rectAnimation->setStartValue(previousDetail.detail);
         rectAnimation->setEndValue(detailRect);
@@ -69,7 +90,7 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(env)
     m_animation.setCurrentTime(n);
-    QRectF rect = m_animationProperties.rect();
+    QRectF rect = m_animationProperties->rect();
     if (rect != m_resizedRect) {
         const int target_width = m_targetVideoInfo.width;
         const int target_height = m_targetVideoInfo.height;
@@ -175,3 +196,5 @@ void __stdcall ZoomNPan::GetAudio(void* buf, __int64 start, __int64 count,
     Q_UNUSED(count)
     Q_UNUSED(env)
 }
+
+#include "zoomnpan.moc"

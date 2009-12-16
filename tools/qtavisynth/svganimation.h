@@ -28,12 +28,14 @@ public:
         Blending blendingOut;
     };
 
-    SvgAnimationProperties(const Data &data);
+    SvgAnimationProperties(const Data &data, QObject *parent = 0);
     QString svgElement() const;
     qreal scale() const;
     void setScale(qreal scale);
     qreal opacity() const;
     void setOpacity(qreal opacity);
+    static Blending findBlendingOrThrow(const char *blendingKey,
+                                        IScriptEnvironment* env);
 
     static const QByteArray scalePropertyName;
     static const QByteArray opacityPropertyName;
@@ -55,17 +57,12 @@ class SvgAnimation : public IClip
 {
 public:
     SvgAnimation(int width, int height,
-                         const QString &svgFile,
-                         const QList<SvgAnimationProperties::Data> &dataSets,
-                         IScriptEnvironment* env);
-    ~SvgAnimation();
+                 const QString &svgFile,
+                 const QList<SvgAnimationProperties::Data> &dataSets,
+                 IScriptEnvironment* env);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
-    static SvgAnimationProperties::Blending findBlendingOrThrow(
-            const char *blendingKey,
-            IScriptEnvironment* env);
     static AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data,
                                                IScriptEnvironment* env);
-
     bool __stdcall GetParity(int n);
     const VideoInfo& __stdcall GetVideoInfo();
     void __stdcall SetCacheHints(int cachehints, int frame_range);

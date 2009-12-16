@@ -10,13 +10,11 @@
 
 #include "windows.h"
 #include "avisynth.h"
-#include "filters.h"
 #include "stillimage.h"
 #include "subtitle.h"
 #include "zoomnpan.h"
 #include "svganimation.h"
-#include "tools.h"
-#include <QtGui>
+#include <QtPlugin>
 
 #if !defined(QT_SHARED) && !defined(QT_DLL)
 Q_IMPORT_PLUGIN(qgif)

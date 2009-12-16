@@ -10,7 +10,9 @@ class Tools
 {
 public:
     static QString cleanFileName(const QString &file);
-    static void CheckSvgAndThrow(const QString &svgFileName, const QString &svgElement, IScriptEnvironment* env);
+    static void checkSvgAndThrow(const QString &svgFileName,
+                                 const QString &svgElement,
+                                 IScriptEnvironment* env);
 
     static const int defaultClipWidth;
     static const int defaultClipHeight;

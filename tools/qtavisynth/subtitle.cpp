@@ -6,13 +6,38 @@
 #include <QSequentialAnimationGroup>
 #include <QPropertyAnimation>
 
+class SubtitleProperties : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(qreal slip READ slip WRITE setSlip);
+    Q_PROPERTY(qreal blend READ blend WRITE setBlend);
+
+public:
+
+    SubtitleProperties(const Subtitle::Data &data);
+    QString title() const;
+    QString subTitle() const;
+    qreal slip() const;
+    void setSlip(qreal slip);
+    qreal blend() const;
+    void setBlend(qreal blend);
+
+    static const QByteArray slipPropertyName;
+    static const QByteArray blendPropertyName;
+
+protected:
+    Subtitle::Data m_subtitleData;
+    qreal m_slip;
+    qreal m_blend;
+};
+
 const QByteArray SubtitleProperties::slipPropertyName = "slip";
 const QByteArray SubtitleProperties::blendPropertyName = "blend";
 const int Subtitle::m_slipFrames = 10;
 const int Subtitle::m_blendDelayFrames = 6;
 const int Subtitle::m_blendFrames = 8;
 
-SubtitleProperties::SubtitleProperties(const Data &data)
+SubtitleProperties::SubtitleProperties(const Subtitle::Data &data)
     : QObject()
     , m_subtitleData(data)
     , m_slip(0.0)
@@ -51,7 +76,7 @@ void SubtitleProperties::setBlend(qreal blend)
 }
 
 Subtitle::Subtitle(int width, int height,
-                   const QList<SubtitleProperties::Data> &titles,
+                   const QList<Data> &titles,
                    IScriptEnvironment* env)
 {
     Q_UNUSED(env)
@@ -63,7 +88,7 @@ Subtitle::Subtitle(int width, int height,
     m_videoInfo.fps_denominator = 1;
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-    foreach (const SubtitleProperties::Data &data, titles) {
+    foreach (const Data &data, titles) {
         SubtitleProperties *properties = new SubtitleProperties(data);
         QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
         QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
@@ -140,12 +165,12 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
     if (titleValues.ArraySize() % 4 != 0)
         env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
 
-    QList<SubtitleProperties::Data> titles;
+    QList<Data> titles;
     for (int i = 0; i < titleValues.ArraySize(); i += 4) {
         if (!(titleValues[i].IsString() && titleValues[i+1].IsString()
               && titleValues[i+2].IsInt() && titleValues[i+3].IsInt()))
             env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.", i / 4 + 1);
-        const SubtitleProperties::Data title = {
+        const Data title = {
             QLatin1String(titleValues[i].AsString()),
             QLatin1String(titleValues[i+1].AsString()),
             titleValues[i+2].AsInt(),
@@ -153,9 +178,9 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
         titles.append(title);
     }
     return new Subtitle(args[0].AsInt(Tools::defaultClipWidth),
-                                args[1].AsInt(Tools::defaultClipHeight),
-                                titles,
-                                env);
+                        args[1].AsInt(Tools::defaultClipHeight),
+                        titles,
+                        env);
 }
 
 bool __stdcall Subtitle::GetParity(int n)
@@ -183,3 +208,5 @@ void __stdcall Subtitle::GetAudio(void* buf, __int64 start, __int64 count,
     Q_UNUSED(count)
     Q_UNUSED(env)
 }
+
+#include "subtitle.moc"

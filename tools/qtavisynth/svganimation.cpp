@@ -2,8 +2,8 @@
 #include "filters.h"
 #include "tools.h"
 
-SvgAnimationProperties::SvgAnimationProperties(const Data &data)
-    : QObject()
+SvgAnimationProperties::SvgAnimationProperties(const Data &data, QObject *parent)
+    : QObject(parent)
     , m_data(data)
     , m_scale(scaleStart)
     , m_opacity(opacityStart)
@@ -35,6 +35,18 @@ void SvgAnimationProperties::setOpacity(qreal opacity)
     m_opacity = opacity;
 }
 
+SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
+        const char *blendingKey, IScriptEnvironment* env)
+{
+    static const int enumIndex = staticMetaObject.indexOfEnumerator("Blending");
+    Q_ASSERT(enumIndex);
+    static const QMetaEnum &blendEnum = staticMetaObject.enumerator(enumIndex);
+    const int blending = blendEnum.keysToValue(blendingKey);
+    if (blending == -1)
+        env->ThrowError("QtorialsSvgAnimation: Invalid blending type '%s'.",
+                        blendingKey);
+    return Blending(blending);
+}
 
 const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
@@ -61,7 +73,8 @@ SvgAnimation::SvgAnimation(int width, int height,
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
     foreach(const SvgAnimationProperties::Data &dataSet, dataSets) {
-        SvgAnimationProperties *properties = new SvgAnimationProperties(dataSet);
+        SvgAnimationProperties *properties =
+                new SvgAnimationProperties(dataSet, &m_animation);
         m_properties.append(properties);
 
         QSequentialAnimationGroup *scaleSequence = new QSequentialAnimationGroup;
@@ -69,8 +82,10 @@ SvgAnimation::SvgAnimation(int width, int height,
         QEasingCurve scaleInEasingCurve(QEasingCurve::OutBack);
         scaleInEasingCurve.setOvershoot(2.5);
 
-        const bool immediateIn = (dataSet.blendingIn == SvgAnimationProperties::immediate);
-        const bool immediateOut = (dataSet.blendingOut == SvgAnimationProperties::immediate);
+        const bool immediateIn =
+                (dataSet.blendingIn == SvgAnimationProperties::immediate);
+        const bool immediateOut =
+                (dataSet.blendingOut == SvgAnimationProperties::immediate);
         const struct Animation {
             QSequentialAnimationGroup *sequence;
             const QByteArray &propertyName;
@@ -143,11 +158,6 @@ SvgAnimation::SvgAnimation(int width, int height,
     m_animation.pause();
 }
 
-SvgAnimation::~SvgAnimation()
-{
-    qDeleteAll(m_properties);
-}
-
 PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(env)
@@ -161,30 +171,17 @@ PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
     m_animation.setCurrentTime(n);
     foreach (const SvgAnimationProperties *properties, m_properties) {
         if (properties->opacity() > SvgAnimationProperties::opacityStart)
-            Filters::paintBlendedSvgElement(&p,
-                                            m_svgFile,
-                                            properties->svgElement(),
-                                            properties->opacity(),
-                                            properties->scale(),
-                                            image.rect()
-                                            );
+            Filters::paintBlendedSvgElement(
+                    &p,
+                    m_svgFile,
+                    properties->svgElement(),
+                    properties->opacity(),
+                    properties->scale(),
+                    image.rect()
+                    );
     }
 
     return frame;
-}
-
-SvgAnimationProperties::Blending SvgAnimation::findBlendingOrThrow(
-        const char *blendingKey, IScriptEnvironment* env)
-{
-    static const int enumIndex =
-            SvgAnimationProperties::staticMetaObject.indexOfEnumerator("Blending");
-    Q_ASSERT(enumIndex);
-    static const QMetaEnum &blendEnum =
-            SvgAnimationProperties::staticMetaObject.enumerator(enumIndex);
-    const int blending = blendEnum.keysToValue(blendingKey);
-    if (blending == -1)
-        env->ThrowError("QtorialsSvgAnimation: Invalid blending type '%s'.", blendingKey);
-    return SvgAnimationProperties::Blending(blending);
 }
 
 AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data,
@@ -207,10 +204,10 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
             QLatin1String(detailValues[i].AsString()),
             detailValues[i+1].AsInt(),
             detailValues[i+2].AsInt(),
-            findBlendingOrThrow(detailValues[i+3].AsString(), env),
-            findBlendingOrThrow(detailValues[i+4].AsString(), env)
+            SvgAnimationProperties::findBlendingOrThrow(detailValues[i+3].AsString(), env),
+            SvgAnimationProperties::findBlendingOrThrow(detailValues[i+4].AsString(), env)
         };
-        Tools::CheckSvgAndThrow(svgFileName, animationDetail.svgElement, env);
+        Tools::checkSvgAndThrow(svgFileName, animationDetail.svgElement, env);
         details.append(animationDetail);
     }
 

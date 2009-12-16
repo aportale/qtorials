@@ -69,7 +69,7 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
     QStringList svgElements;
     foreach(const QString &element, svgElementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
         const QString trimmedElement = element.trimmed();
-        Tools::CheckSvgAndThrow(svgFileName, trimmedElement, env);
+        Tools::checkSvgAndThrow(svgFileName, trimmedElement, env);
         svgElements.append(trimmedElement);
     }
 

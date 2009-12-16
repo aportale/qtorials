@@ -6,19 +6,7 @@
 #include <QSequentialAnimationGroup>
 #include <QRectF>
 
-class ZoomNPanProperties : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QRectF rect READ rect WRITE setRect);
-
-public:
-    QRectF rect() const;
-    void setRect(const QRectF &rect);
-    static const QByteArray propertyName;
-
-protected:
-    QRectF m_rect;
-};
+class ZoomNPanProperties;
 
 class ZoomNPan : public IClip
 {
@@ -53,8 +41,8 @@ protected:
     VideoInfo m_targetVideoInfo;
     QByteArray m_resizeFilter;
     PClip m_extendedClip;
+    ZoomNPanProperties *m_animationProperties;
     QSequentialAnimationGroup m_animation;
-    ZoomNPanProperties m_animationProperties;
     PClip m_resizedClip;
     QRectF m_resizedRect;
 };
