@@ -28,16 +28,14 @@ function videoWelcome_960x720
 {
     DirectShowSource(gMediaDir + "qtsymbian_development.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .Crop(400, 0, 1280, 960)
-        \ .Lanczos4Resize(gClipWidth, gClipHeight)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight, 400, 0, 1280, 960)
 }
 
 function videoWelcome_640x360
 {
     DirectShowSource(gMediaDir + "qtsymbian_development.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .Crop(200, 40, 1568, 880)
-        \ .Lanczos4Resize(gClipWidth, gClipHeight)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight, 200, 40, 1568, 880)
 }
 
 function welcome
