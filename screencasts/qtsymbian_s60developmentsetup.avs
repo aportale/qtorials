@@ -52,7 +52,7 @@ function audioOverview
     #n A Symbian development environment usually consists of...
     #n ...The Nokia Ovi Suite for easy application installation to our phone...
     #n ...Carbide.c++, which is an Eclipse based IDE for Symbian development. We install it for the sake of completeness. In the following, we will use the IDE QtCreator with it's preliminary Symbian support...
-    #n ...ActivePerl-5.6.1, build 658...
+    #n ...ActivePerl-5.6.1, build 635...
 *]
         \ + audioClip(2.043, 18.065, 0)
 \[*
@@ -72,10 +72,10 @@ function videoOverview
         \   textClip("", 110)
         \ , textClip("Nokia Ovi Suite\n\n\n\n\n", 110)
         \ , textClip("Nokia Ovi Suite\nCarbide.c++\n\n\n\n", 120)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\n\n\n", 100)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\n\n", 260)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\n", 200)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 658\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 250)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\n\n\n", 100)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\nS60 Platform SDK\n\n", 260)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\nS60 Platform SDK\nOpen C/C++\n", 200)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 250)
         \ , textClip("", 40)
         \ , gDissolveLength)
 }
@@ -525,7 +525,7 @@ function completeclip
             \ , overview
             \ , componenTitle("Nokia Ovi Suite"),                nokiaOviSuite
             \ , componenTitle("Carbide.c++"),                    carbide
-            \ , componenTitle("ActivePerl-5.6.1, build 658"),    activePerl
+            \ , componenTitle("ActivePerl-5.6.1, build 635"),    activePerl
             \ , componenTitle("S60 Platform SDK"),               S60Sdk
             \ , componenTitle("Open C/C++"),                     openC
             \ , componenTitle("Application TRK"),                appTrk
