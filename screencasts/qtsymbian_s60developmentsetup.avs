@@ -297,13 +297,6 @@ function videoS60Sdk1_640x360
         \ )
 }
 
-function svgSnippet(string elementsCsv, int frames)
-{
-    clip =
-        \ QtorialsSvg("qtsymbian_s60developmentsetup.svg", elementsCsv, gClipWidth, gClipHeight, frames)
-    overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
-}
-
 function audioS60Sdk2
 {
     audioNoise(1)
@@ -321,20 +314,26 @@ function audioS60Sdk2
 
 function videoS60Sdk2
 {
-    Dissolve(
-        \   svgSnippet("", 65)
-        \ , svgSnippet("s60logo32", 70)
-        \ , svgSnippet("s60logo32, sdk3", 40)
-        \ , svgSnippet("s60logo32, sdk3, fp2", 40)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60", 45)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32", 130)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division", 55)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60", 50)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32s60, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50s60, phonearrow50, phone50", 120)
-        \ , svgSnippet("s60logo32, sdk3, fp2, myapp32, myapp32qt, phonearrow32, phone32, s60sdk50, division, myapp50, myapp50qt, phonearrow50, phone50", 100)
-        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 140)
-        \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 180)
-        \ , gDissolveLength)
+    BlankClipRGB(975)
+    \.overlayRgbClipOnRgb(QtorialsSvgAnimation("qtsymbian_s60developmentsetup.svg", gClipWidth, gClipHeight
+        \ , "s60logo32"             ,   65,  975,     "fadeandscale",    "immediate"
+        \ , "sdk3"                  ,  130,  975,     "fadeandscale",    "immediate"
+        \ , "fp2"                   ,  165,  975,     "fadeandscale",    "immediate"
+        \ , "myapp32"               ,  200,  670,             "fade",         "fade"
+        \ , "myapp32s60"            ,  203,  545,     "fadeandscale", "fadeandscale"
+        \ , "phonearrow32"          ,  245,  670,             "fade",         "fade"
+        \ , "phone32"               ,  252,  975,     "fadeandscale",    "immediate"
+        \ , "division"              ,  340,  670,             "fade",         "fade"
+        \ , "s60sdk50"              ,  360,  975,     "fadeandscale",    "immediate"
+        \ , "myapp50"               ,  415,  670,             "fade",         "fade"
+        \ , "myapp50s60"            ,  418,  545,     "fadeandscale", "fadeandscale"
+        \ , "phonearrow50"          ,  450,  670,             "fade",         "fade"
+        \ , "phone50"               ,  457,  975,     "fadeandscale",    "immediate"
+        \ , "myapp32qt"             ,  560,  670,     "fadeandscale",         "fade"
+        \ , "myapp50qt"             ,  560,  670,     "fadeandscale",         "fade"
+        \ , "myappuniversal"        ,  680,  975,             "fade",    "immediate"
+        \ , "phonearrowsuniversal"  ,  800,  975,             "fade",    "immediate"
+    \ ))
 }
 
 function audioS60Sdk3
