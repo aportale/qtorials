@@ -325,12 +325,12 @@ static const struct ElementAndPainter {
     { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
     { QLatin1String("codecblockpattern"),   paintCodecBlockPattern }
 };
-static const int elementsAndPaintersCount =
-        int(sizeof elementsAndPainters / sizeof elementsAndPainters[0]);
 
 typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
 
 Q_GLOBAL_STATIC_WITH_INITIALIZER(ElementAndPainterHash, elementsAndPaintersHash, {
+    static const int elementsAndPaintersCount =
+            int(sizeof elementsAndPainters / sizeof elementsAndPainters[0]);
     for (int i = 0; i < elementsAndPaintersCount; ++i)
         x->insert(elementsAndPainters[i].name, elementsAndPainters[i].function);
 });
