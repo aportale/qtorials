@@ -113,7 +113,7 @@ function videoQtSymbian_640x360
         \ ,  480,  -1,      164,  172,       -1,   -1                      [* SDK step, Destination step *]
         \ ,  940,  -1,       -1,   -1,       -1,   -1                      [* Finishing Installation *]
         \ , 1060,  -1,       43,   57,       -1,   -1                      [* End *]
-        \ )                    
+        \ )
 }
 
 function qtSymbian
@@ -156,7 +156,7 @@ function videoqtDemoSisPackage_640x360
         \ ,                 126,   12,      809,  455                      [* Explorer open *]
         \ ,   70,  -1,      304,   12,       -1,   -1                      [* Navigating to qt dir *]
         \ ,  170,  -1,      304,  268,       -1,   -1                      [* Pointer on qt_demos.sis *]
-        \ )                    
+        \ )
 }
 
 function qtDemoSisPackage
@@ -225,7 +225,7 @@ function videoqtDemoSisExecution_640x360
         \ ,                 304,  268,       -1,   -1                      [* Zoomed on qt_demos.sis *]
         \ ,  150,  75,       -1,   -1,       -1,   -1                      [* Zoom out *]
         \ ,  250,  -1,      100,  170,       -1,   -1                      [* End *]
-        \ )      
+        \ )
 }
 
 function qtDemoSisExecution
@@ -358,7 +358,7 @@ function videoQtSdk_640x360
         \ ,  305,  -1,       -1,   -1,       -1,   -1                      [* Finish Installation, start Creator *]
         \ ,  460,  -1,        0,    0,       -1,   -1                      [* Going to QtVersions preferences *]
         \ ,  630,  -1,      195,   88,       -1,   -1                      [* End *]
-        \ )      
+        \ )
 }
 
 function qtSdk

@@ -326,7 +326,7 @@ function videoCreatorAction_640x360
         \ , 2295,  -1,      180,  360,       -1,   -1
         \ , 2550,  -1,       -1,   -1,       -1,   -1
         \ , 2680, 120,        0,  182,       -1,   -1
-        \ , 3180,  -1,      236,  190,       -1,   -1                     [* Selecting new build configuration from popup *]       
+        \ , 3180,  -1,      236,  190,       -1,   -1                     [* Selecting new build configuration from popup *]
         \ , 3250,  -1,      288,  106,       -1,   -1                     [* accepting runconfiguration name *]
         \ , 3310,  -1,       -1,   -1,       -1,   -1                     [* Scrolling down *]
         \ , 3440,  -1,        0,  360,       -1,   -1                     [* Adding new run configuration *]

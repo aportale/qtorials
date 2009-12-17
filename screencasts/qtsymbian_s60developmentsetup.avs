@@ -132,7 +132,7 @@ function videoNokiaOviSuite_640x360
         \ ,  170,  -1,       60,  290,       -1,   -1                     [* Starting Download *]
         \ ,  240,  -1,       -1,   -1,       -1,   -1                     [* Installation *]
         \ ,  360,  -1,        0,  360,       -1,   -1                     [* Phone connected *]
-        \ )                 
+        \ )
 }
 
 function nokiaOviSuite
@@ -474,12 +474,12 @@ function videoAppTrk_640x360
         \ ,  165,  -1,        0,  360,       -1,   -1                     [* Click download *]
         \ ,  420,  -1,       -1,   -1,       -1,   -1                     [* Downloading *]
         \ ,  540,  -1,        0,  240,       -1,   -1                     [* Nokia App installer starts *]
-        \ )                                                           
+        \ )
 }
 
 function appTrk
 {
-    appTrkInstall = 
+    appTrkInstall =
         \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS", audio = false)
         \ .trim(220, 380)
         \ .TemporalSoften(4, 4, 8, mode = 2)
