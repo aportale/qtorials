@@ -262,7 +262,7 @@ function activePerl
     AudioDub(videoWithClipSize("videoActivePerl").urlSubTitle("bit.ly/activeperl56"), audioActivePerl).converttorgb32
 }
 
-function audioS60Sdk
+function audioS60Sdk1
 {
     audioNoise(1)
 \[*
@@ -274,30 +274,6 @@ function audioS60Sdk
     #n We have the choice between three SDKs... Now, which is the one for us?
 *]
         \ + audioClip(131.030, 136.440, 1)
-\[*
-    #n Normally, we use a specific S60 SDK, for example third edition... feature pack 2 to build our application.
-    #n And that application would run on a S60 third edition, feature pack 2 based phone.
-    #n Or we would use the S60 SDK fifth edition to build our application and run that on a phone with S60 fifth edition.
-    #n But in effect, since we will use the Qt Api, all those version differences do not matter. Our Qt application can be built with any S60 SDK since the third edition featurepack 1.
-    #n And we can run our application on any S60 phone with at least the 3rd edition feature pack 1.
-*]
-        \ + audioClip(136.348, 172.756, 1)
-\[*
-    #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
-*]
-        \ + audioClip(173.082, 179.049, 2)
-\[*
-    #n If the installer complains about a missing Java Runtime Environment, we don't care.
-*]
-        \ + audioClip(186.108, 190.566, 1)
-\[*
-    #n We need to make sure that we have enough space on the drive where we install the SDK. Qt has to be installed on the same drive, later on.
-*]
-        \ + audioClip(191.193, 198.647, 3)
-\[*
-    #n The installer offers to install the 'CSL Arm Toolchain', which we accept. It is needed to build our applications for the phone.
-*]
-        \ + audioClip(200.110, 207.935, 1)
 
         \ + audioNoise(10)
 }
@@ -328,10 +304,25 @@ function svgSnippet(string elementsCsv, int frames)
     overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
 }
 
+function audioS60Sdk2
+{
+    audioNoise(1)
+\[*
+    #n Normally, we use a specific S60 SDK, for example third edition... feature pack 2 to build our application.
+    #n And that application would run on a S60 third edition, feature pack 2 based phone.
+    #n Or we would use the S60 SDK fifth edition to build our application and run that on a phone with S60 fifth edition.
+    #n But in effect, since we will use the Qt Api, all those version differences do not matter. Our Qt application can be built with any S60 SDK since the third edition featurepack 1.
+    #n And we can run our application on any S60 phone with at least the 3rd edition feature pack 1.
+*]
+        \ + audioClip(136.348, 172.756, 1)
+
+        \ + audioNoise(10)
+}
+
 function videoS60Sdk2
 {
     Dissolve(
-        \   svgSnippet("", 60)
+        \   svgSnippet("", 65)
         \ , svgSnippet("s60logo32", 70)
         \ , svgSnippet("s60logo32, sdk3", 40)
         \ , svgSnippet("s60logo32, sdk3, fp2", 40)
@@ -344,6 +335,29 @@ function videoS60Sdk2
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal", 140)
         \ , svgSnippet("s60logo32, sdk3, fp2, phone32, s60sdk50, phone50, myappuniversal, phonearrowsuniversal", 180)
         \ , gDissolveLength)
+}
+
+function audioS60Sdk3
+{
+    audioNoise(1)
+\[*
+    #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
+*]
+        \ + audioClip(173.082, 179.049, 2)
+\[*
+    #n If the installer complains about a missing Java Runtime Environment, we don't care.
+*]
+        \ + audioClip(186.108, 190.566, 1)
+\[*
+    #n We need to make sure that we have enough space on the drive where we install the SDK. Qt has to be installed on the same drive, later on.
+*]
+        \ + audioClip(191.193, 198.647, 3)
+\[*
+    #n The installer offers to install the 'CSL Arm Toolchain', which we accept. It is needed to build our applications for the phone.
+*]
+        \ + audioClip(200.110, 207.935, 1)
+
+        \ + audioNoise(10)
 }
 
 function videoS60Sdk3_960x720
@@ -378,13 +392,12 @@ function videoS60Sdk3_640x360
 
 function S60Sdk
 {
-    AudioDub(
-        \  Dissolve(
-            \  videoWithClipSize("videoS60Sdk1").converttorgb32
-            \ ,videoS60Sdk2
-            \ ,videoWithClipSize("videoS60Sdk3").converttorgb32
-            \ ,gDissolveLength).urlSubTitle("bit.ly/s60sdk")
-        \ ,audioS60Sdk)
+    Dissolve(
+        \   AudioDub(videoWithClipSize("videoS60Sdk1").converttorgb32, audioS60Sdk1)
+        \ , AudioDub(videoS60Sdk2, audioS60Sdk2)
+        \ , AudioDub(videoWithClipSize("videoS60Sdk3").converttorgb32, audioS60Sdk3)
+        \ , gDissolveLength
+    \ ).urlSubTitle("bit.ly/s60sdk")
 }
 
 function audioOpenC
