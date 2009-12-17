@@ -125,13 +125,14 @@ function videoNokiaOviSuite_960x720
 
 function videoNokiaOviSuite_640x360
 {
-    setDetailClip(videoNokiaOviSuite_960x720)
-    setDetail(0, 0)
-    showDetail(75, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(150, -140, 0, 1240, 720)                          [* Page loads *]
-        \ + showDetail(230, 60, 290)                                     [* Starting Download *]
-        \ + showDetail(340, -140, 0, 1240, 720)                          [* Installation *]
-        \ + showDetail(466, 0, 360)                                      [* Phone connected *]
+    videoNokiaOviSuite_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
+        \ ,   95,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
+        \ ,  170,  -1,       60,  290,       -1,   -1                     [* Starting Download *]
+        \ ,  240,  -1,       -1,   -1,       -1,   -1                     [* Installation *]
+        \ ,  360,  -1,        0,  360,       -1,   -1                     [* Phone connected *]
+        \ )                 
 }
 
 function nokiaOviSuite
@@ -190,18 +191,19 @@ function videoCarbide_960x720
 
 function videoCarbide_640x360
 {
-    setDetailClip(videoCarbide_960x720)
-    setDetail(0, 0)
-    showDetail(85, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(165, -140, 0, 1240, 720)                          [* Page loads *]
-        \ + showDetail(210, 60, 290)                                     [* Starting Download *]
-        \ + showDetail(320, -140, 0, 1240, 720)                          [* Oops *]
-        \ + showDetail(430, 0, 236)                                      [* How to login *]
-        \ + showDetail(510, -140, 0, 1240, 720)                          [* Downloading *]
-        \ + showDetail(650, 160, 188)                                    [* Leave installation options untouched *]
-        \ + showDetail(850, 0, 360)                                      [* Launch WINSCW shortcut *]
-        \ + showDetail(960, 16, 19)                                      [* Executing WINSCW shortcut *]
-        \ + showDetail(1024, -140, 0, 1240, 720)                         [* End *]
+    videoCarbide_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
+        \ ,  105,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
+        \ ,  185,  -1,       60,  290,       -1,   -1                     [* Starting Download *]
+        \ ,  230,  -1,       -1,   -1,       -1,   -1                     [* Oops *]
+        \ ,  340,  -1,        0,  236,       -1,   -1                     [* How to login *]
+        \ ,  450,  -1,       -1,   -1,       -1,   -1                     [* Downloading *]
+        \ ,  530,  -1,      160,  188,       -1,   -1                     [* Leave installation options untouched *]
+        \ ,  670,  -1,        0,  360,       -1,   -1                     [* Launch WINSCW shortcut *]
+        \ ,  870,  -1,       16,   19,       -1,   -1                     [* Executing WINSCW shortcut *]
+        \ ,  980,  -1,       -1,   -1,       -1,   -1                     [* End *]
+        \ )
 }
 
 function carbide
@@ -244,15 +246,15 @@ function videoActivePerl_960x720
 
 function videoActivePerl_640x360
 {
-    setDetailClip(videoActivePerl_960x720)
-    setDetail(0, 0)
-    showDetail(120, 0, 0)                                                [* Entering Url *]
-        \ + showDetail(210, -140, 0, 1240, 720)                          [* Page loads *]
-        \ + showDetail(440, 152, 294)                                    [* Clicking link *]
-        \ + showDetail(570, -140, 0, 1240, 720)                          [* Downloading, Installing *]
-        \ + showDetail(570, -140, 0, 1240, 720)                          [* Downloading, Installing *]
-        \ + showDetail(670, 160, 188)                                    [* Add to PATH environment variable *]
-        \ + showDetail(739, -140, 0, 1240, 720)                          [* End *]
+    videoActivePerl_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
+        \ ,  140,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
+        \ ,  230,  -1,      152,  294,       -1,   -1                     [* Clicking link *]
+        \ ,  460,  -1,       -1,   -1,       -1,   -1                     [* Downloading, Installing *]
+        \ ,  590,  -1,      160,  188,       -1,   -1                     [* Add to PATH environment variable *]
+        \ ,  690,  -1,       -1,   -1,       -1,   -1                     [* End *]
+        \ )
 }
 
 function activePerl
@@ -311,11 +313,12 @@ function videoS60Sdk1_960x720
 
 function videoS60Sdk1_640x360
 {
-    setDetailClip(videoS60Sdk1_960x720)
-    setDetail(0, 0)
-    showDetail(85, 0, 0)                                                [* Entering Url *]
-        \ + showDetail(145, -140, 0, 1240, 720)                         [* Page loads *]
-        \ + showDetail(315, 200, 360)                                   [* Which version? *]
+    videoS60Sdk1_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
+        \ ,  105,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
+        \ ,  165,  -1,       200, 360,       -1,   -1                     [* Which version? *]
+        \ )
 }
 
 function svgSnippet(string elementsCsv, int frames)
@@ -360,16 +363,17 @@ function videoS60Sdk3_960x720
 
 function videoS60Sdk3_640x360
 {
-    setDetailClip(videoS60Sdk3_960x720)
-    setDetail(200, 360)
-    showDetail(140, 200, 360)                                           [* Choosing 5th edition *]
-        \ + showDetail(237, -140, 0, 1240, 720)                         [* Installing *]
-        \ + showDetail(300, 165, 200)                                   [* JRE warning *]
-        \ + showDetail(400, 8, 92, 952, 536)                            [* Installing *]
-        \ + showDetail(500, 192, 270)                                   [* Destination Path *]
-        \ + showDetail(580, -140, 0, 1240, 720)                         [* Installing *]
-        \ + showDetail(700, 161, 202)                                   [* CSL Tool chain *]
-        \ + showDetail(832, -140, 0, 1240, 720)                         [* End *]
+    videoS60Sdk3_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  200, 360,       -1,   -1                     [* Choosing 5th edition *]
+        \ ,  160,  -1,        -1,   -1,      -1,   -1                     [* Installing *]
+        \ ,  257,  -1,       165,  200,      -1,   -1                     [* JRE warning *]
+        \ ,  320,  -1,         8,   92,     952,  536                     [* Installing *]
+        \ ,  420,  -1,       192,  270,      -1,   -1                     [* Destination Path *]
+        \ ,  520,  -1,        -1,   -1,      -1,   -1                     [* Installing *]
+        \ ,  600,  -1,       161,  202,      -1,   -1                     [* CSL Tool chain *]
+        \ ,  720,  -1,        -1,   -1,      -1,   -1                     [* End *]
+        \ )
 }
 
 function S60Sdk
@@ -416,12 +420,13 @@ function videoOpenC_960x720
 
 function videoOpenC_640x360
 {
-    setDetailClip(videoOpenC_960x720)
-    setDetail(0, 0)
-    showDetail(90, 0, 0)                                                [* Entering Url *]
-        \ + showDetail(240, -140, 0, 1240, 720)                         [* Installing *]
-        \ + showDetail(415, 166, 188)                                   [* S60 Sdk Wizard page *]
-        \ + showDetail(489, -140, 0, 1240, 720)                         [* End *]
+    videoOpenC_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
+        \ ,  110,  -1,       -1,   -1,       -1,   -1                     [* Installing *]
+        \ ,  260,  -1,      166,  188,       -1,   -1                     [* S60 Sdk Wizard page *]
+        \ ,  435,  -1,       -1,   -1,       -1,   -1                     [* End *]
+        \ )
 }
 
 function openC
@@ -462,13 +467,14 @@ function videoAppTrk_960x720
 
 function videoAppTrk_640x360
 {
-    setDetailClip(videoAppTrk_960x720)
-    setDetail(0, 0)
-    showDetail(80, 0, 0)                                                [* Entering Url *]
-        \ + showDetail(145, -140, 0, 1240, 720)                         [* Page loads *]
-        \ + showDetail(400, 0, 360)                                     [* Click download *]
-        \ + showDetail(520, -140, 0, 1240, 720)                         [* Downloading *]
-        \ + showDetail(623, 0, 240)                                     [* Nokia App installer starts *]
+    videoAppTrk_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
+        \ ,  100,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
+        \ ,  165,  -1,        0,  360,       -1,   -1                     [* Click download *]
+        \ ,  420,  -1,       -1,   -1,       -1,   -1                     [* Downloading *]
+        \ ,  540,  -1,        0,  240,       -1,   -1                     [* Nokia App installer starts *]
+        \ )                                                           
 }
 
 function appTrk

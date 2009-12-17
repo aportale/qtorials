@@ -307,35 +307,37 @@ function videoCreatorAction_960x720
 
 function videoCreatorAction_640x360
 {
-    setDetailClip(videoCreatorAction_960x720)
-    setDetail(-140, 0, 1240, 720)
-    showDetail(25, -140, 0, 1240, 720)
-        \ + showDetail( 125, 160, 180)
-        \ + showDetail( 335, 174, 234)
-        \ + showDetail( 465, -140, 0, 1240, 720)
-        \ + showDetail( 840, 160, 0)
-        \ + showDetail( 935, 960 - 640, 720 - 360)
-        \ + showDetail(1200, 960 - 640, 48)
-        \ + showDetail(1580, 186, 330)
-        \ + showDetail(1800, 0, 148, 960, 540)
-        \ + showDetail(1950, 72, 144)
-        \ + showDetail(2070, -140, 0, 1240, 720)
-        \ + showDetail(2120, 320, 192)
-        \ + showDetail(2215, 960 - 640, 0)
-        \ + showDetail(2275, -140, 0, 1240, 720)
-        \ + showDetail(2530, 180, 360)
-        \ + showDetail(2660, -140, 0, 1240, 720)
-        \ + showDetail(3160, 0, 182, gClipWidth, gClipHeight, 120)
-        \ + showDetail(3230, 236, 190)                          [* Selecting new build configuration from popup *]
-        \ + showDetail(3290, 288, 106)                          [* accepting runconfiguration name *]
-        \ + showDetail(3420, -140, 0, 1240, 720)                [* Scrolling down *]
-        \ + showDetail(3680, 0, 360)                            [* Adding new run configuration *]
-        \ + showDetail(4240, -140, 0, 1240, 720)                [* Exiting rpoject mode *]
-        \ + showDetail(4410, 0, 360)                            [* Selection run configuration grom debug button popup *]
-        \ + showDetail(5560, 164, 164)                          [* configuration helper dialog *]
-        \ + showDetail(6010, 0, 0, 1240, 720)                   [* Qreator is active *]
-        \ + showDetail(6370, 260, 194)                          [* App runs on phone *]
-        \ + showDetail(6437, -140, 0, 1240, 720)                [* Finito *]
+    videoCreatorAction_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  -1,   -1,       -1,   -1
+        \ ,   45,  -1,      160,  180,       -1,   -1
+        \ ,  145,  -1,      174,  234,       -1,   -1
+        \ ,  355,  -1,       -1,   -1,       -1,   -1
+        \ ,  485,  -1,      160,    0,       -1,   -1
+        \ ,  860,  -1,      320,  360,       -1,   -1
+        \ ,  955,  -1,      320,   48,       -1,   -1
+        \ , 1220,  -1,      186,  330,       -1,   -1
+        \ , 1600,  -1,        0,  148,      960,  540
+        \ , 1820,  -1,       72,  144,       -1,   -1
+        \ , 1970,  -1,       -1,   -1,       -1,   -1
+        \ , 2090,  -1,      320,  192,       -1,   -1
+        \ , 2140,  -1,      320,    0,       -1,   -1
+        \ , 2235,  -1,       -1,   -1,       -1,   -1
+        \ , 2295,  -1,      180,  360,       -1,   -1
+        \ , 2550,  -1,       -1,   -1,       -1,   -1
+        \ , 2680, 120,        0,  182,       -1,   -1
+        \ , 3180,  -1,      236,  190,       -1,   -1                     [* Selecting new build configuration from popup *]       
+        \ , 3250,  -1,      288,  106,       -1,   -1                     [* accepting runconfiguration name *]
+        \ , 3310,  -1,       -1,   -1,       -1,   -1                     [* Scrolling down *]
+        \ , 3440,  -1,        0,  360,       -1,   -1                     [* Adding new run configuration *]
+        \ , 3700,  -1,       -1,   -1,       -1,   -1                     [* Exiting rpoject mode *]
+        \ , 4260,  -1,        0,  360,       -1,   -1                     [* Selection run configuration grom debug button popup *]
+        \ , 4430,  -1,      164,  164,       -1,   -1                     [* configuration helper dialog *]
+        \ , 5500,  -1,       -1,   -1,       -1,   -1                     [* Qreator is active *]
+        \ , 5640,  -1,        0,    0,     1240,  720                     [* Phone blends in *]
+        \ , 5960, 120,      260,  194,       -1,   -1                     [* App runs on phone *]
+        \ , 6390,  -1,       -1,   -1,       -1,   -1                     [* Finito *]
+        \ )
     layer(deviceOverlay, x = gClipWidth - 204)
 }
 

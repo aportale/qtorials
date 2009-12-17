@@ -102,17 +102,18 @@ function videoQtSymbian_960x720
 
 function videoQtSymbian_640x360
 {
-    setDetailClip(videoQtSymbian_960x720)
-    setDetail(0, 0)
-    showDetail(64, 0, 0)                                                 [* Entering Url *]
-        \ + showDetail(120, -140, 0, 1240, 720)                          [* Page loads *]
-        \ + showDetail(210, 150, 85)                                     [* Clicking Download/Lgpl *]
-        \ + showDetail(300, -140, 0, 1240, 720)                          [* Scrolling Down *]
-        \ + showDetail(390, 320, 88)                                     [* Clicking link *]
-        \ + showDetail(460, -140, 0, 1240, 720)                          [* Installation til SDK step *]
-        \ + showDetail(920, 164, 172)                                    [* SDK step, Destination step *]
-        \ + showDetail(1040, -140, 0, 1240, 720)                         [* Finishing Installation *]
-        \ + showDetail(1148, 43, 57)                                     [* End *]
+    videoQtSymbian_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                   0,    0,       -1,   -1                      [* Entering Url *]
+        \ ,   84,  -1,       -1,   -1,       -1,   -1                      [* Page loads *]
+        \ ,  140,  -1,      150,   85,       -1,   -1                      [* Clicking Download/Lgpl *]
+        \ ,  230,  -1,       -1,   -1,       -1,   -1                      [* Scrolling Down *]
+        \ ,  310,  -1,      320,   88,       -1,   -1                      [* Clicking link *]
+        \ ,  410,  -1,       -1,   -1,       -1,   -1                      [* Installation til SDK step *]
+        \ ,  480,  -1,      164,  172,       -1,   -1                      [* SDK step, Destination step *]
+        \ ,  940,  -1,       -1,   -1,       -1,   -1                      [* Finishing Installation *]
+        \ , 1060,  -1,       43,   57,       -1,   -1                      [* End *]
+        \ )                    
 }
 
 function qtSymbian
@@ -150,11 +151,12 @@ function videoqtDemoSisPackage_960x720
 
 function videoqtDemoSisPackage_640x360
 {
-    setDetailClip(videoqtDemoSisPackage_960x720)
-    setDetail(126, 12, 809, 455)
-    showDetail(50, 126, 12, 809, 455)                                     [* Explorer open *]
-        \ + showDetail(150, 304, 12)                                      [* Navigating to qt dir *]
-        \ + showDetail(361, 304, 268)                                     [* Pointer on qt_demos.sis *]
+    videoqtDemoSisPackage_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                 126,   12,      809,  455                      [* Explorer open *]
+        \ ,   70,  -1,      304,   12,       -1,   -1                      [* Navigating to qt dir *]
+        \ ,  170,  -1,      304,  268,       -1,   -1                      [* Pointer on qt_demos.sis *]
+        \ )                    
 }
 
 function qtDemoSisPackage
@@ -218,11 +220,12 @@ function videoqtDemoSisExecution_960x720
 
 function videoqtDemoSisExecution_640x360
 {
-    setDetailClip(videoqtDemoSisExecution_960x720)
-    setDetail(304, 268)
-    showDetail(75, 304, 268)                                             [* Zoomed on qt_demos.sis *]
-        \ + showDetail(230, -140, 0, 1240, 720, 75)                      [* Zoom out *]
-        \ + showDetail(332, 100, 170)                                    [* End *]
+    videoqtDemoSisExecution_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                 304,  268,       -1,   -1                      [* Zoomed on qt_demos.sis *]
+        \ ,  150,  75,       -1,   -1,       -1,   -1                      [* Zoom out *]
+        \ ,  250,  -1,      100,  170,       -1,   -1                      [* End *]
+        \ )      
 }
 
 function qtDemoSisExecution
@@ -348,13 +351,14 @@ function videoQtSdk_960x720
 
 function videoQtSdk_640x360
 {
-    setDetailClip(videoQtSdk_960x720)
-    setDetail(-140, 0, 1240, 720)
-    showDetail(80, -140, 0, 1240, 720)                                  [* Page loads *]
-        \ + showDetail(285, 22, 204)                                    [* Navigate to link *]
-        \ + showDetail(440, -140, 0, 1240, 720)                         [* Finish Installation, start Creator *]
-        \ + showDetail(610, 0, 0)                                       [* Going to QtVersions preferences *]
-        \ + showDetail(830, 195, 88)                                       [* End *]
+    videoQtSdk_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  -1,   -1,       -1,   -1                      [* Page loads *]
+        \ ,  100,  75,       22,  204,       -1,   -1                      [* Navigate to link *]
+        \ ,  305,  -1,       -1,   -1,       -1,   -1                      [* Finish Installation, start Creator *]
+        \ ,  460,  -1,        0,    0,       -1,   -1                      [* Going to QtVersions preferences *]
+        \ ,  630,  -1,      195,   88,       -1,   -1                      [* End *]
+        \ )      
 }
 
 function qtSdk

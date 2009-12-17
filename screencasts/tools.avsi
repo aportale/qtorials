@@ -10,9 +10,9 @@ global gStillFrameLength = 30
 global gDissolveLength = 6
 global gClipWidth = 480
 global gClipHeight = 360
-global gDetailsTransitionDefaultFrameCount = 20
-global gDetailsExpansionWidth = 8
-global gDetailsExpansionColor = $eeeeee
+global gZoomNPanExpansionColor = $eeeeee
+global gZoomNPanTransitionFrames = 20
+global gZoomNPanResizeFilter = "Lanczos4Resize"
 global gArtworkDir = "..\artwork\"
 global gMediaDir = "..\..\qtorials_media\"
 global gAudioClip = BlankClip
@@ -77,130 +77,6 @@ function videoWithClipSize(string videoBaseName, int "width", int "height")
 {
     sizeString = String(Default(width, gClipWidth)) + "x" + String(Default(height, gClipHeight))
     return Eval(videoBaseName + "_" + sizeString)
-}
-
-function overlayQtorialImage(clip, string baseName, float "opacity")
-{
-    clipSizeString = String(clip.Width) + "x" + String(clip.Height)
-    image = ImageReader(gArtworkDir + baseName + "_" + clipSizeString + ".png", 0, 0, 25, pixel_type="rgb32")
-    imageMask = image.showalpha
-    return clip.Overlay(image, 0, 0, imageMask, Default(opacity, 1.0), output = "YV12")
-}
-
-function qtLogoSmall(clip)
-{
-    clip.overlayQtorialImage("qt_small", 0.6)
-}
-
-function oldStyle(clip)
-{
-    clip.overlayQtorialImage("oldstyle")
-}
-
-function resetCurrentDetail
-{
-    global gDetailLastFrame = 0
-
-    global gDetailCurrentTransitionFrame = 1
-
-    global gDetailStartLeft = 0
-    global gDetailStartTop = 0
-    global gDetailStartWidth = gClipWidth
-    global gDetailStartHeight = gClipHeight
-
-    global gDetailEndLeft = 0
-    global gDetailEndTop = 0
-    global gDetailEndWidth = gClipWidth
-    global gDetailEndHeight = gClipHeight
-}
-resetCurrentDetail
-
-function sCurveInterpolation(float sourceValue, float targetValue, int frame, int framesCount)
-{
-    x = float(frame) / float(framesCount)
-    y = Spline(x, 0.0, 0.0,  1.0/3.0, 1.0/6.0,  2.0/3.0, 5.0/6.0,  1.0, 1.0,  true)
-    return sourceValue + y * (targetValue - sourceValue)
-}
-
-function showDetailStartAndEndSameSize
-{
-    return (gDetailStartWidth == gDetailEndWidth) && (gDetailStartHeight == gDetailEndHeight)
-}
-
-function showDetailFrame
-{
-    interpolatedLeft = sCurveInterpolation(float(gDetailStartLeft), float(gDetailEndLeft), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
-    interpolatedLeft = showDetailStartAndEndSameSize ? Round(interpolatedLeft) : interpolatedLeft
-    interpolatedTop = sCurveInterpolation(float(gDetailStartTop), float(gDetailEndTop), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
-    interpolatedTop = showDetailStartAndEndSameSize ? Round(interpolatedTop) : interpolatedTop
-    interpolatedWidth = sCurveInterpolation(float(gDetailStartWidth), float(gDetailEndWidth), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
-    interpolatedHeight = sCurveInterpolation(float(gDetailStartHeight), float(gDetailEndHeight), gDetailCurrentTransitionFrame, gDetailsTransitionFrameCount)
-    result = gDetailClip
-        \ .Trim(gDetailLastFrame + gDetailCurrentTransitionFrame + 1, gDetailLastFrame + gDetailCurrentTransitionFrame + 1)
-        \ .LanczosResize(gClipWidth, gClipHeight, interpolatedLeft, interpolatedTop, interpolatedWidth, interpolatedHeight)
-    global gDetailCurrentTransitionFrame = gDetailCurrentTransitionFrame + 1
-    return (gDetailCurrentTransitionFrame < gDetailsTransitionFrameCount) ? (result + showDetailFrame) : result  # recursion = poor man's loop in AviSynth
-}
-
-function setDetailClip(clip)
-{
-    resetCurrentDetail
-    global gDetailClip = clip.addBorders(gDetailsExpansionWidth, gDetailsExpansionWidth, gDetailsExpansionWidth, gDetailsExpansionWidth, gDetailsExpansionColor)
-}
-
-function setFullScreen()
-{
-    setDetail(-gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
-}
-
-function showFullScreen(clip, int untilFrame, int "transitionFrames")
-{
-    expandedClip = expandedClipForDetails(clip)
-    transitionFrameCount = Default(transitionFrames, gDetailsTransitionDefaultFrameCount)
-    return showDetail(clip, untilFrame, -gDetailWidthExpand, -gDetailHeightExpand, expandedClip.Width, expandedClip.Height)
-}
-
-function setDetail(int left, int top, int "width", int "height")
-{
-    global gDetailStartLeft = left + gDetailsExpansionWidth
-    global gDetailStartTop = top + gDetailsExpansionWidth
-    global gDetailStartWidth = Default(width, gClipWidth)
-    global gDetailStartHeight = Default(height, gClipHeight)
-}
-
-function creativeCommons(clip, string "cclicense")
-{
-    gBackgroundColor = $eeeeee
-    textColor = $333333
-    theLogo = BlankClip(clip, 75, color = gBackgroundColor).overlayQtorialImage("cc-" + Default(cclicense, "by-sa") + "_big")
-    return Dissolve(
-        \   clip
-        \ , clip.hasAudio ? Audiodub(theLogo, audioNoise(10)) : theLogo
-        \ , gDissolveLength)
-}
-
-function showDetail(int untilFrame, int left, int top, int "width", int "height", int "transitionFrames")
-{
-    global gDetailEndLeft = left + gDetailsExpansionWidth
-    global gDetailEndTop = top + gDetailsExpansionWidth
-    global gDetailEndWidth = Default(width, gClipWidth)
-    global gDetailEndHeight = Default(height, gClipHeight)
-    totalFrames = untilFrame - gDetailLastFrame
-    global gDetailsTransitionFrameCount = Min(Default(transitionFrames, gDetailsTransitionDefaultFrameCount), totalFrames)
-    global gDetailCurrentTransitionFrame = 0
-
-    detail = gDetailClip
-        \ .trim(gDetailLastFrame + gDetailsTransitionFrameCount + 1, gDetailLastFrame + totalFrames)
-        \ .LanczosResize(gClipWidth, gClipHeight, gDetailEndLeft, gDetailEndTop, gDetailEndWidth, gDetailEndHeight)
-    detail = (gDetailsTransitionFrameCount > 0) ? (showDetailFrame + detail) : detail
-
-    global gDetailStartLeft = gDetailEndLeft
-    global gDetailStartTop = gDetailEndTop
-    global gDetailStartWidth = gDetailEndWidth
-    global gDetailStartHeight = gDetailEndHeight
-    global gDetailLastFrame = gDetailLastFrame + totalFrames
-
-    return detail
 }
 
 function overlayRgbClipOnRgb(clip background, clip overlay)
