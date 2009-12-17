@@ -295,20 +295,20 @@ Filters::paintBlendedSvgElement(QPainter *p,
     const QRectF elementBounds = renderer->boundsOnElement(svgElement);
     QRectF scaledBounds(elementBounds.topLeft(), elementBounds.size() * scale);
     scaledBounds.moveCenter(elementBounds.center());
+    p->save();
     if (opacity < 1.0) {
         QImage elementImage(rect.size(), QImage::Format_ARGB32);
         elementImage.fill(0);
         QPainter elementPainter(&elementImage);
-        elementPainter.setOpacity(opacity);
         elementPainter.setTransform(painterTransform);
         renderer->render(&elementPainter, svgElement, scaledBounds);
+        p->setOpacity(opacity);
         p->drawImage(0, 0, elementImage);
     } else {
-        p->save();
         p->setTransform(p->transform() * painterTransform);
         renderer->render(p, svgElement, scaledBounds);
-        p->restore();
     }
+    p->restore();
     return SvgOk;
 }
 
