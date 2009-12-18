@@ -30,6 +30,21 @@
   <defs
      id="defs2474">
     <linearGradient
+       id="linearGradient3833">
+      <stop
+         id="stop3839"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:0.21568628;" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.1254902;"
+         offset="0.45833334"
+         id="stop3843" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3841" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient3614">
       <stop
          style="stop-color:#000000;stop-opacity:0.58823532;"
@@ -110,6 +125,17 @@
        fx="320.00003"
        fy="856.00018"
        r="120" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3833"
+       id="radialGradient3059"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.234375,0,0,0.234375,148.56251,904.5625)"
+       cx="320"
+       cy="320"
+       fx="320"
+       fy="320"
+       r="320" />
   </defs>
   <metadata
      id="metadata10">
@@ -160,13 +186,24 @@
      inkscape:groupmode="layer"
      id="originals"
      style="display:inline">
-    <rect
+    <g
        id="oldstyle"
-       style="fill:url(#radialGradient3659);stroke:none"
-       width="100"
-       height="100"
-       x="172"
-       y="928" />
+       transform="translate(4,16)">
+      <rect
+         y="928"
+         x="172"
+         height="100"
+         width="100"
+         style="fill:url(#radialGradient3659);stroke:none"
+         id="rect217" />
+      <rect
+         y="928"
+         x="172"
+         height="100"
+         width="100"
+         style="fill:url(#radialGradient3059);fill-opacity:1;stroke:none;display:inline"
+         id="rect219" />
+    </g>
     <g
        id="qtlogo"
        transform="translate(-173.36079,172.8512)">
