@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Qt Logo Created with Inkscape (http://www.inkscape.org/) by Marsupilami -->
+
 <!--
    This work is licensed under the Creative Commons
    Attribution-Noncommercial-Share Alike 3.0 Unported
@@ -9,6 +10,7 @@
    171 Second Street, Suite 300, San Francisco,
    California, 94105, USA.
 -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -24,11 +26,37 @@
    viewBox=""
    id="svg4095"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.47 r22583"
    sodipodi:docname="artwork.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs2474">
+    <linearGradient
+       id="linearGradient3799">
+      <stop
+         id="stop3801"
+         offset="0"
+         style="stop-color:#000000;stop-opacity:0.58823532;" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.58823532;"
+         offset="0.80703104"
+         id="stop3803" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.39215687;"
+         offset="0.89429909"
+         id="stop3805" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0"
+         offset="1"
+         id="stop3807" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 360 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1280 : 360 : 1"
+       inkscape:persp3d-origin="640 : 240 : 1"
+       id="perspective210" />
     <linearGradient
        id="linearGradient3833">
       <stop
@@ -134,6 +162,24 @@
        x2="528"
        y2="992"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3614"
+       id="linearGradient3795"
+       x1="320"
+       y1="944"
+       x2="528"
+       y2="992"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3799"
+       id="linearGradient3797"
+       gradientUnits="userSpaceOnUse"
+       x1="320"
+       y1="944"
+       x2="528"
+       y2="992" />
   </defs>
   <metadata
      id="metadata10">
@@ -147,8 +193,8 @@
     </rdf:RDF>
   </metadata>
   <sodipodi:namedview
-     inkscape:window-height="1174"
-     inkscape:window-width="1600"
+     inkscape:window-height="914"
+     inkscape:window-width="1280"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      guidetolerance="10.0"
@@ -161,15 +207,16 @@
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="0.99999995"
-     inkscape:cx="514.36588"
-     inkscape:cy="-233.8203"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="3.9999998"
+     inkscape:cx="463.41923"
+     inkscape:cy="-267.94359"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:current-layer="originals"
      inkscape:snap-bbox="true"
      showborder="false"
-     inkscape:showpageshadow="false">
+     inkscape:showpageshadow="false"
+     inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid2405"
@@ -366,7 +413,8 @@
            id="circle128"
            r="10.80615"
            cy="90.231934"
-           cx="491.94629" />
+           cx="491.94629"
+           d="m 502.75244,90.231934 c 0,5.968072 -4.83808,10.806146 -10.80615,10.806146 -5.96807,0 -10.80615,-4.838074 -10.80615,-10.806146 0,-5.968072 4.83808,-10.806151 10.80615,-10.806151 5.96807,0 10.80615,4.838079 10.80615,10.806151 z" />
         <g
            id="g130">
           <path
@@ -380,7 +428,8 @@
              id="circle134"
              r="1.63232"
              cy="84.090332"
-             cx="491.93359" />
+             cx="491.93359"
+             d="m 493.56591,84.090332 c 0,0.901505 -0.73081,1.63232 -1.63232,1.63232 -0.9015,0 -1.63232,-0.730815 -1.63232,-1.63232 0,-0.901505 0.73082,-1.63232 1.63232,-1.63232 0.90151,0 1.63232,0.730815 1.63232,1.63232 z" />
         </g>
         <path
            style="fill-rule:evenodd"
@@ -588,7 +637,8 @@
            id="circle400"
            r="10.80615"
            cy="15.31396"
-           cx="491.9473" />
+           cx="491.9473"
+           d="m 502.75345,15.31396 c 0,5.968072 -4.83808,10.806151 -10.80615,10.806151 -5.96808,0 -10.80615,-4.838079 -10.80615,-10.806151 0,-5.968072 4.83807,-10.8061504 10.80615,-10.8061504 5.96807,0 10.80615,4.8380784 10.80615,10.8061504 z" />
         <g
            id="g402">
           <path
@@ -602,7 +652,8 @@
              id="circle406"
              r="1.63232"
              cy="9.1723604"
-             cx="491.9346" />
+             cx="491.9346"
+             d="m 493.56692,9.1723604 c 0,0.9015056 -0.73081,1.6323196 -1.63232,1.6323196 -0.9015,0 -1.63232,-0.730814 -1.63232,-1.6323196 0,-0.9015054 0.73082,-1.63232 1.63232,-1.63232 0.90151,0 1.63232,0.7308146 1.63232,1.63232 z" />
         </g>
         <path
            style="fill-rule:evenodd"
@@ -703,7 +754,8 @@
              id="circle315"
              r="10.8064"
              cy="90.224609"
-             cx="242.56226" />
+             cx="242.56226"
+             d="m 253.36866,90.224609 c 0,5.96821 -4.83819,10.806401 -10.8064,10.806401 -5.96821,0 -10.8064,-4.838191 -10.8064,-10.806401 0,-5.96821 4.83819,-10.8064 10.8064,-10.8064 5.96821,0 10.8064,4.83819 10.8064,10.8064 z" />
           <g
              id="g317">
             <path
@@ -717,7 +769,8 @@
                id="circle321"
                r="1.63232"
                cy="84.083008"
-               cx="242.5498" />
+               cx="242.5498"
+               d="m 244.18212,84.083008 c 0,0.901505 -0.73081,1.63232 -1.63232,1.63232 -0.9015,0 -1.63232,-0.730815 -1.63232,-1.63232 0,-0.901506 0.73082,-1.63232 1.63232,-1.63232 0.90151,0 1.63232,0.730814 1.63232,1.63232 z" />
           </g>
           <path
              style="fill-rule:evenodd"
@@ -1025,15 +1078,17 @@
       </g>
     </g>
     <g
-       id="subtitlebackground">
+       id="subtitlebackground"
+       style="fill-opacity:1;fill:url(#linearGradient3795)">
       <rect
          y="960"
          x="320"
          height="32"
          width="240"
          id="rect2820"
-         style="opacity:1;fill:url(#radialGradient3612);fill-opacity:1;stroke:none;stroke-width:7.69999981;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:15.4, 7.7;stroke-dashoffset:0;stroke-opacity:1" />
+         style="opacity:1;fill:url(#linearGradient3797);fill-opacity:1;stroke:none;stroke-width:7.69999980999999870;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:15.40000000000000000, 7.70000000000000020;stroke-dashoffset:0;stroke-opacity:1" />
     </g>
   </g>
 </svg>
 <!-- version: 20080810, original size: 64.707001 77.855324, border: 3% -->
+
