@@ -10,8 +10,8 @@ LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "qtsymbian_s60developmentsetup_narration.wav")
-global gAudioNoiseStart = 1029400 / 44100.0
-global gAudioNoiseEnd = 1039584 / 44100.0
+global gAudioNoiseStart = 1078334 / 44100.0
+global gAudioNoiseEnd = 1094214 / 44100.0
 global gClipWidth = 640
 global gClipHeight = 360
 global gTextClipFramesPerCharacter = 4
@@ -52,16 +52,13 @@ function audioOverview
     #n A Symbian development environment usually consists of...
     #n ...The Nokia Ovi Suite for easy application installation to our phone...
     #n ...Carbide.c++, which is an Eclipse based IDE for Symbian development. We install it for the sake of completeness. In the following, we will use the IDE QtCreator with it's preliminary Symbian support...
-    #n ...ActivePerl-5.6.1, build 635...
-*]
-        \ + audioClip(2.043, 18.065, 0)
-\[*
+    #n ...ActivePerl-5.6.1...
     #n ...An S60 SDK. It contains the Symbian platform specific tools, header files, libraries, and the cross compiling toolchain for the phone...
     #n ...We also want the an updated "Open C" Plugin. It will be installed on top of the S60 SDK, and later also on our phone...
     #n ...And last but not least, we want to install the 'Application TRK' on our phone. That is needed for on-device debugging and automated deployment...
     #  Slide with components
 *]
-        \ + audioClip(23.614, 49.273, 1)
+        \ + audioClip(1.996, 40.449, 1)
 
         \ + audioNoise(10)
 }
@@ -72,10 +69,10 @@ function videoOverview
         \   textClip("", 110)
         \ , textClip("Nokia Ovi Suite\n\n\n\n\n", 110)
         \ , textClip("Nokia Ovi Suite\nCarbide.c++\n\n\n\n", 120)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\n\n\n", 100)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\nS60 Platform SDK\n\n", 260)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\nS60 Platform SDK\nOpen C/C++\n", 200)
-        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1, build 635\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 250)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1\n\n\n", 70)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1\nS60 Platform SDK\n\n", 240)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1\nS60 Platform SDK\nOpen C/C++\n", 225)
+        \ , textClip("Nokia Ovi Suite\nCarbide.c++\nActivePerl-5.6.1\nS60 Platform SDK\nOpen C/C++\nApplication TRK", 250)
         \ , textClip("", 40)
         \ , gDissolveLength)
 }
@@ -92,19 +89,19 @@ function audioNokiaOviSuite
     #n We visit the Nokia Ovi Suite download page.
     #t bit.ly/ovisuite
 *]
-        \ + audioClip(53.870, 57.168, 1.5)
+        \ + audioClip(45.046, 48.018, 1.7)
 \[*
     #n There, we click "Download"...
 *]
-        \ + audioClip(57.597, 59.164, 0.5)
+        \ + audioClip(48.082, 49.604, 0.8)
 \[*
     #n ...and and install it.
 *]
-        \ + audioClip(59.141, 60.302, 2.5)
+        \ + audioClip(49.627, 50.567, 2.6)
 \[*
     #n If after the installation, we see such an icon, the Nokia Ovi Suite is connected to our device.
 *]
-        \ + audioClip(60.778, 66.920, 1)
+        \ + audioClip(51.235, 57.266, 1)
 
         \ + audioNoise(10)
 }
@@ -147,23 +144,23 @@ function audioCarbide
     #n We visit the Carbide.c++ download page at Forum Nokia.
     #t bit.ly/carbidecpp
 *]
-        \ + audioClip(68.116, 71.622, 1.3)
+        \ + audioClip(58.485, 61.962, 1.3)
 \[*
     #n There, we click on "Download now"...
 *]
-        \ + audioClip(71.924, 74.014, 2)
+        \ + audioClip(62.288, 64.250, 2.5)
 \[*
     #n ...and 'oops', we need to login into Forum Nokia. If you do not have an account yet, you can get it through the registration form.
 *]
-        \ + audioClip(74.048, 82.268, 3)
+        \ + audioClip(64.453, 72.301, 2.5)
 \[*
-    #n During the installation we can leave all settings as they are.
+    #n During the installation we can leave all the settings as they are.
 *]
-        \ + audioClip(88.410, 92.137, 2)
+        \ + audioClip(73.259, 76.800, 3)
 \[*
     #n After the installation, we start the shortcut called 'Configure environment for WINSCW command line' in order to add s few required environment variables to our system.
 *]
-        \ + audioClip(92.740, 102.992, 1)
+        \ + audioClip(77.142, 87.104, 1)
 
         \ + audioNoise(10)
 }
@@ -197,7 +194,7 @@ function videoCarbide_640x360
         \ ,  105,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
         \ ,  185,  -1,       60,  290,       -1,   -1                     [* Starting Download *]
         \ ,  230,  -1,       -1,   -1,       -1,   -1                     [* Oops *]
-        \ ,  340,  -1,        0,  236,       -1,   -1                     [* How to login *]
+        \ ,  340,  50,        0,  236,       -1,   -1                     [* How to login *]
         \ ,  450,  -1,       -1,   -1,       -1,   -1                     [* Downloading *]
         \ ,  530,  -1,      160,  188,       -1,   -1                     [* Leave installation options untouched *]
         \ ,  670,  -1,        0,  360,       -1,   -1                     [* Launch WINSCW shortcut *]
@@ -218,16 +215,16 @@ function audioActivePerl
     #n We visit the ActiveState Download page of Active Perl 5.6.
     #t bit.ly/activeperl56
 *]
-        \ + audioClip(103.991, 108.495, 1.5)
+        \ + audioClip(88.091, 92.398, 1.5)
 \[*
     #n There, we chose the version 5.6.1, build 635...
     #n This is the recommended version by Forum Nokia. Any other perl version might deter the Symbain toolchain from working properly.
 *]
-        \ + audioClip(108.681, 121.197, 2)
+        \ + audioClip(92.804, 105.192, 1.9)
 \[*
     #n When installing it, we make sure that Perl is added to the PATH environment variable.
 *]
-        \ + audioClip(121.916, 126.363, 1)
+        \ + audioClip(105.645, 110.022, 1)
 
         \ + audioNoise(10)
 }
@@ -251,7 +248,7 @@ function videoActivePerl_640x360
         \ ,                   0,    0,       -1,   -1                     [* Entering Url *]
         \ ,  140,  -1,       -1,   -1,       -1,   -1                     [* Page loads *]
         \ ,  230,  -1,      152,  294,       -1,   -1                     [* Clicking link *]
-        \ ,  460,  -1,       -1,   -1,       -1,   -1                     [* Downloading, Installing *]
+        \ ,  460,  50,       -1,   -1,       -1,   -1                     [* Downloading, Installing *]
         \ ,  590,  -1,      160,  188,       -1,   -1                     [* Add to PATH environment variable *]
         \ ,  690,  -1,       -1,   -1,       -1,   -1                     [* End *]
         \ )
@@ -269,11 +266,11 @@ function audioS60Sdk1
     #n We visit the S60 SDK download page at Forum Nokia.
     #t bit.ly/s60sdk
 *]
-        \ + audioClip(127.222, 130.798, 2)
+        \ + audioClip(110.962, 114.492, 2)
 \[*
     #n We have the choice between three SDKs... Now, which is the one for us?
 *]
-        \ + audioClip(131.030, 136.440, 1)
+        \ + audioClip(114.712, 119.263, 1)
 
         \ + audioNoise(10)
 }
@@ -307,7 +304,7 @@ function audioS60Sdk2
     #n But in effect, since we will use the Qt Api, all those version differences do not matter. Our Qt application can be built with any S60 SDK since the third edition featurepack 1.
     #n And we can run our application on any S60 phone with at least the 3rd edition feature pack 1.
 *]
-        \ + audioClip(136.348, 172.756, 1)
+        \ + audioClip(119.612, 155.696, 1)
 
         \ + audioNoise(10)
 }
@@ -342,19 +339,19 @@ function audioS60Sdk3
 \[*
     #n That means that we have a free choice, here. I simply chose the fifth edition and click on Download.
 *]
-        \ + audioClip(173.082, 179.049, 2)
+        \ + audioClip(156.021, 161.199, 2)
 \[*
     #n If the installer complains about a missing Java Runtime Environment, we don't care.
 *]
-        \ + audioClip(186.108, 190.566, 1)
+        \ + audioClip(161.431, 165.703, 1)
 \[*
     #n We need to make sure that we have enough space on the drive where we install the SDK. Qt has to be installed on the same drive, later on.
 *]
-        \ + audioClip(191.193, 198.647, 3)
+        \ + audioClip(165.866, 173.412, 3)
 \[*
     #n The installer offers to install the 'CSL Arm Toolchain', which we accept. It is needed to build our applications for the phone.
 *]
-        \ + audioClip(200.110, 207.935, 1)
+        \ + audioClip(175.084, 182.248, 1)
 
         \ + audioNoise(10)
 }
@@ -406,15 +403,15 @@ function audioOpenC
     #n We visit the Open C Plugin download page at Forum Nokia.
     #t bit.ly/openc
 *]
-        \ + audioClip(208.446, 211.929, 4)
+        \ + audioClip(182.584, 185.928, 4)
 \[*
     #n The installer will ask us for the S60 SDK on top of which we want to install the Open C plugin.
 *]
-        \ + audioClip(218.291, 223.887, 0.5)
+        \ + audioClip(189.051, 194.670, 0.2)
 \[*
     #n The preselected one should be fine.
 *]
-        \ + audioClip(224.676, 226.627, 1)
+        \ + audioClip(195.564, 197.341, 1)
 
         \ + audioNoise(10)
 }
@@ -453,16 +450,16 @@ function audioAppTrk
     #n We visit the Application TRK download page.
     #t bit.ly/apptrk
 *]
-        \ + audioClip(227.974, 230.783, 1)
+        \ + audioClip(198.780, 201.520, 1)
 \[*
     #n And choose the app_trk package with the right version for our phone.
     #n Since I have an ExpressMusic 5800 which runs S60 fifth edition, I take the 5 0 version.
 *]
-        \ + audioClip(230.969, 242.277, 1)
+        \ + audioClip(201.799, 212.886, 1)
 \[*
     #n We simply execute the downloaded .sisx file and the Ovi Suite will start the installation to our connected phone.
 *]
-        \ + audioClip(242.788, 249.313, 1)
+        \ + audioClip(213.351, 219.864, 1)
 
         \ + audioNoise(10)
 }
@@ -514,7 +511,7 @@ function audioOutro
 \[*
     #n You have now a fully functional Symbian SDK. Now, we can get Qt for Symbian running.
 *]
-        \ + audioClip(250.908, 257.967, 1)
+        \ + audioClip(221.860, 228.466, 1)
 
         \ + audioNoise(10)
 }
@@ -543,7 +540,7 @@ function completeclip
             \ , overview
             \ , componenTitle("Nokia Ovi Suite"),                nokiaOviSuite
             \ , componenTitle("Carbide.c++"),                    carbide
-            \ , componenTitle("ActivePerl-5.6.1, build 635"),    activePerl
+            \ , componenTitle("ActivePerl-5.6.1"),               activePerl
             \ , componenTitle("S60 Platform SDK"),               S60Sdk
             \ , componenTitle("Open C/C++"),                     openC
             \ , componenTitle("Application TRK"),                appTrk
