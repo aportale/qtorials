@@ -52,11 +52,11 @@
          id="stop3618" />
       <stop
          id="stop3784"
-         offset="0.74558008"
+         offset="0.78868484"
          style="stop-color:#000000;stop-opacity:0.58823532;" />
       <stop
          id="stop3782"
-         offset="0.87942022"
+         offset="0.89491355"
          style="stop-color:#000000;stop-opacity:0.39215687;" />
       <stop
          id="stop3620"
@@ -116,17 +116,6 @@
        y2="406.7926" />
     <radialGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient3614"
-       id="radialGradient3612"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.8261696,-9.087933e-8,2.2388471e-8,0.6666669,-264.37439,389.33305)"
-       cx="320.00003"
-       cy="856.00018"
-       fx="320.00003"
-       fy="856.00018"
-       r="120" />
-    <radialGradient
-       inkscape:collect="always"
        xlink:href="#linearGradient3833"
        id="radialGradient3059"
        gradientUnits="userSpaceOnUse"
@@ -136,6 +125,15 @@
        fx="320"
        fy="320"
        r="320" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3614"
+       id="linearGradient3788"
+       x1="320"
+       y1="960"
+       x2="528"
+       y2="992"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <metadata
      id="metadata10">
