@@ -32,13 +32,17 @@
     <linearGradient
        id="linearGradient3614">
       <stop
-         id="stop3616"
+         style="stop-color:#000000;stop-opacity:0.58823532;"
          offset="0"
-         style="stop-color:#000000;stop-opacity:0.54901963;" />
-      <stop
-         style="stop-color:#000000;stop-opacity:0.35294119;"
-         offset="0.87"
          id="stop3618" />
+      <stop
+         id="stop3784"
+         offset="0.74558008"
+         style="stop-color:#000000;stop-opacity:0.58823532;" />
+      <stop
+         id="stop3782"
+         offset="0.87942022"
+         style="stop-color:#000000;stop-opacity:0.39215687;" />
       <stop
          id="stop3620"
          offset="1"
