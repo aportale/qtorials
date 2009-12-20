@@ -244,6 +244,38 @@ void paintCodecBlockPattern(QPainter *p, const QRect &rect)
     p->fillRect(rect, QBrush(brush));
 }
 
+void paintCC(QPainter *p, const QRect &rect, const QString &ccSuffix)
+{
+    const QString svgId = QLatin1String("cc-") + ccSuffix;
+    const int logoHeightForRectHeight = int(qMin(rect.height() / 4.0, rect.width() * 0.15));
+    const int logoY =
+            snappedToBlockSize((rect.height() - logoHeightForRectHeight) / 2, rect.height());
+    const int logoHeight =
+            snappedToBlockSize(rect.height() - 2*logoY, rect.height());
+    const QRectF logoElementBounds =
+            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
+    const int logoWidth =
+            snappedToBlockSize(logoElementBounds.width() / logoElementBounds.height()
+                               * logoHeight, rect.height());
+    const int logoX = snappedToBlockSize((rect.width() - logoWidth) / 2, rect.height());
+    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
+}
+
+void paintCCByNcSa(QPainter *p, const QRect &rect)
+{
+    paintCC(p, rect, QLatin1String("by-nc-sa"));
+}
+
+void paintCCByNcNd(QPainter *p, const QRect &rect)
+{
+    paintCC(p, rect, QLatin1String("by-nc-nd"));
+}
+
+void paintCCBySa(QPainter *p, const QRect &rect)
+{
+    paintCC(p, rect, QLatin1String("by-sa"));
+}
+
 QTransform fitRect1InRect2Centered(const QRectF &rect1, const QRectF &rect2)
 {
     const qreal widthFactor = rect2.width() / rect1.width();
@@ -323,7 +355,10 @@ static const struct ElementAndPainter {
     { QLatin1String("qtlogobig"),           paintQtLogoBig },
     { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
     { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
-    { QLatin1String("codecblockpattern"),   paintCodecBlockPattern }
+    { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
+    { QLatin1String("cc-by-nc-sa"),         paintCCByNcSa },
+    { QLatin1String("cc-by-nc-nd"),         paintCCByNcNd },
+    { QLatin1String("cc-by-sa"),            paintCCBySa }
 };
 
 typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
