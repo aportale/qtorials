@@ -141,45 +141,38 @@
          d="m 1058.8924,843.69997 c -0.5506,0.96357 35.5732,-16.11449 75.6604,-2.12132"
          style="fill:#cccccc;stroke:#000000;stroke-width:6.2423749px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
-    <text
-       xml:space="preserve"
-       style="font-size:30.41530609px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="204.91783"
-       y="55.445873"
-       id="foolineedit"><tspan
-         sodipodi:role="line"
-         id="tspan2915"
+    <g
+       id="foolineedit">
+      <text
+         id="text2846"
+         y="55.445873"
          x="204.91783"
-         y="55.445873">foo</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:30.41530609px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="205.21648"
-       y="96.456314"
-       id="foolistwidget"><tspan
-         sodipodi:role="line"
-         id="tspan2915-4"
+         style="font-size:30.41530609px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="55.445873"
+           x="204.91783"
+           id="tspan2915"
+           sodipodi:role="line">foo</tspan></text>
+    </g>
+    <g
+       id="foolistwidget">
+      <rect
+         style="fill:none;stroke:none"
+         id="rect2836"
+         width="47.376152"
+         height="27.577164"
+         x="202.93964"
+         y="71.195358" />
+      <text
+         id="text2848"
+         y="96.456314"
          x="205.21648"
-         y="96.456314">foo</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:30.41530609px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="204.35947"
-       y="55.035717"
-       id="barlineedit"><tspan
-         sodipodi:role="line"
-         id="tspan2915-48"
-         x="204.35947"
-         y="55.035717">bar</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:30.41530609px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="204.24661"
-       y="121.94545"
-       id="barlistwidget"><tspan
-         sodipodi:role="line"
-         id="tspan2915-48-2"
-         x="204.24661"
-         y="121.94545">bar</tspan></text>
+         style="font-size:30.41530609px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="96.456314"
+           x="205.21648"
+           id="tspan2915-4"
+           sodipodi:role="line">foo</tspan></text>
+    </g>
   </g>
 </svg>
