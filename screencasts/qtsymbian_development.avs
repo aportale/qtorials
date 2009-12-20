@@ -49,13 +49,6 @@ function welcome
             \   QtorialsSubtitle(gClipWidth, gClipHeight, "Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160))
 }
 
-function svgSnippet(string elementsCsv, int frames)
-{
-    clip =
-        \ QtorialsSvg("qtsymbian_development.svg", elementsCsv, gClipWidth, gClipHeight, frames)
-    overlayRgbClip(BlankClip(clip, color = gBackgroundColor), clip)
-}
-
 function audioMockup
 {
     audioNoise(2)
@@ -72,16 +65,16 @@ function audioMockup
 
 function videoMockup
 {
-    Dissolve(
-        \   svgSnippet("", 80)
-        \ , svgSnippet("mainwindow", 60)
-        \ , svgSnippet("mainwindow, lineedit", 30)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton", 35)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget", 50)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit", 70)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit, finger, foolistwidget", 30)
-        \ , svgSnippet("mainwindow, lineedit, pushbutton, listwidget, foolineedit, foolistwidget", 100)
-        \ , gDissolveLength)
+    BlankClipRGB(455)
+    \.overlayRgbClipOnRgb(QtorialsSvgAnimation("qtsymbian_development.svg", gClipWidth, gClipHeight
+        \ , "mainwindow"          ,   80,  455,     "fade"        , "immediate"
+        \ , "lineedit"            ,  140,  455,     "fadeandscale", "immediate"
+        \ , "pushbutton"          ,  160,  455,     "fadeandscale", "immediate"
+        \ , "listwidget"          ,  195,  455,     "fadeandscale", "fade"
+        \ , "foolineedit"         ,  250,  455,     "fade"        , "fadeandscale"
+        \ , "finger"              ,  305,  365,     "immediate"   , "immediate"
+        \ , "foolistwidget"       ,  365,  455,     "fadeandscale", "fade"
+    \ ))
 }
 
 function mockup
