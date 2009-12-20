@@ -156,15 +156,6 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3614"
-       id="linearGradient3788"
-       x1="320"
-       y1="960"
-       x2="528"
-       y2="992"
-       gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3614"
        id="linearGradient3795"
        x1="320"
        y1="944"
@@ -241,13 +232,6 @@
          width="100"
          style="fill:url(#radialGradient3659);stroke:none"
          id="rect217" />
-      <rect
-         y="928"
-         x="172"
-         height="100"
-         width="100"
-         style="fill:url(#radialGradient3059);fill-opacity:1;stroke:none;display:inline"
-         id="rect219" />
     </g>
     <g
        id="qtlogo"
