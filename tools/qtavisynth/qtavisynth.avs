@@ -29,3 +29,4 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
   \ , "pushbutton",     100, 200, "fade", "immediate"
   \ , "listwidget",     120, 200, "immediate", "fadeandscale"
 \))
+\.overlayRgbClip(QtorialsElements("cc-by-nc-sa, oldstyle", gClipWidth, gClipHeight))
