@@ -160,16 +160,18 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
                                           IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
+    static const int valuesPerTitle = 4;
 
     const AVSValue &titleValues = args[2];
-    if (titleValues.ArraySize() % 4 != 0)
+    if (titleValues.ArraySize() % valuesPerTitle != 0)
         env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
 
     QList<Data> titles;
-    for (int i = 0; i < titleValues.ArraySize(); i += 4) {
+    for (int i = 0; i < titleValues.ArraySize(); i += valuesPerTitle) {
         if (!(titleValues[i].IsString() && titleValues[i+1].IsString()
               && titleValues[i+2].IsInt() && titleValues[i+3].IsInt()))
-            env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.", i / 4 + 1);
+            env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.",
+                            i / valuesPerTitle + 1);
         const Data title = {
             QLatin1String(titleValues[i].AsString()),
             QLatin1String(titleValues[i+1].AsString()),
