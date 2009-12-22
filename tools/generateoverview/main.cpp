@@ -16,6 +16,10 @@ const QLatin1String richContent("richcontent");
 const QLatin1String html("html");
 const QLatin1String p("p");
 const QLatin1String text("TEXT");
+const QLatin1String name("NAME");
+const QLatin1String value("VALUE");
+const QLatin1String attribute("attribute");
+const QLatin1String youtubeId("youtube_id");
 
 struct Root;
 struct Category;
@@ -28,7 +32,17 @@ struct Clip {
     QString youtubeID;
     Category *category;
 
+    Clip()
+        : category(0)
+    {
+    }
+
     QString html() const;
+    Root *root() const;
+    bool publishable() const
+    {
+        return !youtubeID.isEmpty();
+    }
 };
 
 struct Category {
@@ -38,56 +52,154 @@ struct Category {
     QList <Clip*> clips;
     Root *root;
 
+    Category()
+        : root(0)
+    {
+    }
+
     ~Category()
     {
         qDeleteAll(clips);
     }
+
     QString html() const;
+    bool publishable() const
+    {
+        foreach (const Clip *clip, clips)
+            if (clip->publishable())
+                return true;
+        return false;
+    }
 };
 
 struct Root {
     QStringList description;
     QStringList tags;
     QList <Category*> categories;
+    mutable int indentationLength;
+    bool publishing;
+
+    Root()
+        : indentationLength(0)
+        , publishing(false)
+    {
+    }
 
     ~Root()
     {
         qDeleteAll(categories);
     }
+
     QString html() const;
+
+    QString indentation() const
+    {
+        return QString(indentationLength, QLatin1Char('\t'));
+    }
+
+    void increaseIndentation() const
+    {
+        indentationLength++;
+    }
+
+    void decreaseIndentation() const
+    {
+        indentationLength--;
+        Q_ASSERT(indentationLength >= 0);
+    }
 };
+
+Root *Clip::root() const
+{
+    return category->root;
+}
 
 QString Root::html() const
 {
     QString result;
-    result.append(QLatin1String("<h1>Qtorials<h1>\n"));
+    result.append(QLatin1String("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
+                                "\n  \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"));
+    result.append(QLatin1String("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n"));
+    increaseIndentation();
+    result.append(indentation() + QLatin1String("<head>\n"));
+    increaseIndentation();
+    result.append(indentation() + QLatin1String("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"));
+    result.append(indentation() + QLatin1String("<meta name=\"language\" content=\"en\"/>\n"));
+    result.append(indentation() + QLatin1String("<meta name=\"author\" content=\"Alessandro Portale\"/>\n"));
+    result.append(indentation() + QLatin1String("<meta name=\"description\" content=\"Qtorials - The bite sized Qt tutorial screencasts. First steps, fundamentals, and more, all in a not-too-boring fashion. Enjoy :)\"/>\n"));
+    result.append(indentation() + QLatin1String("<meta name=\"keywords\" content=\"Tutorials, Qtorials, Qt, Software, Development, Screen casts, Open source, Nokia\"/>\n"));
+    result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" media=\"screen\"/>\n"));
+    result.append(indentation() + QLatin1String("<title>Qtorials - Bite sized Qt tutorials</title>\n"));
+    decreaseIndentation();
+    result.append(indentation() + QLatin1String("</head>\n"));
+    result.append(indentation() + QLatin1String("<body>\n"));
+    increaseIndentation();
+    result.append(indentation() + QLatin1String("<h1>Qtorials</h1>\n"));
+    result.append(indentation() + QLatin1String("<ul id=\"qtorials\">\n"));
+    increaseIndentation();
     foreach (const Category *category, categories) {
-        result.append(category->html());
+        if (!publishing || category->publishable())
+            result.append(category->html());
     }
+    decreaseIndentation();
+    result.append(indentation() + QLatin1String("</ul>\n"));
+    decreaseIndentation();
+    result.append(indentation() + QLatin1String("</body>\n"));
+    decreaseIndentation();
+    result.append(QLatin1String("</html>\n"));
     return result;
 }
 
 QString Category::html() const
 {
     QString result;
-    result.append(QLatin1String("<h2>") + title + QLatin1String("<h2>\n"));
+    result.append(root->indentation() + QLatin1String("<li>\n"));
+    root->increaseIndentation();
+    result.append(root->indentation() + QLatin1String("<h2>") + title + QLatin1String("</h2>\n"));
+    result.append(root->indentation()
+                  + QLatin1String("<p>")
+                  + description.join(QLatin1String("</p>\n<p>"))
+                  + QLatin1String("</p>\n"));
+    result.append(root->indentation() + QLatin1String("<ul>\n"));
+    root->increaseIndentation();
     foreach (const Clip *clip, clips) {
-        result.append(clip->html());
+        if (!root->publishing || clip->publishable())
+            result.append(clip->html());
     }
+    root->decreaseIndentation();
+    result.append(root->indentation() + QLatin1String("</ul>\n"));
+    result.append(root->indentation() + QLatin1String("<span class=\"clearomator\">&nbsp;</span><!-- Hack to keep floating things inside content area -->\n"));
+    root->decreaseIndentation();
+    result.append(root->indentation() + QLatin1String("</li>\n"));
     return result;
 }
 
 QString Clip::html() const
 {
     QString result;
-    result.append(QLatin1String("<h3>")
-                  + category->title
-                  + QLatin1String(" - ")
-                  + title
-                  + QLatin1String("<h3>\n"));
-    result.append(QLatin1String("<p>")
+    const QString completeTitle =
+            category->title + QLatin1String(" - ") + title;
+    result.append(root()->indentation() + QLatin1String("<li>\n"));
+    root()->increaseIndentation();
+    result.append(root()->indentation()
+                  + QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">"
+                                        "<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>"
+                                        "</a>").arg(youtubeID).arg(completeTitle).arg(120).arg(90));
+    result.append(root()->indentation()
+                  + QLatin1String("<h3>")
+                  + (root()->publishing ? title : completeTitle)
+                  + QLatin1String("</h3>\n"));
+    result.append(root()->indentation()
+                  + QLatin1String("<p>")
                   + description.join(QLatin1String("</p>\n<p>"))
                   + QLatin1String("</p>\n"));
+    if (!root()->publishing)
+        result.append(root()->indentation()
+                      + QLatin1String("<span class=\"tags\">")
+                      + (tags + category->tags + root()->tags).join(QLatin1String(", "))
+                      + QLatin1String("</span>\n"));
+    root()->decreaseIndentation();
+    result.append(root()->indentation() + QLatin1String("</li>\n"));
     return result;
 }
 
@@ -112,6 +224,14 @@ QStringList readRichContentParagraphs(QXmlStreamReader &reader)
     return result;
 }
 
+QStringList splittedTags(const QString &tagsCsv)
+{
+    QStringList result;
+    foreach (const QString &tag, tagsCsv.split(QLatin1Char(','), QString::SkipEmptyParts))
+        result.append(tag.trimmed());
+    return result;
+}
+
 Clip *readClip(QXmlStreamReader &reader)
 {
     Clip *clip = new Clip;
@@ -121,8 +241,14 @@ Clip *readClip(QXmlStreamReader &reader)
         const QXmlStreamReader::TokenType token = reader.readNext();
         switch (token) {
         case QXmlStreamReader::StartElement:
-            if (reader.name() == richContent)
+            if (reader.name() == richContent) {
                 clip->description = readRichContentParagraphs(reader);
+            } else if (reader.name() == attribute) {
+                if (reader.attributes().value(name) == youtubeId)
+                    clip->youtubeID = reader.attributes().value(value).toString();
+                else if (reader.attributes().value(name) == clipTags)
+                    clip->tags = splittedTags(reader.attributes().value(value).toString());
+            }
             break;
         case QXmlStreamReader::EndElement:
             if (reader.name() == node)
@@ -150,6 +276,9 @@ Category *readCategory(QXmlStreamReader &reader)
                 category->clips.append(clip);
             } else if (reader.name() == richContent) {
                 category->description = readRichContentParagraphs(reader);
+            } else if (reader.name() == attribute) {
+                if (reader.attributes().value(name) == clipTags)
+                    category->tags = splittedTags(reader.attributes().value(value).toString());
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -176,6 +305,9 @@ Root *readRoot(QXmlStreamReader &reader)
                 root->categories.append(category);
             } else if (reader.name() == richContent) {
                 root->description = readRichContentParagraphs(reader);
+            } else if (reader.name() == attribute) {
+                if (reader.attributes().value(name) == clipTags)
+                    root->tags = splittedTags(reader.attributes().value(value).toString());
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -191,15 +323,22 @@ Root *readRoot(QXmlStreamReader &reader)
 
 int main(int argc, char *argv[])
 {
-    QString mmFileName;
-    mmFileName = QLatin1String((argc >= 2) ?
-                               argv[1]
-                               : "../../concepts/qtorials.mm");
-
+    const QString mmFileName = QLatin1String((argc >= 2) ?
+                                             argv[1]
+                                             : "../../concepts/qtorials.mm");
     QFile mmFile(mmFileName);
     if (!mmFile.open(QIODevice::ReadOnly)) {
-        fprintf(stderr, "Cannot open '%s'", mmFileName.toLocal8Bit().data());
+        fprintf(stderr, "Cannot open '%s' for reading.", mmFileName.toLocal8Bit().data());
         return 1;
+    }
+
+    const QString htmlFileName = QLatin1String((argc >= 3) ?
+                                               argv[2]
+                                               : "../../concepts/overview.html");
+    QFile htmlFile(htmlFileName);
+    if (!htmlFile.open(QFile::WriteOnly)) {
+        fprintf(stderr, "Cannot open '%s' for writing.", htmlFileName.toLocal8Bit().data());
+        return 2;
     }
 
     Root *root = 0;
@@ -217,7 +356,9 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    qDebug() << root->html();
+
+    root->publishing = true;
+    htmlFile.write(root->html().toUtf8());
 
     delete root;
 
