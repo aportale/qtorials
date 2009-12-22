@@ -10,16 +10,18 @@
 
 #include <QtCore>
 
-const QLatin1String clipTags("clip_tags");
-const QLatin1String node("node");
-const QLatin1String richContent("richcontent");
-const QLatin1String html("html");
-const QLatin1String p("p");
-const QLatin1String text("TEXT");
-const QLatin1String name("NAME");
-const QLatin1String value("VALUE");
-const QLatin1String attribute("attribute");
-const QLatin1String youtubeId("youtube_id");
+// constants for parsing the Freemind XML
+// the 'mm' prefix stands for MindMap
+const QLatin1String mmClipTags("clip_tags");
+const QLatin1String mmNode("node");
+const QLatin1String mmRichContent("richcontent");
+const QLatin1String mmHtml("html");
+const QLatin1String mmP("p");
+const QLatin1String mmText("TEXT");
+const QLatin1String mmName("NAME");
+const QLatin1String mmValue("VALUE");
+const QLatin1String mmAttribute("attribute");
+const QLatin1String mmYoutubeId("youtube_id");
 
 struct Root;
 struct Category;
@@ -214,7 +216,7 @@ QStringList readRichContentParagraphs(QXmlStreamReader &reader)
                 result.append(reader.text().toString().trimmed());
             break;
         case QXmlStreamReader::EndElement:
-            if (reader.name() == html)
+            if (reader.name() == mmHtml)
                 return result;
             break;
         default:
@@ -235,23 +237,23 @@ QStringList splittedTags(const QString &tagsCsv)
 Clip *readClip(QXmlStreamReader &reader)
 {
     Clip *clip = new Clip;
-    if (reader.attributes().hasAttribute(text))
-        clip->title = reader.attributes().value(text).toString();
+    if (reader.attributes().hasAttribute(mmText))
+        clip->title = reader.attributes().value(mmText).toString();
     while (!reader.atEnd()) {
         const QXmlStreamReader::TokenType token = reader.readNext();
         switch (token) {
         case QXmlStreamReader::StartElement:
-            if (reader.name() == richContent) {
+            if (reader.name() == mmRichContent) {
                 clip->description = readRichContentParagraphs(reader);
-            } else if (reader.name() == attribute) {
-                if (reader.attributes().value(name) == youtubeId)
-                    clip->youtubeID = reader.attributes().value(value).toString();
-                else if (reader.attributes().value(name) == clipTags)
-                    clip->tags = splittedTags(reader.attributes().value(value).toString());
+            } else if (reader.name() == mmAttribute) {
+                if (reader.attributes().value(mmName) == mmYoutubeId)
+                    clip->youtubeID = reader.attributes().value(mmValue).toString();
+                else if (reader.attributes().value(mmName) == mmClipTags)
+                    clip->tags = splittedTags(reader.attributes().value(mmValue).toString());
             }
             break;
         case QXmlStreamReader::EndElement:
-            if (reader.name() == node)
+            if (reader.name() == mmNode)
                 return clip;
             break;
         default:
@@ -264,25 +266,25 @@ Clip *readClip(QXmlStreamReader &reader)
 Category *readCategory(QXmlStreamReader &reader)
 {
     Category *category = new Category;
-    if (reader.attributes().hasAttribute(text))
-        category->title = reader.attributes().value(text).toString();
+    if (reader.attributes().hasAttribute(mmText))
+        category->title = reader.attributes().value(mmText).toString();
     while (!reader.atEnd()) {
         const QXmlStreamReader::TokenType token = reader.readNext();
         switch (token) {
         case QXmlStreamReader::StartElement:
-            if (reader.name() == node) {
+            if (reader.name() == mmNode) {
                 Clip *clip = readClip(reader);
                 clip->category = category;
                 category->clips.append(clip);
-            } else if (reader.name() == richContent) {
+            } else if (reader.name() == mmRichContent) {
                 category->description = readRichContentParagraphs(reader);
-            } else if (reader.name() == attribute) {
-                if (reader.attributes().value(name) == clipTags)
-                    category->tags = splittedTags(reader.attributes().value(value).toString());
+            } else if (reader.name() == mmAttribute) {
+                if (reader.attributes().value(mmName) == mmClipTags)
+                    category->tags = splittedTags(reader.attributes().value(mmValue).toString());
             }
             break;
         case QXmlStreamReader::EndElement:
-            if (reader.name() == node)
+            if (reader.name() == mmNode)
                 return category;
             break;
         default:
@@ -299,19 +301,19 @@ Root *readRoot(QXmlStreamReader &reader)
         const QXmlStreamReader::TokenType token = reader.readNext();
         switch (token) {
         case QXmlStreamReader::StartElement:
-            if (reader.name() == node) {
+            if (reader.name() == mmNode) {
                 Category *category = readCategory(reader);
                 category->root = root;
                 root->categories.append(category);
-            } else if (reader.name() == richContent) {
+            } else if (reader.name() == mmRichContent) {
                 root->description = readRichContentParagraphs(reader);
-            } else if (reader.name() == attribute) {
-                if (reader.attributes().value(name) == clipTags)
-                    root->tags = splittedTags(reader.attributes().value(value).toString());
+            } else if (reader.name() == mmAttribute) {
+                if (reader.attributes().value(mmName) == mmClipTags)
+                    root->tags = splittedTags(reader.attributes().value(mmValue).toString());
             }
             break;
         case QXmlStreamReader::EndElement:
-            if (reader.name() == node)
+            if (reader.name() == mmNode)
                 return root;
             break;
         default:
@@ -347,7 +349,7 @@ int main(int argc, char *argv[])
         const QXmlStreamReader::TokenType token = reader.readNext();
         switch (token) {
         case QXmlStreamReader::StartElement:
-            if (reader.name() == node) {
+            if (reader.name() == mmNode) {
                 Q_ASSERT(!root);
                 root = readRoot(reader);
             }
