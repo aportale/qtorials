@@ -13,6 +13,7 @@
 // constants for parsing the Freemind XML
 // the 'mm' prefix stands for MindMap
 const QLatin1String mmClipTags("clip_tags");
+const QLatin1String mmClipLength("clip_length");
 const QLatin1String mmNode("node");
 const QLatin1String mmRichContent("richcontent");
 const QLatin1String mmHtml("html");
@@ -30,7 +31,7 @@ struct Clip {
     QString title;
     QStringList description;
     QStringList tags;
-    QTime length;
+    QString length;
     QString youtubeID;
     Category *category;
 
@@ -186,7 +187,7 @@ QString Clip::html() const
     result.append(root()->indentation()
                   + QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">"
                                         "<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>"
-                                        "</a>").arg(youtubeID).arg(completeTitle).arg(120).arg(90));
+                                        "</a>\n").arg(youtubeID).arg(completeTitle).arg(120).arg(90));
     result.append(root()->indentation()
                   + QLatin1String("<h3>")
                   + (root()->publishing ? title : completeTitle)
@@ -195,6 +196,15 @@ QString Clip::html() const
                   + QLatin1String("<p>")
                   + description.join(QLatin1String("</p>\n<p>"))
                   + QLatin1String("</p>\n"));
+    result.append(root()->indentation()
+                  + QLatin1String("<span class=\"cliplength\">")
+                  + length
+                  + QLatin1String("</span>\n"));
+    if (!youtubeID.isEmpty())
+        result.append(root()->indentation()
+                      + QLatin1String("<span class=\"youtubeid\">")
+                      + youtubeID
+                      + QLatin1String("</span>\n"));
     if (!root()->publishing)
         result.append(root()->indentation()
                       + QLatin1String("<span class=\"tags\">")
@@ -250,6 +260,8 @@ Clip *readClip(QXmlStreamReader &reader)
                     clip->youtubeID = reader.attributes().value(mmValue).toString();
                 else if (reader.attributes().value(mmName) == mmClipTags)
                     clip->tags = splittedTags(reader.attributes().value(mmValue).toString());
+                else if (reader.attributes().value(mmName) == mmClipLength)
+                    clip->length = reader.attributes().value(mmValue).toString();
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -327,7 +339,7 @@ int main(int argc, char *argv[])
 {
     const QString mmFileName = QLatin1String((argc >= 2) ?
                                              argv[1]
-                                             : "../../concepts/qtorials.mm");
+                                             : "../../overview/qtorials.mm");
     QFile mmFile(mmFileName);
     if (!mmFile.open(QIODevice::ReadOnly)) {
         fprintf(stderr, "Cannot open '%s' for reading.", mmFileName.toLocal8Bit().data());
@@ -336,7 +348,7 @@ int main(int argc, char *argv[])
 
     const QString htmlFileName = QLatin1String((argc >= 3) ?
                                                argv[2]
-                                               : "../../concepts/overview.html");
+                                               : "../../overview/html/index.html");
     QFile htmlFile(htmlFileName);
     if (!htmlFile.open(QFile::WriteOnly)) {
         fprintf(stderr, "Cannot open '%s' for writing.", htmlFileName.toLocal8Bit().data());
