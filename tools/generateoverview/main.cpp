@@ -133,6 +133,8 @@ QString Root::html() const
     result.append(indentation() + QLatin1String("<meta name=\"keywords\" content=\"Tutorials, Qtorials, Qt, Software, Development, Screen casts, Open source, Nokia\"/>\n"));
     result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" media=\"screen\"/>\n"));
     result.append(indentation() + QLatin1String("<title>Qtorials - Bite sized Qt tutorials</title>\n"));
+    result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>\n"));
+    result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"script.js\"></script>\n"));
     decreaseIndentation();
     result.append(indentation() + QLatin1String("</head>\n"));
     result.append(indentation() + QLatin1String("<body>\n"));
@@ -200,11 +202,6 @@ QString Clip::html() const
                   + QLatin1String("<span class=\"cliplength\">")
                   + length
                   + QLatin1String("</span>\n"));
-    if (!youtubeID.isEmpty())
-        result.append(root()->indentation()
-                      + QLatin1String("<span class=\"youtubeid\">")
-                      + youtubeID
-                      + QLatin1String("</span>\n"));
     if (!root()->publishing)
         result.append(root()->indentation()
                       + QLatin1String("<span class=\"tags\">")
