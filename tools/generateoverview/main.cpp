@@ -374,6 +374,15 @@ int main(int argc, char *argv[])
     root->publishing = true;
     htmlFile.write(root->html().toUtf8());
 
+    const QString htmlDetailsFileName = QLatin1String("../../overview/html/index_details.html");
+    QFile htmlDetailsFile(htmlDetailsFileName);
+    if (!htmlDetailsFile.open(QFile::WriteOnly)) {
+        fprintf(stderr, "Cannot open '%s' for writing.", htmlDetailsFileName.toLocal8Bit().data());
+        return 3;
+    }
+    root->publishing = false;
+    htmlDetailsFile.write(root->html().toUtf8());
+
     delete root;
 
     return 0;
