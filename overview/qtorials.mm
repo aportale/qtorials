@@ -52,9 +52,8 @@
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout NAME_WIDTH="94" VALUE_WIDTH="222"/>
 <attribute NAME="clip_tags" VALUE="windows"/>
-<attribute NAME="clip_width" VALUE="480"/>
-<attribute NAME="clip_length" VALUE="3:18"/>
-<attribute NAME="youtube_id_" VALUE=""/>
+<attribute NAME="clip_length" VALUE="2:44"/>
+<attribute NAME="youtube_id" VALUE="ZeLHj_YMKgo"/>
 <attribute NAME="youtube_id_hd" VALUE="ggbQ_yU4wII"/>
 </node>
 <node COLOR="#00b439" CREATED="1237319440468" ID="ID_1734709603" MODIFIED="1261927650491" TEXT="OSX">
