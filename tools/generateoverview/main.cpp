@@ -488,7 +488,9 @@ int main(int argc, char *argv[])
         }
     }
 
-    htmlFile.write(root->html().toUtf8());
+    htmlFile.write(root->html()
+                   .remove(QLatin1Char('\n')).remove(QLatin1Char('\t'))
+                   .toUtf8());
 
     const QString htmlDetailsFileName = QLatin1String("../../overview/html/index_details.html");
     QFile htmlDetailsFile(htmlDetailsFileName);
@@ -497,7 +499,9 @@ int main(int argc, char *argv[])
         return 3;
     }
     root->publishing = false;
-    htmlDetailsFile.write(root->html().toUtf8());
+    htmlDetailsFile.write(root->html()
+                          .remove(QLatin1Char('\n')).remove(QLatin1Char('\t'))
+                          .toUtf8());
 
     delete root;
 
