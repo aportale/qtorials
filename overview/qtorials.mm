@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node COLOR="#000000" CREATED="1236466048994" ID="Freemind_Link_788798378" MODIFIED="1261488502255" TEXT="Qtorials">
+<node COLOR="#000000" CREATED="1236466048994" ID="Freemind_Link_788798378" MODIFIED="1261858409102" TEXT="Qtorials">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -17,8 +17,10 @@
 </richcontent>
 <font NAME="SansSerif" SIZE="20"/>
 <hook NAME="accessories/plugins/AutomaticLayout.properties"/>
-<attribute_layout VALUE_WIDTH="150"/>
+<attribute_layout NAME_WIDTH="140" VALUE_WIDTH="150"/>
 <attribute NAME="clip_tags" VALUE="qt, tutorial, qtorial, open source, software, development, nokia"/>
+<attribute NAME="clip_default_width" VALUE="640"/>
+<attribute NAME="clip_default_height" VALUE="360"/>
 <node COLOR="#0033ff" CREATED="1237319164140" ID="ID_1094202060" MODIFIED="1261491150447" POSITION="right" TEXT="Qt SDK installation">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -29,13 +31,12 @@
       How to get the Qt SDK running on your system. Also taking a first look at the QtDemo and QtCreator.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout NAME_WIDTH="119" VALUE_WIDTH="164"/>
 <attribute NAME="clip_tags" VALUE="installation, getting started"/>
-<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1016574805" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1261438169068" TEXT="Windows">
+<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1016574805" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1261858945433" TEXT="Windows">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -43,11 +44,13 @@
   <body>
     How to download and install Qt SDK on Windows.
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout NAME_WIDTH="94" VALUE_WIDTH="222"/>
 <attribute NAME="clip_tags" VALUE="windows"/>
+<attribute NAME="clip_width" VALUE="480"/>
 <attribute NAME="clip_length" VALUE="3:18"/>
 <attribute NAME="youtube_id" VALUE="zf9XYs902Mw"/>
 </node>
@@ -77,8 +80,7 @@
       Installation of the prerequisite packages on (K)ubuntu or other debian based systems. How to download the Qt SDK, setting the file mode and installing the Qt SDK.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout NAME_WIDTH="90" VALUE_WIDTH="47"/>
@@ -95,8 +97,7 @@
       This chapter will show you how to create simple Ui. How to show single widgets, how to combine them to a dialog and how to lay them out. First, the manual coding approach is demonstrated, and then how to achieve it with QtDesigner.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout VALUE_WIDTH="141"/>
@@ -176,8 +177,7 @@
       You want to hand over your creation to somebody else. How do You make sure that Your application is complete, runs out-of-the-box on a &quot;non-developer&quot; system, and is easy to start? This chapter has a few answers.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout VALUE_WIDTH="162"/>
@@ -192,8 +192,7 @@
       The needed files. The locations of Qt plugins. Redistributing compiler specific runtimes. Creation of an installer package.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout VALUE_WIDTH="151"/>
@@ -248,7 +247,7 @@
 <attribute NAME="clip_tags" VALUE="osx, mac, compact, static, dmg disk image"/>
 </node>
 </node>
-<node COLOR="#0033ff" CREATED="1237319164140" ID="ID_840970220" MODIFIED="1261491421528" POSITION="right" TEXT="Qt for Symbian">
+<node COLOR="#0033ff" CREATED="1237319164140" ID="ID_840970220" MODIFIED="1261858375368" POSITION="right" TEXT="Qt for Symbian">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -280,8 +279,7 @@
       How to set up a basic&#160;Symbian/S60 development environment on Windows.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout NAME_WIDTH="94" VALUE_WIDTH="222"/>
@@ -299,8 +297,7 @@
       How to set up Qt for Symbian on top of an existing Symbian/S60 development environment.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout NAME_WIDTH="91" VALUE_WIDTH="175"/>
@@ -318,8 +315,7 @@
       How to create a small Qt-based Symbian application in Qt Creator - running it on Windows, compiling for the phone and running on the phone.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout NAME_WIDTH="90" VALUE_WIDTH="235"/>
@@ -338,8 +334,7 @@
       Various screencasts about classes and tools in Qt worth knowing.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <attribute NAME="clip_tags" VALUE="tidbit"/>
