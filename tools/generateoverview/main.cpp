@@ -259,7 +259,7 @@ QString Clip::html() const
     const bool useHDClip = youtubeID.isEmpty();
     const QString defaultYouTubeID = useHDClip ? youtubeIDHd : youtubeID;
     const QString thumbnailImage =
-            QString::fromLatin1("<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>")
+            QString::fromLatin1("<img src=\"http://img.youtube.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>")
             .arg(defaultYouTubeID).arg(completeTitle).arg(120).arg(90);
     result.append(root()->indentation()
                   + inYouTubeLink(defaultYouTubeID, thumbnailImage)
