@@ -14,6 +14,10 @@
 // the 'mm' prefix stands for MindMap
 const QLatin1String mmClipTags("clip_tags");
 const QLatin1String mmClipLength("clip_length");
+const QLatin1String mmClipWidth("clip_width");
+const QLatin1String mmClipHeight("clip_height");
+const QLatin1String mmClipDefaultWidth("clip_default_width");
+const QLatin1String mmClipDefaultHeight("clip_default_height");
 const QLatin1String mmNode("node");
 const QLatin1String mmRichContent("richcontent");
 const QLatin1String mmHtml("html");
@@ -33,19 +37,31 @@ struct Clip {
     QStringList tags;
     QString length;
     QString youtubeID;
+    QSize clipSize;
     Category *category;
 
+    static Clip *createClip(QXmlStreamReader &reader, Category *category);
+    QString html() const;
+    QString jsData() const
+    {
+        return QString::fromLatin1("{%1: %2, %3: %4, %5: '%6'}")
+                .arg(mmClipWidth).arg(size().width())
+                .arg(mmClipHeight).arg(size().height())
+                .arg(mmYoutubeId).arg(youtubeID);
+    }
+    bool publishable() const
+    {
+        return !youtubeID.isEmpty();
+    }
+    QSize size() const;
+
+private:
     Clip()
         : category(0)
     {
     }
 
-    QString html() const;
     Root *root() const;
-    bool publishable() const
-    {
-        return !youtubeID.isEmpty();
-    }
 };
 
 struct Category {
@@ -55,11 +71,7 @@ struct Category {
     QList <Clip*> clips;
     Root *root;
 
-    Category()
-        : root(0)
-    {
-    }
-
+    static Category *createCategory(QXmlStreamReader &reader, Root *root);
     ~Category()
     {
         qDeleteAll(clips);
@@ -73,6 +85,12 @@ struct Category {
                 return true;
         return false;
     }
+
+private:
+    Category()
+        : root(0)
+    {
+    }
 };
 
 struct Root {
@@ -81,13 +99,9 @@ struct Root {
     QList <Category*> categories;
     mutable int indentationLength;
     bool publishing;
+    QSize clipDefaultSize;
 
-    Root()
-        : indentationLength(0)
-        , publishing(false)
-    {
-    }
-
+    static Root *createRoot(QXmlStreamReader &reader);
     ~Root()
     {
         qDeleteAll(categories);
@@ -109,6 +123,13 @@ struct Root {
     {
         indentationLength--;
         Q_ASSERT(indentationLength >= 0);
+    }
+
+private:
+    Root()
+        : indentationLength(0)
+        , publishing(true)
+    {
     }
 };
 
@@ -132,9 +153,32 @@ QString Root::html() const
     result.append(indentation() + QLatin1String("<meta name=\"description\" content=\"Qtorials - The bite sized Qt tutorial screencasts. First steps, fundamentals, and more, all in a not-too-boring fashion. Enjoy :)\"/>\n"));
     result.append(indentation() + QLatin1String("<meta name=\"keywords\" content=\"Tutorials, Qtorials, Qt, Software, Development, Screen casts, Open source, Nokia\"/>\n"));
     result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" media=\"screen\"/>\n"));
+    result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"fancybox/jquery.fancybox-1.2.6.css\" media=\"screen\"/>\n"));
     result.append(indentation() + QLatin1String("<title>Qtorials - Bite sized Qt tutorials</title>\n"));
     result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>\n"));
+    result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"fancybox/jquery.fancybox-1.2.6.js\"></script>\n"));
     result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"script.js\"></script>\n"));
+    result.append(indentation() + QLatin1String("<script type=\"text/javascript\">\n"));
+    increaseIndentation();
+    result.append(indentation() + QLatin1String("var qtorialsData = {\"clips\": [\n"));
+    increaseIndentation();
+    {
+        bool firstClip = true;
+        foreach (const Category *category, categories)
+            foreach (const Clip *clip, category->clips)
+                if (!publishing || clip->publishable()) {
+                    if (firstClip)
+                        firstClip = false;
+                    else
+                        result.append(QLatin1String(",\n"));
+                    result.append(indentation() + clip->jsData());
+                }
+        result.append(QLatin1String("\n"));
+    }
+    decreaseIndentation();
+    result.append(indentation() + QLatin1String("]};\n"));
+    decreaseIndentation();
+    result.append(indentation() + QLatin1String("</script>\n"));
     decreaseIndentation();
     result.append(indentation() + QLatin1String("</head>\n"));
     result.append(indentation() + QLatin1String("<body>\n"));
@@ -198,10 +242,14 @@ QString Clip::html() const
                   + QLatin1String("<p>")
                   + description.join(QLatin1String("</p>\n<p>"))
                   + QLatin1String("</p>\n"));
+    result.append(root()->indentation() + QLatin1String("<ul>\n"));
+    root()->increaseIndentation();
     result.append(root()->indentation()
-                  + QLatin1String("<span class=\"cliplength\">")
+                  + QLatin1String("<li class=\"cliplength\">")
                   + length
-                  + QLatin1String("</span>\n"));
+                  + QLatin1String("</li>\n"));
+    root()->decreaseIndentation();
+    result.append(root()->indentation() + QLatin1String("</ul>\n"));
     if (!root()->publishing)
         result.append(root()->indentation()
                       + QLatin1String("<span class=\"tags\">")
@@ -241,9 +289,10 @@ QStringList splittedTags(const QString &tagsCsv)
     return result;
 }
 
-Clip *readClip(QXmlStreamReader &reader)
+Clip *Clip::createClip(QXmlStreamReader &reader, Category *category)
 {
     Clip *clip = new Clip;
+    clip->category = category;
     if (reader.attributes().hasAttribute(mmText))
         clip->title = reader.attributes().value(mmText).toString();
     while (!reader.atEnd()) {
@@ -259,6 +308,10 @@ Clip *readClip(QXmlStreamReader &reader)
                     clip->tags = splittedTags(reader.attributes().value(mmValue).toString());
                 else if (reader.attributes().value(mmName) == mmClipLength)
                     clip->length = reader.attributes().value(mmValue).toString();
+                else if (reader.attributes().value(mmName) == mmClipWidth)
+                    clip->clipSize.setWidth(reader.attributes().value(mmValue).toString().toInt());
+                else if (reader.attributes().value(mmName) == mmClipHeight)
+                    clip->clipSize.setHeight(reader.attributes().value(mmValue).toString().toInt());
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -272,9 +325,17 @@ Clip *readClip(QXmlStreamReader &reader)
     return clip;
 }
 
-Category *readCategory(QXmlStreamReader &reader)
+QSize Clip::size() const
+{
+    return QSize(
+            clipSize.width() > 0 ? clipSize.width() : root()->clipDefaultSize.width(),
+            clipSize.height() > 0 ? clipSize.height() : root()->clipDefaultSize.height());
+}
+
+Category *Category::createCategory(QXmlStreamReader &reader, Root *root)
 {
     Category *category = new Category;
+    category->root = root;
     if (reader.attributes().hasAttribute(mmText))
         category->title = reader.attributes().value(mmText).toString();
     while (!reader.atEnd()) {
@@ -282,9 +343,7 @@ Category *readCategory(QXmlStreamReader &reader)
         switch (token) {
         case QXmlStreamReader::StartElement:
             if (reader.name() == mmNode) {
-                Clip *clip = readClip(reader);
-                clip->category = category;
-                category->clips.append(clip);
+                category->clips.append(Clip::createClip(reader, category));
             } else if (reader.name() == mmRichContent) {
                 category->description = readRichContentParagraphs(reader);
             } else if (reader.name() == mmAttribute) {
@@ -303,7 +362,7 @@ Category *readCategory(QXmlStreamReader &reader)
     return category;
 }
 
-Root *readRoot(QXmlStreamReader &reader)
+Root *Root::createRoot(QXmlStreamReader &reader)
 {
     Root *root = new Root;
     while (!reader.atEnd()) {
@@ -311,14 +370,16 @@ Root *readRoot(QXmlStreamReader &reader)
         switch (token) {
         case QXmlStreamReader::StartElement:
             if (reader.name() == mmNode) {
-                Category *category = readCategory(reader);
-                category->root = root;
-                root->categories.append(category);
+                root->categories.append(Category::createCategory(reader, root));
             } else if (reader.name() == mmRichContent) {
                 root->description = readRichContentParagraphs(reader);
             } else if (reader.name() == mmAttribute) {
                 if (reader.attributes().value(mmName) == mmClipTags)
                     root->tags = splittedTags(reader.attributes().value(mmValue).toString());
+                else if (reader.attributes().value(mmName) == mmClipDefaultWidth)
+                    root->clipDefaultSize.setWidth(reader.attributes().value(mmValue).toString().toInt());
+                else if (reader.attributes().value(mmName) == mmClipDefaultHeight)
+                    root->clipDefaultSize.setHeight(reader.attributes().value(mmValue).toString().toInt());
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -329,6 +390,7 @@ Root *readRoot(QXmlStreamReader &reader)
             break;
         }
     }
+    Q_ASSERT(root->clipDefaultSize.isValid());
     return root;
 }
 
@@ -360,7 +422,7 @@ int main(int argc, char *argv[])
         case QXmlStreamReader::StartElement:
             if (reader.name() == mmNode) {
                 Q_ASSERT(!root);
-                root = readRoot(reader);
+                root = Root::createRoot(reader);
             }
             break;
         default:
@@ -368,7 +430,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    root->publishing = true;
     htmlFile.write(root->html().toUtf8());
 
     const QString htmlDetailsFileName = QLatin1String("../../overview/html/index_details.html");
