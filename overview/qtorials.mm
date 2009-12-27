@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node COLOR="#000000" CREATED="1236466048994" ID="Freemind_Link_788798378" MODIFIED="1261858409102" TEXT="Qtorials">
+<node COLOR="#000000" CREATED="1236466048994" ID="Freemind_Link_788798378" MODIFIED="1261928413488" TEXT="Qtorials">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -21,6 +21,8 @@
 <attribute NAME="clip_tags" VALUE="qt, tutorial, qtorial, open source, software, development, nokia"/>
 <attribute NAME="clip_default_width" VALUE="640"/>
 <attribute NAME="clip_default_height" VALUE="360"/>
+<attribute NAME="clip_default_width_hd" VALUE="960"/>
+<attribute NAME="clip_default_height_hd" VALUE="720"/>
 <node COLOR="#0033ff" CREATED="1237319164140" ID="ID_1094202060" MODIFIED="1261491150447" POSITION="right" TEXT="Qt SDK installation">
 <richcontent TYPE="NOTE"><html>
   <head>
@@ -36,7 +38,7 @@
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout NAME_WIDTH="119" VALUE_WIDTH="164"/>
 <attribute NAME="clip_tags" VALUE="installation, getting started"/>
-<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1016574805" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1261858945433" TEXT="Windows">
+<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1016574805" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1261930396625" TEXT="Windows">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -52,9 +54,10 @@
 <attribute NAME="clip_tags" VALUE="windows"/>
 <attribute NAME="clip_width" VALUE="480"/>
 <attribute NAME="clip_length" VALUE="3:18"/>
-<attribute NAME="youtube_id" VALUE="zf9XYs902Mw"/>
+<attribute NAME="youtube_id_" VALUE=""/>
+<attribute NAME="youtube_id_hd" VALUE="ggbQ_yU4wII"/>
 </node>
-<node COLOR="#00b439" CREATED="1237319440468" ID="ID_1734709603" MODIFIED="1261437178823" TEXT="OSX">
+<node COLOR="#00b439" CREATED="1237319440468" ID="ID_1734709603" MODIFIED="1261927650491" TEXT="OSX">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -70,7 +73,7 @@
 <attribute_layout NAME_WIDTH="91" VALUE_WIDTH="64"/>
 <attribute NAME="clip_tags" VALUE="osx, mac"/>
 </node>
-<node COLOR="#00b439" CREATED="1237319443859" ID="ID_1428500051" MODIFIED="1261491141097" TEXT="Linux">
+<node COLOR="#00b439" CREATED="1237319443859" ID="ID_1428500051" MODIFIED="1261927651581" TEXT="Linux">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -182,7 +185,7 @@
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout VALUE_WIDTH="162"/>
 <attribute NAME="clip_tags" VALUE="deploy, ship"/>
-<node COLOR="#00b439" CREATED="1238616723436" ID="ID_535173612" MODIFIED="1261491321622" TEXT="Windows (easy)">
+<node COLOR="#00b439" CREATED="1238616723436" ID="ID_535173612" MODIFIED="1261930368248" TEXT="Windows (easy)">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -192,7 +195,8 @@
       The needed files. The locations of Qt plugins. Redistributing compiler specific runtimes. Creation of an installer package.
     </p>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout VALUE_WIDTH="151"/>
@@ -257,8 +261,7 @@
       How to get the Qt SDK running on your system. Also taking a first look at the QtDemo and QtCreator.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout NAME_WIDTH="119" VALUE_WIDTH="164"/>

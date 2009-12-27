@@ -8,17 +8,9 @@ $(document).ready(function(){
     });
 });
 
-function addViewLinks(clipLi, i)
+function addClipFancyBoxToViewLink(linkElement, clipWidth, clipHeight, clipId)
 {
-    var firstAnchor = $(clipLi).find("a:first");
-    $(firstAnchor).removeAttr("href");
-    var clipLength = $(clipLi).find(".cliplength:first");
-    var clipId = qtorialsData["clips"][i]["youtube_id"];
-    var clipWidth = qtorialsData["clips"][i]["clip_width"];
-    var clipHeight = qtorialsData["clips"][i]["clip_height"] + 25;
-    var youTubeHref = "http://www.youtube.com/watch?v=" + clipId;
-    $(clipLength).before('<li><a href="#youtubeplayer">View Qtorial</a></li>');
-    $(clipLi).find("a:last").fancybox({
+    $(linkElement).fancybox({
         'callbackOnStart' : function()
             {
                 var objectString =
@@ -39,7 +31,25 @@ function addViewLinks(clipLi, i)
         'frameWidth' : clipWidth,
         'frameHeight' : clipHeight,
         'overlayOpacity' : 0.6,
-        'centerOnScroll' : false
+        'centerOnScroll' : false,
+        'zoomOpacity' : false,
+        'zoomSpeedChange' : 0
     });
+}
+
+function addViewLinks(clipLi, i)
+{
+    var firstAnchor = $(clipLi).find("a:first");
+    $(firstAnchor).removeAttr("href");
+    var clipLength = $(clipLi).find(".cliplength:first");
+    var clipDataSet = qtorialsData["clips"][i];
+    if ("youtube_id" in clipDataSet) {
+        var clipId = qtorialsData["clips"][i]["youtube_id"];
+        var clipWidth = qtorialsData["clips"][i]["clip_width"];
+        var clipHeight = qtorialsData["clips"][i]["clip_height"] + 25;
+        var youTubeHref = "http://www.youtube.com/watch?v=" + clipId;
+        $(clipLength).before('<li><a href="#youtubeplayer">View Qtorial</a></li>');
+    }
+
     $(clipLength).before('<li><a href="' + youTubeHref + '">YouTube Page</a></li>');
 }

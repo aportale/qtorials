@@ -16,8 +16,12 @@ const QLatin1String mmClipTags("clip_tags");
 const QLatin1String mmClipLength("clip_length");
 const QLatin1String mmClipWidth("clip_width");
 const QLatin1String mmClipHeight("clip_height");
+const QLatin1String mmClipWidthHd("clip_width_hd");
+const QLatin1String mmClipHeightHd("clip_height_hd");
 const QLatin1String mmClipDefaultWidth("clip_default_width");
 const QLatin1String mmClipDefaultHeight("clip_default_height");
+const QLatin1String mmClipDefaultWidthHd("clip_default_width_hd");
+const QLatin1String mmClipDefaultHeightHd("clip_default_height_hd");
 const QLatin1String mmNode("node");
 const QLatin1String mmRichContent("richcontent");
 const QLatin1String mmHtml("html");
@@ -27,6 +31,7 @@ const QLatin1String mmName("NAME");
 const QLatin1String mmValue("VALUE");
 const QLatin1String mmAttribute("attribute");
 const QLatin1String mmYoutubeId("youtube_id");
+const QLatin1String mmYoutubeIdHd("youtube_id_hd");
 
 struct Root;
 struct Category;
@@ -37,23 +42,37 @@ struct Clip {
     QStringList tags;
     QString length;
     QString youtubeID;
+    QString youtubeIDHd;
     QSize clipSize;
+    QSize clipSizeHd;
     Category *category;
 
     static Clip *createClip(QXmlStreamReader &reader, Category *category);
     QString html() const;
     QString jsData() const
     {
-        return QString::fromLatin1("{%1: %2, %3: %4, %5: '%6'}")
-                .arg(mmClipWidth).arg(size().width())
-                .arg(mmClipHeight).arg(size().height())
-                .arg(mmYoutubeId).arg(youtubeID);
+        QStringList segments;
+        const QString tmplate = QLatin1String("%1: %2, %3: %4, %5: '%6'");
+        if (!youtubeID.isEmpty())
+            segments.append(tmplate
+                            .arg(mmClipWidth).arg(size().width())
+                            .arg(mmClipHeight).arg(size().height())
+                            .arg(mmYoutubeId).arg(youtubeID));
+        if (!youtubeIDHd.isEmpty())
+            segments.append(tmplate
+                            .arg(mmClipWidthHd).arg(sizeHd().width())
+                            .arg(mmClipHeightHd).arg(sizeHd().height())
+                            .arg(mmYoutubeIdHd).arg(youtubeIDHd));
+        return QLatin1String("{")
+                + segments.join(QLatin1String(", "))
+                + QLatin1String("}");
     }
     bool publishable() const
     {
-        return !youtubeID.isEmpty();
+        return !(youtubeID.isEmpty() && youtubeIDHd.isEmpty());
     }
     QSize size() const;
+    QSize sizeHd() const;
 
 private:
     Clip()
@@ -100,6 +119,7 @@ struct Root {
     mutable int indentationLength;
     bool publishing;
     QSize clipDefaultSize;
+    QSize clipDefaultSizeHd;
 
     static Root *createRoot(QXmlStreamReader &reader);
     ~Root()
@@ -230,10 +250,12 @@ QString Clip::html() const
             category->title + QLatin1String(" - ") + title;
     result.append(root()->indentation() + QLatin1String("<li>\n"));
     root()->increaseIndentation();
-    result.append(root()->indentation()
-                  + QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">"
-                                        "<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>"
-                                        "</a>\n").arg(youtubeID).arg(completeTitle).arg(120).arg(90));
+    const QString mainYouTubeID = youtubeID.isEmpty() ? youtubeIDHd : youtubeID;
+    if (!mainYouTubeID.isEmpty())
+        result.append(root()->indentation()
+                      + QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">"
+                                            "<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>"
+                                            "</a>\n").arg(mainYouTubeID).arg(completeTitle).arg(120).arg(90));
     result.append(root()->indentation()
                   + QLatin1String("<h3>")
                   + (root()->publishing ? title : completeTitle)
@@ -304,6 +326,8 @@ Clip *Clip::createClip(QXmlStreamReader &reader, Category *category)
             } else if (reader.name() == mmAttribute) {
                 if (reader.attributes().value(mmName) == mmYoutubeId)
                     clip->youtubeID = reader.attributes().value(mmValue).toString();
+                else if (reader.attributes().value(mmName) == mmYoutubeIdHd)
+                    clip->youtubeIDHd = reader.attributes().value(mmValue).toString();
                 else if (reader.attributes().value(mmName) == mmClipTags)
                     clip->tags = splittedTags(reader.attributes().value(mmValue).toString());
                 else if (reader.attributes().value(mmName) == mmClipLength)
@@ -312,6 +336,10 @@ Clip *Clip::createClip(QXmlStreamReader &reader, Category *category)
                     clip->clipSize.setWidth(reader.attributes().value(mmValue).toString().toInt());
                 else if (reader.attributes().value(mmName) == mmClipHeight)
                     clip->clipSize.setHeight(reader.attributes().value(mmValue).toString().toInt());
+                else if (reader.attributes().value(mmName) == mmClipWidthHd)
+                    clip->clipSizeHd.setWidth(reader.attributes().value(mmValue).toString().toInt());
+                else if (reader.attributes().value(mmName) == mmClipHeightHd)
+                    clip->clipSizeHd.setHeight(reader.attributes().value(mmValue).toString().toInt());
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -330,6 +358,13 @@ QSize Clip::size() const
     return QSize(
             clipSize.width() > 0 ? clipSize.width() : root()->clipDefaultSize.width(),
             clipSize.height() > 0 ? clipSize.height() : root()->clipDefaultSize.height());
+}
+
+QSize Clip::sizeHd() const
+{
+    return QSize(
+            clipSizeHd.width() > 0 ? clipSizeHd.width() : root()->clipDefaultSizeHd.width(),
+            clipSizeHd.height() > 0 ? clipSizeHd.height() : root()->clipDefaultSizeHd.height());
 }
 
 Category *Category::createCategory(QXmlStreamReader &reader, Root *root)
@@ -380,6 +415,10 @@ Root *Root::createRoot(QXmlStreamReader &reader)
                     root->clipDefaultSize.setWidth(reader.attributes().value(mmValue).toString().toInt());
                 else if (reader.attributes().value(mmName) == mmClipDefaultHeight)
                     root->clipDefaultSize.setHeight(reader.attributes().value(mmValue).toString().toInt());
+                else if (reader.attributes().value(mmName) == mmClipDefaultWidthHd)
+                    root->clipDefaultSizeHd.setWidth(reader.attributes().value(mmValue).toString().toInt());
+                else if (reader.attributes().value(mmName) == mmClipDefaultHeightHd)
+                    root->clipDefaultSizeHd.setHeight(reader.attributes().value(mmValue).toString().toInt());
             }
             break;
         case QXmlStreamReader::EndElement:
@@ -391,6 +430,7 @@ Root *Root::createRoot(QXmlStreamReader &reader)
         }
     }
     Q_ASSERT(root->clipDefaultSize.isValid());
+    Q_ASSERT(root->clipDefaultSizeHd.isValid());
     return root;
 }
 
