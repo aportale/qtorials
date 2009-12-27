@@ -245,7 +245,7 @@ QString Category::html() const
 
 QString inYouTubeLink(const QString &youTubeID, const QString &innerHtml)
 {
-    return QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">%2</a>")
+    return QString::fromLatin1("<a href=\"http://youtube.com/watch?v=%1\">%2</a>")
                   .arg(youTubeID).arg(innerHtml);
 }
 
