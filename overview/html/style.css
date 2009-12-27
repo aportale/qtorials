@@ -27,6 +27,7 @@ margin-bottom: 8px;
 font-size: 0.8em;
 background-color:#fff;
 padding: 0;
+margin: 0;
 }
 #qtorials li ul li ul {
 padding: 4px 0 4px 0;
@@ -37,7 +38,7 @@ padding: 0 10px 0 0;
 float: left;
 clear: both;
 }
-#qtorials li, #qtorials li li {
+#qtorials li {
 list-style-type: none;
 }
 #qtorials h3 {
@@ -56,7 +57,7 @@ border-top: 10px solid #EFF3F2;
 }
 #qtorials > li > ul > li > ul > li {
 display: inline;
-padding-right: 15px;
+padding-right: 8px;
 }
 #qtorials > li > ul > li > p {
 margin: 4px 0 4px 0;
