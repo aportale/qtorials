@@ -274,6 +274,10 @@ QString Clip::html() const
                   + QLatin1String("</p>\n"));
     result.append(root()->indentation() + QLatin1String("<ul>\n"));
     root()->increaseIndentation();
+    result.append(root()->indentation()
+                  + QLatin1String("<li class=\"cliplength\">")
+                  + length
+                  + QLatin1String("</li>\n"));
     if (!youtubeID.isEmpty())
         result.append(root()->indentation()
                       + QLatin1String("<li class=\"watchclip\">")
@@ -282,12 +286,8 @@ QString Clip::html() const
     if (!youtubeIDHd.isEmpty())
         result.append(root()->indentation()
                       + QLatin1String("<li class=\"watchclip\">")
-                      + inYouTubeLink(youtubeIDHd, QLatin1String("Watch(HD)"))
+                      + inYouTubeLink(youtubeIDHd, QLatin1String("Watch (HD)"))
                       + QLatin1String("</li>\n"));
-    result.append(root()->indentation()
-                  + QLatin1String("<li class=\"cliplength\">")
-                  + length
-                  + QLatin1String("</li>\n"));
     root()->decreaseIndentation();
     result.append(root()->indentation() + QLatin1String("</ul>\n"));
     if (!root()->publishing)
