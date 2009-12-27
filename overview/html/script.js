@@ -8,21 +8,23 @@ $(document).ready(function(){
     });
 });
 
-function addClipFancyBoxToViewLink(linkElement, clipWidth, clipHeight, clipId)
+function addClipFancyBoxToViewLink(linkElement, clipWidth, clipHeight, clipId, hd)
 {
+    var hdParam = hd ? "&hd=1" : "";
+    var embedUrl = 'http://www.youtube.com/v/' + clipId + hdParam + '&autoplay=1';
+    var objectString =
+        '<object width="' + clipWidth + '" height="' + clipHeight + '">'
+        + '<param name="movie" value="' + embedUrl + '"></param>'
+        + '<param name="allowFullScreen" value="true"></param>'
+        + '<param name="allowscriptaccess" value="always"></param>'
+        + '<embed src="' + embedUrl + '" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true"'
+        + 'width="' + clipWidth + '" height="' + clipHeight + '"></embed></object>';
+    $(linkElement).attr("href", "#youtubeplayer");
     $(linkElement).fancybox({
         'callbackOnStart' : function()
             {
-                var objectString =
-                    '<object width="' + clipWidth + '" height="' + clipHeight + '">'
-                    + '<param name="movie" value="http://www.youtube.com/v/' + clipId + '&hl=en_GB&fs=1&"></param>'
-                    + '<param name="allowFullScreen" value="true"></param>'
-                    + '<param name="allowscriptaccess" value="always"></param>'
-                    + '<embed src="http://www.youtube.com/v/' + clipId + '&hl=en_GB&fs=1&autoplay=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true"'
-                    + 'width="' + clipWidth + '" height="' + clipHeight + '"></embed></object>';
-                $(youtubePlayer).width(clipWidth);
-                $(youtubePlayer).height(clipHeight);
-                $(youtubePlayer).append(objectString);
+                $("#youtubeplayer").append(objectString);
+                var huhu = 1;
             },
         'callbackOnClose' : function()
             {
@@ -40,16 +42,23 @@ function addClipFancyBoxToViewLink(linkElement, clipWidth, clipHeight, clipId)
 function addViewLinks(clipLi, i)
 {
     var firstAnchor = $(clipLi).find("a:first");
+    var principalYouTubeUrl = firstAnchor.attr("href");
     $(firstAnchor).removeAttr("href");
-    var clipLength = $(clipLi).find(".cliplength:first");
     var clipDataSet = qtorialsData["clips"][i];
     if ("youtube_id" in clipDataSet) {
-        var clipId = qtorialsData["clips"][i]["youtube_id"];
-        var clipWidth = qtorialsData["clips"][i]["clip_width"];
-        var clipHeight = qtorialsData["clips"][i]["clip_height"] + 25;
-        var youTubeHref = "http://www.youtube.com/watch?v=" + clipId;
-        $(clipLength).before('<li><a href="#youtubeplayer">View Qtorial</a></li>');
+        var clipWidth = clipDataSet["clip_width"];
+        var clipHeight = clipDataSet["clip_height"] + 25;
+        var clipId = clipDataSet["youtube_id"];
+        var link = $("ul > li.watchclip:first > a", clipLi)[0];
+        addClipFancyBoxToViewLink(link, clipWidth, clipHeight, clipId, false);
+    }
+    if ("youtube_id_hd" in clipDataSet) {
+        var clipWidth = clipDataSet["clip_width_hd"];
+        var clipHeight = clipDataSet["clip_height_hd"] + 25;
+        var clipId = clipDataSet["youtube_id_hd"];
+        var link = $("ul > li.watchclip:last > a", clipLi)[0];
+        addClipFancyBoxToViewLink(link, clipWidth, clipHeight, clipId, true);
     }
 
-    $(clipLength).before('<li><a href="' + youTubeHref + '">YouTube Page</a></li>');
+    $("ul > li:last", clipLi).after('<li class=\"commentclip\"><a href="' + principalYouTubeUrl + '">Comment</a></li>');
 }

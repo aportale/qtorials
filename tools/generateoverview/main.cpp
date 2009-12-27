@@ -180,9 +180,9 @@ QString Root::html() const
     result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"script.js\"></script>\n"));
     result.append(indentation() + QLatin1String("<script type=\"text/javascript\">\n"));
     increaseIndentation();
-    result.append(indentation() + QLatin1String("var qtorialsData = {\"clips\": [\n"));
-    increaseIndentation();
     {
+        result.append(indentation() + QLatin1String("var qtorialsData = {\"clips\": [\n"));
+        increaseIndentation();
         bool firstClip = true;
         foreach (const Category *category, categories)
             foreach (const Clip *clip, category->clips)
@@ -194,9 +194,9 @@ QString Root::html() const
                     result.append(indentation() + clip->jsData());
                 }
         result.append(QLatin1String("\n"));
+        decreaseIndentation();
+        result.append(indentation() + QLatin1String("]};\n"));
     }
-    decreaseIndentation();
-    result.append(indentation() + QLatin1String("]};\n"));
     decreaseIndentation();
     result.append(indentation() + QLatin1String("</script>\n"));
     decreaseIndentation();
@@ -243,6 +243,12 @@ QString Category::html() const
     return result;
 }
 
+QString inYouTubeLink(const QString &youTubeID, const QString &innerHtml)
+{
+    return QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">%2</a>")
+                  .arg(youTubeID).arg(innerHtml);
+}
+
 QString Clip::html() const
 {
     QString result;
@@ -250,12 +256,14 @@ QString Clip::html() const
             category->title + QLatin1String(" - ") + title;
     result.append(root()->indentation() + QLatin1String("<li>\n"));
     root()->increaseIndentation();
-    const QString mainYouTubeID = youtubeID.isEmpty() ? youtubeIDHd : youtubeID;
-    if (!mainYouTubeID.isEmpty())
-        result.append(root()->indentation()
-                      + QString::fromLatin1("<a href=\"http://www.youtube.com/watch?v=%1\">"
-                                            "<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>"
-                                            "</a>\n").arg(mainYouTubeID).arg(completeTitle).arg(120).arg(90));
+    const bool useHDClip = youtubeID.isEmpty();
+    const QString defaultYouTubeID = useHDClip ? youtubeIDHd : youtubeID;
+    const QString thumbnailImage =
+            QString::fromLatin1("<img src=\"http://i3.ytimg.com/vi/%1/default.jpg\" alt=\"%2\" width=\"%3\" height=\"%4\"/>")
+            .arg(defaultYouTubeID).arg(completeTitle).arg(120).arg(90);
+    result.append(root()->indentation()
+                  + inYouTubeLink(defaultYouTubeID, thumbnailImage)
+                  + QLatin1String("\n"));
     result.append(root()->indentation()
                   + QLatin1String("<h3>")
                   + (root()->publishing ? title : completeTitle)
@@ -266,6 +274,16 @@ QString Clip::html() const
                   + QLatin1String("</p>\n"));
     result.append(root()->indentation() + QLatin1String("<ul>\n"));
     root()->increaseIndentation();
+    if (!youtubeID.isEmpty())
+        result.append(root()->indentation()
+                      + QLatin1String("<li class=\"watchclip\">")
+                      + inYouTubeLink(youtubeID, QLatin1String("Watch"))
+                      + QLatin1String("</li>\n"));
+    if (!youtubeIDHd.isEmpty())
+        result.append(root()->indentation()
+                      + QLatin1String("<li class=\"watchclip\">")
+                      + inYouTubeLink(youtubeIDHd, QLatin1String("Watch(HD)"))
+                      + QLatin1String("</li>\n"));
     result.append(root()->indentation()
                   + QLatin1String("<li class=\"cliplength\">")
                   + length
