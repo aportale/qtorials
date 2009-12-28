@@ -10,7 +10,7 @@ rem California, 94105, USA.
 set SCRIPTDIR=%~d0%~p0
 set OUTPUTDIR=%SCRIPTDIR%html\
 
-for %%i in (bgtop bgmiddle bgbottom) do call :exportidtopng %%i
+for %%i in (bgtop bgmiddle bgbottom bgwatch bgcomment bglength) do call :exportidtopng %%i
 goto :eof
 
 :exportidtopng
