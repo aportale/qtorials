@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,13 +14,10 @@
    height="768"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
+   inkscape:version="0.47 r22583"
    sodipodi:docname="artwork.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   version="1.0"
-   inkscape:export-filename="C:\ownprojects\qtorials\overview\html\bottombg.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   version="1.0">
   <defs
      id="defs4">
     <linearGradient
@@ -40,8 +38,9 @@
        x1="70"
        y1="478"
        x2="70"
-       y2="398"
-       gradientUnits="userSpaceOnUse" />
+       y2="422.77319"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,220)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -53,16 +52,17 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.0196773"
-     inkscape:cx="341.59385"
-     inkscape:cy="317.28821"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="465.37068"
+     inkscape:cy="392.18989"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1020"
-     inkscape:window-height="744"
-     inkscape:window-x="0"
-     inkscape:window-y="0">
+     inkscape:window-width="1280"
+     inkscape:window-height="914"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid2418"
@@ -88,46 +88,34 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="opacity:1;fill:#fefefe;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="fill:#fefefe;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="bgmiddle"
        width="600"
        height="32"
        x="0"
-       y="336"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\ownprojects\qtorials\overview\html\bgmiddle.png" />
+       y="556"/>
     <rect
-       style="opacity:1;fill:#fefefe;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3230"
+       style="fill:#fefefe;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="bgbottom"
        width="600"
-       height="80"
+       height="400"
        x="0"
-       y="398"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\ownprojects\qtorials\overview\html\bottombg.png" />
+       y="298"/>
     <rect
-       style="opacity:1;fill:#fefefe;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3228"
+       style="fill:#fefefe;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="bgtop"
        width="600"
-       height="53.5"
+       height="54"
        x="0"
-       y="272"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       inkscape:export-filename="C:\ownprojects\qtorials\overview\html\titlebg.png" />
+       y="712"/>
     <path
        style="fill:#eff3f2;fill-opacity:1;fill-rule:evenodd;stroke:#e0e8e5;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 0.49999997,327.5 L 0.49999997,292.5 C 0.49999997,282.5 10.4,272.5 20.3,272.5 L 599.5,272.5 L 599.5,327.5 L 0.49999997,327.5"
-       id="path2420"
-       sodipodi:nodetypes="cccccc"
-       inkscape:export-filename="C:\ownprojects\qtorials\overview\html\titlebg.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       d="m 0.49999997,767.50006 0,-35 c 0,-10 9.90000003,-20 19.80000003,-20 l 579.2,0 0,55 -599.00000003,0"
+       id="bptop"
+       sodipodi:nodetypes="cccccc"/>
     <path
        style="fill:url(#linearGradient3226);fill-opacity:1;fill-rule:evenodd;stroke:#e0e8e5;stroke-width:0.99999994000000003px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 599.5,332.5 L 599.5,457.5 C 599.5,467.5 589.6,477.5 579.7,477.5 L 0.5,477.5 L 0.5,332.5 L 599.5,332.5"
+       d="m 599.5,-272 0,949.5 c 0,10 -9.9,20 -19.8,20 l -579.2,0 0,-969.5 599,0"
        id="path2424"
        sodipodi:nodetypes="cccccc" />
   </g>
