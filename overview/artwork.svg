@@ -20,13 +20,6 @@
    version="1.0">
   <defs
      id="defs4">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 384 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="1024 : 384 : 1"
-       inkscape:persp3d-origin="512 : 256 : 1"
-       id="perspective58" />
     <linearGradient
        id="linearGradient3881">
       <stop
@@ -43,20 +36,20 @@
       <stop
          id="stop3875"
          offset="0"
-         style="stop-color:#ffdaa5;stop-opacity:1;" />
+         style="stop-color:#e0e8e5;stop-opacity:1;" />
       <stop
          id="stop3877"
          offset="1"
-         style="stop-color:#ffeacd;stop-opacity:1;" />
+         style="stop-color:#f4f6f5;stop-opacity:1;" />
     </linearGradient>
     <linearGradient
        id="linearGradient3597">
       <stop
-         style="stop-color:#d2d2d2;stop-opacity:1;"
+         style="stop-color:#e4e4e4;stop-opacity:1;"
          offset="0"
          id="stop3599" />
       <stop
-         style="stop-color:#e6e6e6;stop-opacity:1;"
+         style="stop-color:#f5f5f5;stop-opacity:1;"
          offset="1"
          id="stop3601" />
     </linearGradient>
@@ -88,17 +81,8 @@
        x1="610"
        y1="713"
        x2="610"
-       y2="726.25"
+       y2="734"
        gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       y2="681.75"
-       x2="610"
-       y1="668"
-       x1="610"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3800"
-       xlink:href="#linearGradient3873"
-       inkscape:collect="always" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3881"
@@ -108,6 +92,15 @@
        x2="810"
        y2="688"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3873"
+       id="linearGradient3092"
+       gradientUnits="userSpaceOnUse"
+       x1="610"
+       y1="668"
+       x2="610"
+       y2="688.09973" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -119,11 +112,11 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="617.01067"
-     inkscape:cy="44.294417"
+     inkscape:zoom="2"
+     inkscape:cx="592.64978"
+     inkscape:cy="-12.481468"
      inkscape:document-units="px"
-     inkscape:current-layer="bgwatch"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1280"
      inkscape:window-height="914"
@@ -362,7 +355,7 @@
          height="40"
          width="200"
          id="rect2823-9"
-         style="fill:url(#linearGradient3800);fill-opacity:1;stroke:none" />
+         style="fill:url(#linearGradient3092);fill-opacity:1;stroke:none" />
       <g
          transform="matrix(1.1453133,0,0,1.1453133,-90.527591,-93.116638)"
          id="g3897">
