@@ -12,6 +12,7 @@ public:
     {
         m_targetVideoInfo.num_frames =
                 m_targetVideoInfo.num_frames / lapseFactor;
+        m_targetVideoInfo.audio_samples_per_second = 0;
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
