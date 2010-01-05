@@ -9,7 +9,7 @@ RgbOverlay::RgbOverlay(PClip backgroundClip, PClip foregroundClip,
                 AVSValue(params, sizeof params / sizeof params[0]);
         m_overlaidClip = env->Invoke("Layer", paramsValue).AsClip();
     } else {
-        PClip showAlpha = env->Invoke("ShowAlpha", foregroundClip).AsClip();
+        const PClip showAlpha = env->Invoke("ShowAlpha", foregroundClip).AsClip();
         const AVSValue params[] = { backgroundClip, foregroundClip, 0, 0, showAlpha };
         const AVSValue paramsValue =
                 AVSValue(params, sizeof params / sizeof params[0]);

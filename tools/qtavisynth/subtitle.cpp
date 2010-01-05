@@ -137,12 +137,12 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
                                           IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    PClip background = args[0].AsClip();
+    const PClip background = args[0].AsClip();
     const QString title = QLatin1String(args[1].AsString("Title"));
     const QString subtitle = QLatin1String(args[2].AsString());
     const int start = args[3].AsInt(10);
     const int end = args[4].AsInt(30);
-    PClip subtitleClip =
+    const PClip subtitleClip =
             new Subtitle(background->GetVideoInfo(), title, subtitle, start, end);
     return new RgbOverlay(background, subtitleClip, env);
 }
