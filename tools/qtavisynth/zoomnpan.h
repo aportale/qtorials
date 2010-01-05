@@ -18,9 +18,9 @@ public:
     };
 
     ZoomNPan(PClip originClip, int width, int height,
-                     int extensionColor, int defaultTransitionLength, const char *resizeFilter,
-                     const QRectF &startDetail, const QList<Detail> &details,
-                     IScriptEnvironment* env);
+             int extensionColor, int defaultTransitionLength, const char *resizeFilter,
+             const QRectF &startDetail, const QList<Detail> &details,
+             IScriptEnvironment* env);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
     static AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data,
                                            IScriptEnvironment* env);
