@@ -10,17 +10,9 @@ class SubtitleProperties;
 class Subtitle : public IClip
 {
 public:
-    struct Data
-    {
-        QString title;
-        QString subtitle;
-        int startFrame;
-        int endFrame;
-    };
-
     Subtitle(const VideoInfo &backgroundVideoInfo,
-             const QList<Data> &titles,
-             IScriptEnvironment* env);
+             const QString title, const QString subtitle,
+             int startFrame, int endFrame);
     ~Subtitle();
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
@@ -34,7 +26,11 @@ public:
 
 protected:
     VideoInfo m_videoInfo;
-    QList<SubtitleProperties*> m_titleData;
+    QString m_title;
+    QString m_subtitle;
+    int m_startFrame;
+    int m_endFrame;
+    SubtitleProperties* m_properties;
     QParallelAnimationGroup m_titleAnimations;
     static const int m_slipFrames;
     static const int m_blendDelayFrames;

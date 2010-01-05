@@ -14,10 +14,7 @@ class SubtitleProperties : public QObject
     Q_PROPERTY(qreal blend READ blend WRITE setBlend);
 
 public:
-
-    SubtitleProperties(const Subtitle::Data &data);
-    QString title() const;
-    QString subTitle() const;
+    SubtitleProperties();
     qreal slip() const;
     void setSlip(qreal slip);
     qreal blend() const;
@@ -27,7 +24,6 @@ public:
     static const QByteArray blendPropertyName;
 
 protected:
-    Subtitle::Data m_subtitleData;
     qreal m_slip;
     qreal m_blend;
 };
@@ -38,22 +34,11 @@ const int Subtitle::m_slipFrames = 10;
 const int Subtitle::m_blendDelayFrames = 6;
 const int Subtitle::m_blendFrames = 8;
 
-SubtitleProperties::SubtitleProperties(const Subtitle::Data &data)
+SubtitleProperties::SubtitleProperties()
     : QObject()
-    , m_subtitleData(data)
     , m_slip(0.0)
     , m_blend(0.0)
 {
-}
-
-QString SubtitleProperties::title() const
-{
-    return m_subtitleData.title;
-}
-
-QString SubtitleProperties::subTitle() const
-{
-    return m_subtitleData.subtitle;
 }
 
 qreal SubtitleProperties::slip() const
@@ -77,59 +62,58 @@ void SubtitleProperties::setBlend(qreal blend)
 }
 
 Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
-                   const QList<Data> &titles,
-                   IScriptEnvironment* env)
+                   const QString title, const QString subtitle,
+                   int startFrame, int endFrame)
     : m_videoInfo(backgroundVideoInfo)
+    , m_title(title)
+    , m_subtitle(subtitle)
+    , m_startFrame(startFrame)
+    , m_endFrame(endFrame)
 {
-    Q_UNUSED(env)
-
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-    foreach (const Data &data, titles) {
-        SubtitleProperties *properties = new SubtitleProperties(data);
-        QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
-        QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
+    m_properties = new SubtitleProperties;
+    QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
+    QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
 
-        const struct Animation {
-            QSequentialAnimationGroup *sequence;
-            const QByteArray &propertyName;
-            int pauseBefore;
-            int duration;
-            qreal startValue;
-            qreal endValue;
-        } animations[] = {
-            { slipSequence, SubtitleProperties::slipPropertyName, data.startFrame, m_slipFrames, 0.0, 1.0 },
-            { slipSequence, SubtitleProperties::slipPropertyName, data.endFrame - data.startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0 },
-            { blendSequence, SubtitleProperties::blendPropertyName, data.startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0 },
-            { blendSequence, SubtitleProperties::blendPropertyName, data.endFrame - data.startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
-        };
+    const struct Animation {
+        QSequentialAnimationGroup *sequence;
+        const QByteArray &propertyName;
+        int pauseBefore;
+        int duration;
+        qreal startValue;
+        qreal endValue;
+    } animations[] = {
+        { slipSequence, SubtitleProperties::slipPropertyName, m_startFrame, m_slipFrames, 0.0, 1.0 },
+        { slipSequence, SubtitleProperties::slipPropertyName, m_endFrame - m_startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0 },
+        { blendSequence, SubtitleProperties::blendPropertyName, m_startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0 },
+        { blendSequence, SubtitleProperties::blendPropertyName, m_endFrame - m_startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
+    };
 
-        for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
-            const struct Animation &a = animations[i];
-            a.sequence->addPause(a.pauseBefore);
-            QPropertyAnimation *animation =
-                    new QPropertyAnimation(properties, a.propertyName);
-            animation->setDuration(a.duration);
-            animation->setStartValue(a.startValue);
-            animation->setEndValue(a.endValue);
-            animation->setEasingCurve(QEasingCurve::InOutQuad);
-            a.sequence->addAnimation(animation);
-        }
-
-        slipSequence->addPause(100000);
-        blendSequence->addPause(100000);
-        m_titleAnimations.addAnimation(slipSequence);
-        m_titleAnimations.addAnimation(blendSequence);
-
-        m_titleData.append(properties);
+    for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
+        const struct Animation &a = animations[i];
+        a.sequence->addPause(a.pauseBefore);
+        QPropertyAnimation *animation =
+                new QPropertyAnimation(m_properties, a.propertyName);
+        animation->setDuration(a.duration);
+        animation->setStartValue(a.startValue);
+        animation->setEndValue(a.endValue);
+        animation->setEasingCurve(QEasingCurve::InOutQuad);
+        a.sequence->addAnimation(animation);
     }
+
+    slipSequence->addPause(100000);
+    blendSequence->addPause(100000);
+    m_titleAnimations.addAnimation(slipSequence);
+    m_titleAnimations.addAnimation(blendSequence);
+
     m_titleAnimations.start();
     m_titleAnimations.pause();
 }
 
 Subtitle::~Subtitle()
 {
-    qDeleteAll(m_titleData);
+    delete m_properties;
 }
 
 PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)
@@ -142,12 +126,10 @@ PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)
     p.scale(1, -1);
     p.translate(0, -image.height());
     m_titleAnimations.setCurrentTime(n);
-    foreach (const SubtitleProperties *titleData, m_titleData) {
-        Filters::paintAnimatedSubTitle(
-                &p, titleData->title(), titleData->subTitle(),
-                titleData->slip(), titleData->blend(),
-                image.rect());
-    }
+    Filters::paintAnimatedSubTitle(
+            &p, m_title, m_subtitle,
+            m_properties->slip(), m_properties->blend(),
+            image.rect());
     return frame;
 }
 
@@ -155,28 +137,14 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
                                           IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    static const int valuesPerTitle = 4;
-
-    const AVSValue &titleValues = args[1];
-    if (titleValues.ArraySize() % valuesPerTitle != 0)
-        env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
-
-    QList<Data> titles;
-    for (int i = 0; i < titleValues.ArraySize(); i += valuesPerTitle) {
-        if (!(titleValues[i].IsString() && titleValues[i+1].IsString()
-              && titleValues[i+2].IsInt() && titleValues[i+3].IsInt()))
-            env->ThrowError("QtorialsSubtitle: Wrong title argument data types in title set %i.",
-                            i / valuesPerTitle + 1);
-        const Data title = {
-            QLatin1String(titleValues[i].AsString()),
-            QLatin1String(titleValues[i+1].AsString()),
-            titleValues[i+2].AsInt(),
-            titleValues[i+3].AsInt()};
-        titles.append(title);
-    }
     PClip background = args[0].AsClip();
-    PClip subtitle = new Subtitle(background->GetVideoInfo(), titles, env);
-    return new RgbOverlay(background, subtitle, env);
+    const QString title = QLatin1String(args[1].AsString("Title"));
+    const QString subtitle = QLatin1String(args[2].AsString());
+    const int start = args[3].AsInt(10);
+    const int end = args[4].AsInt(30);
+    PClip subtitleClip =
+            new Subtitle(background->GetVideoInfo(), title, subtitle, start, end);
+    return new RgbOverlay(background, subtitleClip, env);
 }
 
 bool __stdcall Subtitle::GetParity(int n)

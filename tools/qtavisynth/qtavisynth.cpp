@@ -33,7 +33,8 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
                      StillImage::CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[clip]c[svgfile]s[elements]s*",
                      StillImage::CreateSvg, 0);
-    env->AddFunction("QtorialsSubtitle", "[clip]c.*",
+    env->AddFunction("QtorialsSubtitle",
+                     "[clip]c[title]s[subtitle]s[start]i[end]i",
                      Subtitle::CreateSubtitle, 0);
     env->AddFunction("QtorialsZoomNPan",
                      "[clip]c[width]i[height]i[extensioncolor]i"

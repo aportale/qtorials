@@ -19,11 +19,7 @@ BlankClipRGB
                       \ ,  120,  -1,    0,  0, -1, -1
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
-\.QtorialsSubtitle(
-  \   "Title1", "Subtitle", 10, 110
-  \ , "Title2", "Subtitle", 20, 120
-  \ , "Title3", "Subtitle", 30, 130
-\)
+\.QtorialsSubtitle("Title1", "Subtitle", 10, 110)
 \.QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow")
 \.overlayRgbClip(QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg", gClipWidth, gClipHeight
   \ , "lineedit",       60, 100, "fadeandscale", "fade"
