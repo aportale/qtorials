@@ -191,10 +191,7 @@ void __stdcall ZoomNPan::SetCacheHints(int cachehints, int frame_range)
 void __stdcall ZoomNPan::GetAudio(void* buf, __int64 start, __int64 count,
                                   IScriptEnvironment* env)
 {
-    Q_UNUSED(buf)
-    Q_UNUSED(start)
-    Q_UNUSED(count)
-    Q_UNUSED(env)
+    m_extendedClip->GetAudio(buf, start, count, env);
 }
 
 #include "zoomnpan.moc"
