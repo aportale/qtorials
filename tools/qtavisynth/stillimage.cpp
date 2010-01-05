@@ -19,22 +19,6 @@ StillImage::StillImage(const QImage &image, int frames, IScriptEnvironment* env)
     env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).bits(), m_frame->GetPitch(), image.bytesPerLine(), image.height());
 }
 
-AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
-{
-    Q_UNUSED(user_data)
-    const QString title =
-        QString::fromLatin1(args[0].AsString("Title")).replace(QLatin1String("\\n"),
-                                                               QLatin1String("\n"));
-    QImage image(args[2].AsInt(Tools::defaultClipWidth),
-                 args[3].AsInt(Tools::defaultClipHeight),
-                 QImage::Format_ARGB32);
-    image.fill(Tools::transparentColor);
-    QPainter p(&image);
-    Filters::paintTitle(&p, image.rect(), title,
-                        args[1].AsInt(qRgba(0x0, 0x0, 0x0, 0xff)));
-    return new StillImage(image, args[4].AsInt(100), env);
-}
-
 AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)

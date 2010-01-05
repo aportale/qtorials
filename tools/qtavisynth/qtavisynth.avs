@@ -18,11 +18,11 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
                       \ ,  120,  -1,    0,  0, -1, -1
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
-\.overlayRgbClip(QtorialsSubtitle(gClipWidth, gClipHeight
-  \ , "Title1", "Subtitle", 10, 110
+\.QtorialsSubtitle(
+  \   "Title1", "Subtitle", 10, 110
   \ , "Title2", "Subtitle", 20, 120
   \ , "Title3", "Subtitle", 30, 130
-\))
+\)
 \.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow", gClipWidth, gClipHeight, 100))
 \.overlayRgbClip(QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg", gClipWidth, gClipHeight
   \ , "lineedit",       60, 100, "fadeandscale", "fade"

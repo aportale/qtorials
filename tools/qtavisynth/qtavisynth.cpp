@@ -12,6 +12,7 @@
 #include "avisynth.h"
 #include "stillimage.h"
 #include "subtitle.h"
+#include "title.h"
 #include "zoomnpan.h"
 #include "svganimation.h"
 #include <QtPlugin>
@@ -26,14 +27,13 @@ Q_IMPORT_PLUGIN(qsvg)
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
-    env->AddFunction("QtorialsTitle",
-                     "[text]s[textcolor]i[width]i[height]i[frames]i",
-                     StillImage::CreateTitle, 0);
+    env->AddFunction("QtorialsTitle", "[clip]c[text]s[textcolor]i",
+                     Title::CreateTitle, 0);
     env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i",
                      StillImage::CreateElements, 0);
     env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i",
                      StillImage::CreateSvg, 0);
-    env->AddFunction("QtorialsSubtitle", "[width]i[height]i.*",
+    env->AddFunction("QtorialsSubtitle", "[clip]c.*",
                      Subtitle::CreateSubtitle, 0);
     env->AddFunction("QtorialsZoomNPan",
                      "[clip]c[width]i[height]i[extensioncolor]i"

@@ -1,6 +1,7 @@
 #include "subtitle.h"
 #include "filters.h"
 #include "tools.h"
+#include "rgboverlay.h"
 #include <QImage>
 #include <QPainter>
 #include <QSequentialAnimationGroup>
@@ -75,17 +76,13 @@ void SubtitleProperties::setBlend(qreal blend)
     m_blend = blend;
 }
 
-Subtitle::Subtitle(int width, int height,
+Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
                    const QList<Data> &titles,
                    IScriptEnvironment* env)
+    : m_videoInfo(backgroundVideoInfo)
 {
     Q_UNUSED(env)
 
-    memset(&m_videoInfo, 0, sizeof(VideoInfo));
-    m_videoInfo.width = width;
-    m_videoInfo.height = height;
-    m_videoInfo.fps_numerator = 25;
-    m_videoInfo.fps_denominator = 1;
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
     foreach (const Data &data, titles) {
@@ -125,8 +122,6 @@ Subtitle::Subtitle(int width, int height,
         m_titleAnimations.addAnimation(blendSequence);
 
         m_titleData.append(properties);
-        m_videoInfo.num_frames = qMax(data.endFrame + 1 // +1, so that we have a clear frame at the end
-                                      , m_videoInfo.num_frames);
     }
     m_titleAnimations.start();
     m_titleAnimations.pause();
@@ -162,7 +157,7 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
     Q_UNUSED(user_data)
     static const int valuesPerTitle = 4;
 
-    const AVSValue &titleValues = args[2];
+    const AVSValue &titleValues = args[1];
     if (titleValues.ArraySize() % valuesPerTitle != 0)
         env->ThrowError("QtorialsSubtitle: Mismatching number of arguments.\nThe title arguments must be dividable by 4.");
 
@@ -179,10 +174,9 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
             titleValues[i+3].AsInt()};
         titles.append(title);
     }
-    return new Subtitle(args[0].AsInt(Tools::defaultClipWidth),
-                        args[1].AsInt(Tools::defaultClipHeight),
-                        titles,
-                        env);
+    PClip background = args[0].AsClip();
+    PClip subtitle = new Subtitle(background->GetVideoInfo(), titles, env);
+    return new RgbOverlay(background, subtitle, env);
 }
 
 bool __stdcall Subtitle::GetParity(int n)

@@ -14,13 +14,17 @@ SOURCES = qtavisynth.cpp \
     tools.cpp \
     subtitle.cpp \
     zoomnpan.cpp \
-    svganimation.cpp
+    svganimation.cpp \
+    rgboverlay.cpp \
+    title.cpp
 HEADERS = filters.h \
     stillimage.h \
     tools.h \
     subtitle.h \
     zoomnpan.h \
-    svganimation.h
+    svganimation.h \
+    rgboverlay.h \
+    title.h
 CONFIG += dll \
     qt
 DESTDIR = ./

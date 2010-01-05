@@ -18,9 +18,9 @@ public:
         int endFrame;
     };
 
-    Subtitle(int width, int height,
-                     const QList<Data> &titles,
-                     IScriptEnvironment* env);
+    Subtitle(const VideoInfo &backgroundVideoInfo,
+             const QList<Data> &titles,
+             IScriptEnvironment* env);
     ~Subtitle();
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);

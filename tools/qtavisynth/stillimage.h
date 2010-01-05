@@ -10,8 +10,6 @@ class StillImage : public IClip
 public:
     StillImage(const QImage &image, int frames, IScriptEnvironment* env);
 
-    static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data,
-                                        IScriptEnvironment* env);
     static AVSValue __cdecl CreateElements(AVSValue args, void* user_data,
                                            IScriptEnvironment* env);
     static AVSValue __cdecl CreateSvg(AVSValue args, void* user_data,
