@@ -205,7 +205,7 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
         details.append(animationDetail);
     }
 
-    PClip svgAnimation =
+    const PClip svgAnimation =
             new SvgAnimation(background->GetVideoInfo(), svgFileName, details);
     return new RgbOverlay(background, svgAnimation, env);
 }
