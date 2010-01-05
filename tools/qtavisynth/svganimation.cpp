@@ -138,14 +138,11 @@ SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
             a.sequence->addAnimation(animation);
         }
 
-        scaleSequence->addPause(10000);
-        opacitySequence->addPause(10000);
+        scaleSequence->addPause(m_videoInfo.num_frames - scaleSequence->duration());
+        opacitySequence->addPause(m_videoInfo.num_frames - opacitySequence->duration());
 
         m_animation.addAnimation(scaleSequence);
         m_animation.addAnimation(opacitySequence);
-
-        m_videoInfo.num_frames = qMax(dataSet.endFrame + qMax(SvgAnimationProperties::opacityDuration, SvgAnimationProperties::scaleDuration) + 1 // +1, so that we have a clear frame at the end
-                                      , m_videoInfo.num_frames);
     }
 
     m_animation.start();

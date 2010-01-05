@@ -102,8 +102,8 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
         a.sequence->addAnimation(animation);
     }
 
-    slipSequence->addPause(100000);
-    blendSequence->addPause(100000);
+    slipSequence->addPause(m_videoInfo.num_frames - slipSequence->duration());
+    blendSequence->addPause(m_videoInfo.num_frames - blendSequence->duration());
     m_titleAnimations.addAnimation(slipSequence);
     m_titleAnimations.addAnimation(blendSequence);
 
