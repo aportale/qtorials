@@ -1,5 +1,6 @@
 #include "title.h"
 #include "filters.h"
+#include "tools.h"
 #include "rgboverlay.h"
 #include <QImage>
 
@@ -29,7 +30,7 @@ PVideoFrame __stdcall Title::GetFrame(int n, IScriptEnvironment* env)
     PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
     unsigned char* frameBits = frame->GetWritePtr();
     QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
-    image.fill(0);
+    image.fill(Tools::transparentColor);
     QPainter p(&image);
     p.scale(1, -1);
     p.translate(0, -image.height());
