@@ -59,8 +59,7 @@ function textClip(String text, int "frames", int "align", int "x", int "y", stri
     background = Defined(backgroundimage) ?
         \ ImageSource(backgroundimage, fps = 25, end = framesCount)
         \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
-    background.overlayRgbClip(
-        \ QtorialsTitle(text, textColor, gClipWidth, gClipHeight, framesCount))
+    background.QtorialsTitle(text, textColor)
 }
 
 function frame(clip sourceClip, int frame)
@@ -79,39 +78,9 @@ function videoWithClipSize(string videoBaseName, int "width", int "height")
     return Eval(videoBaseName + "_" + sizeString)
 }
 
-function overlayRgbClipOnRgb(clip background, clip overlay)
-{
-    return background.layer(overlay, "add")
-}
-
-function overlayRgbClipOnNonRgb(clip background, clip overlay)
-{
-    return background.Overlay(overlay, 0, 0, overlay.showAlpha)
-}
-
-function overlayRgbClip(clip background, clip overlay)
-{
-    return background.IsRGB ?
-        \ overlayRgbClipOnRgb(background, overlay)
-        \ : overlayRgbClipOnNonRgb(background, overlay)
-}
-
-function overlayQtorialsElements(clip background, string overlayElements)
-{
-    return background.overlayRgbClip(
-        \ QtorialsElements(overlayElements, background.Width, background.Height, background.FrameCount))
-}
-
-function simpleQtorialsElements(string overlayElements, int framesCount)
-{
-    overlayRgbClip(
-        \   BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
-        \ , QtorialsElements(overlayElements, gClipWidth, gClipHeight, framesCount))
-}
-
 function urlSubTitle(clip, string url)
 {
-    overlayRgbClip(clip.converttorgb32, QtorialsSubtitle(gClipWidth, gClipHeight, url, "", 30, 175))
+    clip.converttorgb32.QtorialsSubtitle(url, "", 30, 175)
 }
 
 function BlankClipRGB(framesCount)

@@ -45,8 +45,7 @@ function welcome
             \ , WAVSource(gMediaDir + "qtsymbian_development.wav"))
         \ .DelayAudio(0.26)
         \ .Trim(16, 350)
-        \ .overlayRgbClip(
-            \   QtorialsSubtitle(gClipWidth, gClipHeight, "Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160))
+        \ .QtorialsSubtitle("Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160)
 }
 
 function audioMockup
@@ -66,7 +65,7 @@ function audioMockup
 function videoMockup
 {
     BlankClipRGB(455)
-    \.overlayRgbClipOnRgb(QtorialsSvgAnimation("qtsymbian_development.svg", gClipWidth, gClipHeight
+    \.QtorialsSvgAnimation("qtsymbian_development.svg"
         \ , "mainwindow"          ,   80,  455,     "fade"        , "immediate"
         \ , "lineedit"            ,  140,  455,     "fadeandscale", "immediate"
         \ , "pushbutton"          ,  160,  455,     "fadeandscale", "immediate"
@@ -74,7 +73,7 @@ function videoMockup
         \ , "foolineedit"         ,  250,  455,     "fade"        , "fadeandscale"
         \ , "finger"              ,  305,  365,     "immediate"   , "immediate"
         \ , "foolistwidget"       ,  365,  455,     "fadeandscale", "fade"
-    \ ))
+    \ )
 }
 
 function mockup
@@ -352,7 +351,8 @@ function audioOutro
 
 function videoOutro
 {
-    simpleQtorialsElements("qtlogobig", 250)
+    BlankClipRGB(250)
+        \ .QtorialsElements("qtlogobig")
 }
 
 function outro
@@ -370,7 +370,7 @@ function completeclip
             \ , creatorAction
             \ , outro
             \ , gDissolveLength)
-        \ .overlayQtorialsElements("qtlogosmall, oldstyle")
+        \ .QtorialsElements("qtlogosmall", "oldstyle")
         \ .FadeIO(gDissolveLength)
 }
 

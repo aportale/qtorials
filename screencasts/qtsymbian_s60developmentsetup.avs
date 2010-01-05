@@ -312,7 +312,7 @@ function audioS60Sdk2
 function videoS60Sdk2
 {
     BlankClipRGB(975)
-    \.overlayRgbClipOnRgb(QtorialsSvgAnimation("qtsymbian_s60developmentsetup.svg", gClipWidth, gClipHeight
+    \.QtorialsSvgAnimation("qtsymbian_s60developmentsetup.svg"
         \ , "s60logo32"           ,   65,  975,     "fadeandscale", "immediate"
         \ , "sdk3"                ,  130,  975,     "fadeandscale", "immediate"
         \ , "fp2"                 ,  165,  975,     "fadeandscale", "immediate"
@@ -330,7 +330,7 @@ function videoS60Sdk2
         \ , "myapp50qt"           ,  560,  670,     "fadeandscale", "fade"
         \ , "myappuniversal"      ,  680,  975,     "fade"        , "immediate"
         \ , "phonearrowsuniversal",  800,  975,     "fade"        , "immediate"
-    \ ))                                                       
+    \ )
 }
 
 function audioS60Sdk3
@@ -518,7 +518,8 @@ function audioOutro
 
 function videoOutro
 {
-    simpleQtorialsElements("qtlogobig", 240).converttorgb32
+    BlankClipRGB(240)
+        \ .QtorialsElements("qtlogobig")
 }
 
 function outro
@@ -546,7 +547,7 @@ function completeclip
             \ , componenTitle("Application TRK"),                appTrk
             \ , outro
             \ , gDissolveLength)
-        \ .overlayQtorialsElements("qtlogosmall, oldstyle")
+        \ .QtorialsElements("qtlogosmall", "oldstyle")
         \ .FadeIO(gDissolveLength)
 }
 

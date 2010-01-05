@@ -43,8 +43,7 @@ function welcome
     AudioDub(videoWithClipSize("videoWelcome"), WAVSource(gMediaDir + "qtsymbian_qtsetup.wav"))
         \ .DelayAudio(-1.75)
         \ .Trim(10, 325)
-        \ .overlayRgbClip(
-            \   QtorialsSubtitle(gClipWidth, gClipHeight, "Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160))
+        \ .QtorialsSubtitle("Alessandro Portale", "Nokia, Qt Development Frameworks", 30, 160)
 }
 
 function audioQtSymbian
@@ -380,7 +379,8 @@ function audioOutro
 
 function videoOutro
 {
-    simpleQtorialsElements("qtlogobig", 200)
+    BlankClipRGB(200)
+        \ .QtorialsElements("qtlogobig")
 }
 
 function outro
@@ -402,7 +402,7 @@ function completeclip
             \ , qtSdk
             \ , outro
             \ , gDissolveLength)
-        \ .overlayQtorialsElements("qtlogosmall, oldstyle")
+        \ .QtorialsElements("qtlogosmall", "oldstyle")
         \ .FadeIO(gDissolveLength)
 }
 
