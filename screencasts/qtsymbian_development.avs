@@ -238,26 +238,26 @@ function audioCreatorAction
 
 function deviceOverlay
 {
-    trkRrb =
-        \  DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS")
+    trkRgb =
+        \  DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
         \ .turnright()
         \ .crop(70, 128, 934, 1662)
         \ .Lanczos4Resize(204, 360)
         \ .converttorgb32
-    debugRrb =
-        \  DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS")
+    debugRgb =
+        \  DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
         \ .turnright()
         \ .crop(70, 128, 934, 1662)
         \ .Lanczos4Resize(204, 360)
         \ .converttorgb32
     Dissolve(
-        \   Blankclip(trkRrb, 4990)
-        \ , trkRrb
-        \ , Blankclip(debugRrb, 185)
-        \ , debugRrb + debugRrb.trim(debugRrb.Framecount, debugRrb.Framecount).loop(140)
-        \ , Blankclip(debugRrb, 185)
+        \   Blankclip(trkRgb, 4990)
+        \ , trkRgb
+        \ , Blankclip(debugRgb, 185)
+        \ , debugRgb + debugRgb.trim(debugRgb.Framecount, debugRgb.Framecount).loop(140)
+        \ , Blankclip(debugRgb, 185)
         \ , gDissolveLength)
 }
 
