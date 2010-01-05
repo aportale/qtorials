@@ -1,15 +1,12 @@
 #include "stillimage.h"
 #include "filters.h"
 #include "tools.h"
+#include "rgboverlay.h"
 
-StillImage::StillImage(const QImage &image, int frames, IScriptEnvironment* env)
+StillImage::StillImage(const VideoInfo &backgroundVideoInfo, const QImage &image,
+                       IScriptEnvironment* env)
+    : m_videoInfo(backgroundVideoInfo)
 {
-    memset(&m_videoInfo, 0, sizeof(VideoInfo));
-    m_videoInfo.width = image.width();
-    m_videoInfo.height = image.height();
-    m_videoInfo.fps_numerator = 25;
-    m_videoInfo.fps_denominator = 1;
-    m_videoInfo.num_frames = frames;
     m_videoInfo.pixel_type =
             (image.format() == QImage::Format_ARGB32
                 || image.format() == QImage::Format_ARGB32_Premultiplied) ?
@@ -22,48 +19,45 @@ StillImage::StillImage(const QImage &image, int frames, IScriptEnvironment* env)
 AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-
-    const QStringList elements = QString::fromLatin1(args[0].AsString())
-                           .split(QLatin1Char(','), QString::SkipEmptyParts);
-    QStringList trimmedElements;
-    foreach (const QString &element, elements) {
-        const QString trimmedElement = element.trimmed();
-        if (Filters::elementAvailable(trimmedElement))
-            env->ThrowError("QtorialsElements: Invalid element '%s'.", trimmedElement.toLatin1().constData());
-        trimmedElements.append(trimmedElement);
+    const PClip background = args[0].AsClip();
+    const VideoInfo backgroundVI = background->GetVideoInfo();
+    const AVSValue &elementValues = args[1];
+    QStringList elements;
+    for (int i = 0; i < elementValues.ArraySize(); ++i) {
+        const QLatin1String element(elementValues[i].AsString());
+        if (Filters::elementAvailable(element))
+            env->ThrowError("QtorialsElements: Invalid element '%s'.", element.latin1());
+        elements.append(element);
     }
-
-    QImage image(args[1].AsInt(Tools::defaultClipWidth),
-                 args[2].AsInt(Tools::defaultClipHeight),
-                 QImage::Format_ARGB32);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Tools::transparentColor);
     QPainter p(&image);
-    Filters::paintElements(&p, trimmedElements, image.rect());
-    return new StillImage(image, args[3].AsInt(100), env);
+    Filters::paintElements(&p, elements, image.rect());
+    const PClip elementsClip = new StillImage(backgroundVI, image, env);
+    return new RgbOverlay(background, elementsClip, env);
 }
 
 AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
 
+    const PClip background = args[0].AsClip();
+    const VideoInfo backgroundVI = background->GetVideoInfo();
     const QString svgFileName =
-        Tools::cleanFileName(QLatin1String(args[0].AsString()));
-    const QString svgElementsCSV =
-            QString::fromLatin1(args[1].AsString());
-    QStringList svgElements;
-    foreach(const QString &element, svgElementsCSV.split(QLatin1Char(','), QString::SkipEmptyParts)) {
-        const QString trimmedElement = element.trimmed();
-        Tools::checkSvgAndThrow(svgFileName, trimmedElement, env);
-        svgElements.append(trimmedElement);
+        Tools::cleanFileName(QLatin1String(args[1].AsString()));
+    const AVSValue &elementValues = args[2];
+    QStringList elements;
+    for (int i = 0; i < elementValues.ArraySize(); ++i) {
+        const QLatin1String element(elementValues[i].AsString());
+        Tools::checkSvgAndThrow(svgFileName, element, env);
+        elements.append(element);
     }
-
-    QImage image(args[2].AsInt(Tools::defaultClipWidth),
-                 args[3].AsInt(Tools::defaultClipHeight),
-                 QImage::Format_ARGB32);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Tools::transparentColor);
     QPainter p(&image);
-    Filters::paintSvgElements(&p, svgFileName, svgElements, image.rect());
-    return new StillImage(image, args[4].AsInt(100), env);
+    Filters::paintSvgElements(&p, svgFileName, elements, image.rect());
+    const PClip svgClip = new StillImage(backgroundVI, image, env);
+    return new RgbOverlay(background, svgClip, env);
 }
 
 PVideoFrame __stdcall StillImage::GetFrame(int n, IScriptEnvironment* env)

@@ -12,7 +12,8 @@ Import("..\..\screencasts\tools.avsi")
 gClipWidth = 640
 gClipHeight = 360
 
-QtorialsElements("rgbpatterns", 800, 800, 500)
+BlankClipRGB
+\.QtorialsElements("rgbpatterns")
 \.QtorialsZoomNPan(gClipWidth, gClipHeight, $ffffff, 100, "BilinearResize"
     \ ,               0,   0, gClipWidth * 2, gClipHeight * 2
                       \ ,  120,  -1,    0,  0, -1, -1
@@ -23,10 +24,10 @@ QtorialsElements("rgbpatterns", 800, 800, 500)
   \ , "Title2", "Subtitle", 20, 120
   \ , "Title3", "Subtitle", 30, 130
 \)
-\.overlayRgbClip(QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow", gClipWidth, gClipHeight, 100))
+\.QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow")
 \.overlayRgbClip(QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg", gClipWidth, gClipHeight
   \ , "lineedit",       60, 100, "fadeandscale", "fade"
   \ , "pushbutton",     100, 200, "fade", "immediate"
   \ , "listwidget",     120, 200, "immediate", "fadeandscale"
 \))
-\.overlayRgbClip(QtorialsElements("cc-by-nc-sa, oldstyle", gClipWidth, gClipHeight))
+\.QtorialsElements("cc-by-nc-sa", "oldstyle")

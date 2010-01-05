@@ -29,9 +29,9 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("QtorialsTitle", "[clip]c[text]s[textcolor]i",
                      Title::CreateTitle, 0);
-    env->AddFunction("QtorialsElements", "[elements]s[width]i[height]i[frames]i",
+    env->AddFunction("QtorialsElements", "[clip]c[elements]s*",
                      StillImage::CreateElements, 0);
-    env->AddFunction("QtorialsSvg", "[svgfile]s[elements]s[width]i[height]i[frames]i",
+    env->AddFunction("QtorialsSvg", "[clip]c[svgfile]s[elements]s*",
                      StillImage::CreateSvg, 0);
     env->AddFunction("QtorialsSubtitle", "[clip]c.*",
                      Subtitle::CreateSubtitle, 0);
