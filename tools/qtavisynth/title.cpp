@@ -4,9 +4,9 @@
 #include "rgboverlay.h"
 #include <QImage>
 
-Title::Title(const VideoInfo &backgroundVideoInfo,
+Title::Title(const VideoInfo &videoInfo,
              const QString text, const QColor color)
-    : m_videoInfo(backgroundVideoInfo)
+    : m_videoInfo(videoInfo)
     , m_text(text)
     , m_color(color)
 {
@@ -27,6 +27,7 @@ AVSValue __cdecl Title::CreateTitle(AVSValue args, void* user_data, IScriptEnvir
 
 PVideoFrame __stdcall Title::GetFrame(int n, IScriptEnvironment* env)
 {
+    Q_UNUSED(n)
     PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
     unsigned char* frameBits = frame->GetWritePtr();
     QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);

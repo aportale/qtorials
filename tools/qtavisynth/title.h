@@ -8,7 +8,7 @@
 class Title : public IClip
 {
 public:
-    Title(const VideoInfo &backgroundVideoInfo,
+    Title(const VideoInfo &videoInfo,
           const QString text, const QColor color);
 
     static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data,
