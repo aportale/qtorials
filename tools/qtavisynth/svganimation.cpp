@@ -1,6 +1,7 @@
 #include "svganimation.h"
 #include "filters.h"
 #include "tools.h"
+#include "rgboverlay.h"
 
 SvgAnimationProperties::SvgAnimationProperties(const Data &data, QObject *parent)
     : QObject(parent)
@@ -58,18 +59,11 @@ const int SvgAnimationProperties::opacityDuration = SvgAnimationProperties::scal
 const qreal SvgAnimationProperties::opacityStart = 0.0;
 const qreal SvgAnimationProperties::opacityEnd = 1.0;
 
-SvgAnimation::SvgAnimation(int width, int height,
-                           const QString &svgFile,
-                           const QList<SvgAnimationProperties::Data> &dataSets,
-                           IScriptEnvironment* env)
-    : m_svgFile(svgFile)
+SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
+                           const QList<SvgAnimationProperties::Data> &dataSets)
+    : m_videoInfo(videoInfo)
+    , m_svgFile(svgFile)
 {
-    Q_UNUSED(env)
-    memset(&m_videoInfo, 0, sizeof(VideoInfo));
-    m_videoInfo.width = width;
-    m_videoInfo.height = height;
-    m_videoInfo.fps_numerator = 25;
-    m_videoInfo.fps_denominator = 1;
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
     foreach(const SvgAnimationProperties::Data &dataSet, dataSets) {
@@ -188,15 +182,15 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
                                                   IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
-    static const int valuesPerDetail = 5;
 
-    const AVSValue &detailValues = args[3];
+    const PClip background = args[0].AsClip();
+    const QString svgFileName =
+            Tools::cleanFileName(QLatin1String(args[1].AsString()));
+    const AVSValue &detailValues = args[2];
+    static const int valuesPerDetail = 5;
     if (detailValues.ArraySize() % valuesPerDetail != 0)
         env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
                         "They need to be %d per keyframe.", valuesPerDetail);
-
-    const QString svgFileName =
-            Tools::cleanFileName(QLatin1String(args[0].AsString()));
 
     QList<SvgAnimationProperties::Data> details;
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
@@ -211,11 +205,9 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
         details.append(animationDetail);
     }
 
-    return new SvgAnimation(args[1].AsInt(),
-                            args[2].AsInt(),
-                            svgFileName,
-                            details,
-                            env);
+    PClip svgAnimation =
+            new SvgAnimation(background->GetVideoInfo(), svgFileName, details);
+    return new RgbOverlay(background, svgAnimation, env);
 }
 
 bool __stdcall SvgAnimation::GetParity(int n)

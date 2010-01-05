@@ -14,16 +14,16 @@ gClipHeight = 360
 
 BlankClipRGB
 \.QtorialsElements("rgbpatterns")
-\.QtorialsZoomNPan(gClipWidth, gClipHeight, $ffffff, 100, "BilinearResize"
+\.QtorialsZoomNPan(gClipWidth, gClipHeight, $ffffff, 100, "Lanczos4resize"
     \ ,               0,   0, gClipWidth * 2, gClipHeight * 2
                       \ ,  120,  -1,    0,  0, -1, -1
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
 \.QtorialsSubtitle("Title1", "Subtitle", 10, 110)
 \.QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow")
-\.overlayRgbClip(QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg", gClipWidth, gClipHeight
+\.QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg"
   \ , "lineedit",       60, 100, "fadeandscale", "fade"
   \ , "pushbutton",     100, 200, "fade", "immediate"
   \ , "listwidget",     120, 200, "immediate", "fadeandscale"
-\))
+\)
 \.QtorialsElements("cc-by-nc-sa", "oldstyle")

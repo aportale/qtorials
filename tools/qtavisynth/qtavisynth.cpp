@@ -41,7 +41,7 @@ const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
                      "[defaulttransitionframes]i[resizefiter]s"
                      "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
                      ZoomNPan::CreateZoomNPan, 0);
-    env->AddFunction("QtorialsSvgAnimation", "[svgfile]s[width]i[height]i.*",
+    env->AddFunction("QtorialsSvgAnimation", "[clip]c[svgfile]s.*",
                      SvgAnimation::CreateSvgAnimation, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }

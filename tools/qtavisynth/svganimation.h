@@ -56,10 +56,8 @@ protected:
 class SvgAnimation : public IClip
 {
 public:
-    SvgAnimation(int width, int height,
-                 const QString &svgFile,
-                 const QList<SvgAnimationProperties::Data> &dataSets,
-                 IScriptEnvironment* env);
+    SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
+                 const QList<SvgAnimationProperties::Data> &dataSets);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
     static AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data,
                                                IScriptEnvironment* env);
