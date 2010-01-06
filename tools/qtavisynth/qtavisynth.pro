@@ -16,7 +16,8 @@ SOURCES = qtavisynth.cpp \
     zoomnpan.cpp \
     svganimation.cpp \
     rgboverlay.cpp \
-    title.cpp
+    title.cpp \
+    highlight.cpp
 HEADERS = filters.h \
     stillimage.h \
     tools.h \
@@ -24,7 +25,8 @@ HEADERS = filters.h \
     zoomnpan.h \
     svganimation.h \
     rgboverlay.h \
-    title.h
+    title.h \
+    highlight.h
 CONFIG += dll \
     qt
 DESTDIR = ./

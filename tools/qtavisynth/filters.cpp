@@ -432,3 +432,20 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
     p->restore();
     deleteQApplicationIfNeeded(a);
 }
+
+void Filters::paintHighlight(QPainter *p, const QRect &highlightRect,
+                             qreal opacity)
+{
+    if (opacity <= 0)
+        return;
+
+    const QColor color(0xfeee0b);
+
+    p->save();
+    p->setOpacity(opacity * 0.25);
+    p->fillRect(highlightRect, color);
+    p->setPen(QPen(color, 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+    p->setOpacity(opacity);
+    p->drawRect(highlightRect);
+    p->restore();
+}

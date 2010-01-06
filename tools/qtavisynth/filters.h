@@ -35,6 +35,8 @@ public:
                                             const QRect &rect, const QRectF &viewBox = QRectF());
     static void paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                                       qreal slipIn, qreal blendIn, const QRect &rect);
+    static void paintHighlight(QPainter *p, const QRect &highlightRect,
+                               qreal opacity);
 };
 
 #endif // FILTERS_H
