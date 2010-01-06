@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="yadif" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Win32 Release">
+				<Option output="Release\yadif" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-march=pentium2" />
+					<Add option="-O3" />
+					<Add option="-Wall" />
+				</Compiler>
+				<Linker>
+					<Add option="-shared avisynth.lib" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="strip Release\yadif.dll" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Win32 Debug">
+				<Option output="Debug\yadif" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Linker>
+					<Add library="avisynth.lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="avisynth_c.h" />
+		<Unit filename="vf_yadif_template.h" />
+		<Unit filename="yadif-rus.html" />
+		<Unit filename="yadif.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="yadif.html" />
+		<Unit filename="yadif.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

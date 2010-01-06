@@ -1,0 +1,36 @@
+1 VERSIONINFO
+ FILEVERSION 1,7,0,0
+ PRODUCTVERSION 2,5,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "Port of YADIF (Yet Another DeInterlacing Filter) from MPlayer http://www.mplayerhq.hu (C)2006 Michael Niedermayer <michaelni@gmx.at>\0"
+            VALUE "CompanyName", "A.G.Balakhnin aka Fizick, bag@hotmail.ru, http://avisynth.org.ru\0"
+            VALUE "FileDescription", "Yadif c-plugin for Avisynth v2.5\0"
+            VALUE "FileVersion", "1, 7, 0, 0\0"
+            VALUE "InternalName", "yadif\0"
+            VALUE "LegalCopyright", "Copyright © 2007-2009, A.G.Balakhnin aka Fizick under GNU GPL v.2\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "yadif.dll\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "yadif\0"
+            VALUE "ProductVersion", "2, 5, 0, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
