@@ -14,7 +14,7 @@ class SubtitleProperties : public QObject
     Q_PROPERTY(qreal blend READ blend WRITE setBlend);
 
 public:
-    SubtitleProperties();
+    SubtitleProperties(QObject *parent = 0);
     qreal slip() const;
     void setSlip(qreal slip);
     qreal blend() const;
@@ -34,8 +34,8 @@ const int Subtitle::m_slipFrames = 10;
 const int Subtitle::m_blendDelayFrames = 6;
 const int Subtitle::m_blendFrames = 8;
 
-SubtitleProperties::SubtitleProperties()
-    : QObject()
+SubtitleProperties::SubtitleProperties(QObject *parent)
+    : QObject(parent)
     , m_slip(0.0)
     , m_blend(0.0)
 {
@@ -67,12 +67,10 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
     : m_videoInfo(backgroundVideoInfo)
     , m_title(title)
     , m_subtitle(subtitle)
-    , m_startFrame(startFrame)
-    , m_endFrame(endFrame)
 {
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-    m_properties = new SubtitleProperties;
+    m_properties = new SubtitleProperties(&m_titleAnimations);
     QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
     QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
 
@@ -84,10 +82,10 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
         qreal startValue;
         qreal endValue;
     } animations[] = {
-        { slipSequence, SubtitleProperties::slipPropertyName, m_startFrame, m_slipFrames, 0.0, 1.0 },
-        { slipSequence, SubtitleProperties::slipPropertyName, m_endFrame - m_startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0 },
-        { blendSequence, SubtitleProperties::blendPropertyName, m_startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0 },
-        { blendSequence, SubtitleProperties::blendPropertyName, m_endFrame - m_startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
+        { slipSequence, SubtitleProperties::slipPropertyName, startFrame, m_slipFrames, 0.0, 1.0 },
+        { slipSequence, SubtitleProperties::slipPropertyName, endFrame - startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0 },
+        { blendSequence, SubtitleProperties::blendPropertyName, startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0 },
+        { blendSequence, SubtitleProperties::blendPropertyName, endFrame - startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
     };
 
     for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
@@ -109,11 +107,6 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
 
     m_titleAnimations.start();
     m_titleAnimations.pause();
-}
-
-Subtitle::~Subtitle()
-{
-    delete m_properties;
 }
 
 PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)

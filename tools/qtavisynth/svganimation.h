@@ -68,7 +68,7 @@ public:
                             IScriptEnvironment* env);
 
 protected:
-    QString m_svgFile;
+    const QString m_svgFile;
     VideoInfo m_videoInfo;
     QParallelAnimationGroup m_animation;
     QList<SvgAnimationProperties*> m_properties;

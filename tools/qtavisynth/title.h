@@ -22,8 +22,8 @@ public:
                             IScriptEnvironment* env);
 
 protected:
-    QString m_text;
-    QColor m_color;
+    const QString m_text;
+    const QColor m_color;
     VideoInfo m_videoInfo;
 };
 

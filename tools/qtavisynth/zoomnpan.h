@@ -39,8 +39,8 @@ protected:
 
     static const int m_extensionWidth;
     VideoInfo m_targetVideoInfo;
-    QByteArray m_resizeFilter;
-    PClip m_extendedClip;
+    const QByteArray m_resizeFilter;
+    const PClip m_extendedClip;
     ZoomNPanProperties *m_animationProperties;
     QSequentialAnimationGroup m_animation;
     PClip m_resizedClip;

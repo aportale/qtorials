@@ -92,6 +92,7 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
     m_animation.setCurrentTime(n);
     QRectF rect = m_animationProperties->rect();
     if (rect != m_resizedRect) {
+        m_resizedRect = rect;
         const int target_width = m_targetVideoInfo.width;
         const int target_height = m_targetVideoInfo.height;
         if (rect.size() == QSizeF(target_width, target_height))
@@ -145,7 +146,7 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
 
 const PClip ZoomNPan::extendedClip(const PClip &originClip, int extensionColor, IScriptEnvironment* env)
 {
-    AVSValue extensionParams[] =
+    const AVSValue extensionParams[] =
         { originClip, m_extensionWidth, m_extensionWidth, m_extensionWidth, m_extensionWidth, extensionColor };
     return env->Invoke("AddBorders",
                        AVSValue(extensionParams, sizeof extensionParams / sizeof extensionParams[0])).AsClip();

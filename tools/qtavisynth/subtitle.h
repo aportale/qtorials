@@ -13,7 +13,6 @@ public:
     Subtitle(const VideoInfo &backgroundVideoInfo,
              const QString title, const QString subtitle,
              int startFrame, int endFrame);
-    ~Subtitle();
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
     static AVSValue __cdecl CreateSubtitle(AVSValue args, void* user_data,
@@ -26,10 +25,8 @@ public:
 
 protected:
     VideoInfo m_videoInfo;
-    QString m_title;
-    QString m_subtitle;
-    int m_startFrame;
-    int m_endFrame;
+    const QString m_title;
+    const QString m_subtitle;
     SubtitleProperties* m_properties;
     QParallelAnimationGroup m_titleAnimations;
     static const int m_slipFrames;
