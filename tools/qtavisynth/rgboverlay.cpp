@@ -5,11 +5,17 @@ RgbOverlay::RgbOverlay(const PClip &backgroundClip,
                        IScriptEnvironment* env)
 {
     if (backgroundClip->GetVideoInfo().IsRGB()) {
-
-        const AVSValue params[] = { backgroundClip, foregroundClip };
+        const bool isRgb24 = backgroundClip->GetVideoInfo().IsRGB24();
+        const PClip backgroundClipRgb32 = isRgb24?
+                env->Invoke("ConvertToRgb32", backgroundClip).AsClip()
+                : backgroundClip;
+        const AVSValue params[] = { backgroundClipRgb32, foregroundClip };
         const AVSValue paramsValue =
                 AVSValue(params, sizeof params / sizeof params[0]);
-        m_overlaidClip = env->Invoke("Layer", paramsValue).AsClip();
+        const PClip overlaidClipRgb32 = env->Invoke("Layer", paramsValue).AsClip();
+        m_overlaidClip = isRgb24?
+                env->Invoke("ConvertToRgb24", overlaidClipRgb32).AsClip()
+                : overlaidClipRgb32;
     } else {
         const PClip showAlpha = env->Invoke("ShowAlpha", foregroundClip).AsClip();
         const AVSValue params[] = { backgroundClip, foregroundClip, 0, 0, showAlpha };
