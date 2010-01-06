@@ -7,7 +7,9 @@
 class RgbOverlay : public IClip
 {
 public:
-    RgbOverlay(PClip backgroundClip, PClip foregroundClip, IScriptEnvironment* env);
+    RgbOverlay(const PClip &backgroundClip, const PClip
+               &foregroundClip,
+               IScriptEnvironment* env);
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
     bool __stdcall GetParity(int n);

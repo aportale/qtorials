@@ -1,9 +1,11 @@
 #include "rgboverlay.h"
 
-RgbOverlay::RgbOverlay(PClip backgroundClip, PClip foregroundClip,
+RgbOverlay::RgbOverlay(const PClip &backgroundClip,
+                       const PClip &foregroundClip,
                        IScriptEnvironment* env)
 {
     if (backgroundClip->GetVideoInfo().IsRGB()) {
+
         const AVSValue params[] = { backgroundClip, foregroundClip };
         const AVSValue paramsValue =
                 AVSValue(params, sizeof params / sizeof params[0]);
