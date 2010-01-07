@@ -4,7 +4,7 @@
 #include "windows.h"
 #include "avisynth.h"
 #include <QRect>
-#include <QSequentialAnimationGroup>
+#include <QParallelAnimationGroup>
 
 class HighlightProperties;
 
@@ -25,9 +25,8 @@ public:
 
 protected:
     VideoInfo m_videoInfo;
-    QRect m_rectangle;
     HighlightProperties *m_properties;
-    QSequentialAnimationGroup m_highlightAnimation;
+    QParallelAnimationGroup m_highlightAnimations;
     static const int m_blendFrames;
 };
 

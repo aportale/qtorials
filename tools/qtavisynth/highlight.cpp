@@ -2,20 +2,26 @@
 #include "filters.h"
 #include "rgboverlay.h"
 #include <QPropertyAnimation>
+#include <QEasingCurve>
 
 class HighlightProperties : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QRectF rectangle READ rectangle WRITE setRectangle);
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity);
 
 public:
     HighlightProperties(QObject *parent = 0);
+    QRectF rectangle() const;
+    void setRectangle(const QRectF &rectangle);
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
+    static const QByteArray rectanglePropertyName;
     static const QByteArray opacityPropertyName;
 
 protected:
+    QRectF m_rectangle;
     qreal m_opacity;
 };
 
@@ -23,6 +29,16 @@ HighlightProperties::HighlightProperties(QObject *parent)
     : QObject(parent)
     , m_opacity(0)
 {
+}
+
+QRectF HighlightProperties::rectangle() const
+{
+    return m_rectangle;
+}
+
+void HighlightProperties::setRectangle(const QRectF &rectangle)
+{
+    m_rectangle = rectangle;
 }
 
 qreal HighlightProperties::opacity() const
@@ -35,42 +51,54 @@ void HighlightProperties::setOpacity(qreal opacity)
     m_opacity = opacity;
 }
 
+const QByteArray HighlightProperties::rectanglePropertyName = "rectangle";
 const QByteArray HighlightProperties::opacityPropertyName = "opacity";
 const int Highlight::m_blendFrames = 5;
 
 Highlight::Highlight(const VideoInfo &videoInfo,
                      const QRect &rectangle, int startFrame, int endFrame)
     : m_videoInfo(videoInfo)
-    , m_rectangle(rectangle)
 {
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-    m_properties = new HighlightProperties(&m_highlightAnimation);
+    m_properties = new HighlightProperties(&m_highlightAnimations);
+    QSequentialAnimationGroup *rectangleAnimation = new QSequentialAnimationGroup;
+    QSequentialAnimationGroup *opacityAnimation = new QSequentialAnimationGroup;
 
+    const QRectF initialRect = rectangle.adjusted(-20, -20, 20, 20);
     const struct Animation {
+        QSequentialAnimationGroup *sequence;
+        const QByteArray &propertyName;
+        const QEasingCurve easing;
         int pauseBefore;
         int duration;
-        qreal startValue;
-        qreal endValue;
+        const QVariant startValue;
+        const QVariant endValue;
     } animations[] = {
-        { startFrame, m_blendFrames, 0.0, 1.0 },
-        { endFrame - startFrame - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 }
+        { opacityAnimation, HighlightProperties::opacityPropertyName, QEasingCurve::Linear, startFrame, m_blendFrames, 0.0, 1.0 },
+        { opacityAnimation, HighlightProperties::opacityPropertyName, QEasingCurve::Linear, endFrame - startFrame - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
+        { rectangleAnimation, HighlightProperties::rectanglePropertyName, QEasingCurve::OutQuad, startFrame, m_blendFrames, initialRect, rectangle }
     };
 
     for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
         const struct Animation &a = animations[i];
-        m_highlightAnimation.addPause(a.pauseBefore);
+        a.sequence->addPause(a.pauseBefore);
         QPropertyAnimation *animation =
-                new QPropertyAnimation(m_properties, HighlightProperties::opacityPropertyName);
+                new QPropertyAnimation(m_properties, a.propertyName);
+        animation->setEasingCurve(a.easing);
         animation->setDuration(a.duration);
         animation->setStartValue(a.startValue);
         animation->setEndValue(a.endValue);
-        m_highlightAnimation.addAnimation(animation);
+        a.sequence->addAnimation(animation);
     }
 
-    m_highlightAnimation.addPause(m_videoInfo.num_frames - m_highlightAnimation.duration());
-    m_highlightAnimation.start();
-    m_highlightAnimation.pause();
+    rectangleAnimation->addPause(m_videoInfo.num_frames - rectangleAnimation->duration());
+    opacityAnimation->addPause(m_videoInfo.num_frames - opacityAnimation->duration());
+
+    m_highlightAnimations.addAnimation(rectangleAnimation);
+    m_highlightAnimations.addAnimation(opacityAnimation);
+    m_highlightAnimations.start();
+    m_highlightAnimations.pause();
 }
 
 PVideoFrame __stdcall Highlight::GetFrame(int n, IScriptEnvironment* env)
@@ -82,8 +110,8 @@ PVideoFrame __stdcall Highlight::GetFrame(int n, IScriptEnvironment* env)
     QPainter p(&image);
     p.scale(1, -1);
     p.translate(0, -image.height());
-    m_highlightAnimation.setCurrentTime(n);
-    Filters::paintHighlight(&p, m_rectangle, m_properties->opacity());
+    m_highlightAnimations.setCurrentTime(n);
+    Filters::paintHighlight(&p, m_properties->rectangle(), m_properties->opacity());
     return frame;
 }
 
