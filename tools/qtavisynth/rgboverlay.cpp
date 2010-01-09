@@ -75,7 +75,7 @@ void __stdcall RgbOverlay::GetAudio(void* buf, __int64 start, __int64 count, ISc
 
 const PaintedRgbClip *RgbOverlay::paintedRgbClip() const
 {
-    return m_overlaidClip->GetVideoInfo().IsRGB() ?
+    return m_overlaidClip->GetVideoInfo().IsRGB32() ?
             dynamic_cast<const PaintedRgbClip*>((m_foregroundClip.operator->()))
             : 0;
 }
