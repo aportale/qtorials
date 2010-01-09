@@ -20,7 +20,7 @@ public:
                             IScriptEnvironment* env);
 
 protected:
-    const PaintedRgbClip *rgbPaintedClip() const;
+    const PaintedRgbClip *paintedRgbClip() const;
 
     const PClip m_foregroundClip;
     PClip m_overlaidClip;

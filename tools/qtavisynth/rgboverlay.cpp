@@ -11,7 +11,7 @@ RgbOverlay::RgbOverlay(const PClip &backgroundClip,
     , m_overlaidClip(backgroundClip)
 {
     if (backgroundClip->GetVideoInfo().IsRGB()) {
-        if (!rgbPaintedClip()) {
+        if (!paintedRgbClip()) {
             const bool isRgb24 = backgroundClip->GetVideoInfo().IsRGB24();
             const PClip backgroundClipRgb32 = isRgb24?
                     env->Invoke("ConvertToRgb32", backgroundClip).AsClip()
@@ -36,7 +36,7 @@ RgbOverlay::RgbOverlay(const PClip &backgroundClip,
 PVideoFrame __stdcall RgbOverlay::GetFrame(int n, IScriptEnvironment* env)
 {
     PVideoFrame frame = m_overlaidClip->GetFrame(n, env);
-    if (const PaintedRgbClip *paintedRgbClip = rgbPaintedClip()) {
+    if (const PaintedRgbClip *currentPaintedRgbClip = paintedRgbClip()) {
         const VideoInfo &videoInfo = m_overlaidClip->GetVideoInfo();
         PVideoFrame background = env->NewVideoFrame(videoInfo);
         unsigned char* backgroundBits = background->GetWritePtr();
@@ -47,7 +47,7 @@ PVideoFrame __stdcall RgbOverlay::GetFrame(int n, IScriptEnvironment* env)
         QPainter p(&image);
         p.scale(1, -1);
         p.translate(0, -image.height());
-        paintedRgbClip->paintFrame(&p, n, QRect());
+        currentPaintedRgbClip->paintFrame(&p, n, QRect());
         frame = background;
     }
     return frame;
@@ -73,7 +73,7 @@ void __stdcall RgbOverlay::GetAudio(void* buf, __int64 start, __int64 count, ISc
     m_overlaidClip->GetAudio(buf, start, count, env);
 }
 
-const PaintedRgbClip *RgbOverlay::rgbPaintedClip() const
+const PaintedRgbClip *RgbOverlay::paintedRgbClip() const
 {
     return m_overlaidClip->GetVideoInfo().IsRGB() ?
             dynamic_cast<const PaintedRgbClip*>((m_foregroundClip.operator->()))
