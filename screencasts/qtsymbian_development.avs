@@ -277,6 +277,7 @@ function videoCreatorAction_960x720
         \ + projectmode.trim(720, 720).loop(440)                [* wait for that guy to finish talking *]
         \ + projectmode.trim(720, 1230)                         [* talking guy until device detected *]
         \ + projectmode.trim(1230, 1230).loop(120)              [* device detected *]
+			\ .QtorialsHighlight(159, 489, 220, 14, 0, 120)
         \ + projectmode.trim(1230, 1262)                        [* projectmode left *]
     devicedebugging = DirectShowSource(gMediaDir + "qtsymbian_development_devicedebugging.avi")
     devicedebugging_cut =
