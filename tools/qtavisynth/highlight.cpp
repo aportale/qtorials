@@ -53,7 +53,8 @@ void HighlightProperties::setOpacity(qreal opacity)
 
 const QByteArray HighlightProperties::rectanglePropertyName = "rectangle";
 const QByteArray HighlightProperties::opacityPropertyName = "opacity";
-const int Highlight::m_blendFrames = 5;
+const int Highlight::m_blendInFrames = 12;
+const int Highlight::m_blendOutFrames = 6;
 
 Highlight::Highlight(const VideoInfo &videoInfo,
                      const QRect &rectangle, int startFrame, int endFrame)
@@ -65,7 +66,9 @@ Highlight::Highlight(const VideoInfo &videoInfo,
     QSequentialAnimationGroup *rectangleAnimation = new QSequentialAnimationGroup;
     QSequentialAnimationGroup *opacityAnimation = new QSequentialAnimationGroup;
 
-    const QRectF initialRect = rectangle.adjusted(-20, -20, 20, 20);
+    const int shrink = 30;
+    const QRectF startRectangle =
+            rectangle.adjusted(-shrink, -shrink, shrink, shrink);
     const struct Animation {
         QSequentialAnimationGroup *sequence;
         const QByteArray &propertyName;
@@ -75,9 +78,9 @@ Highlight::Highlight(const VideoInfo &videoInfo,
         const QVariant startValue;
         const QVariant endValue;
     } animations[] = {
-        { opacityAnimation, HighlightProperties::opacityPropertyName, QEasingCurve::Linear, startFrame, m_blendFrames, 0.0, 1.0 },
-        { opacityAnimation, HighlightProperties::opacityPropertyName, QEasingCurve::Linear, endFrame - startFrame - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
-        { rectangleAnimation, HighlightProperties::rectanglePropertyName, QEasingCurve::OutQuad, startFrame, m_blendFrames, initialRect, rectangle }
+        { opacityAnimation, HighlightProperties::opacityPropertyName, QEasingCurve::Linear, startFrame, m_blendInFrames, 0.0, 1.0 },
+        { opacityAnimation, HighlightProperties::opacityPropertyName, QEasingCurve::Linear, endFrame - startFrame - m_blendInFrames - m_blendOutFrames, m_blendOutFrames, 1.0, 0.0 },
+        { rectangleAnimation, HighlightProperties::rectanglePropertyName, QEasingCurve::OutQuad, startFrame, m_blendInFrames, startRectangle, rectangle }
     };
 
     for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {

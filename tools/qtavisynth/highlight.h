@@ -32,7 +32,8 @@ protected:
     VideoInfo m_videoInfo;
     HighlightProperties *m_properties;
     mutable QParallelAnimationGroup m_highlightAnimations;
-    static const int m_blendFrames;
+    static const int m_blendInFrames;
+    static const int m_blendOutFrames;
 };
 
 #endif // HIGHLIGHT_H
