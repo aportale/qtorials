@@ -4,11 +4,12 @@
 #include "windows.h"
 #include "avisynth.h"
 
+class PaintedRgbClip;
+
 class RgbOverlay : public IClip
 {
 public:
-    RgbOverlay(const PClip &backgroundClip, const PClip
-               &foregroundClip,
+    RgbOverlay(const PClip &backgroundClip, const PClip &foregroundClip,
                IScriptEnvironment* env);
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
@@ -19,6 +20,9 @@ public:
                             IScriptEnvironment* env);
 
 protected:
+    const PaintedRgbClip *rgbPaintedClip() const;
+
+    const PClip m_foregroundClip;
     PClip m_overlaidClip;
 };
 
