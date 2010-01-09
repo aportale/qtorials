@@ -101,6 +101,13 @@ Highlight::Highlight(const VideoInfo &videoInfo,
     m_highlightAnimations.pause();
 }
 
+void Highlight::paintFrame(QPainter *painter, int frameNumber, const QRect &rect) const
+{
+    Q_UNUSED(rect)
+    m_highlightAnimations.setCurrentTime(frameNumber);
+    Filters::paintHighlight(painter, m_properties->rectangle(), m_properties->opacity());
+}
+
 PVideoFrame __stdcall Highlight::GetFrame(int n, IScriptEnvironment* env)
 {
     PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
@@ -110,8 +117,7 @@ PVideoFrame __stdcall Highlight::GetFrame(int n, IScriptEnvironment* env)
     QPainter p(&image);
     p.scale(1, -1);
     p.translate(0, -image.height());
-    m_highlightAnimations.setCurrentTime(n);
-    Filters::paintHighlight(&p, m_properties->rectangle(), m_properties->opacity());
+    paintFrame(&p, n, QRect());
     return frame;
 }
 
