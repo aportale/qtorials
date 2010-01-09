@@ -440,13 +440,15 @@ void Filters::paintHighlight(QPainter *p, const QRectF &highlightRect,
         return;
 
     const QColor color(0xfeee0b);
+    const QRectF outerRect =
+            highlightRect.adjusted(-1, -1, 1, 1); // Plus half pen width
 
     p->save();
     p->setOpacity(opacity * 0.25);
     p->fillRect(highlightRect, color);
     p->setPen(QPen(color, 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-    p->setOpacity(opacity);
+    p->setOpacity(opacity * 0.75);
     p->setRenderHint(QPainter::Antialiasing);
-    p->drawRect(highlightRect);
+    p->drawRect(outerRect);
     p->restore();
 }
