@@ -40,7 +40,7 @@ SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
         const char *blendingKey, IScriptEnvironment* env)
 {
     static const int enumIndex = staticMetaObject.indexOfEnumerator("Blending");
-    Q_ASSERT(enumIndex);
+    Q_ASSERT(enumIndex != -1);
     static const QMetaEnum &blendEnum = staticMetaObject.enumerator(enumIndex);
     const int blending = blendEnum.keysToValue(blendingKey);
     if (blending == -1)
