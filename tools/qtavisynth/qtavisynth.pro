@@ -26,7 +26,8 @@ HEADERS = filters.h \
     svganimation.h \
     rgboverlay.h \
     title.h \
-    highlight.h
+    highlight.h \
+    paintedrgbclip.h
 CONFIG += dll \
     qt
 DESTDIR = ./
