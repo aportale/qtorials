@@ -81,7 +81,7 @@ function mockup
     AudioDub(videoMockup, audioMockup)
 }
 
-function audioCreatorAction
+function audioCreatorAppWizard
 {
     audioNoise(0)
 \[*
@@ -95,12 +95,42 @@ function audioCreatorAction
 \[*
     #n ...with the name 'MyFirstApp'.
     #t MyFirstApp
+    ##n The project has to be created on the same drive where the S60 SDK and Qt for Symbian were installed. That is a requirement by the tool chain.
  *]
         \ + audioClip(21.449, 23.632, 2.5)
 \[*
     #n We proceed to the end of the project wizard.
  *]
-        \ + audioClip(23.875, 26.604, 6)
+        \ + audioClip(23.875, 26.604, 10)
+
+        \ + audioNoise(10)
+}
+
+function videoCreatorAppWizard_960x720
+{
+    DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
+		\ .converttorgb32
+}
+
+function videoCreatorAppWizard_640x360
+{
+    videoCreatorAppWizard_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  -1,   -1,       -1,   -1
+        \ ,   45,  -1,      160,  180,       -1,   -1
+        \ ,  145,  -1,      174,  234,       -1,   -1
+        \ ,  330,  -1,       -1,   -1,       -1,   -1			[* Finito *]
+        \ )
+}
+
+function creatorAppWizard
+{
+    AudioDub(videoWithClipSize("videoCreatorAppWizard"), audioCreatorAppWizard)
+}
+
+function audioCreatorAction
+{
+    audioNoise(5)
 \[*
     #n In the form editor, we add the widgets to the mainWindow...
     #t pu
@@ -252,7 +282,7 @@ function deviceOverlay
         \ .Lanczos4Resize(204, 360)
         \ .converttorgb32
     Dissolve(
-        \   Blankclip(trkRgb, 4990)
+        \   Blankclip(trkRgb, 4624)
         \ , trkRgb
         \ , Blankclip(debugRgb, 185)
         \ , debugRgb + debugRgb.trim(debugRgb.Framecount, debugRgb.Framecount).loop(140)
@@ -262,7 +292,6 @@ function deviceOverlay
 
 function videoCreatorAction_960x720
 {
-    appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
     desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
     desktopapp_cut =
         \   desktopapp.trim(1, 833)                             [* Start until first goto slot *]
@@ -291,8 +320,7 @@ function videoCreatorAction_960x720
         \ + devicedebugging.trim(600, 600).loop(237)            [* app runs *]
         \ + devicedebugging.trim(680, 1115)                     [* app hits breakpoint *]
     Dissolve(
-        \   appwizard
-        \ , desktopapp_cut
+        \   desktopapp_cut
         \ , projectmode_cut
         \ , devicedebugging_cut
         \ , gDissolveLength).converttorgb32
@@ -303,34 +331,31 @@ function videoCreatorAction_640x360
     videoCreatorAction_960x720.QtorialsZoomNPan(
         \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
         \ ,                  -1,   -1,       -1,   -1
-        \ ,   45,  -1,      160,  180,       -1,   -1
-        \ ,  145,  -1,      174,  234,       -1,   -1
-        \ ,  355,  -1,       -1,   -1,       -1,   -1
-        \ ,  485,  -1,      160,    0,       -1,   -1
-        \ ,  860,  -1,      320,  360,       -1,   -1
-        \ ,  955,  -1,      320,   48,       -1,   -1
-        \ , 1220,  -1,      186,  330,       -1,   -1
-        \ , 1600,  -1,        0,  148,      960,  540
-        \ , 1820,  -1,       72,  144,       -1,   -1
-        \ , 1970,  -1,       -1,   -1,       -1,   -1
-        \ , 2090,  -1,      320,  192,       -1,   -1
-        \ , 2140,  -1,      320,    0,       -1,   -1
-        \ , 2235,  -1,       -1,   -1,       -1,   -1
-        \ , 2295,  -1,      180,  360,       -1,   -1
-        \ , 2550,  -1,       -1,   -1,       -1,   -1
-        \ , 2680, 120,        0,  182,       -1,   -1
-        \ , 3180,  -1,      236,  190,       -1,   -1                     [* Selecting new build configuration from popup *]
-        \ , 3250,  -1,      288,  106,       -1,   -1                     [* accepting runconfiguration name *]
-        \ , 3310,  -1,       -1,   -1,       -1,   -1                     [* Scrolling down *]
-        \ , 3440,  -1,        0,  360,       -1,   -1                     [* Adding new run configuration *]
-        \ , 3700,  -1,       -1,   -1,       -1,   -1                     [* Exiting rpoject mode *]
-        \ , 4260,  -1,        0,  360,       -1,   -1                     [* Selection run configuration grom debug button popup *]
-        \ , 4430,  -1,      164,  164,       -1,   -1                     [* configuration helper dialog *]
-        \ , 5500,  -1,       -1,   -1,       -1,   -1                     [* Qreator is active *]
-        \ , 5640,  -1,        0,    0,     1240,  720                     [* Phone blends in *]
-        \ , 5960, 120,      260,  194,       -1,   -1                     [* App runs on phone *]
-        \ , 6390,  -1,       -1,   -1,       -1,   -1                     [* Finito *]
-        \ )
+        \ ,  115,  -1,      160,    0,       -1,   -1
+        \ ,  490,  -1,      320,  360,       -1,   -1
+        \ ,  585,  -1,      320,   48,       -1,   -1
+        \ ,  850,  -1,      186,  330,       -1,   -1
+        \ , 1230,  -1,        0,  148,      960,  540
+        \ , 1450,  -1,       72,  144,       -1,   -1
+        \ , 1600,  -1,       -1,   -1,       -1,   -1
+        \ , 1720,  -1,      320,  192,       -1,   -1
+        \ , 1770,  -1,      320,    0,       -1,   -1
+        \ , 1865,  -1,       -1,   -1,       -1,   -1
+        \ , 1925,  -1,      180,  360,       -1,   -1
+        \ , 2180,  -1,       -1,   -1,       -1,   -1
+        \ , 2310, 120,        0,  182,       -1,   -1
+        \ , 2810,  -1,      236,  190,       -1,   -1                     [* Selecting new build configuration from popup *]
+        \ , 2880,  -1,      288,  106,       -1,   -1                     [* accepting runconfiguration name *]
+        \ , 2940,  -1,       -1,   -1,       -1,   -1                     [* Scrolling down *]
+        \ , 3070,  -1,        0,  360,       -1,   -1                     [* Adding new run configuration *]
+        \ , 3330,  -1,       -1,   -1,       -1,   -1                     [* Exiting rpoject mode *]
+        \ , 3890,  -1,        0,  360,       -1,   -1                     [* Selection run configuration grom debug button popup *]
+        \ , 4060,  -1,      164,  164,       -1,   -1                     [* configuration helper dialog *]
+        \ , 5130,  -1,       -1,   -1,       -1,   -1                     [* Qreator is active *]
+        \ , 5270,  -1,        0,    0,     1240,  720                     [* Phone blends in *]
+        \ , 5590, 120,      260,  194,       -1,   -1                     [* App runs on phone *]
+        \ , 6020,  -1,       -1,   -1,       -1,   -1                     [* Finito *]
+        \ ) 
     layer(deviceOverlay, x = gClipWidth - 204)
 }
 
@@ -368,6 +393,7 @@ function completeclip
             \   intro
             \ , welcome.converttorgb
             \ , mockup
+            \ , creatorAppWizard
             \ , creatorAction
             \ , outro
             \ , gDissolveLength)
