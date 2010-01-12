@@ -265,31 +265,6 @@ function audioCreatorAction
         \ + audioNoise(10)
 }
 
-function deviceOverlay
-{
-    trkRgb =
-        \  DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .turnright()
-        \ .crop(70, 128, 934, 1662)
-        \ .Lanczos4Resize(204, 360)
-        \ .converttorgb32
-    debugRgb =
-        \  DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .turnright()
-        \ .crop(70, 128, 934, 1662)
-        \ .Lanczos4Resize(204, 360)
-        \ .converttorgb32
-    Dissolve(
-        \   Blankclip(trkRgb, 4624)
-        \ , trkRgb
-        \ , Blankclip(debugRgb, 185)
-        \ , debugRgb + debugRgb.trim(debugRgb.Framecount, debugRgb.Framecount).loop(140)
-        \ , Blankclip(debugRgb, 185)
-        \ , gDissolveLength)
-}
-
 function videoCreatorAction_960x720
 {
     desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
@@ -356,12 +331,34 @@ function videoCreatorAction_640x360
         \ , 5590, 120,      260,  194,       -1,   -1                     [* App runs on phone *]
         \ , 6020,  -1,       -1,   -1,       -1,   -1                     [* Finito *]
         \ ) 
-    layer(deviceOverlay, x = gClipWidth - 204)
 }
 
-function creatorAction
+function creatorActionWithOverlay
 {
+    trkRgb =
+        \  DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS", audio = false)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .turnright()
+        \ .crop(70, 128, 934, 1662)
+        \ .Lanczos4Resize(204, 360)
+        \ .converttorgb32
+    debugRgb =
+        \  DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS", audio = false)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .turnright()
+        \ .crop(70, 128, 934, 1662)
+        \ .Lanczos4Resize(204, 360)
+        \ .converttorgb32
+    overlay = Dissolve(
+        \   Blankclip(trkRgb, 4624)
+        \ , trkRgb
+        \ , Blankclip(debugRgb, 185)
+        \ , debugRgb + debugRgb.trim(debugRgb.Framecount, debugRgb.Framecount).loop(140)
+        \ , Blankclip(debugRgb, 185)
+        \ , gDissolveLength)
+
     AudioDub(videoWithClipSize("videoCreatorAction"), audioCreatorAction)
+		\ .layer(overlay, x = gClipWidth - overlay.Width, y = (gClipHeight - overlay.height) / 2)
 }
 
 function audioOutro
@@ -394,7 +391,7 @@ function completeclip
             \ , welcome.converttorgb
             \ , mockup
             \ , creatorAppWizard
-            \ , creatorAction
+            \ , creatorActionWithOverlay
             \ , outro
             \ , gDissolveLength)
         \ .QtorialsElements("qtlogosmall", "oldstyle")
