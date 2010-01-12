@@ -28,7 +28,8 @@ function videoWelcome_960x720
 {
     DirectShowSource(gMediaDir + "qtsymbian_development.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .Lanczos4Resize(gClipWidth, gClipHeight, 400, 0, 1280, 960)
+        \ .Lanczos4Resize(gClipWidth, 544, 98, 0, 1706, 968)
+		\ .AddBorders(0, 88, 0, 88, 0)
 }
 
 function videoWelcome_640x360
