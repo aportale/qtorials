@@ -337,7 +337,7 @@ Filters::paintBlendedSvgElement(QPainter *p,
         p->setOpacity(opacity);
         p->drawImage(0, 0, elementImage);
     } else {
-        p->setTransform(p->transform() * painterTransform);
+        p->setTransform(painterTransform, true);
         renderer->render(p, svgElement, scaledBounds);
     }
     p->restore();
