@@ -367,6 +367,7 @@ function videoS60Sdk3_960x720
         \ + footage.trim(16970, 17040)                                      [* Clicking JRE warning *]
         \ + footage.trim(17040, 17180).selectevery(8).assumefps(25)         [* Fast forwarding to target directory *]
         \ + footage.trim(17180, 17180).loop(220)                            [* Drive space considerations *]
+            \ .QtorialsHighlight(344, 520, 19, 17, 40, 200)
         \ + footage.trim(17180, 36600).selectevery(600).assumefps(25)       [* Fast forwarding to CSL Toolchain installer *]
         \ + footage.trim(36600, 36800)                                      [* CSL Toolchain installer *]
         \ + footage.trim(36800, 37200).selectevery(8).assumefps(25)         [* Fast forwarding to End *]
