@@ -489,14 +489,21 @@ function videoAppTrk_640x360
 
 function appTrk
 {
+    croppedWidth = 1080
+    croppedHeight = 1280
+    ratio = float(croppedWidth) / float(croppedHeight)
+    scaledHeight = gClipHeight
+    scaledWidth = int(scaledHeight * ratio) + 1
+    bordersSide = (gClipWidth - scaledWidth) / 2
+
     appTrkInstall =
         \  DirectShowSource(gMediaDir + "qtsymbian_s60developmentsetup_apptrk.MTS", audio = false)
         \ .trim(220, 380)
         \ .TemporalSoften(4, 4, 8, mode = 2)
         \ .turnright()
-        \ .crop(0, 330, 1080, 1280)
-        \ .Lanczos4Resize(304, 360)
-        \ .addborders(168, 0, 168, 0, $000000)
+        \ .crop(0, 330, croppedWidth, croppedHeight)
+        \ .Lanczos4Resize(scaledWidth, scaledHeight)
+        \ .addborders(bordersSide, 0, bordersSide, 0, $000000)
         \ .converttorgb32
     AudioDub(
         \ Dissolve(
