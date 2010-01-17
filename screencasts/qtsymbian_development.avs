@@ -96,9 +96,12 @@ function audioCreatorAppWizard
 \[*
     #n ...with the name 'MyFirstApp'.
     #t MyFirstApp
-    ##n The project has to be created on the same drive where the S60 SDK and Qt for Symbian were installed. That is a requirement by the tool chain.
  *]
-        \ + audioClip(21.449, 23.632, 2.5)
+        \ + audioClip(21.449, 23.632, .5)
+\[*
+    #n The project must be created on the same drive on which the S60 SDK and Qt for Symbian were installed.
+ *]
+        \ + audioClip(229.189, 235.412, 1)
 \[*
     #n We proceed to the end of the project wizard.
  *]
@@ -109,8 +112,18 @@ function audioCreatorAppWizard
 
 function videoCreatorAppWizard_960x720
 {
-    DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
-		\ .converttorgb32
+    appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
+        \ .converttorgb32
+    appwizard_createin_blink =
+        \   appwizard.trim(198, 198).loop(13)               [* blinking cursor *]
+        \ + appwizard.trim(197, 197).loop(13)
+    appwizard_cut =
+        \   appwizard.trim(0, 197)                          [* Until Class name entered *]
+        \ + appwizard_createin_blink.loop(7)                [* Project on same drive as S60 SDK and Qt for Symbian *]
+            \ .QtorialsHighlight(314, 410, 22, 24, 0, 180)
+        \ + appwizard.trim(197, 371)
+
+    appwizard_cut
 }
 
 function videoCreatorAppWizard_640x360
@@ -120,7 +133,7 @@ function videoCreatorAppWizard_640x360
         \ ,                  -1,   -1,       -1,   -1
         \ ,   45,  -1,      160,  180,       -1,   -1
         \ ,  145,  -1,      174,  234,       -1,   -1
-        \ ,  330,  -1,       -1,   -1,       -1,   -1			[* Finito *]
+        \ ,  420,  -1,       -1,   -1,       -1,   -1           [* Finito *]
         \ )
 }
 
