@@ -146,8 +146,9 @@ function videoqtDemoSisPackage_960x720
 {
     footage = DirectShowSource(gMediaDir + "qtsymbian_qtsetup_qtsymbianphone.avi")
     footage.trim(60, 60).loop(40)                                         [* Explorer open *]
-        \ + footage.trim(60, 240)                                         [* Navigating to qt_demos.sis *]
-        \ + footage.trim(240, 240).loop(140)                              [* Navigating to qt_demos.sis *]
+        \ + footage.trim(60, 223)                                         [* Navigating to qt_demos.sis *]
+        \ + footage.trim(223, 223).loop(157)                              [* Navigating to qt_demos.sis *]
+            \ .QtorialsHighlight(346, 470, 84, 18, 0, 157)
 }
 
 function videoqtDemoSisPackage_640x360
