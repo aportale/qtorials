@@ -94,6 +94,7 @@ function videoQtSymbian_960x720
         \ + footage.trim(6500, 6500).loop(100)                           [* S60 SDK step *]
         \ + footage.trim(6500, 6560)                                     [* S60 SDK step. Destination Path step. *]
         \ + footage.trim(6560, 6560).loop(100)                           [* Destination Path step *]
+            \ .QtorialsHighlight(267, 386, 22, 24, 20, 100)
         \ + footage.trim(6560, 6692)                                     [* Destination Path step *]
         \ + footage.trim(6692, 6692).loop(90)                            [* Destination Path step *]
         \ + footage.trim(6692, 12495).selectevery(110).assumefps(25)     [* Timelapse til End *]
