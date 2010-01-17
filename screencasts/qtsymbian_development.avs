@@ -308,6 +308,7 @@ function videoCreatorAction_960x720
         \ + devicedebugging.trim(381, 600)                      [* app starts up *]
         \ + devicedebugging.trim(600, 600).loop(237)            [* app runs *]
         \ + devicedebugging.trim(680, 1115)                     [* app hits breakpoint *]
+            \ .QtorialsHighlight(424, 431, 238, 89, 160, 320)
     Dissolve(
         \   desktopapp_cut
         \ , projectmode_cut
