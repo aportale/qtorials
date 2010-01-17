@@ -29,7 +29,7 @@ function videoWelcome_960x720
     DirectShowSource(gMediaDir + "qtsymbian_development.MTS", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
         \ .Lanczos4Resize(gClipWidth, 544, 98, 0, 1706, 968)
-		\ .AddBorders(0, 88, 0, 88, 0)
+        \ .AddBorders(0, 88, 0, 88, 0)
 }
 
 function videoWelcome_640x360
@@ -295,7 +295,7 @@ function videoCreatorAction_960x720
         \ + projectmode.trim(720, 720).loop(440)                [* wait for that guy to finish talking *]
         \ + projectmode.trim(720, 1230)                         [* talking guy until device detected *]
         \ + projectmode.trim(1230, 1230).loop(120)              [* device detected *]
-			\ .QtorialsHighlight(159, 489, 220, 14, 0, 120)
+            \ .QtorialsHighlight(159, 489, 220, 14, 0, 120)
         \ + projectmode.trim(1230, 1262)                        [* projectmode left *]
     devicedebugging = DirectShowSource(gMediaDir + "qtsymbian_development_devicedebugging.avi")
     devicedebugging_cut =
@@ -372,7 +372,7 @@ function creatorActionWithOverlay
         \ , gDissolveLength)
 
     AudioDub(videoWithClipSize("videoCreatorAction"), audioCreatorAction)
-		\ .layer(overlay, x = gClipWidth - overlay.Width, y = (gClipHeight - overlay.height) / 2)
+        \ .layer(overlay, x = gClipWidth - overlay.Width, y = (gClipHeight - overlay.height) / 2)
 }
 
 function audioOutro
