@@ -42,13 +42,14 @@ function addClipFancyBoxToViewLink(linkElement, clipWidth, clipHeight, clipId, h
 function addViewLinks(clipLi, i)
 {
     var firstAnchor = $(clipLi).find("a:first");
-    var principalYouTubeUrl = firstAnchor.attr("href");
+    var commentClipId;
     $(firstAnchor).removeAttr("href");
     var clipDataSet = qtorialsData["clips"][i];
     if ("youtube_id" in clipDataSet) {
         var clipWidth = clipDataSet["clip_width"];
         var clipHeight = clipDataSet["clip_height"] + 25;
         var clipId = clipDataSet["youtube_id"];
+        commentClipId = clipId;
         var link = $("ul > li.watchclip:first > a", clipLi)[0];
         addClipFancyBoxToViewLink(link, clipWidth, clipHeight, clipId, false);
     }
@@ -57,8 +58,11 @@ function addViewLinks(clipLi, i)
         var clipHeight = clipDataSet["clip_height_hd"] + 25;
         var clipId = clipDataSet["youtube_id_hd"];
         var link = $("ul > li.watchclip:last > a", clipLi)[0];
+        if (!commentClipId)
+            commentClipId = clipId;
         addClipFancyBoxToViewLink(link, clipWidth, clipHeight, clipId, true);
     }
 
-    $("ul > li:last", clipLi).after('<li class=\"commentclip\"><a href="' + principalYouTubeUrl + '">Comment</a></li>');
+    if (commentClipId)
+        $("ul > li:last", clipLi).after('<li class=\"commentclip\"><a href="http://youtube.com/comment_servlet?all_comments&v=' + commentClipId + '">Comment</a></li>');
 }
