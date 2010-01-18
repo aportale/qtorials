@@ -172,8 +172,8 @@ QString Root::html() const
     result.append(indentation() + QLatin1String("<meta name=\"author\" content=\"Nokia, Qt Development Frameworks\"/>\n"));
     result.append(indentation() + QLatin1String("<meta name=\"description\" content=\"Qtorials - The bite sized Qt tutorial screencasts. First steps, fundamentals, and more, all in a not-too-boring fashion. Enjoy :)\"/>\n"));
     result.append(indentation() + QLatin1String("<meta name=\"keywords\" content=\"Tutorials, Qtorials, Qt, Software, Development, Screen casts, Open source, Nokia\"/>\n"));
-    result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" media=\"screen\"/>\n"));
     result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"fancybox/jquery.fancybox-1.2.6.css\" media=\"screen\"/>\n"));
+    result.append(indentation() + QLatin1String("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" media=\"screen\"/>\n"));
     result.append(indentation() + QLatin1String("<title>Qtorials - Bite sized Qt tutorials</title>\n"));
     result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"jquery-1.3.2.min.js\"></script>\n"));
     result.append(indentation() + QLatin1String("<script type=\"text/javascript\" src=\"fancybox/jquery.fancybox-1.2.6.min.js\"></script>\n"));
