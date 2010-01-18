@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node COLOR="#000000" CREATED="1236466048994" ID="Freemind_Link_788798378" MODIFIED="1261928413488" TEXT="Qtorials">
+<node COLOR="#000000" CREATED="1236466048994" ID="Freemind_Link_788798378" MODIFIED="1263823190750" TEXT="Qtorials">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -23,7 +23,87 @@
 <attribute NAME="clip_default_height" VALUE="360"/>
 <attribute NAME="clip_default_width_hd" VALUE="960"/>
 <attribute NAME="clip_default_height_hd" VALUE="720"/>
-<node COLOR="#0033ff" CREATED="1237319164140" ID="ID_1094202060" MODIFIED="1261491150447" POSITION="right" TEXT="Qt SDK installation">
+<node COLOR="#0033ff" CREATED="1237319164140" ID="ID_840970220" MODIFIED="1263822057547" POSITION="right" TEXT="Qt for Symbian">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      Introduction into mobile development with Qt for the Symbian Platform.
+    </p>
+  </body>
+</html></richcontent>
+<edge STYLE="sharp_bezier" WIDTH="8"/>
+<font NAME="SansSerif" SIZE="18"/>
+<attribute_layout NAME_WIDTH="119" VALUE_WIDTH="164"/>
+<attribute NAME="clip_tags" VALUE="Symbian, s60"/>
+<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1533522103" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1263820193734" TEXT="Setting up a Symbian/S60 development environment ">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <!--
+        p { margin-top: 0 }
+        body { font-size: 12pt; font-family: SansSerif }
+      -->
+    
+
+    <p>
+      How to set up a basic&#160;Symbian/S60 development environment on Windows.
+    </p>
+  </body>
+</html></richcontent>
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+<attribute_layout NAME_WIDTH="94" VALUE_WIDTH="222"/>
+<attribute NAME="clip_tags" VALUE="development environment, setup, s60 sdk, carbide.c++, active perl, application trk"/>
+<attribute NAME="youtube_id_hd" VALUE="5BgMJS3wC28"/>
+<attribute NAME="clip_length" VALUE="5:20"/>
+<attribute NAME="youtube_id" VALUE="Sh58z-goVn4"/>
+</node>
+<node COLOR="#00b439" CREATED="1237319440468" ID="ID_990970024" MODIFIED="1263821015906" TEXT="Setting up Qt for Symbian">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      How to set up Qt for Symbian on top of an existing Symbian/S60 development environment.
+    </p>
+  </body>
+</html></richcontent>
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+<attribute_layout NAME_WIDTH="91" VALUE_WIDTH="175"/>
+<attribute NAME="clip_tags" VALUE="Qt Sdk, setup"/>
+<attribute NAME="clip_length" VALUE="2:52"/>
+<attribute NAME="youtube_id" VALUE="bGJOQTkdttM"/>
+<attribute NAME="youtube_id_hd" VALUE="14Zp3reuLNY"/>
+</node>
+<node COLOR="#00b439" CREATED="1237319443859" ID="ID_856080445" MODIFIED="1263823200797" TEXT="Developing in Qt Creator">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      How to create a small Qt-based Symbian application in Qt Creator - running it on Windows, compiling for the phone and running on the phone.
+    </p>
+  </body>
+</html>
+</richcontent>
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+<attribute_layout NAME_WIDTH="90" VALUE_WIDTH="235"/>
+<attribute NAME="clip_tags" VALUE="Qt Creator, development"/>
+<attribute NAME="clip_length" VALUE="5:02"/>
+<attribute NAME="youtube_id" VALUE="Rb43gnZI1A0"/>
+<attribute NAME="youtube_id_hd" VALUE="kn37j9nhiWQ"/>
+</node>
+</node>
+<node COLOR="#0033ff" CREATED="1237319164140" ID="ID_1094202060" MODIFIED="1263820647734" POSITION="right" TEXT="Qt SDK installation">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -38,7 +118,7 @@
 <font NAME="SansSerif" SIZE="18"/>
 <attribute_layout NAME_WIDTH="119" VALUE_WIDTH="164"/>
 <attribute NAME="clip_tags" VALUE="installation, getting started"/>
-<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1016574805" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1261930396625" TEXT="Windows">
+<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1016574805" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1263823194031" TEXT="Windows">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -54,7 +134,6 @@
 <attribute NAME="clip_tags" VALUE="windows"/>
 <attribute NAME="clip_length" VALUE="2:44"/>
 <attribute NAME="youtube_id" VALUE="ZeLHj_YMKgo"/>
-<attribute NAME="youtube_id_hd" VALUE="ggbQ_yU4wII"/>
 </node>
 <node COLOR="#00b439" CREATED="1237319440468" ID="ID_1734709603" MODIFIED="1261927650491" TEXT="OSX">
 <richcontent TYPE="NOTE"><html>
@@ -194,8 +273,7 @@
       The needed files. The locations of Qt plugins. Redistributing compiler specific runtimes. Creation of an installer package.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <attribute_layout VALUE_WIDTH="151"/>
@@ -233,7 +311,7 @@
 <attribute_layout VALUE_WIDTH="154"/>
 <attribute NAME="clip_tags" VALUE="osx, mac, easy, dmg, disk image"/>
 </node>
-<node COLOR="#00b439" CREATED="1238616765187" ID="ID_662328517" MODIFIED="1261438360483" TEXT="OSX (compact)">
+<node COLOR="#00b439" CREATED="1238616765187" ID="ID_662328517" MODIFIED="1263820154453" TEXT="OSX (compact)">
 <richcontent TYPE="NOTE"><html>
   <head>
     
@@ -250,83 +328,7 @@
 <attribute NAME="clip_tags" VALUE="osx, mac, compact, static, dmg disk image"/>
 </node>
 </node>
-<node COLOR="#0033ff" CREATED="1237319164140" ID="ID_840970220" MODIFIED="1261858375368" POSITION="right" TEXT="Qt for Symbian">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      How to get the Qt SDK running on your system. Also taking a first look at the QtDemo and QtCreator.
-    </p>
-  </body>
-</html></richcontent>
-<edge STYLE="sharp_bezier" WIDTH="8"/>
-<font NAME="SansSerif" SIZE="18"/>
-<attribute_layout NAME_WIDTH="119" VALUE_WIDTH="164"/>
-<attribute NAME="clip_tags" VALUE="Symbian, s60"/>
-<node COLOR="#00b439" CREATED="1237319427687" ID="ID_1533522103" LINK="../screencasts/sdkinstallation/windows.avs" MODIFIED="1261491763427" TEXT="Setting up a Symbian/S60 development environment ">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <!--
-        p { margin-top: 0 }
-        body { font-size: 12pt; font-family: SansSerif }
-      -->
-    
-
-    <p>
-      How to set up a basic&#160;Symbian/S60 development environment on Windows.
-    </p>
-  </body>
-</html></richcontent>
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="16"/>
-<attribute_layout NAME_WIDTH="94" VALUE_WIDTH="222"/>
-<attribute NAME="clip_tags" VALUE="development environment, setup, s60 sdk, carbide.c++, active perl, application trk"/>
-<attribute NAME="clip_length" VALUE="5:20"/>
-<attribute NAME="youtube_id" VALUE="Sh58z-goVn4"/>
-</node>
-<node COLOR="#00b439" CREATED="1237319440468" ID="ID_990970024" MODIFIED="1261491678917" TEXT="Setting up Qt for Symbian">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      How to set up Qt for Symbian on top of an existing Symbian/S60 development environment.
-    </p>
-  </body>
-</html></richcontent>
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="16"/>
-<attribute_layout NAME_WIDTH="91" VALUE_WIDTH="175"/>
-<attribute NAME="clip_tags" VALUE="Qt Sdk, setup"/>
-<attribute NAME="clip_length" VALUE="2:52"/>
-<attribute NAME="youtube_id" VALUE="bGJOQTkdttM"/>
-</node>
-<node COLOR="#00b439" CREATED="1237319443859" ID="ID_856080445" MODIFIED="1261491840571" TEXT="Developing in Qt Creator">
-<richcontent TYPE="NOTE"><html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      How to create a small Qt-based Symbian application in Qt Creator - running it on Windows, compiling for the phone and running on the phone.
-    </p>
-  </body>
-</html></richcontent>
-<edge STYLE="bezier" WIDTH="thin"/>
-<font NAME="SansSerif" SIZE="16"/>
-<attribute_layout NAME_WIDTH="90" VALUE_WIDTH="235"/>
-<attribute NAME="clip_tags" VALUE="Qt Creator, development"/>
-<attribute NAME="clip_length" VALUE="5:02"/>
-<attribute NAME="youtube_id" VALUE="Rb43gnZI1A0"/>
-</node>
-</node>
-<node COLOR="#0033ff" CREATED="1238930730887" FOLDED="true" ID="ID_1017245630" MODIFIED="1261488510204" POSITION="right" TEXT="Qt tidbits">
+<node COLOR="#0033ff" CREATED="1238930730887" FOLDED="true" ID="ID_1017245630" MODIFIED="1263820652375" POSITION="right" TEXT="Qt tidbits">
 <richcontent TYPE="NOTE"><html>
   <head>
     
