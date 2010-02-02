@@ -5,15 +5,41 @@
 class ColorQuantize : public IClip
 {
 public:
-    ColorQuantize(PClip originClip, int paletteSize, bool globalPalette,
-                  FREE_IMAGE_QUANTIZE algorithm)
+    ColorQuantize(PClip originClip, int paletteSize,
+                  bool useGlobalPalette, FREE_IMAGE_QUANTIZE algorithm,
+                  IScriptEnvironment* env)
         : m_origin(originClip)
         , m_paletteSize(paletteSize)
-        , m_globalPalette(globalPalette)
+        , m_useGlobalPalette(useGlobalPalette)
         , m_algorithm(algorithm)
         , m_targetVideoInfo(originClip->GetVideoInfo())
+        , m_globalPalette(0)
     {
-        m_targetVideoInfo.pixel_type = VideoInfo::CS_BGR32;
+        if (!originClip->GetVideoInfo().IsRGB24()) {
+            m_originRgb = env->Invoke("ConvertToRgb24", originClip).AsClip();
+            m_targetVideoInfo.pixel_type = VideoInfo::CS_BGR24;
+        } else {
+            m_originRgb = originClip;
+        }
+
+        if (m_useGlobalPalette) {
+            FIBITMAP *hugeImage =
+                    FreeImage_Allocate(m_targetVideoInfo.width,
+                                       m_targetVideoInfo.height * m_targetVideoInfo.num_frames,
+                                       24);
+            for (int frame = 0; frame < m_targetVideoInfo.num_frames; ++frame) {
+                PVideoFrame videoFrame = m_originRgb->GetFrame(frame, env);
+                const unsigned char* const srcp = videoFrame->GetReadPtr();
+                for (int row = 0; row < m_targetVideoInfo.height; ++row) {
+                    const int hugeFrameRow = frame * m_targetVideoInfo.height + row;
+                    BYTE *dstp = FreeImage_GetScanLine(hugeImage, hugeFrameRow);
+                    const unsigned char* const srcrowp = srcp + row * videoFrame->GetPitch();
+                    memcpy(dstp, srcrowp, videoFrame->GetRowSize());
+                }
+            }
+            // FreeImage_Save(FIF_PNG, hugeImage, "test.png");
+            FreeImage_Unload(hugeImage);
+        }
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
@@ -36,7 +62,7 @@ public:
                             "Supported range is between '%d' and '%d'."
                             ,paletteSize, mimumPaletteSize, maxiumPaletteSize);
 
-        const bool globalPalette = args[2].AsBool(true);
+        const bool useGlobalPalette = args[2].AsBool(true);
 
         static const char* const algorithms[] = {
             "Xiaolin Wu",
@@ -53,7 +79,7 @@ public:
                             "Supported are '%s' and '%s'."
                             ,algorithmString, algorithms[0], algorithms[1]);
 
-        return new ColorQuantize(origin, paletteSize, globalPalette, algorithm);
+        return new ColorQuantize(origin, paletteSize, useGlobalPalette, algorithm, env);
     }
 
     bool __stdcall GetParity(int /* n */)
@@ -79,9 +105,11 @@ public:
 protected:
     PClip m_origin;
     const int m_paletteSize;
-    const bool m_globalPalette;
+    const bool m_useGlobalPalette;
     const FREE_IMAGE_QUANTIZE m_algorithm;
     VideoInfo m_targetVideoInfo;
+    RGBQUAD *m_globalPalette;
+    PClip m_originRgb;
 };
 
 extern "C" __declspec(dllexport)
