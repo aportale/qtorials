@@ -14,6 +14,7 @@ public:
         , m_algorithm(algorithm)
         , m_targetVideoInfo(originClip->GetVideoInfo())
         , m_globalPalette(0)
+        , m_globalPaletteSize(0)
     {
         if (!originClip->GetVideoInfo().IsRGB24()) {
             m_originRgb = env->Invoke("ConvertToRgb24", originClip).AsClip();
@@ -37,15 +38,50 @@ public:
                     memcpy(dstp, srcrowp, videoFrame->GetRowSize());
                 }
             }
-            // FreeImage_Save(FIF_PNG, hugeImage, "test.png");
+            FIBITMAP *quantizedImage =
+                    FreeImage_ColorQuantizeEx(hugeImage, algorithm, m_paletteSize);
             FreeImage_Unload(hugeImage);
+            m_globalPaletteSize = FreeImage_GetColorsUsed(quantizedImage);
+            m_globalPalette = new RGBQUAD[m_globalPaletteSize];
+            memcpy(m_globalPalette, FreeImage_GetPalette(quantizedImage), m_globalPaletteSize * sizeof(RGBQUAD));
+            FreeImage_Unload(quantizedImage);
         }
+    }
+
+    ~ColorQuantize()
+    {
+        if (m_globalPalette)
+            delete[] m_globalPalette;
     }
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
     {
         PVideoFrame dst = env->NewVideoFrame(m_targetVideoInfo);
         unsigned char* const dstp = dst->GetWritePtr();
+        PVideoFrame videoFrame = m_originRgb->GetFrame(n, env);
+        const unsigned char* const srcp = videoFrame->GetReadPtr();
+
+        FIBITMAP *frameImage =
+                FreeImage_Allocate(m_targetVideoInfo.width, m_targetVideoInfo.height, 24);
+        for (int row = 0; row < m_targetVideoInfo.height; ++row) {
+            BYTE *dstp = FreeImage_GetScanLine(frameImage, row);
+            const unsigned char* const srcrowp = srcp + row * videoFrame->GetPitch();
+            memcpy(dstp, srcrowp, videoFrame->GetRowSize());
+        }
+        const int paletteSize = m_useGlobalPalette ? m_globalPaletteSize : m_paletteSize;
+        const int reservedPaletteSize = m_useGlobalPalette ? paletteSize : 0;
+        FIBITMAP *quantizedFrameImage =
+                FreeImage_ColorQuantizeEx(frameImage, FIQ_NNQUANT, paletteSize, reservedPaletteSize, m_globalPalette);
+        FreeImage_Unload(frameImage);
+        FIBITMAP *quantizedFrameImageRgb24 =
+                FreeImage_ConvertTo24Bits(quantizedFrameImage);
+        FreeImage_Unload(quantizedFrameImage);
+        for (int row = 0; row < m_targetVideoInfo.height; ++row) {
+            unsigned char* dstrowp = dstp + row * dst->GetPitch();
+            const BYTE* const srcp = FreeImage_GetScanLine(quantizedFrameImageRgb24, row);
+            memcpy(dstrowp, srcp, dst->GetRowSize());
+        }
+        FreeImage_Unload(quantizedFrameImageRgb24);
         return dst;
     }
 
@@ -109,6 +145,7 @@ protected:
     const FREE_IMAGE_QUANTIZE m_algorithm;
     VideoInfo m_targetVideoInfo;
     RGBQUAD *m_globalPalette;
+    int m_globalPaletteSize;
     PClip m_originRgb;
 };
 
