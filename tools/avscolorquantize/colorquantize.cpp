@@ -29,14 +29,8 @@ public:
                                        m_targetVideoInfo.height * m_targetVideoInfo.num_frames,
                                        24);
             for (int frame = 0; frame < m_targetVideoInfo.num_frames; ++frame) {
-                PVideoFrame videoFrame = m_originRgb->GetFrame(frame, env);
-                const unsigned char* const srcp = videoFrame->GetReadPtr();
-                for (int row = 0; row < m_targetVideoInfo.height; ++row) {
-                    const int hugeFrameRow = frame * m_targetVideoInfo.height + row;
-                    BYTE *dstp = FreeImage_GetScanLine(hugeImage, hugeFrameRow);
-                    const unsigned char* const srcrowp = srcp + row * videoFrame->GetPitch();
-                    memcpy(dstp, srcrowp, videoFrame->GetRowSize());
-                }
+                const PVideoFrame videoFrame = m_originRgb->GetFrame(frame, env);
+                copyVideoFrameToImage(m_originRgb->GetFrame(frame, env),hugeImage, frame * m_targetVideoInfo.height);
             }
             FIBITMAP *quantizedImage =
                     FreeImage_ColorQuantizeEx(hugeImage, algorithm, m_paletteSize);
@@ -58,16 +52,11 @@ public:
     {
         PVideoFrame dst = env->NewVideoFrame(m_targetVideoInfo);
         unsigned char* const dstp = dst->GetWritePtr();
-        PVideoFrame videoFrame = m_originRgb->GetFrame(n, env);
-        const unsigned char* const srcp = videoFrame->GetReadPtr();
 
         FIBITMAP *frameImage =
                 FreeImage_Allocate(m_targetVideoInfo.width, m_targetVideoInfo.height, 24);
-        for (int row = 0; row < m_targetVideoInfo.height; ++row) {
-            BYTE *dstp = FreeImage_GetScanLine(frameImage, row);
-            const unsigned char* const srcrowp = srcp + row * videoFrame->GetPitch();
-            memcpy(dstp, srcrowp, videoFrame->GetRowSize());
-        }
+        copyVideoFrameToImage(m_originRgb->GetFrame(n, env), frameImage);
+
         const int paletteSize = m_useGlobalPalette ? m_globalPaletteSize : m_paletteSize;
         const int reservedPaletteSize = m_useGlobalPalette ? paletteSize : 0;
         FIBITMAP *quantizedFrameImage =
@@ -139,6 +128,17 @@ public:
     }
 
 protected:
+    static void copyVideoFrameToImage(const PVideoFrame &videoFrame,
+                                      FIBITMAP *image, int rowOffset = 0)
+    {
+        const unsigned char* const srcp = videoFrame->GetReadPtr();
+        for (int row = 0; row < videoFrame->GetHeight(); ++row) {
+            BYTE *dstp = FreeImage_GetScanLine(image, rowOffset + row);
+            const unsigned char* const srcrowp = srcp + row * videoFrame->GetPitch();
+            memcpy(dstp, srcrowp, videoFrame->GetRowSize());
+        }
+    }
+
     PClip m_origin;
     const int m_paletteSize;
     const bool m_useGlobalPalette;
