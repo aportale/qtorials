@@ -7,14 +7,13 @@ class ColorQuantize : public IClip
 public:
     ColorQuantize(PClip originClip, int paletteSize,
                   bool useGlobalPalette, FREE_IMAGE_QUANTIZE algorithm,
-                  IScriptEnvironment* env)
+                  const char *globalPaletteOutputFile, IScriptEnvironment* env)
         : m_origin(originClip)
         , m_paletteSize(paletteSize)
         , m_useGlobalPalette(useGlobalPalette)
         , m_algorithm(algorithm)
         , m_targetVideoInfo(originClip->GetVideoInfo())
         , m_globalPalette(0)
-        , m_globalPaletteSize(0)
     {
         if (!originClip->GetVideoInfo().IsRGB24()) {
             m_originRgb = env->Invoke("ConvertToRgb24", originClip).AsClip();
@@ -35,10 +34,11 @@ public:
             FIBITMAP *quantizedImage =
                     FreeImage_ColorQuantizeEx(hugeImage, algorithm, m_paletteSize);
             FreeImage_Unload(hugeImage);
-            m_globalPaletteSize = FreeImage_GetColorsUsed(quantizedImage);
-            m_globalPalette = new RGBQUAD[m_globalPaletteSize];
-            memcpy(m_globalPalette, FreeImage_GetPalette(quantizedImage), m_globalPaletteSize * sizeof(RGBQUAD));
+            m_globalPalette = new RGBQUAD[m_paletteSize];
+            memcpy(m_globalPalette, FreeImage_GetPalette(quantizedImage), m_paletteSize * sizeof(RGBQUAD));
             FreeImage_Unload(quantizedImage);
+            if (globalPaletteOutputFile)
+                savePaletteImage(globalPaletteOutputFile, m_globalPalette, m_paletteSize);
         }
     }
 
@@ -57,10 +57,9 @@ public:
                 FreeImage_Allocate(m_targetVideoInfo.width, m_targetVideoInfo.height, 24);
         copyVideoFrameToImage(m_originRgb->GetFrame(n, env), frameImage);
 
-        const int paletteSize = m_useGlobalPalette ? m_globalPaletteSize : m_paletteSize;
-        const int reservedPaletteSize = m_useGlobalPalette ? paletteSize : 0;
+        const int reservedPaletteSize = m_useGlobalPalette ? m_paletteSize : 0;
         FIBITMAP *quantizedFrameImage =
-                FreeImage_ColorQuantizeEx(frameImage, FIQ_NNQUANT, paletteSize, reservedPaletteSize, m_globalPalette);
+                FreeImage_ColorQuantizeEx(frameImage, FIQ_NNQUANT, m_paletteSize, reservedPaletteSize, m_globalPalette);
         FreeImage_Unload(frameImage);
         FIBITMAP *quantizedFrameImageRgb24 =
                 FreeImage_ConvertTo24Bits(quantizedFrameImage);
@@ -104,7 +103,14 @@ public:
                             "Supported are '%s' and '%s'."
                             ,algorithmString, algorithms[0], algorithms[1]);
 
-        return new ColorQuantize(origin, paletteSize, useGlobalPalette, algorithm, env);
+        const char* const globalpaletteoutputfile = args[4].AsString(NULL);
+        if (globalpaletteoutputfile && !useGlobalPalette)
+            env->ThrowError("ColorQuantize: globalpaletteoutputfile can\n"
+                            "only be chosen if a global palette is used."
+                            ,paletteSize, mimumPaletteSize, maxiumPaletteSize);
+
+        return new ColorQuantize(origin, paletteSize, useGlobalPalette,
+                                 algorithm, globalpaletteoutputfile, env);
     }
 
     bool __stdcall GetParity(int /* n */)
@@ -139,13 +145,23 @@ protected:
         }
     }
 
+    void savePaletteImage(const char *fileName, RGBQUAD *palette, int entries)
+    {
+        FIBITMAP *image = FreeImage_Allocate(entries, 1, 8);
+        memcpy(FreeImage_GetPalette(image), palette, entries * sizeof(RGBQUAD));
+        BYTE *dstp = FreeImage_GetScanLine(image, 0);
+        for (int i = 0; i < entries; ++i)
+            dstp[i] = BYTE(i);
+        FreeImage_Save(FIF_PNG, image, fileName);
+        FreeImage_Unload(image);
+    }
+
     PClip m_origin;
     const int m_paletteSize;
     const bool m_useGlobalPalette;
     const FREE_IMAGE_QUANTIZE m_algorithm;
     VideoInfo m_targetVideoInfo;
     RGBQUAD *m_globalPalette;
-    int m_globalPaletteSize;
     PClip m_originRgb;
 };
 
@@ -153,7 +169,8 @@ extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
     env->AddFunction("ColorQuantize",
-                     "[clip]c[palettesize]i[globalpalette]b[algorithm]s",
+                     "[clip]c[palettesize]i[globalpalette]b"
+                     "[algorithm]s[globalpaletteoutputfile]s",
                      ColorQuantize::CreateColorQuantize, 0);
     return "`ColorQuantize' Reduce colors to a palette";
 }
