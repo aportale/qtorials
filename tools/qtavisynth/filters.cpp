@@ -276,6 +276,18 @@ void paintCCBySa(QPainter *p, const QRect &rect)
     paintCC(p, rect, QLatin1String("by-sa"));
 }
 
+void paintX2LogoBig(QPainter *p, const QRect &rect)
+{
+    const QLatin1String svgId("x2logo");
+    const QRectF logoElementBounds =
+            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
+    const int logoHeight = qMin(rect.height(), rect.width()) / 1.8;
+    const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
+    const int logoY = (rect.height() - logoHeight) / 2;
+    const int logoX = (rect.width() - logoWidth) / 2;
+    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
+}
+
 QTransform fitRect1InRect2Centered(const QRectF &rect1, const QRectF &rect2)
 {
     const qreal widthFactor = rect2.width() / rect1.width();
@@ -358,7 +370,8 @@ static const struct ElementAndPainter {
     { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
     { QLatin1String("cc-by-nc-sa"),         paintCCByNcSa },
     { QLatin1String("cc-by-nc-nd"),         paintCCByNcNd },
-    { QLatin1String("cc-by-sa"),            paintCCBySa }
+    { QLatin1String("cc-by-sa"),            paintCCBySa },
+    { QLatin1String("x2logobig"),           paintX2LogoBig }
 };
 
 typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
