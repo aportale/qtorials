@@ -134,6 +134,18 @@ public:
         }
     }
 
+    static void dumpImages(const QSize &size)
+    {
+        for (int i = 0; i < PhoneScreenCalibr8::m_modesCount; ++i) {
+            QImage img(size, QImage::Format_RGB32);
+            QPainter p(&img);
+            PhoneScreenCalibr8::m_modes[i].function(p, img.size());
+            img.save(QString::fromLatin1("calibrate_%1_%2_%3.png")
+                    .arg(size.width()).arg(size.height())
+                    .arg(PhoneScreenCalibr8::m_modes[i].name));
+        }
+    }
+
 protected:
     void nextMode()
     {
@@ -184,6 +196,11 @@ int main(int argc, char *argv[])
     dlg.showFullScreen();
 #else
     dlg.show();
+#endif
+
+#if 0
+    PhoneScreenCalibr8::dumpImages(QSize(640, 360));
+    PhoneScreenCalibr8::dumpImages(QSize(360, 640));
 #endif
 
     return a.exec();
