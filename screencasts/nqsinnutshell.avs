@@ -25,7 +25,7 @@ function audioInstall
 {
     audioNoise(1)
 \[*
-    #n The Nokia Qt SDK can be found on the forum nokia website.
+    #n The Nokia Qt SDK can be found on the Forum Nokia website.
 *]
         \ + audioClip(45.046, 48.018, 1.7)
 \[*
@@ -33,7 +33,7 @@ function audioInstall
 *]
         \ + audioClip(48.082, 49.604, 0.8)
 \[*
-    #n ...we can choose between the Online and Offline Installer variants for our Desktop platform.
+    #n ...we can choose between the Online and Offline Installer variants for the Desktop platform on which we develop on.
 *]
         \ + audioClip(49.627, 50.567, 2.6)
 \[*
@@ -41,7 +41,7 @@ function audioInstall
 *]
         \ + audioClip(51.235, 57.266, 1)
 \[*
-    #n The components page let's us select the...
+    #n The components page lets us select the...
     #n QtMobility Api, Documentation, Qt Creator, the Qt Simulator and the complete Maemo and Symbian toolchains.
 *]
         \ + audioClip(51.235, 57.266, 1)
@@ -79,14 +79,14 @@ function audioCode
 *]
         \ + audioClip(48.082, 49.604, 0.8)
 \[*
-    #n The applicatino Ui can be created with the classical QtWidgets which originate from the desktop world.
+    #n The application Ui can be created with the classical Qt Widgets which originate from the desktop world.
     #n Future Nokia Qt SDK versions will offer more mobile optimized Ui technologies.
     #n This tiny test application has a list widget with items which can be cleared with the push button below.
 *]
         \ + audioClip(49.627, 50.567, 2.6)
 \[*
     #n The initially active target is the Qt Simulator. When we run the project, the Simulator with our application is launched.
-    #n The Device that is simulated can be choosen...
+    #n The Device to be simulated can be choosen...
     #n ...it can be rotated...
     #n ...and be scaled.
     #n Of course, our little test application is fully functional.
@@ -96,7 +96,7 @@ function audioCode
     #n The simultaor allows to manipulate different mobile specific parameters of the simulated device.
     #n For example the Location and Contacts.
     #n A Qt application which uses the QtMobility API can handle these parameters,...
-    #n ...in the Simulator, and as well in a real device.
+    #n ...in the Simulator, and as well on a real device.
 *]
         \ + audioClip(45.046, 48.018, 1.7)
 \[*
@@ -124,15 +124,15 @@ function audioPhone
 {
     audioNoise(1)
 \[*
-    #n The application gets deployed to the mobile phone and executed.
+    #n The application gets deployed to the mobile phone and is executed.
 *]
         \ + audioClip(45.046, 48.018, 1.7)
 \[*
-    #n QWidets on Symbian look and feel like native S60 Controls.
+    #n Qt Widgets on Symbian look and feel like native S60 Controls.
 *]
         \ + audioClip(48.082, 49.604, 0.8)
 \[*
-    #n ...and also here, our application works like a charm,
+    #n ...and also here, our application works like a charm.
 *]
         \ + audioClip(49.627, 50.567, 2.6)
 \[*
