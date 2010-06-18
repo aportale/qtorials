@@ -9,9 +9,9 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-#global gAudioClip = WAVSource(gMediaDir + "nqsinnutshell.wav")
-global gAudioNoiseStart = 1078334 / 44100.0
-global gAudioNoiseEnd = 1094214 / 44100.0
+global gAudioClip = WAVSource(gMediaDir + "nqsinnutshell.wav")
+global gAudioNoiseStart = 118.740
+global gAudioNoiseEnd = 119.158
 global gClipWidth = 1024
 global gClipHeight = 768
 global gTextClipFramesPerCharacter = 4
@@ -27,28 +27,28 @@ function audioInstall
 \[*
     #n The Nokia Qt SDK can be found on the Forum Nokia website.
 *]
-        \ + audioClip(45.046, 48.018, 1.7)
+        \ + audioClip(0.197, 3.784, 1)
 \[*
     #n Under 'Develop' -> 'Qt' -> 'Download',...
 *]
-        \ + audioClip(48.082, 49.604, 0.8)
+        \ + audioClip(3.796, 5.816, 1)
 \[*
     #n ...we can choose between the Online and Offline Installer variants for the Desktop platform on which we develop on.
 *]
-        \ + audioClip(49.627, 50.567, 2.6)
+        \ + audioClip(5.909, 11.389, 1)
 \[*
     #n The installer allows a Full or Custom installation.
 *]
-        \ + audioClip(51.235, 57.266, 1)
+        \ + audioClip(11.586, 14.675, 1)
 \[*
     #n The components page lets us select the...
     #n QtMobility Api, Documentation, Qt Creator, the Qt Simulator and the complete Maemo and Symbian toolchains.
 *]
-        \ + audioClip(51.235, 57.266, 1)
+        \ + audioClip(15.325, 25.716, 1)
 \[*
     #n The installation takes about 20 to 30 minutes. Afterwards, we have a complete Qt development environment for Maemo and Symbian.
 *]
-        \ + audioClip(49.627, 50.567, 2.6)
+        \ + audioClip(26.911, 34.400, 1)
 
         \ + audioNoise(10)
 }
@@ -61,9 +61,6 @@ function install
 function videoCode
 {
     DirectShowSource(gMediaDir + "nqsinnutshell_code.avi", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .Lanczos4Resize(gClipWidth, 544, 98, 0, 1706, 968)
-        \ .AddBorders(0, 88, 0, 88, 0)
 }
 
 function audioCode
@@ -72,18 +69,18 @@ function audioCode
 \[*
     #n In QtCreator, we can directly create Create a new Mobile Project.
 *]
-        \ + audioClip(45.046, 48.018, 1.7)
+        \ + audioClip(35.840, 39.729, 1)
 \[*
     #n The Project Wizard lets us choose the target platforms for our project.
     #n We select Maemo, Qt Simulator and Symbian, whose toolchains came with the Installer.
 *]
-        \ + audioClip(48.082, 49.604, 0.8)
+        \ + audioClip(40.112, 49.470, 1)
 \[*
     #n The application Ui can be created with the classical Qt Widgets which originate from the desktop world.
     #n Future Nokia Qt SDK versions will offer more mobile optimized Ui technologies.
     #n This tiny test application has a list widget with items which can be cleared with the push button below.
 *]
-        \ + audioClip(49.627, 50.567, 2.6)
+        \ + audioClip(49.923, 66.990, 1)
 \[*
     #n The initially active target is the Qt Simulator. When we run the project, the Simulator with our application is launched.
     #n The Device to be simulated can be choosen...
@@ -91,18 +88,18 @@ function audioCode
     #n ...and be scaled.
     #n Of course, our little test application is fully functional.
 *]
-        \ + audioClip(51.235, 57.266, 1)
+        \ + audioClip(67.361, 84.103, 1)
 \[*
     #n The simultaor allows to manipulate different mobile specific parameters of the simulated device.
     #n For example the Location and Contacts.
     #n A Qt application which uses the QtMobility API can handle these parameters,...
     #n ...in the Simulator, and as well on a real device.
 *]
-        \ + audioClip(45.046, 48.018, 1.7)
+        \ + audioClip(84.567, 101.216, 1)
 \[*
     #n We can now change the target to 'Symbian Device' and execute the program.
 *]
-        \ + audioClip(45.046, 48.018, 1.7)
+        \ + audioClip(101.634, 106.255, 1)
 
         \ + audioNoise(10)
 }
@@ -126,19 +123,19 @@ function audioPhone
 \[*
     #n The application gets deployed to the mobile phone and is executed.
 *]
-        \ + audioClip(45.046, 48.018, 1.7)
+        \ + audioClip(106.480, 109.986, 1)
 \[*
     #n Qt Widgets on Symbian look and feel like native S60 Controls.
 *]
-        \ + audioClip(48.082, 49.604, 0.8)
+        \ + audioClip(110.335, 114.143, 1)
 \[*
     #n ...and also here, our application works like a charm.
 *]
-        \ + audioClip(49.627, 50.567, 2.6)
+        \ + audioClip(114.178, 116.987, 1)
 \[*
     #n Thanks for watching :)
 *]
-        \ + audioClip(51.235, 57.266, 1)
+        \ + audioClip(117.301, 118.438, 1)
 
         \ + audioNoise(10)
 }
@@ -164,4 +161,5 @@ function completeclip
         \ .FadeIO(gDissolveLength)
 }
 
-completeclip
+#completeclip
+install
