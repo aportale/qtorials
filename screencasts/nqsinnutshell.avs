@@ -19,7 +19,8 @@ global gTextClipFramesPerCharacter = 4
 function videoInstall
 {
     install = DirectShowSource(gMediaDir + "nqsinnutshell_install.avi", audio = false)
-    install.trim(250, 460).selectevery(2).assumefps(25)                 [* Start until page loaded *]
+    install_cut =
+        \   install.trim(250, 460).selectevery(2).assumefps(25)                 [* Start until page loaded *]
         \ + install.trim(460, 810)               	                    [* Installer variants popup *]
         \ + install.trim(900, 990).selectevery(2).assumefps(25)         [* Downloading start *]
         \ + install.trim(990, 8000).selectevery(250).assumefps(25)      [* Downloading progress *]
@@ -34,6 +35,8 @@ function videoInstall
         \ + install.trim(20130, 20170).selectevery(2).assumefps(25)     [* Accept Windows Logo Warning *]
         \ + install.trim(20170, 30510).selectevery(100).assumefps(25)   [* Install progress till Finish *]
         \ + install.trim(30510, 30510).loop(50)                         [* Finish *]
+    greendot = install_cut.trim(3, 3).crop(908, 744, 20, 20).converttorgb32
+    install_cut.converttorgb32.Layer(greendot, x = 908, y = 744)
 }
 
 function audioInstall
@@ -78,13 +81,14 @@ function audioInstall
 
 function install
 {
-    AudioDub(videoInstall, audioInstall).converttorgb32
+    AudioDub(videoInstall, audioInstall)
 }
 
 function videoCode
 {
     code = DirectShowSource(gMediaDir + "nqsinnutshell_code.avi", audio = false)
-    code.trim(1, 180)                                                   [* Start until Targets step *]
+    code_cut =
+        \   code.trim(1, 180)                                                   [* Start until Targets step *]
         \ + code.trim(180, 180).loop(220)                               [* Targets step *]
         \ + code.trim(180, 253).selectevery(2).assumefps(25)            [* Targets step till end of wizard *]
         \ + code.trim(430, 1070).selectevery(3, 1, 2).assumefps(25)     [* Creating app *]
@@ -93,6 +97,8 @@ function videoCode
         \ + code.trim(1270, 2100)                                       [* Switching, Rotating, scaling, testing app, expanding parameters *]
         \ + code.trim(2100, 2100).loop(60)                              [* pause on contacts list *]
         \ + code.trim(2100, 2400)                                       [* Close Simulator and launch on Symbian device *]
+    greendot = code_cut.trim(3, 3).crop(1000, 744, 20, 20).converttorgb32
+    code_cut.converttorgb32.Layer(greendot, x = 1000, y = 744)
 }
 
 function audioCode
@@ -150,7 +156,7 @@ function audioCode
 
 function code
 {
-    AudioDub(videoCode, audioCode).converttorgb32
+    AudioDub(videoCode, audioCode)
 }
 
 function videoPhone
