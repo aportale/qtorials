@@ -163,7 +163,7 @@ function videoPhone
 {
     phone = DirectShowSource(gMediaDir + "nqsinnutshell_phone.m2ts", audio = false)
         \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .trim(30, 360)
+        \ .trim(5, 380)
     phone.animate(0, phone.FrameCount, "Lanczos4Resize",
         \   gClipWidth, gClipHeight, float(256), float(0), float(1382), float(1036),
         \   gClipWidth, gClipHeight, float(410), float(110), float(1080), float(810))
@@ -175,11 +175,11 @@ function audioPhone
 \[*
     #n The application gets deployed to the mobile phone and is executed.
 *]
-        \ + audioClip(106.480, 109.986, 1)
+        \ + audioClip(106.480, 109.986, 0.5)
 \[*
     #n Qt Widgets on Symbian look and feel like native S60 Controls.
 *]
-        \ + audioClip(110.335, 114.143, 1)
+        \ + audioClip(110.335, 114.143, 0.5)
 \[*
     #n ...and also here, our application works like a charm.
 *]
