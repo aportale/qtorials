@@ -9,25 +9,32 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-global withAudio = false
+global withAudio = true
 
 global gClipWidth = (withAudio ? 1920 : 960)
 global gClipHeight = (withAudio ? 1080 : 720)
 
-function RawFootage
+function TweakedFootage(clip raw)
 {
-    clip = SegmentedDirectShowSource(gMediaDir + "roberto_remuxed/cppfrontend.MTS", audio = withAudio)
-    Dissolve(clip.trim(2625, 10100), clip.trim(11300, 179300), gDissolveLength)
-    # 2625 - 10100, 11300, 179300
+    withAudio ? raw.GetLeftChannel :
+    \ raw
+    \ . TemporalSoften(2, 4, 2, mode = 2)
+    \ . Lanczos4Resize(gClipWidth, gClipHeight, 386, 166, 1182, 886)
+    \ . Levels(0, 0.75, 180, 0, 255)
+    \ . Sharpen(0.1)
 }
 
-function TweakedFootage
+function CutFootage()
 {
-    RawFootage
-    TemporalSoften(2, 4, 2, mode = 2)
-    Lanczos4Resize(gClipWidth, gClipHeight, 386, 166, 1182, 886)
-    Levels(0, 0.75, 180, 0, 255)
-    Sharpen(0.1)
+    TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.01.MTS", audio = withAudio).trim(2625, 10100))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.01.MTS", audio = withAudio).trim(11300, 0))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.02.MTS", audio = withAudio))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.03.MTS", audio = withAudio))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.04.MTS", audio = withAudio))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.05.MTS", audio = withAudio))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.06.MTS", audio = withAudio))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.07.MTS", audio = withAudio))
+    \ + TweakedFootage(DirectShowSource(gMediaDir + "roberto/cppfrontend.08.MTS", audio = withAudio))
 }
 
 function completeclip
@@ -35,11 +42,12 @@ function completeclip
     Dissolve(
         \   textClip("Roberto Raggi\nNokia, Qt Development Frameworks", 90).Converttoyv12.killaudio
         \ , textClip("The D Programming Language", 90).Converttoyv12.killaudio
-        \ , (withAudio ? RawFootage : TweakedFootage.Converttoyv12)
+        \ , TweakedFootage
         \ , gDissolveLength
     \   )
     overlayQtorialsElements("qtlogosmall").FadeIO(gDissolveLength)
 }
 
 #RawFootage
-TweakedFootage
+#TweakedFootage
+CutFootage
