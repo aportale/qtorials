@@ -47,7 +47,7 @@ function completeclip
 {
     Dissolve(
         \   text("Roberto Raggi\nNokia, Qt Development Frameworks", 90)
-        \ , text("The D Programming Language", 90)
+        \ , text("The C++ Engine Frontend", 90)
         \ , withAudio ? RawClippedFootage : TweakedFootage
         \ , gDissolveLength
     \)
