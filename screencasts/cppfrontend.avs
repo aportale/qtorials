@@ -7,7 +7,7 @@
 # California, 94105, USA.
 
 LoadPlugin ("qtavisynth.dll")
-LoadPlugin ("c:\Program Files\DGAvcDecode\DGAVCDecode.dll")
+LoadPlugin ("DGAVCDecode.dll")
 Import("tools.avsi")
 
 global withAudio = false
@@ -17,7 +17,7 @@ global gClipHeight = (withAudio ? 1080 : 720)
 
 function RawFootage()
 {
-    AVCSource(gMediaDir + "roberto\cppfrontend_tsdoctor_merged.dga")
+    AVCSource(gMediaDir + "cppfrontend\cppfrontend_tsdoctor_merged.dga")
 #    withAudio ? AudioDub(DirectShowSource(gMediaDir + "roberto\cppfrontend_tsdoctor_merged PID 1100 2_0ch 48KHz 256Kbps DELAY -80ms.ac3")).GetLeftChannel.SSRC(44100, false) : NOP
 }
 
