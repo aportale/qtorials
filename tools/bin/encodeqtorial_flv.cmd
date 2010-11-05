@@ -14,5 +14,5 @@ set SCREENCASTMP4=%SCREENCASTSDIR%\%1.mp4
 set STAGEDIR=%SCRIPTDIR%..\..\..\qtorials_stage
 set SCREENCASTFLV=%STAGEDIR%\%1.flv
 
-x264 -o "%SCREENCASTMP4%" --threads 1 "%SCREENCASTAVS%"
+x264 -o "%SCREENCASTMP4%" "%SCREENCASTAVS%"
 ffmpeg -y -i "%SCREENCASTMP4%" -vcodec copy -i "%SCREENCASTAVS%" -acodec libfaac -ac 1 -ar 44100 -ab 64k "%SCREENCASTFLV%"
