@@ -28,9 +28,9 @@ function completeclip
     clip =
         \ Dissolve(
             \   BlankClipRGB(15)
-            \ , textClip("Sench Touch\n\n", 40)
-            \ , textClip("Sench Touch\non QtWebKit\n", 40)
-            \ , textClip("Sench Touch\non QtWebKit\non Nokia N8", 40)
+            \ , textClip("Sencha Touch\n\n", 40)
+            \ , textClip("Sencha Touch\non QtWebKit\n", 40)
+            \ , textClip("Sencha Touch\non QtWebKit\non Nokia N8", 40)
             \ , gDissolveLength).killaudio
         \ + phoneactionClip.animate(0, phoneactionClip.FrameCount, "Lanczos4Resize",     gClipWidth, gClipHeight, 0.0, 0.0, 1920.0, 1080.0,     gClipWidth, gClipHeight, 248.0, 128.0, 1390.0, 781.0).ConvertToRgb
     return clip.QtorialsElements("oldstyle").FadeIO(gDissolveLength)
