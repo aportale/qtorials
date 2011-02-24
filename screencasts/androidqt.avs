@@ -207,7 +207,7 @@ function audioNecessitas
 \[*
     #n Our virtual device which we created moments ago has been detected and there is even the possibility to add and remove devices and launch the emulator from within Creator!
 *]
-        \ + audioClip(121.571, 131.532, 1)
+        \ + audioClip(121.571, 131.532, 2)
 \[*
     #n In the Qt4 options we add a new Qt version, by specifying the location of the qmake binary that came with Necessitas.
 *]
@@ -239,6 +239,15 @@ function videoNecessitas_960x720
         \ + clip.trim(9340, 9430)                                       [* Launching Creator *]
         \ + clip.trim(9462, 9604)                                       [* Opening options *]
         \ + clip.trim(9604, 10155).selectevery(3).assumefps(25)         [* Setting paths *]
+        \ + clip.trim(10155, 10155).loop(310)                           [* AVDs *]
+            \ .QtorialsHighlight(4, 248, 802, 38, 50, 310)              [* Highlighting found AVD *]
+            \ .QtorialsHighlight(808, 226, 78, 86, 150, 310)            [* Highlighting AVD management *]
+        \ + clip.trim(10173, 10208).selectevery(3).assumefps(25)        [* Moving dialog *]
+        \ + clip.trim(10208, 10249)                                     [* Swelecting Qt4 *]
+        \ + clip.trim(10249, 10290).selectevery(3).assumefps(25)        [* Moving dialog *]
+        \ + clip.trim(10290, 10325)                                     [* Adding Qt version *]
+        \ + clip.trim(10325, 10820).selectevery(5).assumefps(25)        [* Setting qmake *]
+        \ + clip.trim(10820, 10940)                                     [* Naming version *]
 
     Dissolve(download_cut, installation_cut, setup_cut, gDissolveLength)
 }
