@@ -16,14 +16,6 @@
 #include "title.h"
 #include "zoomnpan.h"
 #include "svganimation.h"
-#include <QtPlugin>
-
-#if !defined(QT_SHARED) && !defined(QT_DLL)
-Q_IMPORT_PLUGIN(qgif)
-Q_IMPORT_PLUGIN(qjpeg)
-Q_IMPORT_PLUGIN(qtiff)
-Q_IMPORT_PLUGIN(qsvg)
-#endif
 
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
