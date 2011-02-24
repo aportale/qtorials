@@ -10,8 +10,8 @@ LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
 global gAudioClip = WAVSource(gMediaDir + "androidqt_narration.wav")
-global gAudioNoiseStart = 188.223113
-global gAudioNoiseEnd = 188.435465
+global gAudioNoiseStart = 54.575987
+global gAudioNoiseEnd = 55.449887
 global gClipWidth = 960
 global gClipHeight = 720
 global gTextClipFramesPerCharacter = 2
@@ -70,11 +70,11 @@ function audioNecessitasComponents
 function videoNecessitasComponents
 {
     Dissolve(
-        \   textClip("Necessitas:\n\n\n\n", 110)
-        \ , textClip("Necessitas:\nQt for Android\n\n\n", 110)
-        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\n\n", 160)
-        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\nNecessitas installer\n", 240)
-        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\nNecessitas installer\nMinistro", 160)
+        \   textClip("Necessitas:\n\n\n\n", 135)
+        \ , textClip("Necessitas:\nQt for Android\n\n\n", 100)
+        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\n\n", 130)
+        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\nNecessitas installer\n", 220)
+        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\nNecessitas installer\nMinistro", 145)
         \ , gDissolveLength)
 }
 
@@ -85,19 +85,19 @@ function necessitasComponents
 
 function audioAndroidSdk
 {
-    audioNoise(1)
+    audioNoise(0.5)
 \[*
     #n Let's start by downloading and setting up the Android Software development kit, as well as the Android native development kit.
 *]
-        \ + audioClip(28.606, 35.131, 1)
+        \ + audioClip(28.606, 35.131, 0.5)
 \[*
     #n From the android developer site, we download the linux version of the Android sdk.
 *]
-        \ + audioClip(35.758, 40.472, 1)
+        \ + audioClip(35.758, 40.472, 2)
 \[*
     #n And from another page on that site we get the Android ndk.
 *]
-        \ + audioClip(43.699, 47.252, 1)
+        \ + audioClip(43.699, 47.252, 2.5)
 \[*
     #n Then, we extract both downloaded archives.
 *]
@@ -109,15 +109,15 @@ function audioAndroidSdk
 \[*
     #n The Android SDK is not yet completely set up. We need to do some things in the Android SDK Manager.
 *]
-        \ + audioClip(64.598, 70.240, 1)
+        \ + audioClip(64.598, 70.240, 4)
 \[*
     #n We get the Platform tools and the SDK Platform for at least one Android version.
 *]
-        \ + audioClip(73.700, 78.414, 1)
+        \ + audioClip(73.700, 78.414, 3.5)
 \[*
     #n Then we create a new virtual device for the Android emulator...
 *]
-        \ + audioClip(79.273, 82.663, 1)
+        \ + audioClip(79.273, 82.663, 0.5)
 \[*
     #n With enough space on the SD Card and with our screen resolution of choice.
 *]
@@ -139,10 +139,25 @@ function videoAndroidSdk_960x720
         \ + clip.trim(1210, 1558).selectevery(15).assumefps(25)         [* Downloading NDK *]
     setup_cut =
         \   clip.trim(1620, 1775).selectevery(4).assumefps(25)          [* Extracting SDK *]
+        \ + clip.trim(1775, 1775).loop(20)                              [* Extracting SDK *]
         \ + clip.trim(1820, 1964).selectevery(4).assumefps(25)          [* Extracting NDK *]
+        \ + clip.trim(2300, 2428).selectevery(4).assumefps(25)          [* apt-get*]
+        \ + clip.trim(2428, 2575).selectevery(2).assumefps(25)          [* jdk ant *]
+        \ + clip.trim(2575, 3050).selectevery(4).assumefps(25)          [* installing jdk ant *]
+        \ + clip.trim(3050, 3270).selectevery(2).assumefps(25)          [* launching sdk manager *]
+        \ + clip.trim(3270, 3400).selectevery(4).assumefps(25)          [* sdk manager opens *]
+        \ + clip.trim(3400, 3472).selectevery(2).assumefps(25)          [* Click Available versions *]
+        \ + clip.trim(3472, 3620).selectevery(4).assumefps(25)          [* List updates *]
+        \ + clip.trim(3620, 3700)                                       [* Selecting tool and froyo *]
+        \ + clip.trim(3700, 3768).selectevery(2).assumefps(25)          [* Click: Yes, Ok *]
+        \ + clip.trim(3768, 4644).selectevery(80).assumefps(25)         [* installing tools *]
+        \ + clip.trim(4644, 4678)                                       [* Agree adb update *]
+        \ + clip.trim(4678, 4795).selectevery(15).assumefps(25)         [* adb restarts *]
+        \ + clip.trim(4795, 4926).selectevery(2).assumefps(25)          [* Click avd *]
+        \ + clip.trim(5200, 5515).selectevery(2).assumefps(25)          [* Creating device *]
+        \ + clip.trim(5725, 5925).selectevery(3).assumefps(25)          [* Creating device *]
 
-    #Dissolve(download_cut, setup_cut, gDissolveLength)
-    setup_cut
+    Dissolve(download_cut, setup_cut, gDissolveLength)
 }
 
 function androidSdk
@@ -152,23 +167,43 @@ function androidSdk
 
 function audioNecessitas
 {
-    audioNoise(2)
+    audioNoise(1)
 \[*
     #n Having the standard Android SDK installed, we can now continue with the Qt part.
 *]
-        \ + audioClip(88.840, 93.832, 1)
+        \ + audioClip(88.840, 93.832, 2)
 \[*
-    #n Necessitas is hosted on source forge. We just need to download one installer, and run it.
+    #n Necessitas is hosted on source forge.
 *]
-        \ + audioClip(95.785, 101.346, 1)
+        \ + audioClip(95.840, 98.397, 4)
+\[*
+    #n We just need to download one installer...
+*]
+        \ + audioClip(98.647, 100.589, 3)
+\[*
+    #n ...and run it.
+*]
+        \ + audioClip(100.624, 101.364, 4)
 \[*
     #n The installer creates a start menu entry which we use to launch Qt Creator.
 *]
         \ + audioClip(102.623, 107.186, 1)
 \[*
-    #n Under Tools -> Options -> Android, we specify the Android SDK and NDK locations, aswell as the toolchain and Ant location.
+    #n Under Tools -> ...
 *]
-        \ + audioClip(111.401, 120.108, 1)
+        \ + audioClip(111.427, 112.347, 0.5)
+\[*
+    #n ... -> Options -> ...
+*]
+        \ + audioClip(112.437, 112.942, 1.5)
+\[*
+    #n ... Android, ...
+*]
+        \ + audioClip(112.945, 113.586, 1)
+\[*
+    #n ... we specify the Android SDK and NDK locations, aswell as the toolchain and Ant location.
+*]
+        \ + audioClip(113.847, 120.126, 1)
 \[*
     #n Our virtual device which we created moments ago has been detected and there is even the possibility to add and remove devices and launch the emulator from within Creator!
 *]
@@ -179,6 +214,38 @@ function audioNecessitas
         \ + audioClip(133.216, 140.820, 1)
 
         \ + audioNoise(10)
+}
+
+function videoNecessitas_960x720
+{
+    clip = DirectShowSource(gMediaDir + "androidqt_necessitas.avi")
+        \ .converttorgb32
+    download_cut =
+        \   clip.trim(94, 94).loop(135)                                 [* Google *]
+        \ + clip.trim(94, 444).selectevery(2).assumefps(25)             [* Googling "necessitas" *]
+        \ + clip.trim(444, 660).selectevery(6).assumefps(25)            [* Start Downloading *]
+        \ + clip.trim(660, 685)                                         [* Save As... *]
+        \ + clip.trim(660, 4360).selectevery(100).assumefps(25)         [* downloading... *]
+
+    installation_cut = 
+        \   clip.trim(4575, 4850).selectevery(4).assumefps(25)          [* Launching *]
+        \ + clip.trim(5245, 5280)                                       [* Starting installation *]
+        \ + clip.trim(5280, 5320).selectevery(2).assumefps(25)          [* Starting installation *]
+        \ + clip.trim(5320, 9120).selectevery(200).assumefps(25)        [* Installing *]
+        \ + clip.trim(9120, 9210).selectevery(2).assumefps(25)          [* Finished *]
+
+    setup_cut = 
+        \   clip.trim(9340, 9340).loop(20)                              [* Desktop *]
+        \ + clip.trim(9340, 9430)                                       [* Launching Creator *]
+        \ + clip.trim(9462, 9604)                                       [* Opening options *]
+        \ + clip.trim(9604, 10155).selectevery(3).assumefps(25)         [* Setting paths *]
+
+    Dissolve(download_cut, installation_cut, setup_cut, gDissolveLength)
+}
+
+function necessitas
+{
+    AudioDub(videoWithClipSize("videoNecessitas"), audioNecessitas)
 }
 
 function audioCreatorAction
@@ -494,4 +561,4 @@ function completeclip
 }
 
 #completeclip
-androidSdk
+necessitas
