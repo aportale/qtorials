@@ -9,9 +9,9 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-global gAudioClip = WAVSource(gMediaDir + "qtsymbian_development_narration.wav")
-global gAudioNoiseStart = 5538927 / 44100.0
-global gAudioNoiseEnd = 5559036 / 44100.0
+global gAudioClip = WAVSource(gMediaDir + "androidqt_narration.wav")
+global gAudioNoiseStart = 188.223113
+global gAudioNoiseEnd = 188.435465
 global gClipWidth = 960
 global gClipHeight = 720
 global gTextClipFramesPerCharacter = 2
@@ -62,9 +62,25 @@ function audioNecessitasComponents
     #n The Necessitas suite installer, which sets up the Android Qt development libraries and Qt Creator on top of a standard Android development environment.
     #n And "Ministro". The deployment service for Qt libraries to the end-consumer.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(0.258, 26.935, 1)
 
         \ + audioNoise(10)
+}
+
+function videoNecessitasComponents
+{
+    Dissolve(
+        \   textClip("Necessitas:\n\n\n\n", 110)
+        \ , textClip("Necessitas:\nQt for Android\n\n\n", 110)
+        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\n\n", 160)
+        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\nNecessitas installer\n", 240)
+        \ , textClip("Necessitas:\nQt for Android\nQt Creator for Android\nNecessitas installer\nMinistro", 160)
+        \ , gDissolveLength)
+}
+
+function necessitasComponents
+{
+    AudioDub(videoNecessitasComponents, audioNecessitasComponents)
 }
 
 function audioAndroidSdk
@@ -73,14 +89,36 @@ function audioAndroidSdk
 \[*
     #n Let's start by downloading and setting up the Android Software development kit, as well as the Android native development kit.
     #n From the android developer site, we download the linux version of the Android sdk.
-    #n And from another page on that site we get the Android ndk.
-    #n Then, we extract both downloaded archives.
-    #n For Android development, we need a Java Development Kit aswell as "Ant", the Java Build Tool.
-    #n The Android SDK is not yet completely set up. We need to do some things in the Android SDK Manager.
-    #n We get the Platform tools and the SDK Platform for at least one Android version.
-    #n Then we create a new virtual device for the Android emulator... With enough space on the SD Card and with our screen resolution of choice.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(28.283, 39.985, 1)
+\[*
+    #n And from another page on that site we get the Android ndk.
+*]
+        \ + audioClip(40.636, 44.165, 1)
+\[*
+    #n Then, we extract both downloaded archives.
+*]
+        \ + audioClip(44.211, 46.673, 1)
+\[*
+    #n For Android development, we need a Java Development Kit aswell as "Ant", the Java Build Tool.
+*]
+        \ + audioClip(47.416, 52.896, 1)
+\[*
+    #n The Android SDK is not yet completely set up. We need to do some things in the Android SDK Manager.
+*]
+        \ + audioClip(53.546, 59.443, 1)
+\[*
+    #n We get the Platform tools and the SDK Platform for at least one Android version.
+*]
+        \ + audioClip(59.815, 64.644, 1)
+\[*
+    #n Then we create a new virtual device for the Android emulator...
+*]
+        \ + audioClip(65.155, 68.778, 1)
+\[*
+    #n With enough space on the SD Card and with our screen resolution of choice.
+*]
+        \ + audioClip(69.149, 73.654, 1)
 
         \ + audioNoise(10)
 }
@@ -90,13 +128,28 @@ function audioNecessitas
     audioNoise(2)
 \[*
     #n Having the standard Android SDK installed, we can now continue with the Qt part.
+*]
+        \ + audioClip(75.604, 80.109, 1)
+\[*
     #n Necessitas is hosted on source forge. We just need to download one installer, and run it.
+*]
+        \ + audioClip(80.295, 85.914, 1)
+\[*
     #n The installer creates a start menu entry which we use to launch Qt Creator.
+*]
+        \ + audioClip(86.146, 90.697, 1)
+\[*
     #n Under Tools -> Options -> Android, we specify the Android SDK and NDK locations, aswell as the toolchain and Ant location.
+*]
+        \ + audioClip(91.858, 100.775, 1)
+\[*
     #n Our virtual device which we created moments ago has been detected and there is even the possibility to add and remove devices and launch the emulator from within Creator!
+*]
+        \ + audioClip(101.332, 111.038, 1)
+\[*
     #n In the Qt4 options we add a new Qt version, by specifying the location of the qmake binary that came with Necessitas.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(111.549, 119.351, 1)
 
         \ + audioNoise(10)
 }
@@ -106,13 +159,32 @@ function audioCreatorAction
     audioNoise(2)
 \[*
     #n Let's finally get our first Qt application running on Android.
-    #n I am opening a Qt Quick Application called "Samegame", and select a Qt version.
-    #n Creator generated a few Java files for us which are the shell for our C++ based Qt application.
-    #n The file "libs.xml" lists which Qt modules are needed to launch our application. Samegame also needs "QtDeclarative".
-    #n Now we can press play, and see how our application gets first built as shared library. Then the java code and packe gets built.
-    #n Samegame gets deployed to my attached device, and launched.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(121.162, 124.366, 1)
+\[*
+    #n I am opening a Qt Quick Application called "Samegame"
+*]
+        \ + audioClip(124.552, 127.570, 1)
+\[*
+    #n ...and select a Qt version.
+*]
+        \ + audioClip(127.570, 129.196, 1)
+\[*
+    #n Creator generated a few Java files for us which are the shell for our C++ based Qt application.
+*]
+        \ + audioClip(129.521, 135.558, 1)
+\[*
+    #n The file "libs.xml" lists which Qt modules are needed to launch our application. Samegame also needs "QtDeclarative".
+*]
+        \ + audioClip(135.930, 142.617, 1)
+\[*
+    #n Now we can press play, and see how our application gets first built as shared library. Then the java code and package gets built.
+*]
+        \ + audioClip(143.035, 150.558, 1)
+\[*
+    #n Samegame gets deployed to my attached device, and gets launched.
+*]
+        \ + audioClip(150.930, 154.924, 1)
 
         \ + audioNoise(10)
 }
@@ -122,11 +194,20 @@ function audioQmlOnDevice
     audioNoise(2)
 \[*
     #n Finally, we see our first Qt/QML application running on Android.
-    #n While, we are here, let's look at a few more QML applications.
-    #n Input methods are already implemented.
-    #n OpenGL support is still missing in the first version od Qt for Android, because of technical issues. But the software rendering is pretty performant.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(156.131, 160.357, 1)
+\[*
+    #n While, we are here, let's look at a few more QML applications.
+*]
+        \ + audioClip(161.286, 164.722, 1)
+\[*
+    #n Input methods are already working.
+*]
+        \ + audioClip(164.862, 166.951, 1)
+\[*
+    #n OpenGL support is still missing in the first version of Qt for Android, because of technical issues. But the software rendering is pretty performant.
+*]
+        \ + audioClip(166.998, 174.707, 1)
 
         \ + audioNoise(10)
 }
@@ -136,10 +217,13 @@ function audioCreatorDebugging
     audioNoise(2)
 \[*
     #n What if our application has bugs?
+*]
+        \ + audioClip(176.007, 178.608, 1)
+\[*
     #n No reason to worry, BogDan already implemented Android debugging in Creator. For emulator and device.
     #n You can see the debugger in action on his YouTube channel.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(178.887, 188.082, 1)
 
         \ + audioNoise(10)
 }
@@ -152,7 +236,7 @@ function audioWhatAboutDeployment
     #n But... what about deployment? The Qt libraries need to be present on the end users' device, in order to make our Qt application work.
     #n That's why BogDan also implemented a pretty smart deployment service for Qt libraries... called Ministro.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(0, 1, 1)
 
         \ + audioNoise(10)
 }
@@ -162,15 +246,33 @@ function audioMinistro
     audioNoise(2)
 \[*
     #n The very first time any necessitas based Qt application is started on a device, the user is asked to install the "Ministro" application.
+*]
+        \ + audioClip(188.825, 196.534, 1)
+\[*
     #n Then, the Marked app launches and offers Ministro to be installed with a few clicks.
+*]
+        \ + audioClip(196.766, 201.828, 1)
+\[*
     #n Please note, this only happens once on a device, if Ministro was not yet installed.
+*]
+        \ + audioClip(201.967, 207.029, 1)
+\[*
     #n Now, Ministro will download the missing Qt libraries that are required for our application.
+*]
+        \ + audioClip(207.401, 212.788, 1)
+\[*
     #n Remember the "libs.xml" where we added QtDeclarative? Ministro uses that data to determine which Qt libraries need to be downloaded.
-    #n The libraries are stored in a central location and are now shared among Qt applications.
+*]
+        \ + audioClip(213.159, 221.425, 1)
+\[*
+    #n The libraries are stored in a central location on the system and are now shared among Qt applications.
     #n Therefore, the next launch of a Qt application may not trigger any library download.
+*]
+        \ + audioClip(221.565, 232.664, 1)
+\[*
     #n Another very crucial point of Ministro is that it downloads a version of Qt libraries that is compatible with the Android version running on the end users' device.
 *]
-        \ + audioClip(1.155, 15.005, 1)
+        \ + audioClip(233.407, 242.834, 1)
 
         \ + audioNoise(10)
 }
@@ -181,7 +283,7 @@ function audioOutro
 \[*
     #n Thanks for watching. Enjoy migrating your Qt app to Android.
  *]
-        \ + audioClip(215.440, 223.718, 1)
+        \ + audioClip(243.531, 247.525, 1)
 
         \ + audioNoise(10)
 }
@@ -360,4 +462,5 @@ function completeclip
         \ .FadeIO(gDissolveLength)
 }
 
-completeclip
+#completeclip
+necessitasComponents
