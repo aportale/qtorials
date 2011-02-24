@@ -18,24 +18,28 @@ global gTextClipFramesPerCharacter = 2
 
 function intro
 {
-    Dissolve(
-        \   textClip("Getting started with\nQt on Android", 75)
-        \ , gDissolveLength)
+    textClip("Getting started with\nQt on Android", 75)
 }
 
-function videoWelcome_960x720
+global gCameraFootage = 0
+function cameraFootage
 {
-    DirectShowSource(gMediaDir + "qtsymbian_development.MTS", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .Lanczos4Resize(gClipWidth, 544, 98, 0, 1706, 968)
-        \ .AddBorders(0, 88, 0, 88, 0)
+    gCameraFootage = (gCameraFootage.IsClip ? gCameraFootage : DirectShowSource(gMediaDir + "androidqt_intro.m2ts", audio = false))
+    AudioDub(gCameraFootage, WavSource(gMediaDir + "androidqt_intro.wav"))
+    DelayAudio(3.2)
+    TemporalSoften(4, 4, 8, mode = 2)
 }
 
-function videoWelcome_640x360
+function welcome_960x720
 {
-    DirectShowSource(gMediaDir + "qtsymbian_development.MTS", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .Lanczos4Resize(gClipWidth, gClipHeight, 200, 40, 1568, 880)
+    cameraFootage
+        \ .trim(172, 1195)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight, 356.0, 0.0, 1360.0, 1020.0)
+}
+
+function welcome
+{
+    videoWithClipSize("welcome")
 }
 
 function audioAboutAndroidPort
@@ -247,7 +251,7 @@ function videoNecessitas_960x720
         \ + clip.trim(10249, 10290).selectevery(3).assumefps(25)        [* Moving dialog *]
         \ + clip.trim(10290, 10325)                                     [* Adding Qt version *]
         \ + clip.trim(10325, 10820).selectevery(5).assumefps(25)        [* Setting qmake *]
-        \ + clip.trim(10820, 10940)                                     [* Naming version *]
+        \ + clip.trim(10820, 10955)                                     [* Naming version *]
 
     Dissolve(download_cut, installation_cut, setup_cut, gDissolveLength)
 }
@@ -259,27 +263,27 @@ function necessitas
 
 function audioCreatorAction
 {
-    audioNoise(2)
+    audioNoise(1)
 \[*
     #n Let's finally get our first Qt application running on Android.
 *]
-        \ + audioClip(141.981, 145.279, 1)
+        \ + audioClip(285.814, 289.715, 1)
 \[*
     #n I am opening a Qt Quick Application called "Samegame"
 *]
-        \ + audioClip(145.894, 149.272, 1)
+        \ + audioClip(145.894, 149.272, 0.5)
 \[*
     #n ...and select a Qt version.
 *]
-        \ + audioClip(150.062, 151.641, 1)
+        \ + audioClip(150.062, 151.641, 3)
 \[*
     #n Creator generated a few Java files for us which are the shell for our C++ based Qt application.
 *]
-        \ + audioClip(152.790, 158.676, 1)
+        \ + audioClip(152.790, 158.676, 3)
 \[*
     #n The file "libs.xml" lists which Qt modules are needed to launch our application. Samegame also needs "QtDeclarative".
 *]
-        \ + audioClip(159.269, 167.674, 1)
+        \ + audioClip(159.269, 167.674, 2)
 \[*
     #n Now we can press play, and see how our application gets first built as shared library...
 *]
@@ -296,6 +300,29 @@ function audioCreatorAction
         \ + audioNoise(10)
 }
 
+function videoCreatorAction_960x720
+{
+    clip = DirectShowSource(gMediaDir + "androidqt_creatoraction.avi")
+        \ .converttorgb32
+    action_cut =
+        \   clip.trim(20, 20).loop(120)                                  [* Welcome screen *]
+        \ + clip.trim(20, 196)                                           [* Click 'Open Project' *]
+        \ + clip.trim(310, 455).selectevery(2).assumefps(25)             [* Open Java files *]
+        \ + clip.trim(455, 1000)                                         [* Java/libs.xml/run *]
+        \ + clip.trim(1000, 1215).selectevery(4).assumefps(25)           [* build libs *]
+        \ + clip.trim(1215, 1215).loop(20)                               [* build libs *]
+        \ + clip.trim(1215, 1348).selectevery(2).assumefps(25)           [* build package *]
+        \ + clip.trim(1348, 1765).selectevery(3).assumefps(25)           [* deploy package *]
+        \ + clip.trim(1765, 1815)                                        [* Start process *]
+
+    action_cut
+}
+
+function creatorAction
+{
+    AudioDub(videoWithClipSize("videoCreatorAction"), audioCreatorAction)
+}
+
 function audioQmlOnDevice
 {
     audioNoise(2)
@@ -306,7 +333,7 @@ function audioQmlOnDevice
 \[*
     #n While, we are here, let's look at a few more QML applications.
 *]
-        \ + audioClip(189.780, 193.309, 1)
+        \ + audioClip(189.780, 193.309, 3)
 \[*
     #n An initial input methods implementation has already been done.
 *]
@@ -317,6 +344,30 @@ function audioQmlOnDevice
         \ + audioClip(199.854, 207.586, 1)
 
         \ + audioNoise(10)
+}
+
+function videoQmlOnDevice
+{
+    clip = DirectShowSource(gMediaDir + "androidqt_phoneaction.m2ts", audio = false)
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+    Dissolve(
+        \   clip.trim(38, 250)                                          [* SameGame *]
+        \ , clip.trim(660, 1040)                                        [* Flickr *]
+        \ , clip.trim(1865, 2020)                                       [* Snake *]
+        \ , gDissolveLength)
+    TurnLeft
+}
+
+function videoQmlOnDevice_960x720
+{
+    videoQmlOnDevice
+    Lanczosresize(524, 720, 0.0, 230.0, 1080.0, 1480.0)
+    AddBorders (218, 0, 218, 0, 0)
+}
+
+function qmlOnDevice
+{
+    AudioDub(videoWithClipSize("videoQmlOnDevice"), audioQmlOnDevice)
 }
 
 function audioCreatorDebugging
@@ -335,17 +386,21 @@ function audioCreatorDebugging
         \ + audioNoise(10)
 }
 
-function audioWhatAboutDeployment
+function whatAboutDeployment_960x720
 {
-    audioNoise(2)
+    cameraFootage
+        \ .trim(1300, 1920)
+        \ .Lanczos4Resize(gClipWidth, gClipHeight, 356.0, 0.0, 1360.0, 1020.0)
+}
+
+function whatAboutDeployment
+{
 \[*
     #n We have everything we need to create, develop, test and package Qt applications for Android.
     #n But... what about deployment? The Qt libraries need to be present on the end users' device, in order to make our Qt application work.
     #n That's why BogDan also implemented a pretty smart deployment service for Qt libraries... called Ministro.
 *]
-        \ + audioClip(0, 1, 1)
-
-        \ + audioNoise(10)
+    videoWithClipSize("whatAboutDeployment")
 }
 
 function audioMinistro
@@ -388,170 +443,24 @@ function audioOutro
 {
     audioNoise(1)
 \[*
-    #n Thanks for watching. Enjoy migrating your Qt app to Android.
+    #n Now you are ready to port your application to Android :)
  *]
-        \ + audioClip(285.682, 289.665, 1)
+        \ + audioClip(290.016, 293.407, 1)
 
         \ + audioNoise(10)
 }
 
-function videoQtPorts
-{
-    BlankClipRGB(455)
-    \.QtorialsSvgAnimation("qtsymbian_development.svg"
-        \ , "mainwindow"          ,   80,  455,     "fade"        , "immediate"
-        \ , "lineedit"            ,  140,  455,     "fadeandscale", "immediate"
-        \ , "pushbutton"          ,  160,  455,     "fadeandscale", "immediate"
-        \ , "listwidget"          ,  195,  455,     "fadeandscale", "fade"
-        \ , "foolineedit"         ,  250,  455,     "fade"        , "fadeandscale"
-        \ , "finger"              ,  305,  365,     "immediate"   , "immediate"
-        \ , "foolistwidget"       ,  365,  455,     "fadeandscale", "fade"
-    \ )
-}
-
-function QtPorts
-{
-    AudioDub(videoQtPorts, audioQtPorts)
-}
-
-function videoCreatorAppWizard_960x720
-{
-    appwizard = DirectShowSource(gMediaDir + "qtsymbian_development_appwizard.avi")
-        \ .converttorgb32
-    appwizard_createin_blink =
-        \   appwizard.trim(198, 198).loop(13)               [* blinking cursor *]
-        \ + appwizard.trim(197, 197).loop(13)
-    appwizard_cut =
-        \   appwizard.trim(0, 197)                          [* Until Class name entered *]
-        \ + appwizard_createin_blink.loop(7)                [* Project on same drive as S60 SDK and Qt for Symbian *]
-            \ .QtorialsHighlight(314, 410, 22, 24, 0, 180)
-        \ + appwizard.trim(197, 371)
-
-    appwizard_cut
-}
-
-function videoCreatorAppWizard_640x360
-{
-    videoCreatorAppWizard_960x720.QtorialsZoomNPan(
-        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
-        \ ,                  -1,   -1,       -1,   -1
-        \ ,   45,  -1,      160,  180,       -1,   -1
-        \ ,  145,  -1,      174,  234,       -1,   -1
-        \ ,  420,  -1,       -1,   -1,       -1,   -1           [* Finito *]
-        \ )
-}
-
-function creatorAppWizard
-{
-    AudioDub(videoWithClipSize("videoCreatorAppWizard"), audioCreatorAppWizard)
-}
-
-function videoCreatorAction_960x720
-{
-    desktopapp = DirectShowSource(gMediaDir + "qtsymbian_development_desktopapp.avi")
-    desktopapp_cut =
-        \   desktopapp.trim(1, 833)                             [* Start until first goto slot *]
-        \ + desktopapp.trim(836, 860).loop(4)                   [* Cursorblink *]
-        \ + desktopapp.trim(860, 1329)                          [* first goto slot until app launch *]
-        \ + desktopapp.trim(1329, 1329).loop(3)                 [* app launch delay *]
-        \ + desktopapp.trim(1390, 1437)                         [* app launch until type hello *]
-        \ + desktopapp.trim(1464, 1629)                         [* type hello until *]
-    projectmode = DirectShowSource(gMediaDir + "qtsymbian_development_projectmode.avi")
-    projectmode_cut =
-        \   projectmode.trim(70, 720)                           [* changed to project mode *]
-        \ + projectmode.trim(720, 720).loop(440)                [* wait for that guy to finish talking *]
-        \ + projectmode.trim(720, 1230)                         [* talking guy until device detected *]
-        \ + projectmode.trim(1230, 1230).loop(120)              [* device detected *]
-            \ .QtorialsHighlight(159, 489, 220, 14, 0, 120)
-        \ + projectmode.trim(1230, 1262)                        [* projectmode left *]
-    devicedebugging = DirectShowSource(gMediaDir + "qtsymbian_development_devicedebugging.avi")
-    devicedebugging_cut =
-        \   devicedebugging.trim(1, 1).loop(480)                [* changed to project mode *]
-        \ + devicedebugging.trim(1, 50)                         [* changed to project mode *]
-        \ + devicedebugging.trim(50, 50).loop(110)              [* context menu from debug button *]
-        \ + devicedebugging.trim(50, 150)                       [* *]
-        \ + devicedebugging.trim(150, 150).loop(1000)           [* configuration helper dialog *]
-        \ + devicedebugging.trim(150, 225)                      [* start of debugger launch *]
-        \ + devicedebugging.trim(381, 600)                      [* app starts up *]
-        \ + devicedebugging.trim(600, 600).loop(237)            [* app runs *]
-        \ + devicedebugging.trim(680, 1115)                     [* app hits breakpoint *]
-            \ .QtorialsHighlight(424, 431, 238, 89, 160, 320)
-    Dissolve(
-        \   desktopapp_cut
-        \ , projectmode_cut
-        \ , devicedebugging_cut
-        \ , gDissolveLength).converttorgb32
-}
-
-function videoCreatorAction_640x360
-{
-    videoCreatorAction_960x720.QtorialsZoomNPan(
-        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
-        \ ,                  -1,   -1,       -1,   -1
-        \ ,  115,  -1,      160,    0,       -1,   -1
-        \ ,  490,  -1,      320,  360,       -1,   -1
-        \ ,  585,  -1,      320,   48,       -1,   -1
-        \ ,  850,  -1,      186,  330,       -1,   -1
-        \ , 1230,  -1,        0,  148,      960,  540
-        \ , 1450,  -1,       72,  144,       -1,   -1
-        \ , 1600,  -1,       -1,   -1,       -1,   -1
-        \ , 1720,  -1,      320,  192,       -1,   -1
-        \ , 1770,  -1,      320,    0,       -1,   -1
-        \ , 1865,  -1,       -1,   -1,       -1,   -1
-        \ , 1925,  -1,      180,  360,       -1,   -1
-        \ , 2180,  -1,       -1,   -1,       -1,   -1
-        \ , 2310, 120,        0,  182,       -1,   -1
-        \ , 2810,  -1,      236,  190,       -1,   -1                     [* Selecting new build configuration from popup *]
-        \ , 2880,  -1,      288,  106,       -1,   -1                     [* accepting runconfiguration name *]
-        \ , 2940,  -1,       -1,   -1,       -1,   -1                     [* Scrolling down *]
-        \ , 3070,  -1,        0,  360,       -1,   -1                     [* Adding new run configuration *]
-        \ , 3330,  -1,       -1,   -1,       -1,   -1                     [* Exiting rpoject mode *]
-        \ , 3890,  -1,        0,  360,       -1,   -1                     [* Selection run configuration grom debug button popup *]
-        \ , 4060,  -1,      164,  164,       -1,   -1                     [* configuration helper dialog *]
-        \ , 5130,  -1,       -1,   -1,       -1,   -1                     [* Qreator is active *]
-        \ , 5270,  -1,        0,    0,     1240,  720                     [* Phone blends in *]
-        \ , 5590, 120,      260,  194,       -1,   -1                     [* App runs on phone *]
-        \ , 6020,  -1,       -1,   -1,       -1,   -1                     [* Finito *]
-        \ ) 
-}
-
-function creatorActionWithOverlay
-{
-    trkRgb =
-        \  DirectShowSource(gMediaDir + "qtsymbian_development_launchapptrk.MTS", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .turnright()
-        \ .crop(70, 128, 934, 1662)
-        \ .Lanczos4Resize(204, 360)
-        \ .converttorgb32
-    debugRgb =
-        \  DirectShowSource(gMediaDir + "qtsymbian_development_debugapplication.MTS", audio = false)
-        \ .TemporalSoften(4, 4, 8, mode = 2)
-        \ .turnright()
-        \ .crop(70, 128, 934, 1662)
-        \ .Lanczos4Resize(204, 360)
-        \ .converttorgb32
-    overlay = Dissolve(
-        \   Blankclip(trkRgb, 4624)
-        \ , trkRgb
-        \ , Blankclip(debugRgb, 185)
-        \ , debugRgb + debugRgb.trim(debugRgb.Framecount, debugRgb.Framecount).loop(140)
-        \ , Blankclip(debugRgb, 185)
-        \ , gDissolveLength)
-
-    AudioDub(videoWithClipSize("videoCreatorAction"), audioCreatorAction)
-        \ .layer(overlay, x = gClipWidth - overlay.Width, y = (gClipHeight - overlay.height) / 2)
-}
-
 function videoOutro
 {
-    BlankClipRGB(250)
-        \ .QtorialsElements("qtlogobig")
+    Dissolve(
+        \   textClip("Thank you for\nwatching", 80)
+        \ , textClip("Thank you for the port,\nBogDan!", 80)
+        \ , gDissolveLength)
 }
 
 function outro
 {
-    AudioDub(audioOutro, videoOutro)
+    AudioDub(videoOutro, audioOutro)
 }
 
 function completeclip
@@ -560,14 +469,17 @@ function completeclip
         \ Dissolve(
             \   intro
             \ , welcome.converttorgb
-            \ , QtPorts
-            \ , creatorAppWizard
-            \ , creatorActionWithOverlay
+            \ , necessitasComponents
+            \ , androidSdk
+            \ , necessitas
+            \ , creatorAction
+            \ , qmlOnDevice.converttorgb
+            \ , whatAboutDeployment.converttorgb
             \ , outro
             \ , gDissolveLength)
-        \ .QtorialsElements("qtlogosmall", "oldstyle")
+        \ .QtorialsElements("oldstyle")
         \ .FadeIO(gDissolveLength)
 }
 
-#completeclip
-necessitas
+completeclip
+# whatAboutDeployment
