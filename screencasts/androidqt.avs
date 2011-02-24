@@ -42,11 +42,10 @@ function audioAboutAndroidPort
 {
     audioNoise(2)
 \[*
-    #n Hi, my name is Alessandro. I want to talk about the community port of Qt to Android, and how to get our first Qt application runing on Android.
-    #n It all started when Qt announced the "Lighthouse" project, which makes Qt easily portable to nearly any operating system.
-    #n Bogdan Vatra, a Romanian software engineer with a strong passion for Qt and for Android, read about Lighthouse and decided to port Qt to Android... in his spare time.
-    #n It did not take long until he had a Qt user interface showing up on his Android phone. But to make the port easily usable by other's, a lot of work was still needed.
-    #n A Year later, Bodgan announced the Alpha version of a complete development suite.
+    #n Hi, my name is Alessandro. I want to talk about the community port of Qt to Android, and show how to get our first Qt application running on Android.
+    #n It all began when Qt announced the "Lighthouse", project which makes Qt easy to port to nearly any operating system.
+    #n Bogdan Vatra, a Romanian software engineer with a strong passion for Qt and for Android, read about Lighthouse and decided to port Qt to Android... as a spare time project.
+    #n Not even a year later, Bodgan announced the test version of a complete Qt for Android development suite.
 *]
         \ + audioClip(1.155, 15.005, 1)
 
@@ -92,7 +91,7 @@ function audioNecessitas
 \[*
     #n Having the standard Android SDK installed, we can now continue with the Qt part.
     #n Necessitas is hosted on source forge. We just need to download one installer.
-    #n We launch it as root, and need to leave the destination folder as it is. This is a limitation of the Necessitas Alpha version.
+    #n We launch it as root, and need to leave the destination folder as it is. This is a limitation of the Necessitas test version.
     #n The installer created a start menu entry which use to launch the Qt Creator.
     #n Under Tools -> Options -> Android, we specify the Android SDK and NDK locations, aswell as the toolchain and Ant location.
     #n Note that our virtual device which we created moments ago has been detected and There is even the possibility to add and remove devices and launch the emulator from within Creator!
@@ -138,7 +137,7 @@ function audioCreatorDebugging
     audioNoise(2)
 \[*
     #n What if our application has bugs?
-    #n Let's not worry, BogDan already implemented Android debugging in Qt Creator. For emulator and device.
+    #n No reason to worry, BogDan already implemented Android debugging in Qt Creator. For emulator and device.
     #n You can see the debugger in action on his YouTube channel.
 *]
         \ + audioClip(1.155, 15.005, 1)
@@ -150,9 +149,9 @@ function audioWhatAboutDeployment
 {
     audioNoise(2)
 \[*
-    #n We basically have everything we need for Qt application development for Android.
-    #n But what about deployment? The Qt libraries need to be iinstalled on the end user phone.
-    #n That's why BogDan also implemented a very smart deployment service for Qt libraries... called Ministro.
+    #n We have everything we need to create, develop, test and package Qt applications for Android.
+    #n But... what about deployment? The Qt libraries need to be present on the end users' device, in order to make our Qt application work.
+    #n That's why BogDan also implemented a pretty smart deployment service for Qt libraries... called Ministro.
 *]
         \ + audioClip(1.155, 15.005, 1)
 
@@ -164,7 +163,7 @@ function audioMinistro
     audioNoise(2)
 \[*
     #n We have everything we need for Qt application development for Android.
-    #n But what about deployment? The Qt libraries need to be iinstalled on the end user phone.
+    #n But what about deployment? The Qt libraries need to be present on the end users' phone, in order to make your application work.
     #n That's why BogDan also implemented a very smart deployment service for Qt libraries... called Ministro.
 *]
         \ + audioClip(1.155, 15.005, 1)
