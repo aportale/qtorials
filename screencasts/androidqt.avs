@@ -9,7 +9,7 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-global gAudioClip = WAVSource(gMediaDir + "androidqt_narration.wav")
+global gAudioClip = WAVSource(gMediaDir + "androidqt_narration.wav").Amplify(1.8)
 global gAudioNoiseStart = 54.575987
 global gAudioNoiseEnd = 55.449887
 global gClipWidth = 960
@@ -24,7 +24,7 @@ function intro
 global gCameraFootage = 0
 function cameraFootage
 {
-    gCameraFootage = (gCameraFootage.IsClip ? gCameraFootage : DirectShowSource(gMediaDir + "androidqt_intro.m2ts", audio = false))
+    global gCameraFootage = (gCameraFootage.IsClip ? gCameraFootage : DirectShowSource(gMediaDir + "androidqt_intro.m2ts", audio = false))
     AudioDub(gCameraFootage, WavSource(gMediaDir + "androidqt_intro.wav"))
     DelayAudio(3.2)
     TemporalSoften(4, 4, 8, mode = 2)
@@ -34,7 +34,8 @@ function welcome_960x720
 {
     cameraFootage
         \ .trim(172, 1195)
-        \ .Lanczos4Resize(gClipWidth, gClipHeight, 356.0, 0.0, 1360.0, 1020.0)
+        \ .Lanczos4Resize(960, 540, 350.0, 108, 1392.0, 784.0)
+        \ .AddBorders(0, 90, 0, 90, 0)
 }
 
 function welcome
@@ -132,7 +133,7 @@ function audioAndroidSdk
 
 function videoAndroidSdk_960x720
 {
-    clip = DirectShowSource(gMediaDir + "androidqt_androidsdkndk.avi")
+    clip = DirectShowSource(gMediaDir + "androidqt_androidsdkndk.avi", audio = false)
         \ .converttorgb32
     download_cut =
         \   clip.trim(30, 127)                                          [* Focussing input field *]
@@ -222,7 +223,7 @@ function audioNecessitas
 
 function videoNecessitas_960x720
 {
-    clip = DirectShowSource(gMediaDir + "androidqt_necessitas.avi")
+    clip = DirectShowSource(gMediaDir + "androidqt_necessitas.avi", audio = false)
         \ .converttorgb32
     download_cut =
         \   clip.trim(94, 94).loop(135)                                 [* Google *]
@@ -302,7 +303,7 @@ function audioCreatorAction
 
 function videoCreatorAction_960x720
 {
-    clip = DirectShowSource(gMediaDir + "androidqt_creatoraction.avi")
+    clip = DirectShowSource(gMediaDir + "androidqt_creatoraction.avi", audio = false)
         \ .converttorgb32
     action_cut =
         \   clip.trim(20, 20).loop(120)                                  [* Welcome screen *]
@@ -370,13 +371,13 @@ function qmlOnDevice
     AudioDub(videoWithClipSize("videoQmlOnDevice"), audioQmlOnDevice)
 }
 
-function audioCreatorDebugging
+function audioDebugger
 {
-    audioNoise(2)
+    audioNoise(1)
 \[*
     #n What if our application has bugs?
 *]
-        \ + audioClip(209.583, 212.602, 1)
+        \ + audioClip(209.583, 212.602, 0.5)
 \[*
     #n No reason to worry, BogDan already implemented Android debugging in Creator. For emulator and device.
     #n You can see the debugger in action on his YouTube channel.
@@ -386,11 +387,28 @@ function audioCreatorDebugging
         \ + audioNoise(10)
 }
 
+function videoDebugger
+{
+    DirectShowSource(gMediaDir + "androidqt_debugger.avi", audio = false).trim(20, 380)
+        \ .converttorgb32
+}
+
+function videoDebugger_960x720
+{
+    videoDebugger
+}
+
+function debugger
+{
+    AudioDub(videoWithClipSize("videoDebugger"), audioDebugger)
+}
+
 function whatAboutDeployment_960x720
 {
     cameraFootage
         \ .trim(1300, 1920)
-        \ .Lanczos4Resize(gClipWidth, gClipHeight, 356.0, 0.0, 1360.0, 1020.0)
+        \ .Lanczos4Resize(960, 540, 350.0, 108, 1392.0, 784.0)
+        \ .AddBorders(0, 90, 0, 90, 0)
 }
 
 function whatAboutDeployment
@@ -413,30 +431,62 @@ function audioMinistro
 \[*
     #n Then, the Marked app launches and offers Ministro to be installed with a few clicks.
 *]
-        \ + audioClip(233.094, 238.086, 1)
+        \ + audioClip(233.094, 238.086, 2)
 \[*
     #n Please note, this only happens once on a device, if Ministro was not yet installed.
 *]
-        \ + audioClip(239.804, 245.203, 1)
+        \ + audioClip(239.804, 245.203, 2)
 \[*
     #n Now, Ministro will download the missing Qt libraries that are required for our application.
 *]
         \ + audioClip(245.934, 251.101, 1)
-\[*
-    #n Remember the "libs.xml" where we added QtDeclarative? Ministro uses that data to determine which Qt libraries need to be downloaded.
-*]
-        \ + audioClip(253.121, 261.584, 1)
 \[*
     #n The libraries are stored in a central location on the system and are now shared among Qt applications.
     #n Therefore, the next launch of a Qt application may not trigger any library download.
 *]
         \ + audioClip(263.245, 273.705, 1)
 \[*
+    #n Remember the "libs.xml" where we added QtDeclarative? Ministro uses that data to determine which Qt libraries need to be downloaded.
+*]
+        \ + audioClip(253.121, 261.584, 1)
+\[* 
     #n Another very crucial point of Ministro is that it downloads a version of Qt libraries that is compatible with the Android version running on the end users' device.
 *]
         \ + audioClip(274.588, 284.317, 1)
 
         \ + audioNoise(10)
+}
+
+function videoMinistro
+{
+    clip = DirectShowSource(gMediaDir + "androidqt_ministro.m2ts", audio = false)
+
+    ministro_cut =
+        \   clip.trim(0, 110)                                            [* Ministro installer popup *]
+        \ + clip.trim(110, 110).loop(120)                                [* Ministro installer popup *]
+        \ + clip.trim(110, 170)                                          [* Open Market place *]
+        \ + clip.trim(255, 315) + clip.trim(330, 395) + clip.trim(410, 510) [* Open Market place *]
+        \ + clip.trim(510, 690).selectevery(6).assumefps(25)             [* Installing Ministro *]
+        \ + clip.trim(690, 760) + clip.trim(860, 970)                    [* Ministro reports missing libs *]
+        \ + (clip.trim(970, 2160) + clip.trim(2460, 3215) + clip.trim(3515, 4120))
+            \ .selectevery(3).assumefps(25)                             [* Downloading Libraries *]
+        \ + clip.trim(4120, 4170) + clip.trim(4210, 4320)               [* Ministro reports missing libs *]
+
+    ministro_cut
+        \ .TemporalSoften(4, 4, 8, mode = 2)
+        \ .TurnLeft
+}
+
+function videoMinistro_960x720
+{
+    videoMinistro
+    Lanczosresize(524, 720, 0.0, 230.0, 1080.0, 1480.0)
+    AddBorders (218, 0, 218, 0, 0)
+}
+
+function ministro
+{
+    AudioDub(videoWithClipSize("videoMinistro"), audioMinistro)
 }
 
 function audioOutro
@@ -454,7 +504,7 @@ function videoOutro
 {
     Dissolve(
         \   textClip("Thank you for\nwatching", 80)
-        \ , textClip("Thank you for the port,\nBogDan!", 80)
+        \ , textClip("Thank you for the port,\nBogDan and contributers!", 80)
         \ , gDissolveLength)
 }
 
@@ -474,7 +524,9 @@ function completeclip
             \ , necessitas
             \ , creatorAction
             \ , qmlOnDevice.converttorgb
+            \ , debugger
             \ , whatAboutDeployment.converttorgb
+            \ , ministro.converttorgb
             \ , outro
             \ , gDissolveLength)
         \ .QtorialsElements("oldstyle")
@@ -482,4 +534,3 @@ function completeclip
 }
 
 completeclip
-# whatAboutDeployment
