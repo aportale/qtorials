@@ -377,15 +377,15 @@ function audioDebugger
 \[*
     #n What if our application has bugs?
 *]
-        \ + audioClip(209.583, 212.602, 2.5)
+        \ + audioClip(209.583, 212.602, 1)
 \[*
     #n No reason to worry, BogDan already implemented Android debugging in Creator...
 *]
-        \ + audioClip(212.555, 217.362, 1)
+        \ + audioClip(212.555, 217.362, 0.5)
 \[*
     #n ...for emulator and device.
 *]
-        \ + audioClip(217.362, 219.243, 2)
+        \ + audioClip(217.362, 219.243, 1)
 \[*
     #n You can see the debugger in action on his YouTube channel.
 *]
@@ -397,7 +397,8 @@ function audioDebugger
 function videoDebugger
 {
     DirectShowSource(gMediaDir + "androidqt_debugger.ogg", audio = false)
-    trim(3760, 3760 + 350)
+    assumefps(25)
+    trim(3600, 3790 + 325)
 }
 
 function videoDebugger_960x720
