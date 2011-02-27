@@ -9,7 +9,7 @@
 LoadPlugin("qtavisynth.dll")
 Import("tools.avsi")
 
-global gAudioClip = WAVSource(gMediaDir + "androidqt_narration.wav").Amplify(1.8)
+global gAudioClip = WAVSource(gMediaDir + "androidqt_narration.wav").Amplify(1.5)
 global gAudioNoiseStart = 54.575987
 global gAudioNoiseEnd = 55.449887
 global gClipWidth = 960
@@ -26,16 +26,16 @@ function cameraFootage
 {
     global gCameraFootage = (gCameraFootage.IsClip ? gCameraFootage : DirectShowSource(gMediaDir + "androidqt_intro.m2ts", audio = false))
     AudioDub(gCameraFootage, WavSource(gMediaDir + "androidqt_intro.wav"))
-    DelayAudio(3.2)
+    DelayAudio(3.91)
     TemporalSoften(4, 4, 8, mode = 2)
 }
 
 function welcome_960x720
 {
     cameraFootage
-        \ .trim(172, 1195)
-        \ .Lanczos4Resize(960, 540, 350.0, 108, 1392.0, 784.0)
-        \ .AddBorders(0, 90, 0, 90, 0)
+        \ .trim(250, 1315)
+        \ .Lanczos4Resize(960, 480, 138.0, 120, 1514.0, 758.0)
+        \ .AddBorders(0, 120, 0, 120, 0)
 }
 
 function welcome
@@ -330,7 +330,7 @@ function audioQmlOnDevice
 \[*
     #n Finally, we see our first Qt/QML application running on Android.
 *]
-        \ + audioClip(183.766, 188.653, 1)
+        \ + audioClip(293.523, 297.609, 1)
 \[*
     #n While, we are here, let's look at a few more QML applications.
 *]
@@ -377,25 +377,34 @@ function audioDebugger
 \[*
     #n What if our application has bugs?
 *]
-        \ + audioClip(209.583, 212.602, 0.5)
+        \ + audioClip(209.583, 212.602, 2.5)
 \[*
-    #n No reason to worry, BogDan already implemented Android debugging in Creator. For emulator and device.
+    #n No reason to worry, BogDan already implemented Android debugging in Creator...
+*]
+        \ + audioClip(212.555, 217.362, 1)
+\[*
+    #n ...for emulator and device.
+*]
+        \ + audioClip(217.362, 219.243, 2)
+\[*
     #n You can see the debugger in action on his YouTube channel.
 *]
-        \ + audioClip(212.590, 221.936, 1)
+        \ + audioClip(219.243, 221.936, 1)
 
         \ + audioNoise(10)
 }
 
 function videoDebugger
 {
-    DirectShowSource(gMediaDir + "androidqt_debugger.avi", audio = false).trim(20, 380)
-        \ .converttorgb32
+    DirectShowSource(gMediaDir + "androidqt_debugger.ogg", audio = false)
+    trim(3760, 3760 + 350)
 }
 
 function videoDebugger_960x720
 {
     videoDebugger
+    Lanczos4resize(960, 596)
+    AddBorders(0, 62, 0, 62, 0)
 }
 
 function debugger
@@ -406,9 +415,9 @@ function debugger
 function whatAboutDeployment_960x720
 {
     cameraFootage
-        \ .trim(1300, 1920)
-        \ .Lanczos4Resize(960, 540, 350.0, 108, 1392.0, 784.0)
-        \ .AddBorders(0, 90, 0, 90, 0)
+        \ .trim(1450, 2140)
+        \ .Lanczos4Resize(960, 480, 138.0, 120, 1514.0, 758.0)
+        \ .AddBorders(0, 120, 0, 120, 0)
 }
 
 function whatAboutDeployment
@@ -524,7 +533,7 @@ function completeclip
             \ , necessitas
             \ , creatorAction
             \ , qmlOnDevice.converttorgb
-            \ , debugger
+            \ , debugger.converttorgb
             \ , whatAboutDeployment.converttorgb
             \ , ministro.converttorgb
             \ , outro
