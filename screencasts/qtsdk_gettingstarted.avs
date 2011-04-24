@@ -47,7 +47,7 @@ function audioExampleIntro
 {
 [*
     #n Hi, I am Alessandro. In this video I will demonstrate how to get started with the Qt SDK.
-    #n Let's start by opening an example project in Qt Creator. We run the example as a Desktop application, then in the Qt Simulator and also on a mobile device.
+    #n We begin by opening an example project in Qt Creator. We run the example as a Desktop application, then in the Qt Simulator and also on a mobile device.
 *]
 }
 
@@ -59,19 +59,15 @@ function audioExample
 *]
         \ + audioClip(, 1)
 \[*
-    #n The Welcome screen offers...
+    #n The Welcome screen offers: Tutorials with step-by step instructions and screenshots...
 *]
         \ + audioClip(, 1)
 \[*
-    #n ...tutorials with step-by step instructions and screenshots...
+    #n ...useful tips about Qt Creator...
 *]
         \ + audioClip(, 1)
 \[*
-    #n ...tips which worth knowing...
-*]
-        \ + audioClip(, 1)
-\[*
-    #n ...and a big collection of Qt C++ and Qt Quick examples.
+    #n ...and many Qt C++ and Qt Quick examples.
 *]
         \ + audioClip(, 1)
 \[*
@@ -79,15 +75,12 @@ function audioExample
 *]
         \ + audioClip(, 1)
 \[*
-    #n A project setup dialog appears where we can choose which platforms we want to target.
+    #n A dialog appears where we can choose the platforms which we want to target.
 *]
         \ + audioClip(, 1)
 \[*
-    #n "Desktop" is preselected and we add "Qt Simulator" and "Symbian device.
-*]
-        \ + audioClip(, 1)
-\[*
-    #n It is possible to remove or add target platforms, afterwards.
+    #n "Desktop" is preselected and we add "Qt Simulator" and "Symbian device".
+    #n It is also possible to remove or add target platforms, afterwards.
 *]
         \ + audioClip(, 1)
 \[*
@@ -95,7 +88,7 @@ function audioExample
 *]
         \ + audioClip(, 1)
 \[*
-    #n Let's run the application by pressing the "Run" button on the right.
+    #n We launch the application by pressing the "Run" button.
 *]
         \ + audioClip(, 1)
 \[*
@@ -103,7 +96,7 @@ function audioExample
 *]
         \ + audioClip(, 1)
 \[*
-    #n The application was launched in the Simulator because that is the currently selected target.
+    #n It was launched in the Simulator because that is the currently selected target.
 *]
         \ + audioClip(, 1)
 \[*
@@ -115,7 +108,7 @@ function audioExample
 *]
         \ + audioClip(, 1)
 \[*
-    #n Let's switch the target to "Symbian" and run the application on the connected Symbian device.
+    #n Let's switch the target to "Symbian" and run Samegame on a connected Symbian device.
 *]
         \ + audioNoise(10)
 }
@@ -139,8 +132,8 @@ function qmlAppIntroIntro
 function audioQmlAppIntro
 {
 [*
-    #n So, opening an existing project and running it is pretty straight forward.
-    #n We will now create our own Qt Quick application and run it.
+    #n Opening an existing project and running it is pretty straight forward.
+    #n Now, we will create our own Qt Quick application and run it.
 *]
 }
 
@@ -156,7 +149,7 @@ function audioQmlApp
 *]
         \ + audioClip(, 1)
 \[*
-    #n And choose "Qt Quick Project"...
+    #n And choose "Qt Quick Project", ...
 *]
         \ + audioClip(, 1)
 \[*
@@ -168,35 +161,40 @@ function audioQmlApp
 *]
         \ + audioClip(, 1)
 \[*
-    #n ...and continue to the target selection which we already saw.
+    #n ...and continue to the target selection step which we already know.
 *]
         \ + audioClip(, 1)
 \[*
-    #n The wizard offers several options. The defaults are fine for now.
+    #n The wizard offers further options for our Qt Quick Application. The defaults are fine for now.
 *]
         \ + audioClip(, 1)
 \[*
-    #n Our project has been created and we can see the main QML file.
+    #n Our project has been created and we see the main QML file.
 *]
         \ + audioClip(, 1)
 \[*
-    #n It is a simple "Hello World" which quits when it is clicked.
+    #n It is a simple "Hello World" app which quits when the user taps it.
 *]
         \ + audioClip(, 1)
 \[*
-    #n We could start editing the QML source code, or we can work in the visual Design mode.
+    #n We could start editing the QML source code, ... or we can work in the visual QML Design mode.
 *]
         \ + audioClip(, 1)
 \[*
-    #n Let's change a few properties of the text...
+    #n Let's change a few properties of the text, like color, size and style.
 *]
         \ + audioClip(, 1)
 \[*
-    #n ... and switch back to the Edit mode... where we can see the fresh changes in text form.
+    #n When we switch back to the "Edit" mode, we can see the fresh changes in the QML source.
 *]
         \ + audioClip(, 1)
 \[*
-    #n Let's run the application, again first in the Simulator.
+    #n By the way... the help system is always at our finger tip.
+    #n By moving the mouse pointer on a QML element, we get a brief description of it. And by pressing F1 we get to the full help page of the element.
+*]
+        \ + audioClip(, 1)
+\[*
+    #n Let's run the application. Again, first in the Simulator.
 *]
         \ + audioClip(, 1)
 \[*
@@ -219,7 +217,7 @@ function audioDesktopAppIntro
 {
 [*
     #n We ran two Qt Quick applications, which mostly targeted mobile devices.
-    #n With the Qt SDK, we can of course also create powerful Qt C++ applications optimized for the Desktop.
+    #n With the Qt SDK, we can of course also create powerful Qt C++ applications, optimized for the Desktop.
 *]
 }
 
@@ -244,11 +242,11 @@ function audioDesktopApp
         \ + audioClip(, 1)
 \[*
     #n ... which opens up in the visual UI Designer.
-    #n Here, we can drag Qt Widgets on our form, lay them out, edit properties, define application menu entries, define signal/slot connectiosn, ... and much more.
+    #n Here, we can drag Qt Widgets on our form, lay them out, edit properties, define application menu entries, ... and much more.
 *]
         \ + audioClip(, 1)
 \[*
-    #n A click on "Run" launches our Desktop Qt C++ application which looks and feels native.
+    #n The launched Desktop Qt C++ application looks and feels native.
 *]
         \ + audioNoise(10)
 }
