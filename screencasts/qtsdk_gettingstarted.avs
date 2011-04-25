@@ -70,7 +70,7 @@ function audioExampleIntro
 {
 [*
     #n Hi, I am Alessandro. In this video I will demonstrate how to get started with the Qt SDK.
-    #n We begin by opening an example project in Qt Creator. We run the example as a Desktop application, then in the Qt Simulator and also on a mobile device.
+    #n We begin by opening an example project in Qt Creator. We run the example in the Qt Simulator, then as a Desktop application, and also on a mobile device.
 *]
 }
 
@@ -312,8 +312,8 @@ function qmlAppPhoneAction
 function audioDesktopAppIntro
 {
 [*
-    #n We ran two Qt Quick applications, which mostly targeted mobile devices.
-    #n With the Qt SDK, we can of course also create powerful Qt C++ applications, optimized for the Desktop.
+    #n So much about Qt Quick applications.
+    #n With the Qt SDK, we can also create powerful Qt C++ applications, which are optimized for the Desktop.
 *]
 }
 
