@@ -18,23 +18,31 @@ global gTextClipFramesPerCharacter = 2
 
 function intro
 {
-    textClip("Getting started with\nthe Qt SDK", 75)
+    textClip("Getting started with\nthe Qt SDK", 60)
 }
 
 global gTalkingHeadFootage = 0
 function talkingHeadFootage
 {
-    global gTalkingHeadFootage = (gTalkingHeadFootage.IsClip ? gTalkingHeadFootage : DirectShowSource(gMediaDir + "androidqt_intro.m2ts", audio = false))
-    AudioDub(gTalkingHeadFootage, WavSource(gMediaDir + "qtsdk_gettingstarted_intro.wav"))
-    DelayAudio(3.91)
+    global gTalkingHeadFootage = (gTalkingHeadFootage.IsClip ? gTalkingHeadFootage : DirectShowSource(gMediaDir + "qtsdk_gettingstarted_talkinghead.m2ts"))
+    AudioDub(gTalkingHeadFootage, WavSource(gMediaDir + "qtsdk_gettingstarted_talkinghead.wav"))
+    DelayAudio(1.65)
     TemporalSoften(4, 4, 8, mode = 2)
+    ConvertToRgb
 }
 
 function talkingHeadFootage_960x720
 {
     talkingHeadFootage
-        \ .Lanczos4Resize(960, 480, 138.0, 120, 1514.0, 758.0)
-        \ .AddBorders(0, 120, 0, 120, 0)
+        \ .Lanczos4Resize(960, 540, 310.0, 64.0, 1610.0, 906.0)
+        \ .AddBorders(0, 90, 0, 90, 0)
+}
+
+function talkingHeadFootage_480x360
+{
+    talkingHeadFootage
+        \ .Lanczos4Resize(480, 270, 310.0, 64.0, 1610.0, 906.0)
+        \ .AddBorders(0, 45, 0, 45, 0)
 }
 
 global gPhoneActionFootage = 0
@@ -44,6 +52,7 @@ function phoneActionFootage
     AudioDub(gPhoneActionFootage, audioNoise(30))
     TemporalSoften(4, 4, 8, mode = 2)
     TurnRight
+    ConvertToRgb
 }
 
 function phoneActionFootage_960x720
@@ -63,7 +72,7 @@ function phoneActionFootage_480x360
 function exampleIntro
 {
     videoWithClipSize("talkingHeadFootage")
-        \ .trim(250, 1315)
+        \ .trim(110, 590)
 }
 
 function audioExampleIntro
@@ -171,6 +180,29 @@ function videoExample_960x720
     cut
 }
 
+function videoExample_480x360
+{
+    videoExample_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  -1,   -1,       -1,   -1
+        \ ,   50,  -1,        0,  360,       -1,   -1           [* Start menu *]
+        \ ,  120,  -1,       -1,   -1,       -1,   -1           [* Total *]
+        \ ,  220,  -1,      134,   98,       -1,   -1           [* Tutorials *]
+        \ ,  330,  -1,      216,   98,       -1,   -1           [* Tips *]
+        \ ,  405,  -1,      134,  180,       -1,   -1           [* Examples + opening samegame *]
+        \ ,  610,  -1,       -1,   -1,       -1,   -1           [* Total *]
+        \ ,  690,  -1,        0,  136,       -1,   -1           [* Target selection *]
+        \ ,  870,  -1,       -1,   -1,       -1,   -1           [* Finish target selection *]
+        \ , 1111,  -1,        0,  360,       -1,   -1           [* Run button *]
+        \ , 1188,  -1,       -1,   -1,       -1,   -1           [* Building *]
+        \ , 1290,  -1,      228,  102,      676,  506           [* Running in Simulator *]
+        \ , 1440,  -1,       -1,   -1,       -1,   -1           [* Closing Simulator *]
+        \ , 1510,  -1,        0,  360,       -1,   -1           [* Switch target to Desktop, run *]
+        \ , 1650,  -1,       -1,   -1,       -1,   -1           [* Running Desktop *]
+        \ , 1860,  -1,        0,  360,       -1,   -1           [* Switch target to Symbian, run *]
+        \ )
+}
+
 function example
 {
     AudioDub(videoWithClipSize("videoExample"), audioExample)
@@ -182,10 +214,10 @@ function examplePhoneAction
     clip.trim(30, 80) + clip.trim(115, 360)
 }
 
-function qmlAppIntroIntro
+function qmlAppIntro
 {
-    videoWithClipSize("cameraFootage")
-        \ .trim(250, 1315)
+    videoWithClipSize("talkingHeadFootage")
+        \ .trim(670, 890)
 }
 
 function audioQmlAppIntro
@@ -298,6 +330,31 @@ function videoQmlApp_960x720
     cut
 }
 
+function videoQmlApp_480x360
+{
+    videoQmlApp_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  -1,   -1,       -1,   -1
+        \ ,   65,  -1,        0,    0,       -1,   -1           [* File menu *]
+        \ ,  135,  -1,      194,   96,       -1,   -1           [* New Project wizard *]
+        \ ,  210,  -1,       -1,   -1,       -1,   -1           [* Qt Quick Application selected *]
+        \ ,  280,  -1,      198,  168,       -1,   -1           [* Entering project name *]
+        \ ,  420,  -1,       -1,   -1,       -1,   -1           [* Finishing Wizard *]
+        \ ,  683,  -1,      280,   42,       -1,   -1           [* Qml source code *]
+        \ ,  950,  -1,        0,   42,       -1,   -1           [* Clicking design mode *]
+        \ , 1020,  -1,       -1,   -1,       -1,   -1           [* Design mode *]
+        \ , 1120,  -1,      340,  218,      620,  464           [* Editing qml visually *]
+        \ , 1210,  -1,       -1,   -1,       -1,   -1           [* Back do Edit mode *]
+        \ , 1300,  -1,      312,   42,       -1,   -1           [* Edited QML source *]
+        \ , 1570,  -1,       -1,   -1,       -1,   -1           [* F1 Help mode *]
+        \ , 1690,  -1,        0,  360,       -1,   -1           [* Run button *]
+        \ , 1750,  -1,       -1,   -1,       -1,   -1           [* Building for Simulator *]
+        \ , 1825,  -1,      228,  102,      676,  506           [* Running in Simulator *]
+        \ , 1900,  -1,       -1,   -1,       -1,   -1           [* Closing Simulator *]
+        \ , 1950,  -1,        0,  360,       -1,   -1           [* Symbian target, Run button *]
+        \ )
+}
+
 function qmlApp
 {
     AudioDub(videoWithClipSize("videoQmlApp"), audioQmlApp)
@@ -370,39 +427,41 @@ function videoDesktopApp_960x720
     cut
 }
 
+function videoDesktopApp_480x360
+{
+    videoDesktopApp_960x720.QtorialsZoomNPan(
+        \ gClipWidth, gClipHeight, gZoomNPanExpansionColor, gZoomNPanTransitionFrames, gZoomNPanResizeFilter
+        \ ,                  -1,   -1,       -1,   -1
+        \ ,   80,  -1,      194,   96,       -1,   -1           [* New Project wizard *]
+        \ ,  180,  -1,       -1,   -1,       -1,   -1           [* Finishing Wizard *]
+        \ ,  270,  -1,        0,    0,       -1,   -1           [* Opening mainwindow.ui *]
+        \ ,  340,  -1,       -1,   -1,       -1,   -1           [* Finishing Wizard *]
+        \ ,  750,  -1,        0,    0,       -1,   -1           [* Launched app *]
+        \ )
+}
+
 function desktopApp
 {
     AudioDub(videoWithClipSize("videoDesktopApp"), audioDesktopApp)
 }
 
-function audioOutro
+function desktopAppIntro
 {
-    audioNoise(2)
-\[*
-    #n That's it. You just got started with the Qt SDK.
-    #n Thanks for watching.
-*]
-        \ + audioClip(181.487, 185.551, 1)
-        \ + audioNoise(10)
-}
-
-function videoOutro
-{
-    Dissolve(
-        \   textClip("Thank you for\nwatching", 280)
-        \ , gDissolveLength)
+    videoWithClipSize("talkingHeadFootage")
+        \ .trim(1015, 1300)
 }
 
 function outro
 {
-    AudioDub(videoOutro, audioOutro)
+    AudioDub(textClip("Thank you for\nwatching", 90), audioNoise(10))
 }
 
 function completeclip
 {
     return
         \ Dissolve(
-            \   exampleIntro
+            \   intro
+            \ , exampleIntro
             \ , example
             \ , examplePhoneAction
             \ , qmlAppIntro
@@ -412,11 +471,9 @@ function completeclip
             \ , desktopApp
             \ , outro
             \ , gDissolveLength)
-        \ .QtorialsElements("oldstyle")
+        \ .QtorialsElements("oldstyle", "qtlogosmall")
         \ .FadeIO(gDissolveLength)
 }
 
-#completeclip
-#flipvertical
-
-examplePhoneAction
+completeclip
+flipvertical
