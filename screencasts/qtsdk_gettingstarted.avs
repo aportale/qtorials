@@ -26,7 +26,7 @@ function talkingHeadFootage
 {
     global gTalkingHeadFootage = (gTalkingHeadFootage.IsClip ? gTalkingHeadFootage : DirectShowSource(gMediaDir + "qtsdk_gettingstarted_talkinghead.m2ts"))
     AudioDub(gTalkingHeadFootage, WavSource(gMediaDir + "qtsdk_gettingstarted_talkinghead.wav"))
-    DelayAudio(1.65)
+    DelayAudio(3.85)
     TemporalSoften(4, 4, 8, mode = 2)
     ConvertToRgb
 }
@@ -34,14 +34,14 @@ function talkingHeadFootage
 function talkingHeadFootage_960x720
 {
     talkingHeadFootage
-        \ .Lanczos4Resize(960, 540, 310.0, 64.0, 1610.0, 906.0)
+        \ .Lanczos4Resize(960, 540, 380.0, 72.0, 1540.0, 866.0)
         \ .AddBorders(0, 90, 0, 90, 0)
 }
 
 function talkingHeadFootage_480x360
 {
     talkingHeadFootage
-        \ .Lanczos4Resize(480, 270, 310.0, 64.0, 1610.0, 906.0)
+        \ .Lanczos4Resize(480, 270, 380.0, 72.0, 1540.0, 866.0)
         \ .AddBorders(0, 45, 0, 45, 0)
 }
 
@@ -72,7 +72,7 @@ function phoneActionFootage_480x360
 function exampleIntro
 {
     videoWithClipSize("talkingHeadFootage")
-        \ .trim(110, 590)
+        \ .trim(175, 630)
 }
 
 function audioExampleIntro
@@ -217,7 +217,7 @@ function examplePhoneAction
 function qmlAppIntro
 {
     videoWithClipSize("talkingHeadFootage")
-        \ .trim(670, 890)
+        \ .trim(670, 885)
 }
 
 function audioQmlAppIntro
@@ -448,7 +448,7 @@ function desktopApp
 function desktopAppIntro
 {
     videoWithClipSize("talkingHeadFootage")
-        \ .trim(1015, 1300)
+        \ .trim(1010, 1275)
 }
 
 function outro
