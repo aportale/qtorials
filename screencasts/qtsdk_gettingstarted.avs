@@ -26,7 +26,7 @@ function talkingHeadFootage
 {
     global gTalkingHeadFootage = (gTalkingHeadFootage.IsClip ? gTalkingHeadFootage : DirectShowSource(gMediaDir + "qtsdk_gettingstarted_talkinghead.m2ts"))
     AudioDub(gTalkingHeadFootage, WavSource(gMediaDir + "qtsdk_gettingstarted_talkinghead.wav"))
-    DelayAudio(3.85)
+    DelayAudio(3.8)
     TemporalSoften(4, 4, 8, mode = 2)
     ConvertToRgb
 }
@@ -73,6 +73,7 @@ function exampleIntro
 {
     videoWithClipSize("talkingHeadFootage")
         \ .trim(175, 630)
+		\ .QtorialsSubtitle("Alessandro Portale", "Qt Troll, Nokia", 30, 120)
 }
 
 function audioExampleIntro
