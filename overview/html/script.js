@@ -1,6 +1,6 @@
 var youtubePlayer;
 $(document).ready(function(){
-    $("#qtorials").after('<div style="display:none" id="youtubeplayer"></div>');
+    $("#qtorials").after('<div style="display:none" id="youtubeplayerContainer"><div id="youtubeplayer"></div></div>');
     youtubePlayer = $("#youtubeplayer");
     var clipLis = $("#qtorials > li > ul > li");
     $(clipLis).each(function(i){
@@ -21,21 +21,21 @@ function addClipFancyBoxToViewLink(linkElement, clipWidth, clipHeight, clipId, h
         + 'width="' + clipWidth + '" height="' + clipHeight + '"></embed></object>';
     $(linkElement).attr("href", "#youtubeplayer");
     $(linkElement).fancybox({
-        'callbackOnStart' : function()
+        'onComplete' : function()
             {
                 $("#youtubeplayer").append(objectString);
-                var huhu = 1;
             },
-        'callbackOnClose' : function()
+        'onCleanup' : function()
             {
-                $("#youtubeplayer").empty();
+                $("#youtubeplayerContainer").empty();
+                $("#youtubeplayerContainer").append('<div id="youtubeplayer"></div>');
             },
-        'frameWidth' : clipWidth,
-        'frameHeight' : clipHeight,
+        'width' : clipWidth,
+        'height' : clipHeight,
         'overlayOpacity' : 0.6,
         'centerOnScroll' : false,
-        'zoomOpacity' : false,
-        'zoomSpeedChange' : 0
+        'autoDimensions' : false,
+        'scrolling' : false
     });
 }
 
