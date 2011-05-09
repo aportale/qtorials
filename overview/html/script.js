@@ -64,5 +64,5 @@ function addViewLinks(clipLi, i)
     }
 
     if (commentClipId)
-        $("ul > li:last", clipLi).after('<li class=\"commentclip\"><a href="http://youtube.com/comment_servlet?all_comments&v=' + commentClipId + '">Comment</a></li>');
+        $("ul > li:last", clipLi).after('<li class=\"commentclip\"><a href="http://www.youtube.com/all_comments?v=' + commentClipId + '">Comment</a></li>');
 }
