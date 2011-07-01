@@ -16,9 +16,16 @@ global gClipHeight = (withAudio ? 1080 : 720)
 
 global qSourceClipPath = "d:\Compiler\"
 
-function RawFootageA()
+function RobertoA()
 {
-    DirectShowSource(qSourceClipPath + "clipA.01.MTS")
+    SegmentedDirectShowSource(qSourceClipPath + "clipA.MTS")
+    trim(800, 0)
+}
+
+function RobertoB()
+{
+    SegmentedDirectShowSource(qSourceClipPath + "clipB.MTS")
+    trim(800, 110950 + 800)
 }
 
 function TweakedFootage(clip)
@@ -26,12 +33,19 @@ function TweakedFootage(clip)
     clip
     crop(410, 0, 600, 980)
     TemporalSoften(2, 4, 4, mode = 2)
-    Lanczos4Resize(200, 246)
+    Lanczos4Resize(180, 220)
 }
 
 function ScreenRecordingA()
 {
-    DirectShowSource(qSourceClipPath + "ScreenRecordingA.mov", audio = false)
+    DirectShowSource(qSourceClipPath + "ScreenRecordingA.avi", audio = false)
+    trim(5550, 118560 + 5550)
+}
+
+function ScreenWithRoberto(screen, roberto)
+{
+    screen.overlay(roberto, screen.width - roberto.width, screen.height - roberto.height)
+    audiodub(roberto)
 }
 
 function text(string text, int frames)
@@ -52,5 +66,5 @@ function completeclip
     FadeIO(gDissolveLength)
 }
 
-#TweakedFootage(RawFootageA)
-ScreenRecordingA
+TweakedFootage(RobertoB)
+#ScreenWithRoberto(ScreenRecordingA, TweakedFootage(RobertoA))
