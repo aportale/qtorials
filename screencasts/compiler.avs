@@ -6,25 +6,24 @@
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
 
-LoadPlugin ("qtavisynth.dll")
 Import("tools.avsi")
 
-global withAudio = false
+global gClipWidth = 960
+global gClipHeight = 720
 
-global gClipWidth = (withAudio ? 1920 : 960)
-global gClipHeight = (withAudio ? 1080 : 720)
-
-global qSourceClipPath = "d:\Compiler\"
+global qRobertoClipPath = "e:\PRIVATE\AVCHD\BDMV\STREAM\"
+global qScreenRecordingClipPath = "c:\temp\"
 
 function RobertoA()
 {
-    SegmentedDirectShowSource(qSourceClipPath + "clipA.MTS")
+    SegmentedDirectShowSource(qRobertoClipPath + "clipA.MTS")
     trim(800, 0)
 }
 
 function RobertoB()
 {
-    SegmentedDirectShowSource(qSourceClipPath + "clipB.MTS")
+    SegmentedDirectShowSource(qRobertoClipPath + "clipB.MTS")
+#    DirectShowSource(qScreenRecordingClipPath + "clipB.01.MTS")
     trim(800, 110950 + 800)
 }
 
@@ -34,37 +33,38 @@ function TweakedFootage(clip)
     crop(410, 0, 600, 980)
     TemporalSoften(2, 4, 4, mode = 2)
     Lanczos4Resize(180, 220)
+#    PointResize(180, 220)
 }
 
 function ScreenRecordingA()
 {
-    DirectShowSource(qSourceClipPath + "ScreenRecordingA.avi", audio = false)
+    DirectShowSource(qScreenRecordingClipPath + "ScreenRecordingA.avi", audio = false)
     trim(5550, 118560 + 5550)
+}
+
+function ScreenRecordingB()
+{
+    DirectShowSource(qScreenRecordingClipPath + "ScreenRecordingB.avi", audio = false)
+    trim(1265, 0)
 }
 
 function ScreenWithRoberto(screen, roberto)
 {
     screen.overlay(roberto, screen.width - roberto.width, screen.height - roberto.height)
-    audiodub(roberto)
-}
-
-function text(string text, int frames)
-{
-    textClip(text, frames)
-    withAudio != true ? killaudio : NOP
-    Converttoyv12
+    audiodub(roberto.Amplify(1.8).ConvertToMono)
 }
 
 function completeclip
 {
     Dissolve(
-        \   text("Roberto Raggi\nNokia, Qt Development Frameworks", 90)
-        \ , withAudio ? RawClippedFootage : TweakedFootage
+        \   ScreenWithRoberto(ScreenRecordingA, TweakedFootage(RobertoA))
+        \ , ScreenWithRoberto(ScreenRecordingB, TweakedFootage(RobertoB))
         \ , gDissolveLength
     \)
-    QtorialsElements("qtlogosmall")
     FadeIO(gDissolveLength)
 }
 
-TweakedFootage(RobertoB)
-#ScreenWithRoberto(ScreenRecordingA, TweakedFootage(RobertoA))
+#TweakedFootage(RobertoB)
+#ScreenWithRoberto(ScreenRecordingB, TweakedFootage(RobertoB)).trim(0, 3000)
+#TweakedFootage(RobertoB)
+completeclip
