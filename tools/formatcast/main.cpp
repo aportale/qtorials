@@ -11,6 +11,7 @@
 #include <QtCore>
 
 static const QString narrationMarker = QLatin1String("#n ");
+static const QString annotationMarker = QLatin1String("#  ");
 static const QString typingMarker = QLatin1String("#t ");
 static const QString functionKeyword = QLatin1String("function ");
 
@@ -75,6 +76,10 @@ int main(int argc, char *argv[])
             const int markerEnd =
                 avsLine.indexOf(narrationMarker) + narrationMarker.length();
             narrationLines << avsLine.mid(markerEnd);
+        } else if (avsLine.trimmed().startsWith(annotationMarker)) {
+                const int markerEnd =
+                    avsLine.indexOf(annotationMarker) + annotationMarker.length();
+                narrationLines << "<i><small>" << avsLine.mid(markerEnd) << "</small></i>";
         } else {
             if (!narrationLines.isEmpty()) {
                 htmlTs << QLatin1String("<p>\n");
