@@ -18,8 +18,8 @@ function audioIntro
 {
     #n Creating your own device with a great Qt based user interface has never been easier.
     #  A board is shown, attached to a screen showing black.
-    #n Our Boot2Qt package contains everything you need to let your embedded Linux based device boot to your first Qt application in no time.
-    #  "Boot2Qt" text is blended in, screen shows Qt demo logo with particles
+    #n When using Qt for device creation, you get everything you need to let your embedded Linux based device boot to your first Qt application in no time.
+    #  Screen shows Qt demo logo with particles, and "Boot to Qt" text blends in.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
@@ -27,13 +27,13 @@ function audioIntro
 
 function audioInstaller
 {
-    #n The easy-to-use Boot2Qt SDK installer will install the following components:
+    #n The easy-to-use online installer will install a set of components.
     #  2-3 installer pages are quickly shown. A list of bullet points appears on the side.
 }
 
 function audioDeviceImage
 {
-    #n A cross compiling toolchain and an image which you can flash to your device using the flashing wizard 
+    #n A cross compiling toolchain and a pre-built image which you can flash to your device using the flashing wizard
     #  Wizard is shown. SD card in reader is shown. SD card gets inserted into device
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -42,7 +42,7 @@ function audioDeviceImage
 
 function audioYoctoRecipies
 {
-    #n Yocto recipies for the case that you want to target a custom hardware or just want to customize the standard boot2qt image
+    #n The Yocto project recipies which the boot to Qt stack is built on, so you can easily customize the stack into your production needs.
     #  Time lapse of console yocto action
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -52,7 +52,7 @@ function audioYoctoRecipies
 function audioQtCreatorIDE
 {
     #n The Qt Creator IDE for all your application development needs...
-    #  Qt Quick Designer dropping a control on the form
+    #  Time lapse of Qt Quick Designer creating a hello world application
     #n ...which is fully configured to deploy applications to your board...
     #  Press on play. Time lapse of deployment and start of the application on the device.
     #n ...and which has the debugging and profiling tools helping you in creating a great application.
@@ -84,8 +84,8 @@ function audioDocs
 
 function audioQtSupport
 {
-    #n You can also enjoy our support. In case you get stuck, the Qt support team will quickly help you finding solutions.
-    #  ..logging into account page -> Support Center.
+    #n With Qt, you are not alone with your problems. In case you get stuck, the Qt support team will quickly help you finding solutions.
+    #  logging into account page -> Support Center.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
@@ -94,7 +94,7 @@ function audioQtSupport
 function audioOutro
 {
     #n Visit our website to get started. And thank you for watching.
-    #  Showing qt.io url
+    #  showing qt.io url
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
