@@ -33,7 +33,7 @@ function audioInstaller
 
 function audioDeviceImage
 {
-    #n A cross compiling toolchain and a pre-built image which you can flash to your device using the flashing wizard
+    #n A cross compiling toolchain and a pre-built image which you can flash to your board using the flashing wizard
     #  Wizard is shown. SD card in reader is shown. SD card gets inserted into device
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
