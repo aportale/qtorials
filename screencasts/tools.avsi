@@ -20,6 +20,7 @@ global gAudioNoiseStart = 0
 global gAudioNoiseEnd = 1
 global gTextClipFramesPerCharacter = 3
 global gBackgroundColor = $ffffff
+global gFFDShowImport = "c:\Program Files (x86)\ffdshow\ffavisynth.avsi"
 
 function titleTextSize
 {

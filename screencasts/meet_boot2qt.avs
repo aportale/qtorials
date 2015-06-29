@@ -42,7 +42,7 @@ function audioDeviceImage
 
 function audioYoctoRecipies
 {
-    #n The Yocto project recipies which the boot to Qt stack is built on, so you can easily customize the stack into your production needs.
+    #n The Yocto project recipies which the boot to Qt stack is built on, so you can easily customize the stack into your production needs
     #  Time lapse of console yocto action
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
