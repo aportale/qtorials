@@ -12,32 +12,46 @@ Import(gFFDShowImport)
 #global gAudioClip = WAVSource(gMediaDir + "meet_qtcreator.wav")
 global gAudioNoiseStart = 1829888 / 44100.0
 global gAudioNoiseEnd = 1912832 / 44100.0
-global gClipWidth = 640
-global gClipHeight = 360
+
+function warp(clip sourceClip, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+{
+    scaledX3 = String(Round(100.0 / sourceClip.width * x1))
+    scaledY3 = String(Round(100.0 - (100.0 / sourceClip.height * y1)))
+    scaledX4 = String(Round(100.0 / sourceClip.width * x2))
+    scaledY4 = String(Round(100.0 - (100.0 / sourceClip.height * y2)))
+    scaledX1 = String(Round(100.0 / sourceClip.width * x3))
+    scaledY1 = String(Round(100.0 - (100.0 / sourceClip.height * y3)))
+    scaledX2 = String(Round(100.0 / sourceClip.width * x4))
+    scaledY2 = String(Round(100.0 - (100.0 / sourceClip.height * y4)))
+    coordinates = ("perspectiveX1=" + scaledX1 + ",perspectiveY1=" + scaledY1 + ",perspectiveX2=" + scaledX2 + ",perspectiveY2=" + scaledY2 + ",perspectiveX3=" + scaledX3 + ",perspectiveY3=" + scaledY3 + ",perspectiveX4=" + scaledX4 + ",perspectiveY4=" + scaledY4)
+    return sourceClip.ffdshow(options="isPerspective=1,perspectiveIsSrc=2,perspectiveInterpolation=2," + coordinates).subtitle(coordinates)
+}
 
 function deinterlace(clip sourceClip)
 {
     sourceClip.ffdshow(options="isDeinterlace=1,deinterlaceMethod=14")
 }
 
-function audioIntro
+function audioCrossPlatform
 {
-    #n Qt Creator is the IDE for all your C++ and Qt Quick application development needs
-    #  Qt Creator is shown.
+    #n Qt Creator is the IDE for all your C++ and Qt Quick application development needs.
+    #n It is available on the major desktop operating systems and can build and run your application there.
+    #  Split screen showing the application launching on: Windows, OSX, Linux.
+    #n You can also target several other platforms.
+    #  Split screen showing the application launching on: Android, iOS, WinPhone, Embedded, BareMetal (if I manage to get it running)
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
 }
 
-function audioCrossPlatform
+function videoCrossPlatform_desktop
 {
-    #n It is available on the major desktop operating systems and can build and run your application on the desktop.
-    #  Split screen showing the application launching on: Windows, OSX, Linux.
-    #n And you can also target several other platforms.
-    #  Split screen showing the application launching on: Android, iOS, WinPhone, Embedded, BareMetal (if I manage to get it running)
-    a = audioNoise(2) + audioClip(4.075, 11.563, 1)
-
-    return a + audioNoise(10)
+    windows = DirectShowSource(gMediaDir + "meet_qtcreator_crossplatformwindows.avi", audio = false)
+    windows_cut =
+        \   windows.trim(50, 330)            [* App launching *]
+    osx = ImageSource(gMediaDir + "meet_qtcreator_crossplatformosx.png", pixel_type = "RGB32").AssumeFps(50).trim(1, 120)
+    linux = ImageSource(gMediaDir + "meet_qtcreator_crossplatformlinux.png", pixel_type = "RGB32").AssumeFps(50).trim(1, 120)
+    return Dissolve(windows_cut, osx, linux, gDissolveLength)
 }
 
 function videoCrossPlatform
@@ -58,8 +72,8 @@ function videoCrossPlatform
     board_cut = board.trim(125, 210)
     board_cropped = board_cut.crop(582, 0, 600, 1080)
 
-    stacked = StackHorizontal(android_cropped, ios_cropped, winrt_cropped, board_cropped)
-    stacked.info
+    devices_stacked = StackHorizontal(android_cropped, ios_cropped, winrt_cropped, board_cropped).LanczosResize(1280, 720).Converttorgb32
+    return Dissolve(videoCrossPlatform_desktop, devices_stacked, gDissolveLength)
 }
 
 function audioCodeEditingAndNavigation
@@ -77,6 +91,24 @@ function audioCodeEditingAndNavigation
     return a + audioNoise(10)
 }
 
+function videoCodeEditingAndNavigation
+{
+    edit = DirectShowSource(gMediaDir + "meet_qtcreator_codeediting.avi", audio = false)
+    edit_cut =
+        \   edit.trim(50, 300)             [* Editing *]
+    refactor_cut =
+        \   edit.trim(550, 870)            [* Refactor *]
+        \ + edit.trim(870, 870).loop(50)   [* Refactored *]
+    navigate = DirectShowSource(gMediaDir + "meet_qtcreator_codenavigation.avi", audio = false)
+    navigate_cut =
+        \   navigate.trim(25, 100)                                 [* Open Locator *]
+        \ + navigate.trim(100, 200).SelectEvery(3).AssumeFps(50)   [* Selecting class *]
+        \ + navigate.trim(200, 350)                                [* Open Type Hierarchy. Wait. *]
+        \ + navigate.trim(530, 700)                                [* Jump to class *]
+        \ + navigate.trim(700, 950)                                [* Find usages *]
+    return Dissolve(edit_cut, refactor_cut, navigate_cut, gDissolveLength)
+}
+
 function audioVisualEditors
 {
     #n You can create user interfaces in a visual manner, for traditional Desktop applications...
@@ -86,6 +118,17 @@ function audioVisualEditors
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
+}
+
+function videoVisualEditors
+{
+    widgets = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingwidgets.avi", audio = false)
+    widgets_pushButtons = widgets.trim(1350, 1550)
+    widgets_checkBoxes = (widgets.trim(1800, 1862) + widgets.trim(1900, 2000)).warp(20, 20,  850, 10,  10, 420,  850, 440)
+    qtquick = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingqtquick.avi", audio = false)
+    qtquick_cut =
+        \   qtquick.trim(2280, 2600).warp(0, 100,  1100, 5,  0, 620,  1100, 715)          [* Open Locator *]
+    return Dissolve(widgets_pushButtons, widgets_checkBoxes, qtquick_cut, gDissolveLength)
 }
 
 function audioDebuggerProfilerAnalyzers
@@ -99,6 +142,17 @@ function audioDebuggerProfilerAnalyzers
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
+}
+
+function videoDebuggerProfilerAnalyzers
+{
+    widgets = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingwidgets.avi", audio = false)
+    widgets_pushButtons = widgets.trim(1350, 1550)
+    widgets_checkBoxes = widgets.trim(1800, 1862) + widgets.trim(1900, 2000)
+    qtquick = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingqtquick.avi", audio = false)
+    qtquick_cut =
+        \   qtquick.trim(2280, 2600).warp(0, 0,  1200, 20,  0, 620,  1200, 700)         [* Open Locator *]
+    return Dissolve(widgets_pushButtons, widgets_checkBoxes, qtquick_cut, gDissolveLength)
 }
 
 function audioVersionControlSystems
@@ -149,4 +203,4 @@ function completeClip
 
 #completeclip
 
-videoCrossPlatform
+videoVisualEditors
