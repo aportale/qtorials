@@ -65,14 +65,13 @@ function videoCrossPlatform
 function audioCodeEditingAndNavigation
 {
     #n The code editor in Qt Creator understands your source code.
-    #  Editor is shown, while code is typed
     #n It helps you to create code faster,...
     #  Snippet action is shown, code completion is used to fill place holders.
-    #n ...warns you about problems while you type,....
-    #  A warning is shown (TODO: find a simple semantic check with warning and one with error)
-    #n ...and helps you to refactor your code.
-    #  Refactoring action is shown ()
-    #n The IDE offers several powerful ways to have an overview of complex Projects
+    #t {CTRLDOWN}{SHIFTDOWN}{ENTER}{ENTER}{SHIFTUP}{CTRLUP}{#}§in{ENTER} <ios§{DOWN}{DOWN}{ENTER}{DOWN}{DOWN}{DOWN}{ENTER}for{CTRLDOWN}{SPACE}{CTRLUP}§§{ENTER}i{TAB}{TAB}ar{CTRLDOWN}{SPACE}{CTRLUP}§{ENTER}{TAB}{TAB}{ENTER}std::cou{ENTER} << ar{CTRLDOWN}{SPACE}{CTRLUP}{DOWN}§{ENTER}[i] << std::e§{ENTER};
+    #n ...and helps you to refactor it.
+    #  Extract function of the loop
+    #t myExtractedFunction§{ENTER}
+    #n The IDE offers several powerful ways to have an overview of complex projects
     #  Opening a class via Locator. Open a Type hierarchy, jump to code, do a "Find Usages" on something.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 

@@ -93,7 +93,7 @@ public:
             "NeoQuant"
         };
         const char* const algorithmString = args[3].AsString(algorithms[0]);
-        FREE_IMAGE_QUANTIZE algorithm = FIQ_WUQUANT;
+        FREE_IMAGE_QUANTIZE algorithm = FIQ_NNQUANT;
         if (strcmp(algorithmString, algorithms[0]) == 0)
             algorithm = FIQ_WUQUANT;
         else if (strcmp(algorithmString, algorithms[1]) == 0)
