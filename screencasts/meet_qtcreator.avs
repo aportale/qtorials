@@ -31,7 +31,7 @@ function audioIntro
 
 function audioCrossPlatform
 {
-    #n It is available on all major desktop operating systems and can build and run your application on the desktop.
+    #n It is available on the major desktop operating systems and can build and run your application on the desktop.
     #  Split screen showing the application launching on: Windows, OSX, Linux.
     #n And you can also target several other platforms.
     #  Split screen showing the application launching on: Android, iOS, WinPhone, Embedded, BareMetal (if I manage to get it running)
@@ -64,14 +64,13 @@ function videoCrossPlatform
 
 function audioCodeEditingAndNavigation
 {
-    #n The code editor in Qt Creator understands your source code.
-    #n It helps you to create code faster,...
+    #n The code editor in Qt Creator helps you to create code faster,...
     #  Snippet action is shown, code completion is used to fill place holders.
     #t {CTRLDOWN}{SHIFTDOWN}{ENTER}{ENTER}{SHIFTUP}{CTRLUP}{#}§in{ENTER} <ios§{DOWN}{DOWN}{ENTER}{DOWN}{DOWN}{DOWN}{ENTER}for{CTRLDOWN}{SPACE}{CTRLUP}§§{ENTER}i{TAB}{TAB}ar{CTRLDOWN}{SPACE}{CTRLUP}§{ENTER}{TAB}{TAB}{ENTER}std::cou{ENTER} << ar{CTRLDOWN}{SPACE}{CTRLUP}{DOWN}§{ENTER}[i] << std::e§{ENTER};
     #n ...and helps you to refactor it.
     #  Extract function of the loop
     #t myExtractedFunction§{ENTER}
-    #n The IDE offers several powerful ways to have an overview of complex projects
+    #n The IDE understands your source code and offers several powerful ways to have an overview of complex projects
     #  Opening a class via Locator. Open a Type hierarchy, jump to code, do a "Find Usages" on something.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
