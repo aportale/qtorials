@@ -24,7 +24,7 @@ function warp(clip sourceClip, float x1, float y1, float x2, float y2, float x3,
     scaledX2 = String(Round(100.0 / sourceClip.width * x4))
     scaledY2 = String(Round(100.0 - (100.0 / sourceClip.height * y4)))
     coordinates = ("perspectiveX1=" + scaledX1 + ",perspectiveY1=" + scaledY1 + ",perspectiveX2=" + scaledX2 + ",perspectiveY2=" + scaledY2 + ",perspectiveX3=" + scaledX3 + ",perspectiveY3=" + scaledY3 + ",perspectiveX4=" + scaledX4 + ",perspectiveY4=" + scaledY4)
-    return sourceClip.ffdshow(options="isPerspective=1,perspectiveIsSrc=2,perspectiveInterpolation=2," + coordinates).subtitle(coordinates)
+    return sourceClip.ffdshow(options="isPerspective=1,perspectiveIsSrc=1,perspectiveInterpolation=2," + coordinates).subtitle(coordinates)
 }
 
 function deinterlace(clip sourceClip)
@@ -124,11 +124,15 @@ function videoVisualEditors
 {
     widgets = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingwidgets.avi", audio = false)
     widgets_pushButtons = widgets.trim(1350, 1550)
-    widgets_checkBoxes = (widgets.trim(1800, 1862) + widgets.trim(1900, 2000)).warp(20, 20,  850, 10,  10, 420,  850, 440)
+    widgets_checkBoxes = widgets.trim(1800, 1862) + widgets.trim(1900, 2000)
     qtquick = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingqtquick.avi", audio = false)
     qtquick_cut =
-        \   qtquick.trim(2280, 2600).warp(0, 100,  1100, 5,  0, 620,  1100, 715)          [* Open Locator *]
-    return Dissolve(widgets_pushButtons, widgets_checkBoxes, qtquick_cut, gDissolveLength)
+        \   qtquick.trim(2280, 2600)          [* Open Locator *]
+    return Dissolve(
+        \   widgets_pushButtons.warp(10, 20,  1280, 10,  10, 660,  1280, 680)
+        \ , widgets_checkBoxes.warp(20, 20,  820, 10,  20, 440,  820, 450)
+        \ , qtquick_cut.warp(60, 40,  1280, 5,  60, 680,  1280, 715)
+        \ , gDissolveLength)
 }
 
 function audioDebuggerProfilerAnalyzers
@@ -146,13 +150,24 @@ function audioDebuggerProfilerAnalyzers
 
 function videoDebuggerProfilerAnalyzers
 {
-    widgets = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingwidgets.avi", audio = false)
-    widgets_pushButtons = widgets.trim(1350, 1550)
-    widgets_checkBoxes = widgets.trim(1800, 1862) + widgets.trim(1900, 2000)
-    qtquick = DirectShowSource(gMediaDir + "meet_qtcreator_visualeditingqtquick.avi", audio = false)
-    qtquick_cut =
-        \   qtquick.trim(2280, 2600).warp(0, 0,  1200, 20,  0, 620,  1200, 700)         [* Open Locator *]
-    return Dissolve(widgets_pushButtons, widgets_checkBoxes, qtquick_cut, gDissolveLength)
+    debugger = DirectShowSource(gMediaDir + "meet_qtcreator_debugger.avi", audio = false)
+    debugger_cut =
+        \    debugger.trim(15, 145)             [* Setting Breakpoint. Pressing play *]
+        \  + debugger.trim(2720, 2745)          [* Application launching *]
+        \  + debugger.trim(2910, 3055)          [* Breakpoint hit *]
+        \  + debugger.trim(3225, 3270)          [* Debugger views populated *]
+        \  + debugger.trim(3370, 3445)          [* Tree expanded *]
+    profiler = DirectShowSource(gMediaDir + "meet_qtcreator_profiler.avi", audio = false)
+    profiler_cut =
+        \    profiler.trim(0, 38)                                  [* Launching App *]
+        \  + profiler.trim(90, 180)                                [* App appears *]
+        \  + profiler.trim(180, 280).SelectEvery(3).AssumeFps(50)  [* Loading Data *]
+        \  + profiler.trim(400, 740)                               [* Browsing Data, jumping to code location *]
+    staticanalyzer = DirectShowSource(gMediaDir + "meet_qtcreator_clangstaticanalyzer.avi", audio = false)
+    staticanalyzer_cut =
+        \  + staticanalyzer.trim(8695, 8970).SelectEvery(2).AssumeFps(50)  [* Clicking through results *]
+        \  + staticanalyzer.trim(8989, 9100)                               [* Jumping to location *]
+    return Dissolve(debugger_cut, profiler_cut, staticanalyzer_cut, gDissolveLength)
 }
 
 function audioVersionControlSystems
@@ -164,6 +179,25 @@ function audioVersionControlSystems
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
     return a + audioNoise(10)
+}
+
+function videoVersionControlSystems
+{
+    versioncontrol = DirectShowSource(gMediaDir + "meet_qtcreator_versioncontrol.avi", audio = false)
+    launch_commit_editor = versioncontrol.trim(50, 265)
+    commit_editor_action =
+        \    versioncontrol.trim(290, 340)                              [* Commit message pasted *]
+        \  + versioncontrol.trim(340, 480).SelectEvery(2).AssumeFps(50) [* Selecting file and Pressing Diff *]
+        \  + versioncontrol.trim(510, 652)                              [* Viewing diff and opening plugin dialog *]
+        \  + versioncontrol.trim(652, 720).SelectEvery(2).AssumeFps(50) [* Scrolling to VCS plugins *]
+    plugin_list =
+        \    versioncontrol.trim(720, 825)                              [* Watching list of plugins *]
+        \  + versioncontrol.trim(825, 825).loop(50)                     [* Watching list of plugins *]
+    return Dissolve(
+        \    launch_commit_editor.warp(80, 10,  1040, 5,  80, 510,  1040, 560)
+        \  , commit_editor_action.warp(100, 30,  1280, 20,  100, 680,  1280, 700)
+        \  , plugin_list.warp(280, 280,  1000, 260,  280, 680,  1000, 700)
+        \  , gDissolveLength)
 }
 
 function audioDocumentation
