@@ -16,7 +16,7 @@ global gAudioNoiseEnd = 3920494 / 44100.0
 
 function warp(clip sourceClip, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 {
-    return sourceClip
+    # return sourceClip
     scaledX3 = String(Round(100.0 / sourceClip.width * x1))
     scaledY3 = String(Round(100.0 - (100.0 / sourceClip.height * y1)))
     scaledX4 = String(Round(100.0 / sourceClip.width * x2))
@@ -154,7 +154,7 @@ function videoCodeEditingAndNavigation
         \ + navigate.trim(530, 700)                                [* Jump to class *]
         \ + navigate.trim(700, 850)                                [* Find usages *]
     return Dissolve(
-        \   edit_cut.warp(250, 30,  800, 10,  250, 300,  800, 320)
+        \   edit_cut.warp(200, 30,  1100, 10,  200, 530,  1100, 560)
         \ , refactor_cut.warp(200, 30,  1100, 10,  200, 530,  1100, 560)
         \ , navigate_cut.warp(10, 30,  1280, 10,  10, 680,  1280, 700)
         \ , gDissolveLength)
@@ -361,19 +361,30 @@ function outro
     AudioDub(videoOutro, audioOutro)
 }
 
+function blank
+{
+    AudioDub(BlankClip(length = 70, color = $ffffff, width = 1280, height = 720, fps = 50), audioNoise(10))
+}
+
 function completeClip
 {
     return
         \ Dissolve(
             \   intro
-            \ , crossPlatform.FadeIO(color = $ffffff, 35)
+            \ , crossPlatform
+            \ , blank
             \ , codeEditingAndNavigation.converttorgb32
+            \ , blank
             \ , visualEditors.converttorgb32
+            \ , blank
             \ , debuggerProfilerAnalyzers.converttorgb32
+            \ , blank
             \ , versionControlSystems.converttorgb32
+            \ , blank
             \ , documentationAndExamples.converttorgb32
             \ , outro
-            \ , gDissolveLength)
+            \ , 25)
+        \ .QtorialsElements("oldstyle")
         \ .FadeIO(color = $ffffff, 35)
 }
 #        \ .QtorialsElements("oldstyle")
