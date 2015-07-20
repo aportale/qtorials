@@ -60,7 +60,7 @@ function audioUnboxing
 {
     #n Creating your own device with a great Qt based user interface has never been easier.
     #  A board is shown, attached to a screen showing black.
-    #n When using Qt for device creation, you get everything you need to let your embedded Linux based device boot to your first Qt application in no time.
+    #n When using Qt for device creation, you have everything you need to let your embedded Linux based device boot to your first Qt application in no time.
     #  Screen shows Qt demo logo with particles, and "Boot to Qt" text blends in.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -83,7 +83,7 @@ function videoUnboxing
 
 function audioInstaller
 {
-    #n The easy-to-use online installer will install the SDK components.
+    #n The easy-to-use online installer will install the SDK.
     #  2-3 installer pages are quickly shown. A list of bullet points appears on the side.
 }
 
@@ -99,7 +99,7 @@ function videoInstaller
 
 function audioDeviceImage
 {
-    #n The cross compiling toolchain and a pre-built image can be flashed to your board using the flashing wizard.
+    #n You get the cross compiling toolchain and a pre-built image which can be flashed to your board using the flashing wizard.
     #  Wizard is shown. SD card in reader is shown. SD card gets inserted into device
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -128,7 +128,7 @@ function videoDeviceImage
 
 function audioYoctoRecipies
 {
-    #n The included the Yocto project recipies -which the boot to Qt stack is built on- can be used to easily customize the stack into your production needs.
+    #n The included Yocto project recipies -which the boot to Qt stack is built on- can be used to easily customize the stack into your production needs.
     #  Time lapse of console yocto action
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -166,9 +166,9 @@ function videoVirtualKeyboard
 
 function audioQtCreatorIDE
 {
-    #n The Qt Creator IDE for all your application development needs...
+    #n The SDK contains the Qt Creator IDE.
     #  Time lapse of Qt Quick Designer creating a hello world application
-    #n ...is fully configured to deploy applications to your board...
+    #n It is fully configured to deploy applications to your board...
     #  Press on play. Time lapse of deployment and start of the application on the device.
     #n ...and includes the debugging and profiling tools which help you to create great devices.
     #  Debugger is shown. Profiler is shown.
