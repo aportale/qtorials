@@ -40,7 +40,23 @@ function warp(clip sourceClip, float x1, float y1, float x2, float y2, float x3,
     return sourceClip.ffdshow(options="isPerspective=1,perspectiveIsSrc=1,perspectiveInterpolation=2," + coordinates)
 }
 
+function videoIntro
+{
+    intro = ImageSource(gMediaDir + "meet_boot2qt_intro.png", pixel_type = "RGB32", fps = 50).trim(1, 100)
+    intro
+}
+
 function audioIntro
+{
+    audioNoise(10)
+}
+
+function intro
+{
+    AudioDub(videoIntro, audioIntro)
+}
+
+function audioUnboxing
 {
     #n Creating your own device with a great Qt based user interface has never been easier.
     #  A board is shown, attached to a screen showing black.
@@ -51,7 +67,7 @@ function audioIntro
     return a + audioNoise(10)
 }
 
-function videoIntro
+function videoUnboxing
 {
     intro = directshowsource(gMediaDir + "meet_boot2qt_unboxing_.avi", audio = false)
     outofbox = intro.trim(0, 146).ChangeFPS(50)
@@ -67,7 +83,7 @@ function videoIntro
 
 function audioInstaller
 {
-    #n The easy-to-use online installer will install a set of components.
+    #n The easy-to-use online installer will install the SDK components.
     #  2-3 installer pages are quickly shown. A list of bullet points appears on the side.
 }
 
@@ -83,7 +99,7 @@ function videoInstaller
 
 function audioDeviceImage
 {
-    #n A cross compiling toolchain and a pre-built image which you can flash to your board using the flashing wizard
+    #n The cross compiling toolchain and a pre-built image can be flashed to your board using the flashing wizard.
     #  Wizard is shown. SD card in reader is shown. SD card gets inserted into device
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -110,27 +126,9 @@ function videoDeviceImage
     return Dissolve(wizard_cut.warp(320, 250,  1230, 220,  320, 730,  1230, 770), videoDeviceImageSDCard.ConvertToRGB32, gDissolveLength)
 }
 
-function audioVirtualKeyboard
-{
-    #n A cross compiling toolchain and a pre-built image which you can flash to your board using the flashing wizard
-    #  Wizard is shown. SD card in reader is shown. SD card gets inserted into device
-    a = audioNoise(2) + audioClip(4.075, 11.563, 1)
-
-    return a + audioNoise(10)
-}
-
-function videoVirtualKeyboard
-{
-    virtualkeyboard_languages = DirectShowSource(gMediaDir + "meet_boot2qt_virtualkeyboardlanguages_.avi", audio = false)
-    virtualkeyboard_themes = DirectShowSource(gMediaDir + "meet_boot2qt_virtualkeyboardthemes_.avi", audio = false).trim(32, 140)
-
-    virtualkeyboard_cut = Dissolve(virtualkeyboard_languages, virtualkeyboard_themes, gDissolveLength)
-    return virtualkeyboard_cut.ChangeFPS(50)
-}
-
 function audioYoctoRecipies
 {
-    #n The Yocto project recipies which the boot to Qt stack is built on, so you can easily customize the stack into your production needs
+    #n The included the Yocto project recipies -which the boot to Qt stack is built on- can be used to easily customize the stack into your production needs.
     #  Time lapse of console yocto action
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -146,13 +144,33 @@ function videoYoctoRecipies
     return launchingbitbake + parsing + runningtasks
 }
 
+function audioVirtualKeyboard
+{
+    #n The Qt Virtual Keyboard can be used for text input on your device.
+    #n It supports several languages, ...
+    #n ...and can be styled individually.
+    #  Device with virtual keyboard demo is shown. Normal theme, some languages, theh typewriter theme.
+    a = audioNoise(2) + audioClip(4.075, 11.563, 1)
+
+    return a + audioNoise(10)
+}
+
+function videoVirtualKeyboard
+{
+    virtualkeyboard_languages = DirectShowSource(gMediaDir + "meet_boot2qt_virtualkeyboardlanguages_.avi", audio = false)
+    virtualkeyboard_themes = DirectShowSource(gMediaDir + "meet_boot2qt_virtualkeyboardthemes_.avi", audio = false).trim(32, 140)
+
+    virtualkeyboard_cut = Dissolve(virtualkeyboard_languages, virtualkeyboard_themes, gDissolveLength)
+    return virtualkeyboard_cut.ChangeFPS(50)
+}
+
 function audioQtCreatorIDE
 {
     #n The Qt Creator IDE for all your application development needs...
     #  Time lapse of Qt Quick Designer creating a hello world application
-    #n ...which is fully configured to deploy applications to your board...
+    #n ...is fully configured to deploy applications to your board...
     #  Press on play. Time lapse of deployment and start of the application on the device.
-    #n ...and which has the debugging and profiling tools helping you in creating a great application.
+    #n ...and includes the debugging and profiling tools which help you to create great devices.
     #  Debugger is shown. Profiler is shown.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -186,9 +204,10 @@ function videoLaunchOnBoard
 
 function audioEmulator
 {
-    #n An emulator which allows you to test your application without the actual board...
+    #n The emulator allows you to test your application without the actual hardware...
     #  Press on play. Start of the application on the device.
-    #n ...and under special conditions or with editable sensor data.
+    #n ...under special conditions, ...
+    #n ...and with editable sensor data.
     #  Switching through the control panels in the emulator
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -205,7 +224,7 @@ function videoEmulator
 
 function audioDocs
 {
-    #n And the comprehensive documentation which is well integrated in the tools.
+    #n The comprehensive documentation is well integrated in the tools.
     #  Help mode in Qt Creator
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -220,7 +239,8 @@ function videoDocs
 
 function audioQtSupport
 {
-    #n With Qt, you are not alone with your problems. In case you get stuck, the Qt support team will quickly help you finding solutions.
+    #n With Qt, you are not alone with your problems.
+    #n In case you get stuck, the Qt support team will quickly help you finding solutions.
     #  logging into account page -> Support Center.
     a = audioNoise(2) + audioClip(4.075, 11.563, 1)
 
@@ -242,6 +262,12 @@ function audioOutro
     return a + audioNoise(10)
 }
 
+function videoOutro
+{
+    outro = ImageSource(gMediaDir + "meet_boot2qt_outro.png", pixel_type = "RGB32", fps = 50).trim(1, 500)
+    outro
+}
+
 function completeClip
 {
     return
@@ -259,4 +285,4 @@ function completeClip
 
 #completeclip
 
-videoQtSupport
+videoIntro
