@@ -54,12 +54,12 @@ function intro
 
 function audioUnboxing
 {
-    audioNoise(4)
+    audioNoise(1.5)
 \[*
     #n Creating your own device with a great Qt based user interface has never been easier.
     #  A board is shown, attached to a screen showing black.
 *]
-        \ + audioClip(3.564, 8.301, 1)
+        \ + audioClip(3.564, 8.301, 2)
 \[*
     #n When using Qt for device creation, you have everything you need to let your embedded Linux based device boot to your first Qt application in no time.
     #  Screen shows Qt demo logo with particles, and "Boot to Qt" text blends in.
@@ -72,14 +72,13 @@ function audioUnboxing
 function videoUnboxing
 {
     intro = directshowsource(gMediaDir + "meet_boot2qt_unboxing.avi", audio = false)
-    outofbox = intro.trim(0, 146).ChangeFPS(50)
-    attachdisplay = (intro.trim(146, 430) + intro.trim(498, 542)).SelectEvery(2).AssumeFps(50)
-    grabcard = intro.trim(542, 580).ChangeFPS(50)
-    insertcard = intro.trim(580, 666).AssumeFps(50)
+    outofbox = intro.trim(0, 132).ChangeFPS(50)
+    attachdisplay = (intro.trim(132, 430) + intro.trim(498, 542)).SelectEvery(2).AssumeFps(50)
+    insertcard = intro.trim(542, 626).AssumeFps(50)
     connectpower = intro.trim(666, 752).SelectEvery(2).AssumeFps(50)
     boot = intro.trim(844, 880).ChangeFPS(50)
-    boot2qtlogo = intro.trim(1290, 1424).ChangeFPS(50) + intro.trim(1424, 1424).loop(50).AssumeFps(50)
-    intro = outofbox + attachdisplay + grabcard + insertcard + connectpower + boot + boot2qtlogo
+    boot2qtlogo = intro.trim(1290, 1326).ChangeFPS(50) + intro.trim(1326, 1326).loop(40).AssumeFps(50) + intro.trim(1326, 1424).ChangeFPS(50) + intro.trim(1424, 1424).loop(50).AssumeFps(50)
+    intro = outofbox + attachdisplay + insertcard + connectpower + boot + boot2qtlogo
     return intro
 }
 
@@ -131,8 +130,8 @@ function videoDeviceImageSDCard
 {
     clip = directShowSource(gMediaDir + "meet_boot2qt_insertflashedsdcard.avi", audio = false)
     grabcard = clip.trim(30, 88).ChangeFPS(50)
-    insertcard = clip.trim(88, 220).SelectEvery(3).AssumeFps(50)
-    pushin = clip.trim(220, 242).ChangeFPS(50)
+    insertcard = clip.trim(88, 200).SelectEvery(3).AssumeFps(50)
+    pushin = clip.trim(200, 242).ChangeFPS(50)
     return grabcard + insertcard + pushin
 }
 
