@@ -21,11 +21,11 @@ void Tools::checkSvgAndThrow(const QString &svgFileName,
     switch (result) {
         case Filters::SvgFileNotValid:
                 env->ThrowError("Svg: File '%s' was not found or is invalid SVG.",
-                                svgFileName.toAscii().data());
+                                svgFileName.toLatin1().data());
             break;
         case Filters::SvgElementNotFound:
                 env->ThrowError("Svg: Svg element '%s' was not found.",
-                                svgElement.toAscii().data());
+                                svgElement.toLatin1().data());
             break;
         default:
             break;

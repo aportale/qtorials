@@ -356,43 +356,38 @@ Filters::paintBlendedSvgElement(QPainter *p,
     return SvgOk;
 }
 
-static const struct ElementAndPainter {
-    QString name;
-    void (*function)(QPainter *, const QRect&);
-} elementsAndPainters[] = {
-    { QLatin1String("oldstyle"),            paintOldStyle },
-    { QLatin1String("rgbpatterns"),         paintRgbPatterns },
-    { QLatin1String("blockpattern"),        paintCodecBlockPattern },
-    { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
-    { QLatin1String("qtlogobig"),           paintQtLogoBig },
-    { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
-    { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
-    { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
-    { QLatin1String("cc-by-nc-sa"),         paintCCByNcSa },
-    { QLatin1String("cc-by-nc-nd"),         paintCCByNcNd },
-    { QLatin1String("cc-by-sa"),            paintCCBySa },
-    { QLatin1String("x2logobig"),           paintX2LogoBig }
-};
-
 typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
 
-Q_GLOBAL_STATIC_WITH_INITIALIZER(ElementAndPainterHash, elementsAndPaintersHash, {
-    static const int elementsAndPaintersCount =
-            int(sizeof elementsAndPainters / sizeof elementsAndPainters[0]);
-    for (int i = 0; i < elementsAndPaintersCount; ++i)
-        x->insert(elementsAndPainters[i].name, elementsAndPainters[i].function);
-});
+const ElementAndPainterHash& elementsAndPaintersHash()
+{
+    const static ElementAndPainterHash hash = {
+        { QLatin1String("oldstyle"),            paintOldStyle },
+        { QLatin1String("rgbpatterns"),         paintRgbPatterns },
+        { QLatin1String("blockpattern"),        paintCodecBlockPattern },
+        { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
+        { QLatin1String("qtlogobig"),           paintQtLogoBig },
+        { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
+        { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
+        { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
+        { QLatin1String("cc-by-nc-sa"),         paintCCByNcSa },
+        { QLatin1String("cc-by-nc-nd"),         paintCCByNcNd },
+        { QLatin1String("cc-by-sa"),            paintCCBySa },
+        { QLatin1String("x2logobig"),           paintX2LogoBig }
+    };
+    return hash;
+}
 
 bool Filters::elementAvailable(const QString &element)
 {
-    return !elementsAndPaintersHash()->contains(element);
+    return !elementsAndPaintersHash().contains(element);
 }
 
 void Filters::paintElements(QPainter *p, const QStringList &elements, const QRect &rect)
 {
     foreach (const QString &element, elements)
-        if (elementsAndPaintersHash()->contains(element))
-            elementsAndPaintersHash()->value(element)(p, rect);
+        if (elementsAndPaintersHash().contains(element))
+            elementsAndPaintersHash().value(element)(p, rect);
+    p->end();
 }
 
 void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
