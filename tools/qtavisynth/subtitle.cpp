@@ -10,8 +10,8 @@
 class SubtitleProperties : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qreal slip READ slip WRITE setSlip);
-    Q_PROPERTY(qreal blend READ blend WRITE setBlend);
+    Q_PROPERTY(qreal slip READ slip WRITE setSlip)
+    Q_PROPERTY(qreal blend READ blend WRITE setBlend)
 
 public:
     SubtitleProperties(QObject *parent = 0);

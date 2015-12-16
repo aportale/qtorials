@@ -11,6 +11,7 @@
 #include "filters.h"
 #include "qglobal.h"
 #include <QtSvg>
+#include <QGuiApplication>
 
 inline static int codecBlockSize(int clipHeight)
 {
@@ -71,13 +72,14 @@ QSvgRenderer* SvgRendererStore::artworkSvgRenderer()
 static char *argv[] = {"."};
 static int argc = sizeof(argv) / sizeof(argv[0]);
 
-QApplication* createQApplicationIfNeeded()
+QGuiApplication* createQGuiApplicationIfNeeded()
 {
-    return qApp ? 0 : new QApplication(argc, argv);
+    return qGuiApp ? 0 : new QGuiApplication(argc, argv);
 }
 
-void deleteQApplicationIfNeeded(QApplication* &app)
+void deleteQGuiApplicationIfNeeded(QGuiApplication* &app)
 {
+    return; // TODO: find out whether deleting the application is needed
     if (app) {
         delete app;
         app = 0;
@@ -98,19 +100,19 @@ Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &
 void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                          const QColor &textColor)
 {
-    QApplication *a = createQApplicationIfNeeded();
+    QGuiApplication *a = createQGuiApplicationIfNeeded();
     QFont font;
     font.setPixelSize(qMax(8, rect.height() / 14));
     font.setBold(true);
     p->setFont(font);
     p->setPen(textColor);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
-    deleteQApplicationIfNeeded(a);
+    deleteQGuiApplicationIfNeeded(a);
 }
 
-void paintOldStyle(QPainter *p, const QRect &rect)
+void paintVignette(QPainter *p, const QRect &rect)
 {
-    SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("oldstyle"), rect);
+    SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("vignette"), rect);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
@@ -205,33 +207,6 @@ void paintQtLogoBig(QPainter *p, const QRect &rect)
     SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
-void paintSymbianLogoBig(QPainter *p, const QRect &rect)
-{
-    const QLatin1String svgId("symbianlogo");
-    const QRectF logoElementBounds =
-            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
-    const int logoHeight = qMin(rect.height() / 3, rect.width() / 4);
-    const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
-    const int logoY = (rect.height() - logoHeight) / 2;
-    const int logoX = (rect.width() - logoWidth) / 2;
-    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
-}
-
-void paintMaeomoOrgLogoBig(QPainter *p, const QRect &rect)
-{
-    const QLatin1String svgId("maemoorglogo");
-    const int logoHeightForRectHeight = int(qMin(rect.height() / 4.0, rect.width() * 0.15));
-    const int logoY = (rect.height() - logoHeightForRectHeight)
-             / 2 / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
-    const int logoHeight = (rect.height() - 2*logoY)
-             / codecBlockSize(rect.height()) * codecBlockSize(rect.height());
-    const QRectF logoElementBounds =
-            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
-    const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
-    const int logoX = (rect.width() - logoWidth) / 2;
-    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
-}
-
 void paintCodecBlockPattern(QPainter *p, const QRect &rect)
 {
     QImage brush(codecBlockSize(rect.height()) * 2, codecBlockSize(rect.height()) * 2,
@@ -274,18 +249,6 @@ void paintCCByNcNd(QPainter *p, const QRect &rect)
 void paintCCBySa(QPainter *p, const QRect &rect)
 {
     paintCC(p, rect, QLatin1String("by-sa"));
-}
-
-void paintX2LogoBig(QPainter *p, const QRect &rect)
-{
-    const QLatin1String svgId("x2logo");
-    const QRectF logoElementBounds =
-            SvgRendererStore::artworkSvgRenderer()->boundsOnElement(svgId);
-    const int logoHeight = qMin(rect.height(), rect.width()) / 1.8;
-    const int logoWidth = logoElementBounds.width() / logoElementBounds.height() * logoHeight;
-    const int logoY = (rect.height() - logoHeight) / 2;
-    const int logoX = (rect.width() - logoWidth) / 2;
-    SvgRendererStore::artworkSvgRenderer()->render(p, svgId, QRect(logoX, logoY, logoWidth, logoHeight));
 }
 
 QTransform fitRect1InRect2Centered(const QRectF &rect1, const QRectF &rect2)
@@ -356,43 +319,35 @@ Filters::paintBlendedSvgElement(QPainter *p,
     return SvgOk;
 }
 
-static const struct ElementAndPainter {
-    QString name;
-    void (*function)(QPainter *, const QRect&);
-} elementsAndPainters[] = {
-    { QLatin1String("oldstyle"),            paintOldStyle },
-    { QLatin1String("rgbpatterns"),         paintRgbPatterns },
-    { QLatin1String("blockpattern"),        paintCodecBlockPattern },
-    { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
-    { QLatin1String("qtlogobig"),           paintQtLogoBig },
-    { QLatin1String("symbianlogobig"),      paintSymbianLogoBig },
-    { QLatin1String("maemoorglogobig"),     paintMaeomoOrgLogoBig },
-    { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
-    { QLatin1String("cc-by-nc-sa"),         paintCCByNcSa },
-    { QLatin1String("cc-by-nc-nd"),         paintCCByNcNd },
-    { QLatin1String("cc-by-sa"),            paintCCBySa },
-    { QLatin1String("x2logobig"),           paintX2LogoBig }
-};
-
 typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
 
-Q_GLOBAL_STATIC_WITH_INITIALIZER(ElementAndPainterHash, elementsAndPaintersHash, {
-    static const int elementsAndPaintersCount =
-            int(sizeof elementsAndPainters / sizeof elementsAndPainters[0]);
-    for (int i = 0; i < elementsAndPaintersCount; ++i)
-        x->insert(elementsAndPainters[i].name, elementsAndPainters[i].function);
-});
+const ElementAndPainterHash& elementsAndPaintersHash()
+{
+    const static ElementAndPainterHash hash = {
+        { QLatin1String("vignette"),            paintVignette },
+        { QLatin1String("rgbpatterns"),         paintRgbPatterns },
+        { QLatin1String("blockpattern"),        paintCodecBlockPattern },
+        { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
+        { QLatin1String("qtlogobig"),           paintQtLogoBig },
+        { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
+        { QLatin1String("cc-by-nc-sa"),         paintCCByNcSa },
+        { QLatin1String("cc-by-nc-nd"),         paintCCByNcNd },
+        { QLatin1String("cc-by-sa"),            paintCCBySa }
+    };
+    return hash;
+}
 
 bool Filters::elementAvailable(const QString &element)
 {
-    return !elementsAndPaintersHash()->contains(element);
+    return !elementsAndPaintersHash().contains(element);
 }
 
 void Filters::paintElements(QPainter *p, const QStringList &elements, const QRect &rect)
 {
     foreach (const QString &element, elements)
-        if (elementsAndPaintersHash()->contains(element))
-            elementsAndPaintersHash()->value(element)(p, rect);
+        if (elementsAndPaintersHash().contains(element))
+            elementsAndPaintersHash().value(element)(p, rect);
+    p->end();
 }
 
 void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
@@ -409,7 +364,7 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
 
     const int padding = rect.height() / 45;
     const int textLineDistance = rect.height() / 80;
-    qreal backgroundHeight = padding + titleFont.pixelSize() + padding;
+    int backgroundHeight = padding + titleFont.pixelSize() + padding;
     if (!subTitle.isEmpty())
         backgroundHeight += textLineDistance + subTitleFont.pixelSize();
     backgroundHeight = snappedToBlockSize(backgroundHeight, rect.height());
@@ -418,11 +373,11 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
         tweakedPadding -= textLineDistance + subTitleFont.pixelSize();
     tweakedPadding /= 2;
 
-    const int backgroundTop = rect.height() - slipIn * backgroundHeight;
+    const int backgroundTop = int(rect.height() - slipIn * backgroundHeight);
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("subtitlebackground"), background);
 
-    QApplication *a = createQApplicationIfNeeded();
+    QGuiApplication *a = createQGuiApplicationIfNeeded();
     p->save();
     p->setPen(QColor(245, 235, 170));
     p->setCompositionMode(QPainter::CompositionMode_Lighten);
@@ -438,12 +393,12 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
     p->drawText(padding, titleTextTop, title);
     if (!subTitle.isEmpty()) {
         p->setFont(subTitleFont);
-        p->drawText(padding * 1.68,
+        p->drawText(int(padding * 1.68),
                     tweakedPadding + titleFont.pixelSize() + textLineDistance + subTitleFont.pixelSize(),
                     subTitle);
     }
     p->restore();
-    deleteQApplicationIfNeeded(a);
+    deleteQGuiApplicationIfNeeded(a);
 }
 
 void Filters::paintHighlight(QPainter *p, const QRectF &highlightRect,

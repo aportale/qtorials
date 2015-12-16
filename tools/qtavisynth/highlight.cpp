@@ -7,8 +7,8 @@
 class HighlightProperties : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRectF rectangle READ rectangle WRITE setRectangle);
-    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity);
+    Q_PROPERTY(QRectF rectangle READ rectangle WRITE setRectangle)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 
 public:
     HighlightProperties(QObject *parent = 0);

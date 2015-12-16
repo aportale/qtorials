@@ -44,7 +44,7 @@ SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
     static const QMetaEnum &blendEnum = staticMetaObject.enumerator(enumIndex);
     const int blending = blendEnum.keysToValue(blendingKey);
     if (blending == -1)
-        env->ThrowError("QtorialsSvgAnimation: Invalid blending type '%s'.",
+        env->ThrowError("QtAviSynthSvgAnimation: Invalid blending type '%s'.",
                         blendingKey);
     return Blending(blending);
 }
@@ -186,7 +186,7 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
     const AVSValue &detailValues = args[2];
     static const int valuesPerDetail = 5;
     if (detailValues.ArraySize() % valuesPerDetail != 0)
-        env->ThrowError("QtorialsSvgAnimation: Mismatching number of arguments.\n"
+        env->ThrowError("QtAviSynthSvgAnimation: Mismatching number of arguments.\n"
                         "They need to be %d per keyframe.", valuesPerDetail);
 
     QList<SvgAnimationProperties::Data> details;

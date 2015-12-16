@@ -35,6 +35,7 @@ INCLUDEPATH = .
 RESOURCES = qtavisynth.qrc
 QT += svg
 OTHER_FILES = qtavisynth.avs \
+    ../../screencasts/test/* \
     ../../screencasts/tools.avsi
 contains (DEFINES, AVISYNTH26) { 
     SOURCES += avisynth26\interface.cpp

@@ -26,7 +26,7 @@ AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScr
     for (int i = 0; i < elementValues.ArraySize(); ++i) {
         const QLatin1String element(elementValues[i].AsString());
         if (Filters::elementAvailable(element))
-            env->ThrowError("QtorialsElements: Invalid element '%s'.", element.latin1());
+            env->ThrowError("QtAviSynthElements: Invalid element '%s'.", element.latin1());
         elements.append(element);
     }
     QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);

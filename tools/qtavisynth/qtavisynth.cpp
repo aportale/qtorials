@@ -20,24 +20,24 @@
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
-    env->AddFunction("QtorialsTitle", "[clip]c[text]s[textcolor]i",
+    env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[textcolor]i",
                      Title::CreateTitle, 0);
-    env->AddFunction("QtorialsHighlight",
+    env->AddFunction("QtAviSynthHighlight",
                      "[clip]c[left]i[top]i[width]i[height]i[start]i[end]i",
                      Highlight::CreateHighlight, 0);
-    env->AddFunction("QtorialsElements", "[clip]c[elements]s*",
+    env->AddFunction("QtAviSynthElements", "[clip]c[elements]s*",
                      StillImage::CreateElements, 0);
-    env->AddFunction("QtorialsSvg", "[clip]c[svgfile]s[elements]s*",
+    env->AddFunction("QtAviSynthSvg", "[clip]c[svgfile]s[elements]s*",
                      StillImage::CreateSvg, 0);
-    env->AddFunction("QtorialsSubtitle",
+    env->AddFunction("QtAviSynthSubtitle",
                      "[clip]c[title]s[subtitle]s[start]i[end]i",
                      Subtitle::CreateSubtitle, 0);
-    env->AddFunction("QtorialsZoomNPan",
+    env->AddFunction("QtAviSynthZoomNPan",
                      "[clip]c[width]i[height]i[extensioncolor]i"
                      "[defaulttransitionframes]i[resizefiter]s"
                      "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
                      ZoomNPan::CreateZoomNPan, 0);
-    env->AddFunction("QtorialsSvgAnimation", "[clip]c[svgfile]s.*",
+    env->AddFunction("QtAviSynthSvgAnimation", "[clip]c[svgfile]s.*",
                      SvgAnimation::CreateSvgAnimation, 0);
     return "`QtAviSynth' QtAviSynth plugin";
 }

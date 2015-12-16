@@ -6,9 +6,9 @@
 
 Title::Title(const VideoInfo &videoInfo,
              const QString text, const QColor color)
-    : m_videoInfo(videoInfo)
-    , m_text(text)
+    : m_text(text)
     , m_color(color)
+    , m_videoInfo(videoInfo)
 {
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 }
@@ -20,7 +20,7 @@ AVSValue __cdecl Title::CreateTitle(AVSValue args, void* user_data, IScriptEnvir
     const QString text =
         QString::fromLatin1(args[1].AsString("Title")).replace(QLatin1String("\\n"),
                                                                QLatin1String("\n"));
-    const QColor color = args[2].AsInt(qRgba(0x0, 0x0, 0x0, 0xff));
+    const QColor color = QRgb(args[2].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
     const PClip title = new Title(background->GetVideoInfo(), text, color);
     return new RgbOverlay(background, title, env);
 }

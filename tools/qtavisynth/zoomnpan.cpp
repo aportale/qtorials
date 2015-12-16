@@ -5,7 +5,7 @@
 class ZoomNPanProperties : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRectF rect READ rect WRITE setRect);
+    Q_PROPERTY(QRectF rect READ rect WRITE setRect)
 
 public:
     ZoomNPanProperties(QObject *parent = 0);
@@ -97,10 +97,10 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
         const int target_height = m_targetVideoInfo.height;
         if (rect.size() == QSizeF(target_width, target_height))
             rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
-        const float src_left = rect.left();
-        const float src_top = rect.top();
-        const float src_width = rect.width();
-        const float src_height = rect.height();
+        const qreal src_left = rect.left();
+        const qreal src_top = rect.top();
+        const qreal src_width = rect.width();
+        const qreal src_height = rect.height();
         const AVSValue resizedParams[] = { m_extendedClip, target_width, target_height, src_left, src_top, src_width, src_height };
         m_resizedClip = env->Invoke( m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
     }
@@ -114,11 +114,11 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
     static const int valuesPerDetail = 6;
 
     if (!env->FunctionExists(args[5].AsString()))
-        env->ThrowError("QtorialsZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
+        env->ThrowError("QtAviSynthZoomNPan: Invalid resize filter '%s'.", args[5].AsString());
 
     const AVSValue &detailValues = args[10];
     if (detailValues.ArraySize() % valuesPerDetail != 0)
-        env->ThrowError("QtorialsZoomNPan: Mismatching number of arguments.\n"
+        env->ThrowError("QtAviSynthZoomNPan: Mismatching number of arguments.\n"
                         "They need to be %d per detail.", valuesPerDetail);
 
     const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
@@ -157,7 +157,7 @@ QRectF ZoomNPan::fixedDetailRect(const VideoInfo &originVideoInfo,
                                  const QRectF &specifiedDetailRect)
 {
     QRectF result = specifiedDetailRect;
-    if (result.left() == -1 || result.top() == -1) {
+    if (qFuzzyCompare(result.left(), -1) || qFuzzyCompare(result.top(), -1)) {
         // Fullscreen
         QSizeF zoomNPanSize(detailClipSize);
         zoomNPanSize.scale(originVideoInfo.width, originVideoInfo.height,
@@ -165,7 +165,7 @@ QRectF ZoomNPan::fixedDetailRect(const VideoInfo &originVideoInfo,
         result.setSize(zoomNPanSize);
         result.moveLeft((originVideoInfo.width - result.width()) / 2);
         result.moveTop((originVideoInfo.height - result.height()) / 2);
-    } else if (result.width() == -1 || result.height() == -1) {
+    } else if (qFuzzyCompare(result.width(), -1) || qFuzzyCompare(result.height(), -1)) {
         // Native resolution
         result.setSize(detailClipSize);
     }
