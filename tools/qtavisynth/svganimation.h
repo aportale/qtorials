@@ -1,9 +1,18 @@
 #ifndef SVGANIMATION_H
 #define SVGANIMATION_H
 
-#include <windows.h>
+#ifndef LINUXIZED_VERSION
+#include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include <QParallelAnimationGroup>
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class SvgAnimationProperties : public QObject
 {
@@ -68,11 +77,10 @@ public:
                             IScriptEnvironment* env);
 
 protected:
-    const QString m_svgFile;
     VideoInfo m_videoInfo;
+    const QString m_svgFile;
     QParallelAnimationGroup m_animation;
     QList<SvgAnimationProperties*> m_properties;
 };
-
 
 #endif // SVGANIMATION_H

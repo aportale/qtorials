@@ -1,8 +1,13 @@
 #ifndef PAINTEDRGBCLIP_H
 #define PAINTEDRGBCLIP_H
 
+#ifndef LINUXIZED_VERSION
 #include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include <QRect>
 
 class QPainter;

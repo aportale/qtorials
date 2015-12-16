@@ -1,8 +1,16 @@
 #ifndef RGBOVERLAY_H
 #define RGBOVERLAY_H
 
+#ifndef LINUXIZED_VERSION
 #include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class PaintedRgbClip;
 

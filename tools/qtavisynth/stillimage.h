@@ -1,9 +1,18 @@
 #ifndef STILLIMAGE_H
 #define STILLIMAGE_H
 
+#ifndef LINUXIZED_VERSION
 #include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include <QImage>
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class StillImage : public IClip
 {

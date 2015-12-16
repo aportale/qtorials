@@ -1,9 +1,18 @@
 #ifndef SUBTITLE_H
 #define SUBTITLE_H
 
-#include <windows.h>
+#ifndef LINUXIZED_VERSION
+#include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include <QParallelAnimationGroup>
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class SubtitleProperties;
 

@@ -1,10 +1,19 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#include <windows.h>
+#ifndef LINUXIZED_VERSION
+#include "windows.h"
+#include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include <QString>
 #include <QColor>
-#include "avisynth.h"
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class Tools
 {

@@ -36,12 +36,19 @@ RESOURCES = qtavisynth.qrc
 QT += svg
 OTHER_FILES = qtavisynth.avs \
     ../../screencasts/tools.avsi
-contains (DEFINES, AVISYNTH26) { 
+
+contains (DEFINES, LINUXIZED_VERSION) {
+    HEADERS += /home/niweber/projects/avxsynth/include/avxplugin.h
+    INCLUDEPATH += /home/niweber/projects/avxsynth/include/
+}
+else {
+contains (DEFINES, AVISYNTH26) {
     SOURCES += avisynth26\interface.cpp
     HEADERS += avisynth26\avisynth.h
     INCLUDEPATH += avisynth26
 }
-else { 
+else {
     HEADERS += avisynth25\avisynth.h
     INCLUDEPATH += avisynth25
+}
 }

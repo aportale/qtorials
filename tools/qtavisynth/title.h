@@ -1,9 +1,18 @@
 #ifndef TITLE_H
 #define TITLE_H
 
+#ifndef LINUXIZED_VERSION
 #include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include <QColor>
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class Title : public IClip
 {

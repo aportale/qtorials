@@ -8,8 +8,13 @@
     California, 94105, USA.
 */
 
+#ifndef LINUXIZED_VERSION
 #include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include "stillimage.h"
 #include "subtitle.h"
 #include "highlight.h"

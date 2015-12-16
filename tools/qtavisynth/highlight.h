@@ -1,11 +1,20 @@
 #ifndef HIGHLIGHT_H
 #define HIGHLIGHT_H
 
+#ifndef LINUXIZED_VERSION
 #include "windows.h"
 #include "avisynth.h"
+#else
+#include "avxplugin.h"
+#endif
+
 #include "paintedrgbclip.h"
 #include <QRect>
 #include <QParallelAnimationGroup>
+
+#ifdef LINUXIZED_VERSION
+using namespace avxsynth;
+#endif
 
 class HighlightProperties;
 class QPainter;
