@@ -88,3 +88,18 @@ function BlankClipRGB(framesCount)
 {
     BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
 }
+
+function warp(clip sourceClip, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+{
+    # return sourceClip
+    scaledX3 = String(Round(100.0 / sourceClip.width * x1))
+    scaledY3 = String(Round(100.0 - (100.0 / sourceClip.height * y1)))
+    scaledX4 = String(Round(100.0 / sourceClip.width * x2))
+    scaledY4 = String(Round(100.0 - (100.0 / sourceClip.height * y2)))
+    scaledX1 = String(Round(100.0 / sourceClip.width * x3))
+    scaledY1 = String(Round(100.0 - (100.0 / sourceClip.height * y3)))
+    scaledX2 = String(Round(100.0 / sourceClip.width * x4))
+    scaledY2 = String(Round(100.0 - (100.0 / sourceClip.height * y4)))
+    coordinates = ("perspectiveX1=" + scaledX1 + ",perspectiveY1=" + scaledY1 + ",perspectiveX2=" + scaledX2 + ",perspectiveY2=" + scaledY2 + ",perspectiveX3=" + scaledX3 + ",perspectiveY3=" + scaledY3 + ",perspectiveX4=" + scaledX4 + ",perspectiveY4=" + scaledY4)
+    return sourceClip.ffdshow(options="isPerspective=1,perspectiveIsSrc=1,perspectiveInterpolation=2," + coordinates)
+}
