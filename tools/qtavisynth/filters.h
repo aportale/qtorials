@@ -22,7 +22,7 @@ public:
         SvgElementNotFound
     };
     static void paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
-                           const QColor &textColor);
+                           const QString &fontFace, const QColor &textColor);
     static bool elementAvailable(const QString &element);
     static void paintElements(QPainter *p, const QStringList &elements, const QRect &rect);
     static SvgResult checkSvg(const QString &svgFileName, const QString &element);

@@ -8,7 +8,7 @@
     California, 94105, USA.
 */
 
-#include "windows.h"
+#include "Windows.h"
 #include "avisynth.h"
 #include "stillimage.h"
 #include "subtitle.h"
@@ -20,7 +20,7 @@
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
 {
-    env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[textcolor]i",
+    env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[fontface]s[color]i",
                      Title::CreateTitle, 0);
     env->AddFunction("QtAviSynthHighlight",
                      "[clip]c[left]i[top]i[width]i[height]i[start]i[end]i",

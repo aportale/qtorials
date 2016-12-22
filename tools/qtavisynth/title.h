@@ -1,7 +1,7 @@
 #ifndef TITLE_H
 #define TITLE_H
 
-#include "windows.h"
+#include "Windows.h"
 #include "avisynth.h"
 #include <QColor>
 
@@ -9,7 +9,7 @@ class Title : public IClip
 {
 public:
     Title(const VideoInfo &videoInfo,
-          const QString text, const QColor color);
+          const QString text, const QString fontFace, const QColor color);
 
     static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data,
                                         IScriptEnvironment* env);
@@ -23,6 +23,7 @@ public:
 
 protected:
     const QString m_text;
+    const QString m_fontFace;
     const QColor m_color;
     VideoInfo m_videoInfo;
 };

@@ -5,7 +5,7 @@
 # or send a letter to Creative Commons,
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
-# DEFINES += AVISYNTH26
+DEFINES += AVISYNTH26
 TEMPLATE = lib
 TARGET = ../../screencasts/qtavisynth
 SOURCES = qtavisynth.cpp \

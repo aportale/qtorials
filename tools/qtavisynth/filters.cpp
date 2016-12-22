@@ -69,7 +69,7 @@ QSvgRenderer* SvgRendererStore::artworkSvgRenderer()
     return svgRendererStore()->svgRenderer(QLatin1String(":/artwork.svg"), error);
 }
 
-static char *argv[] = {"."};
+static char *argv[] = {(char*)"."};
 static int argc = sizeof(argv) / sizeof(argv[0]);
 
 QGuiApplication* createQGuiApplicationIfNeeded()
@@ -98,12 +98,11 @@ Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &
 }
 
 void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
-                         const QColor &textColor)
+                         const QString &fontFace, const QColor &textColor)
 {
     QGuiApplication *a = createQGuiApplicationIfNeeded();
-    QFont font;
+    QFont font(fontFace);
     font.setPixelSize(qMax(8, rect.height() / 14));
-    font.setBold(true);
     p->setFont(font);
     p->setPen(textColor);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);

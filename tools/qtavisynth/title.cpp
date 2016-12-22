@@ -5,8 +5,9 @@
 #include <QImage>
 
 Title::Title(const VideoInfo &videoInfo,
-             const QString text, const QColor color)
+             const QString text, const QString fontFace, const QColor color)
     : m_text(text)
+    , m_fontFace(fontFace)
     , m_color(color)
     , m_videoInfo(videoInfo)
 {
@@ -20,8 +21,10 @@ AVSValue __cdecl Title::CreateTitle(AVSValue args, void* user_data, IScriptEnvir
     const QString text =
         QString::fromLatin1(args[1].AsString("Title")).replace(QLatin1String("\\n"),
                                                                QLatin1String("\n"));
-    const QColor color = QRgb(args[2].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
-    const PClip title = new Title(background->GetVideoInfo(), text, color);
+    const QString fontFace =
+        QString::fromLatin1(args[2].AsString());
+    const QColor color = QRgb(args[3].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
+    const PClip title = new Title(background->GetVideoInfo(), text, fontFace, color);
     return new RgbOverlay(background, title, env);
 }
 
@@ -35,7 +38,7 @@ PVideoFrame __stdcall Title::GetFrame(int n, IScriptEnvironment* env)
     QPainter p(&image);
     p.scale(1, -1);
     p.translate(0, -image.height());
-    Filters::paintTitle(&p, image.rect(), m_text, m_color);
+    Filters::paintTitle(&p, image.rect(), m_text, m_fontFace, m_color);
     return frame;
 }
 
