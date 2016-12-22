@@ -19,6 +19,8 @@ global gAudioClip = BlankClip
 global gAudioNoiseStart = 0
 global gAudioNoiseEnd = 1
 global gTextClipFramesPerCharacter = 3
+global gTextFontFace = "Tillium Web"
+global gTextColor = $333333
 global gBackgroundColor = $ffffff
 global gFFDShowImport = "c:\Program Files (x86)\ffdshow\ffavisynth.avsi"
 
@@ -55,12 +57,11 @@ function audioClip(float startSecond, float endSecond, float appendedSilenceSeco
 
 function textClip(String text, int "frames", int "align", int "x", int "y", string "backgroundimage")
 {
-    textColor = $333333
     framesCount = Default(frames, StrLen(text) * gTextClipFramesPerCharacter)
     background = Defined(backgroundimage) ?
         \ ImageSource(backgroundimage, fps = 25, end = framesCount)
         \ : BlankClip(framesCount, gClipWidth, gClipHeight, fps = 25, color = gBackgroundColor, pixel_type = "RGB32")
-    background.QtorialsTitle(text, textColor)
+    background.QtAviSynthTitle(text, gTextFontFace, gTextColor)
 }
 
 function frame(clip sourceClip, int frame)
@@ -101,5 +102,5 @@ function warp(clip sourceClip, float x1, float y1, float x2, float y2, float x3,
     scaledX2 = String(Round(100.0 / sourceClip.width * x4))
     scaledY2 = String(Round(100.0 - (100.0 / sourceClip.height * y4)))
     coordinates = ("perspectiveX1=" + scaledX1 + ",perspectiveY1=" + scaledY1 + ",perspectiveX2=" + scaledX2 + ",perspectiveY2=" + scaledY2 + ",perspectiveX3=" + scaledX3 + ",perspectiveY3=" + scaledY3 + ",perspectiveX4=" + scaledX4 + ",perspectiveY4=" + scaledY4)
-    return sourceClip.ffdshow(options="isPerspective=1,perspectiveIsSrc=1,perspectiveInterpolation=2," + coordinates)
+    return sourceClip.ffdshow(options="dithering=0,isPerspective=1,perspectiveIsSrc=1,perspectiveInterpolation=2," + coordinates)
 }
