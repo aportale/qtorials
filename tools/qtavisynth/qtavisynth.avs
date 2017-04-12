@@ -13,17 +13,17 @@ gClipWidth = 640
 gClipHeight = 360
 
 BlankClipRGB
-\.QtorialsElements("rgbpatterns")
-\.QtorialsZoomNPan(gClipWidth, gClipHeight, $ffffff, 100, "Lanczos4resize"
+\.QtAviSynthElements("rgbpatterns")
+\.QtAviSynthZoomNPan(gClipWidth, gClipHeight, $ffffff, 100, "Lanczos4resize"
     \ ,               0,   0, gClipWidth * 2, gClipHeight * 2
                       \ ,  120,  -1,    0,  0, -1, -1
                       \ ,  360,  -1,    -1, -1, -1, -1
     \ )
-\.QtorialsSubtitle("Title1", "Subtitle", 10, 110)
-\.QtorialsSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow")
-\.QtorialsSvgAnimation("..\..\screencasts\qtsymbian_development.svg"
+\.QtAviSynthSubtitle("Title1", "Subtitle", 10, 110)
+\.QtAviSynthSvg("..\..\screencasts\qtsymbian_development.svg", "mainwindow")
+\.QtAviSynthSvgAnimation("..\..\screencasts\qtsymbian_development.svg"
   \ , "lineedit",       60, 100, "fadeandscale", "fade"
   \ , "pushbutton",     100, 200, "fade", "immediate"
   \ , "listwidget",     120, 200, "immediate", "fadeandscale"
 \)
-\.QtorialsElements("cc-by-nc-sa", "oldstyle")
+\.QtAviSynthElements("cc-by-nc-sa", "vignette")
