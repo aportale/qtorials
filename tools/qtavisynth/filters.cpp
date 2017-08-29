@@ -109,9 +109,67 @@ void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleTex
     deleteQGuiApplicationIfNeeded(a);
 }
 
+static const QImage gradientImage()
+{
+    QSvgRenderer *renderer = SvgRendererStore::artworkSvgRenderer();
+    const QString gradientId("vignettegradient");
+    Q_ASSERT(renderer->boundsOnElement(gradientId).size().toSize() == QSize(256, 1));
+    QImage result(256, 1, QImage::Format_ARGB32);
+    result.fill(0);
+    QPainter p(&result);
+    renderer->render(&p, gradientId, result.rect());
+#if 0
+    // for debugging
+    p.fillRect(0, 0, 16, 1, Qt::red);
+    p.fillRect(120, 0, 32, 1, Qt::green);
+    p.fillRect(240, 0, 16, 1, Qt::blue);
+#endif
+    return result;
+}
+
+static void drawGradient(QImage &image)
+{
+    const int imageWidth = image.width();
+    const int imageHeight = image.height();
+    if (imageWidth < 1 || imageHeight < 1)
+        return;
+    const QImage gradient = gradientImage();
+    const QRgb *gradientRgb = reinterpret_cast<const QRgb*>(gradient.constBits());
+    QRgb *imageRgb = reinterpret_cast<QRgb*>(image.bits());
+    const int quarterWidth = imageWidth / 2;
+    const int quarterHeight = imageHeight / 2;
+    // Right triangle with a, b = 181.0193359837561662; c = 256.
+    const qreal xScaleFactor = 181.0193359837561662 / quarterWidth;
+    const qreal yScaleFactor = 181.0193359837561662 / quarterHeight;
+
+    for (int y = 0; y <= quarterHeight; y++) {
+        const int scaledY = int(yScaleFactor * y);
+        const int scaledYSquare = scaledY * scaledY;
+        const int offsetYPlusQuarterWidth = quarterWidth + imageWidth * (quarterHeight - y);
+        for (int x = 0; x <= quarterWidth; x++) {
+            const int scaledX = int(xScaleFactor * x);
+            const int gradientColorIndex = int(sqrt(qreal(scaledYSquare + scaledX * scaledX)));
+            const QRgb gradientColor = gradientRgb[gradientColorIndex];
+            imageRgb[offsetYPlusQuarterWidth - x] = gradientColor;
+            imageRgb[offsetYPlusQuarterWidth + x] = gradientColor;
+        }
+    }
+    const int bytesPerLine = image.bytesPerLine();
+    QRgb *dst = imageRgb + imageWidth * image.height() - imageWidth;
+    QRgb *src = imageRgb;
+    for (int row = 0; row < quarterHeight; row++) {
+        memcpy(dst, src, size_t(bytesPerLine));
+        dst -= imageWidth;
+        src += imageWidth;
+    }
+}
+
 void paintVignette(QPainter *p, const QRect &rect)
 {
-    SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("vignette"), rect);
+    QImage vignette(rect.width(), rect.height(), QImage::Format_ARGB32);
+    vignette.fill(Qt::transparent);
+    drawGradient(vignette);
+    p->drawImage(0, 0, vignette);
 }
 
 void paintRgbPatterns(QPainter *p, const QRect &rect)
