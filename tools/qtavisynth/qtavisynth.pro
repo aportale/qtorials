@@ -5,7 +5,7 @@
 # or send a letter to Creative Commons,
 # 171 Second Street, Suite 300, San Francisco,
 # California, 94105, USA.
-DEFINES += AVISYNTH26
+
 TEMPLATE = lib
 TARGET = ../../screencasts/qtavisynth
 SOURCES = qtavisynth.cpp \
@@ -37,12 +37,8 @@ QT += svg
 OTHER_FILES = qtavisynth.avs \
     ../../screencasts/test/* \
     ../../screencasts/tools.avsi
-contains (DEFINES, AVISYNTH26) { 
-    SOURCES += avisynth26\interface.cpp
-    HEADERS += avisynth26\avisynth.h
-    INCLUDEPATH += avisynth26
-}
-else { 
-    HEADERS += avisynth25\avisynth.h
-    INCLUDEPATH += avisynth25
-}
+
+AVISYNTH_FILTERSDK = "C:/Program Files (x86)/AviSynth+/FilterSDK/"
+LIBS += $${AVISYNTH_FILTERSDK}/lib/x64/AviSynth.lib
+HEADERS += $${AVISYNTH_FILTERSDK}/include/avisynth.h
+INCLUDEPATH += $${AVISYNTH_FILTERSDK}/include

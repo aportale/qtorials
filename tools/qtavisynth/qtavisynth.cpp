@@ -17,9 +17,13 @@
 #include "zoomnpan.h"
 #include "svganimation.h"
 
+const AVS_Linkage* AVS_linkage;
+
 extern "C" __declspec(dllexport)
-const char* __stdcall AvisynthPluginInit2(IScriptEnvironment* env)
+const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Linkage* const vectors)
 {
+    AVS_linkage = vectors;
+
     env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[fontface]s[color]i",
                      Title::CreateTitle, 0);
     env->AddFunction("QtAviSynthHighlight",

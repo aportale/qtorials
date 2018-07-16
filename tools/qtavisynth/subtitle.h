@@ -20,7 +20,7 @@ public:
 
     bool __stdcall GetParity(int n);
     const VideoInfo& __stdcall GetVideoInfo();
-    void __stdcall SetCacheHints(int cachehints, int frame_range);
+    int __stdcall SetCacheHints(int cachehints, int frame_range);
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env);
 
 protected:

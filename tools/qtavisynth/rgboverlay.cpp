@@ -63,9 +63,9 @@ const VideoInfo& __stdcall RgbOverlay::GetVideoInfo()
     return m_overlaidClip->GetVideoInfo();
 }
 
-void __stdcall RgbOverlay::SetCacheHints(int cachehints, int frame_range)
+int __stdcall RgbOverlay::SetCacheHints(int cachehints, int frame_range)
 {
-    m_overlaidClip->SetCacheHints(cachehints, frame_range);
+    return m_overlaidClip->SetCacheHints(cachehints, frame_range);
 }
 
 void __stdcall RgbOverlay::GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)

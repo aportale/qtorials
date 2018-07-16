@@ -53,10 +53,11 @@ const VideoInfo& __stdcall Title::GetVideoInfo()
     return m_videoInfo;
 }
 
-void __stdcall Title::SetCacheHints(int cachehints, int frame_range)
+int __stdcall Title::SetCacheHints(int cachehints, int frame_range)
 {
     Q_UNUSED(cachehints)
     Q_UNUSED(frame_range)
+    return 0;
 }
 
 void __stdcall Title::GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)

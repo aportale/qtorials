@@ -183,10 +183,11 @@ const VideoInfo& __stdcall ZoomNPan::GetVideoInfo()
     return m_targetVideoInfo;
 }
 
-void __stdcall ZoomNPan::SetCacheHints(int cachehints, int frame_range)
+int __stdcall ZoomNPan::SetCacheHints(int cachehints, int frame_range)
 {
     Q_UNUSED(cachehints)
     Q_UNUSED(frame_range)
+    return 0;
 }
 
 void __stdcall ZoomNPan::GetAudio(void* buf, __int64 start, __int64 count,
