@@ -8,7 +8,7 @@ class ZoomNPanProperties : public QObject
     Q_PROPERTY(QRectF rect READ rect WRITE setRect)
 
 public:
-    ZoomNPanProperties(QObject *parent = 0);
+    ZoomNPanProperties(QObject *parent = nullptr);
     QRectF rect() const;
     void setRect(const QRectF &rect);
     static const QByteArray propertyName;
@@ -50,7 +50,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
     Detail previousDetail = { 0, 0, QRectF() };
 
     {
-        QPropertyAnimation *start =
+        auto *start =
                 new QPropertyAnimation(m_animationProperties, ZoomNPanProperties::propertyName);
         start->setDuration(0);
         previousDetail.detail =
@@ -68,7 +68,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
         const int pauseLength = detail.keyFrame - transitionLength - previousDetail.keyFrame;
         if (pauseLength > 0)
             m_animation.addPause(pauseLength);
-        QPropertyAnimation *rectAnimation =
+        auto *rectAnimation =
                 new QPropertyAnimation(m_animationProperties, ZoomNPanProperties::propertyName);
         rectAnimation->setDuration(transitionLength);
         rectAnimation->setStartValue(previousDetail.detail);

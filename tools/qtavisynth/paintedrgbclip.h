@@ -1,5 +1,4 @@
-#ifndef PAINTEDRGBCLIP_H
-#define PAINTEDRGBCLIP_H
+#pragma once
 
 #include "windows.h"
 #include "avisynth.h"
@@ -12,5 +11,3 @@ class PaintedRgbClip
 public:
     virtual void paintFrame(QPainter *painter, int frameNumber, const QRect &rect) const = 0;
 };
-
-#endif // PAINTEDRGBCLIP_H

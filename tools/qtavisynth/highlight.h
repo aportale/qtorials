@@ -1,5 +1,4 @@
-#ifndef HIGHLIGHT_H
-#define HIGHLIGHT_H
+#pragma once
 
 #include "windows.h"
 #include "avisynth.h"
@@ -16,17 +15,16 @@ public:
     Highlight(const VideoInfo &backgroundVideoInfo,
               const QRect &rectangle, int startFrame, int endFrame);
 
-    void paintFrame(QPainter *painter, int frameNumber, const QRect &rect) const;
+    void paintFrame(QPainter *painter, int frameNumber, const QRect &rect) const override;
 
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateHighlight(AVSValue args, void* user_data,
                                             IScriptEnvironment* env);
 
-    bool __stdcall GetParity(int n);
-    const VideoInfo& __stdcall GetVideoInfo();
-    int __stdcall SetCacheHints(int cachehints, int frame_range);
-    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env);
-
+    bool __stdcall GetParity(int n) override;
+    const VideoInfo& __stdcall GetVideoInfo() override;
+    int __stdcall SetCacheHints(int cachehints, int frame_range) override;
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env) override;
 
 protected:
     VideoInfo m_videoInfo;
@@ -35,5 +33,3 @@ protected:
     static const int m_blendInFrames;
     static const int m_blendOutFrames;
 };
-
-#endif // HIGHLIGHT_H

@@ -1,5 +1,4 @@
-#ifndef RGBOVERLAY_H
-#define RGBOVERLAY_H
+#pragma once
 
 #include "windows.h"
 #include "avisynth.h"
@@ -12,12 +11,12 @@ public:
     RgbOverlay(const PClip &backgroundClip, const PClip &foregroundClip,
                IScriptEnvironment* env);
 
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
-    bool __stdcall GetParity(int n);
-    const VideoInfo& __stdcall GetVideoInfo();
-    int __stdcall SetCacheHints(int cachehints, int frame_range);
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
+    bool __stdcall GetParity(int n) override;
+    const VideoInfo& __stdcall GetVideoInfo() override;
+    int __stdcall SetCacheHints(int cachehints, int frame_range) override;
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count,
-                            IScriptEnvironment* env);
+                            IScriptEnvironment* env) override;
 
 protected:
     const PaintedRgbClip *paintedRgbClip() const;
@@ -25,5 +24,3 @@ protected:
     const PClip m_foregroundClip;
     PClip m_overlaidClip;
 };
-
-#endif // RGBOVERLAY_H

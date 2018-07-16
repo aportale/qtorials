@@ -1,5 +1,4 @@
-#ifndef ZOOMNPAN_H
-#define ZOOMNPAN_H
+#pragma once
 
 #include <windows.h>
 #include "avisynth.h"
@@ -21,14 +20,14 @@ public:
              int extensionColor, int defaultTransitionLength, const char *resizeFilter,
              const QRectF &startDetail, const QList<Detail> &details,
              IScriptEnvironment* env);
-    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env);
+    PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data,
                                            IScriptEnvironment* env);
 
-    bool __stdcall GetParity(int n);
-    const VideoInfo& __stdcall GetVideoInfo();
-    int __stdcall SetCacheHints(int cachehints, int frame_range);
-    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env);
+    bool __stdcall GetParity(int n) override;
+    const VideoInfo& __stdcall GetVideoInfo() override;
+    int __stdcall SetCacheHints(int cachehints, int frame_range) override;
+    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env) override;
 
 protected:
     static const PClip extendedClip(const PClip &originClip, int extensionColor,
@@ -46,5 +45,3 @@ protected:
     PClip m_resizedClip;
     QRectF m_resizedRect;
 };
-
-#endif // ZOOMNPAN_H

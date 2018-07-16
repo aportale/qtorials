@@ -14,7 +14,7 @@ class SubtitleProperties : public QObject
     Q_PROPERTY(qreal blend READ blend WRITE setBlend)
 
 public:
-    SubtitleProperties(QObject *parent = 0);
+    SubtitleProperties(QObject *parent = nullptr);
     qreal slip() const;
     void setSlip(qreal slip);
     qreal blend() const;
@@ -24,8 +24,8 @@ public:
     static const QByteArray blendPropertyName;
 
 protected:
-    qreal m_slip;
-    qreal m_blend;
+    qreal m_slip = 0.0;
+    qreal m_blend = 0.0;
 };
 
 const QByteArray SubtitleProperties::slipPropertyName = "slip";
@@ -36,8 +36,6 @@ const int Subtitle::m_blendFrames = 8;
 
 SubtitleProperties::SubtitleProperties(QObject *parent)
     : QObject(parent)
-    , m_slip(0.0)
-    , m_blend(0.0)
 {
 }
 
@@ -71,8 +69,8 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
     m_properties = new SubtitleProperties(&m_titleAnimations);
-    QSequentialAnimationGroup *slipSequence = new QSequentialAnimationGroup;
-    QSequentialAnimationGroup *blendSequence = new QSequentialAnimationGroup;
+    auto *slipSequence = new QSequentialAnimationGroup;
+    auto *blendSequence = new QSequentialAnimationGroup;
 
     const struct Animation {
         QSequentialAnimationGroup *sequence;
@@ -88,10 +86,9 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
         { blendSequence, SubtitleProperties::blendPropertyName, endFrame - startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
     };
 
-    for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
-        const struct Animation &a = animations[i];
+    for (const auto & a : animations) {
         a.sequence->addPause(a.pauseBefore);
-        QPropertyAnimation *animation =
+        auto *animation =
                 new QPropertyAnimation(m_properties, a.propertyName);
         animation->setDuration(a.duration);
         animation->setStartValue(a.startValue);

@@ -67,12 +67,12 @@ SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
     foreach(const SvgAnimationProperties::Data &dataSet, dataSets) {
-        SvgAnimationProperties *properties =
+        auto *properties =
                 new SvgAnimationProperties(dataSet, &m_animation);
         m_properties.append(properties);
 
-        QSequentialAnimationGroup *scaleSequence = new QSequentialAnimationGroup;
-        QSequentialAnimationGroup *opacitySequence = new QSequentialAnimationGroup;
+        auto *scaleSequence = new QSequentialAnimationGroup;
+        auto *opacitySequence = new QSequentialAnimationGroup;
         QEasingCurve scaleInEasingCurve(QEasingCurve::OutBack);
         scaleInEasingCurve.setOvershoot(2.5);
 
@@ -126,10 +126,9 @@ SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
             }
         };
 
-        for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
-            const struct Animation &a = animations[i];
+        for (const auto & a : animations) {
             a.sequence->addPause(a.pauseBefore);
-            QPropertyAnimation *animation =
+            auto *animation =
                     new QPropertyAnimation(properties, a.propertyName);
             animation->setDuration(a.duration);
             animation->setEasingCurve(a.easingCurve);

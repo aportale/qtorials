@@ -39,15 +39,15 @@ public:
         const QFileInfo fileInfo(svgFileName);
         if (!fileInfo.exists()) {
             error = Filters::SvgFileNotValid;
-            return 0;
+            return nullptr;
         }
         const QString saneSvgFileName =
                 fileInfo.canonicalFilePath();
         if (!m_svgRenderers.contains(saneSvgFileName)) {
-            QSvgRenderer *renderer = new QSvgRenderer(svgFileName);
+            auto *renderer = new QSvgRenderer(svgFileName);
             if (!renderer->isValid()) {
                 error = Filters::SvgFileNotValid;
-                return 0;
+                return nullptr;
             }
             m_svgRenderers.insert(saneSvgFileName, renderer);
         }
@@ -74,7 +74,7 @@ static int argc = sizeof(argv) / sizeof(argv[0]);
 
 QGuiApplication* createQGuiApplicationIfNeeded()
 {
-    return qGuiApp ? 0 : new QGuiApplication(argc, argv);
+    return qGuiApp ? nullptr : new QGuiApplication(argc, argv);
 }
 
 void deleteQGuiApplicationIfNeeded(QGuiApplication* &app)
@@ -82,7 +82,7 @@ void deleteQGuiApplicationIfNeeded(QGuiApplication* &app)
     return; // TODO: find out whether deleting the application is needed
     if (app) {
         delete app;
-        app = 0;
+        app = nullptr;
     }
 }
 
@@ -134,8 +134,8 @@ static void drawGradient(QImage &image)
     if (imageWidth < 1 || imageHeight < 1)
         return;
     const QImage gradient = gradientImage();
-    const QRgb *gradientRgb = reinterpret_cast<const QRgb*>(gradient.constBits());
-    QRgb *imageRgb = reinterpret_cast<QRgb*>(image.bits());
+    const auto *gradientRgb = reinterpret_cast<const QRgb*>(gradient.constBits());
+    auto *imageRgb = reinterpret_cast<QRgb*>(image.bits());
     const int quarterWidth = imageWidth / 2;
     const int quarterHeight = imageHeight / 2;
     // Right triangle with a, b = 181.0193359837561662; c = 256.
@@ -143,12 +143,12 @@ static void drawGradient(QImage &image)
     const qreal yScaleFactor = 181.0193359837561662 / quarterHeight;
 
     for (int y = 0; y <= quarterHeight; y++) {
-        const int scaledY = int(yScaleFactor * y);
+        const auto scaledY = int(yScaleFactor * y);
         const int scaledYSquare = scaledY * scaledY;
         const int offsetYPlusQuarterWidth = quarterWidth + imageWidth * (quarterHeight - y);
         for (int x = 0; x <= quarterWidth; x++) {
-            const int scaledX = int(xScaleFactor * x);
-            const int gradientColorIndex = int(sqrt(qreal(scaledYSquare + scaledX * scaledX)));
+            const auto scaledX = int(xScaleFactor * x);
+            const auto gradientColorIndex = int(sqrt(qreal(scaledYSquare + scaledX * scaledX)));
             const QRgb gradientColor = gradientRgb[gradientColorIndex];
             imageRgb[offsetYPlusQuarterWidth - x] = gradientColor;
             imageRgb[offsetYPlusQuarterWidth + x] = gradientColor;
@@ -208,7 +208,7 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
         0xff000000, 0xffffffff
     };
 
-    static const int gradientColorsCount =
+    static const auto gradientColorsCount =
         int(sizeof gradientColors / sizeof gradientColors[0]);
 
     const int gradientHeight = codecBlockSize(rect.height());
@@ -376,7 +376,7 @@ Filters::paintBlendedSvgElement(QPainter *p,
     return SvgOk;
 }
 
-typedef QHash<QString, void (*)(QPainter *, const QRect&)> ElementAndPainterHash;
+using ElementAndPainterHash = QHash<QString, void (*)(QPainter *, const QRect&)>;
 
 const ElementAndPainterHash& elementsAndPaintersHash()
 {
@@ -430,7 +430,7 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
         tweakedPadding -= textLineDistance + subTitleFont.pixelSize();
     tweakedPadding /= 2;
 
-    const int backgroundTop = int(rect.height() - slipIn * backgroundHeight);
+    const auto backgroundTop = int(rect.height() - slipIn * backgroundHeight);
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("subtitlebackground"), background);
 

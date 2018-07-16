@@ -77,5 +77,5 @@ const PaintedRgbClip *RgbOverlay::paintedRgbClip() const
 {
     return m_overlaidClip->GetVideoInfo().IsRGB32() ?
             dynamic_cast<const PaintedRgbClip*>((m_foregroundClip.operator->()))
-            : 0;
+            : nullptr;
 }

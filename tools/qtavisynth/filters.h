@@ -8,8 +8,7 @@
     California, 94105, USA.
 */
 
-#ifndef FILTERS_H
-#define FILTERS_H
+#pragma once
 
 #include <QtGui>
 
@@ -38,5 +37,3 @@ public:
     static void paintHighlight(QPainter *p, const QRectF &highlightRect,
                                qreal opacity);
 };
-
-#endif // FILTERS_H

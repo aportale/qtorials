@@ -1,5 +1,4 @@
-#ifndef TOOLS_H
-#define TOOLS_H
+#pragma once
 
 #include <windows.h>
 #include <QString>
@@ -18,5 +17,3 @@ public:
     static const int defaultClipHeight;
     static const QRgb transparentColor;
 };
-
-#endif // TOOLS_H

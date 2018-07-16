@@ -11,7 +11,7 @@ class HighlightProperties : public QObject
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 
 public:
-    HighlightProperties(QObject *parent = 0);
+    HighlightProperties(QObject *parent = nullptr);
     QRectF rectangle() const;
     void setRectangle(const QRectF &rectangle);
     qreal opacity() const;
@@ -22,12 +22,11 @@ public:
 
 protected:
     QRectF m_rectangle;
-    qreal m_opacity;
+    qreal m_opacity = 0.0;
 };
 
 HighlightProperties::HighlightProperties(QObject *parent)
     : QObject(parent)
-    , m_opacity(0)
 {
 }
 
@@ -63,8 +62,8 @@ Highlight::Highlight(const VideoInfo &videoInfo,
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
     m_properties = new HighlightProperties(&m_highlightAnimations);
-    QSequentialAnimationGroup *rectangleAnimation = new QSequentialAnimationGroup;
-    QSequentialAnimationGroup *opacityAnimation = new QSequentialAnimationGroup;
+    auto *rectangleAnimation = new QSequentialAnimationGroup;
+    auto *opacityAnimation = new QSequentialAnimationGroup;
 
     const int shrink = 30;
     const QRectF startRectangle =
@@ -83,10 +82,9 @@ Highlight::Highlight(const VideoInfo &videoInfo,
         { rectangleAnimation, HighlightProperties::rectanglePropertyName, QEasingCurve::OutQuad, startFrame, m_blendInFrames, startRectangle, rectangle }
     };
 
-    for (int i = 0; i < int(sizeof animations / sizeof animations[0]); ++i) {
-        const struct Animation &a = animations[i];
+    for (const auto & a : animations) {
         a.sequence->addPause(a.pauseBefore);
-        QPropertyAnimation *animation =
+        auto *animation =
                 new QPropertyAnimation(m_properties, a.propertyName);
         animation->setEasingCurve(a.easing);
         animation->setDuration(a.duration);

@@ -25,23 +25,23 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
     AVS_linkage = vectors;
 
     env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[fontface]s[color]i",
-                     Title::CreateTitle, 0);
+                     Title::CreateTitle, nullptr);
     env->AddFunction("QtAviSynthHighlight",
                      "[clip]c[left]i[top]i[width]i[height]i[start]i[end]i",
-                     Highlight::CreateHighlight, 0);
+                     Highlight::CreateHighlight, nullptr);
     env->AddFunction("QtAviSynthElements", "[clip]c[elements]s*",
-                     StillImage::CreateElements, 0);
+                     StillImage::CreateElements, nullptr);
     env->AddFunction("QtAviSynthSvg", "[clip]c[svgfile]s[elements]s*",
-                     StillImage::CreateSvg, 0);
+                     StillImage::CreateSvg, nullptr);
     env->AddFunction("QtAviSynthSubtitle",
                      "[clip]c[title]s[subtitle]s[start]i[end]i",
-                     Subtitle::CreateSubtitle, 0);
+                     Subtitle::CreateSubtitle, nullptr);
     env->AddFunction("QtAviSynthZoomNPan",
                      "[clip]c[width]i[height]i[extensioncolor]i"
                      "[defaulttransitionframes]i[resizefiter]s"
                      "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
-                     ZoomNPan::CreateZoomNPan, 0);
+                     ZoomNPan::CreateZoomNPan, nullptr);
     env->AddFunction("QtAviSynthSvgAnimation", "[clip]c[svgfile]s.*",
-                     SvgAnimation::CreateSvgAnimation, 0);
+                     SvgAnimation::CreateSvgAnimation, nullptr);
     return "`QtAviSynth' QtAviSynth plugin";
 }
