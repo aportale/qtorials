@@ -19,7 +19,7 @@ global gAudioClip = BlankClip
 global gAudioNoiseStart = 0
 global gAudioNoiseEnd = 1
 global gTextClipFramesPerCharacter = 3
-global gTextFontFace = "Tillium Web"
+global gTextFontFace = "Titillium Web"
 global gTextColor = $333333
 global gBackgroundColor = $ffffff
 global gFFDShowImport = "c:\Program Files (x86)\ffdshow\ffavisynth.avsi"
@@ -55,7 +55,7 @@ function audioClip(float startSecond, float endSecond, float appendedSilenceSeco
     return gAudioClip.trimAudio(startSecond, endSecond) + audioNoise(appendedSilenceSeconds)
 }
 
-function textClip(String text, int "frames", int "align", int "x", int "y", string "backgroundimage")
+function textClip(String text, int "frames", string "backgroundimage")
 {
     framesCount = Default(frames, StrLen(text) * gTextClipFramesPerCharacter)
     background = Defined(backgroundimage) ?
