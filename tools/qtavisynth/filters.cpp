@@ -102,7 +102,8 @@ void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleTex
 {
     QGuiApplication *a = createQGuiApplicationIfNeeded();
     QFont font(fontFace);
-    font.setPixelSize(qMax(8, rect.height() / 14));
+    font.setPixelSize(qMax(24, rect.height() / 14));
+    font.setHintingPreference(QFont::PreferFullHinting);
     p->setFont(font);
     p->setPen(textColor);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
