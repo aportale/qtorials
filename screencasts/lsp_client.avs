@@ -27,28 +27,65 @@ function detailCrop(clip sourceClip, int x, int y)
 
 function caption(clip sourceClip, string captionText)
 {
-	height = 30
-	stackvertical(sourceClip.CropBottom(height),
-	\ BlankClip(sourceClip.FrameCount, sourceClip.Width, height, fps = sourceClip.FrameRate, color = gBackgroundColor, pixel_type = sourceClip.PixelType)
-	\   .QtAviSynthTitle(captionText, gTextFontFace, gTextColor))
+    captionHeight = 30
+	captionAppearance = 15
+	captionDuration = 80
+	clipBefore = sourceClip.trim(0, captionAppearance - 1)
+	clipWithCaption = sourceClip.trim(captionAppearance, captionAppearance + captionDuration - 1)
+	clipRemainder = sourceClip.trim(captionAppearance + captionDuration - 1, sourceClip.FrameCount)
+	clipBefore
+	\ +	stackvertical(
+	\       clipWithCaption.CropBottom(captionHeight),
+    \       BlankClip(captionDuration, sourceClip.Width, captionHeight, fps = sourceClip.FrameRate, color = gBackgroundColor, pixel_type = sourceClip.PixelType)
+    \   .QtAviSynthTitle(captionText, gTextFontFace, gTextColor))
+	\ + clipRemainder
 }
 
-title_screen = textClip("Language Client Protocol\nsupport in Qt Creator", 100).KillAudio.AssumeFps(pip_install_source.FrameRate)
+function doubleSpeed(clip sourceClip)
+{
+	sourceClip.selectEvery(2).AssumeFps(25)
+}
+
+function highSpeed(clip sourceClip)
+{
+	sourceClip.selectEvery(4).AssumeFps(25)
+}
+
+title_screen = textClip("Language Server Protocol\nin Qt Creator", 80).KillAudio.AssumeFps(pip_install_source.FrameRate)
 
 pip_install =
-\    pip_install_source.trim(1, 200)
-
-openoptions =
-\    openoptions_source.trim(1, 200)
+\    pip_install_source.trim(30, 110)
+\ +  pip_install_source.trim(110, 168).doubleSpeed
+\ +  pip_install_source.trim(220, 265)
 
 addserver =
-\    addserver_source.detailCrop(0, 0).trim(1, 200)
+\    openoptions_source.trim(50, 200)
+\ +  addserver_source.detailCrop(0, 0).trim(80, 130).doubleSpeed
+\ +  addserver_source.detailCrop(0, 0).trim(130, 170).highSpeed
+\ +  addserver_source.detailCrop(0, 100).trim(160, 310).highSpeed
+\ +  addserver_source.detailCrop(0, 100).trim(310, 460).doubleSpeed
+\ +  addserver_source.detailCrop(0, addserver_source.height - gClipHeight).trim(460, 588).highSpeed
 
 code =
-\    code_source.trim(1, 200)
+\    code_source.trim(10, 40)
+\ +  code_source.trim(48, 90).doubleSpeed        [* completing PySide2 *]
+\ +  code_source.trim(90, 90).loop(15)
+\ +  code_source.trim(90, 175).highSpeed         [* completing .QtWidget *]
+\ +  code_source.trim(175, 175).loop(15)
+\ +  code_source.trim(175, 400).highSpeed        [* completing QLabel *]
+\ +  code_source.trim(400, 400).loop(15)
+\ +  code_source.trim(1930, 2010).doubleSpeed    [* completing show *]
+\ +  code_source.trim(2010, 2010).loop(15)
+\ +  code_source.trim(2635, 2668).doubleSpeed
+\ +  code_source.trim(2668, 2750)
 
-complete = title_screen + pip_install + openoptions + addserver + code
+end_screen = textClip("", 75).KillAudio.AssumeFps(pip_install_source.FrameRate)
 
-#complete
-code
+complete =
+\    title_screen
+\ +  pip_install.caption("Install a language server.")
+\ +  addserver.caption("Register the language server.")
+\ +  code.caption("Enjoy the language support.")
+\ +  end_screen
 
+complete
