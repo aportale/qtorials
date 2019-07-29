@@ -7,5 +7,5 @@ function Blank()
 
 function ScreenCast()
 {
-    DirectShowSource("c:\qtorials_media\meet_boot2qt_documentation.avi").converttoyv24
+    ColorBars().converttoyv24
 }
