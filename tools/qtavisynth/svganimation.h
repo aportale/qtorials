@@ -39,17 +39,17 @@ public:
     static const QByteArray scalePropertyName;
     static const QByteArray opacityPropertyName;
 
-    static const int scaleDuration;
-    static const qreal scaleStart;
-    static const qreal scaleEnd;
-    static const int opacityDuration;
-    static const qreal opacityStart;
-    static const qreal opacityEnd;
+    constexpr static const int scaleDuration = 5;
+    constexpr static const qreal scaleStart = 0.2;
+    constexpr static const qreal scaleEnd = 1.0;
+    constexpr static const int opacityDuration = scaleDuration;
+    constexpr static const qreal opacityStart = 0.0;
+    constexpr static const qreal opacityEnd = 1.0;
 
 protected:
     Data m_data;
-    qreal m_scale;
-    qreal m_opacity;
+    qreal m_scale = scaleStart;
+    qreal m_opacity = opacityStart;
 };
 
 class SvgAnimation : public IClip

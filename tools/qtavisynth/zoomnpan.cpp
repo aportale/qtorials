@@ -18,7 +18,6 @@ protected:
 };
 
 const QByteArray ZoomNPanProperties::propertyName = "rect";
-const int ZoomNPan::m_extensionWidth = 16;
 
 ZoomNPanProperties::ZoomNPanProperties(QObject *parent)
     : QObject(parent)

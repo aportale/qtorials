@@ -6,8 +6,6 @@
 SvgAnimationProperties::SvgAnimationProperties(const Data &data, QObject *parent)
     : QObject(parent)
     , m_data(data)
-    , m_scale(scaleStart)
-    , m_opacity(opacityStart)
 {
 }
 
@@ -51,13 +49,6 @@ SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
 
 const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
-
-const int SvgAnimationProperties::scaleDuration = 5;
-const qreal SvgAnimationProperties::scaleStart = 0.2;
-const qreal SvgAnimationProperties::scaleEnd = 1.0;
-const int SvgAnimationProperties::opacityDuration = SvgAnimationProperties::scaleDuration;
-const qreal SvgAnimationProperties::opacityStart = 0.0;
-const qreal SvgAnimationProperties::opacityEnd = 1.0;
 
 SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
                            const QList<SvgAnimationProperties::Data> &dataSets)

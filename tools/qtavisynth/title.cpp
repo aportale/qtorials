@@ -5,7 +5,7 @@
 #include <QImage>
 
 Title::Title(const VideoInfo &videoInfo,
-             const QString text, const QString fontFace, const QColor color)
+             const QString &text, const QString &fontFace, const QColor color)
     : m_text(text)
     , m_fontFace(fontFace)
     , m_color(color)

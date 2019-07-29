@@ -10,7 +10,7 @@ class Subtitle : public IClip
 {
 public:
     Subtitle(const VideoInfo &backgroundVideoInfo,
-             const QString title, const QString subtitle,
+             const QString &title, const QString &subtitle,
              int startFrame, int endFrame);
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;

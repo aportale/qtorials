@@ -60,7 +60,7 @@ void SubtitleProperties::setBlend(qreal blend)
 }
 
 Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
-                   const QString title, const QString subtitle,
+                   const QString &title, const QString &subtitle,
                    int startFrame, int endFrame)
     : m_videoInfo(backgroundVideoInfo)
     , m_title(title)

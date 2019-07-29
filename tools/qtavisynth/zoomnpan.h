@@ -36,7 +36,7 @@ protected:
                                   const QSize &detailClipSize,
                                   const QRectF &specifiedDetailRect);
 
-    static const int m_extensionWidth;
+    static const int m_extensionWidth = 16;
     VideoInfo m_targetVideoInfo;
     const QByteArray m_resizeFilter;
     const PClip m_extendedClip;
