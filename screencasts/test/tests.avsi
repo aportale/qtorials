@@ -7,5 +7,5 @@ function Blank()
 
 function ScreenCast()
 {
-    ColorBars().converttoyv24
+    ColorBars().converttoyv24.trim(1, 1000)
 }
