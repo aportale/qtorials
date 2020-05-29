@@ -9,11 +9,9 @@ find_package(Qt5 COMPONENTS Gui Svg REQUIRED)
 
 file(TO_CMAKE_PATH "$ENV{ProgramFiles\(x86\)}" program_files_x86)
 set(avisynth_filtersdk "${program_files_x86}/AviSynth+/FilterSDK")
-set(avisynth_filtersdk_include "${avisynth_filtersdk}/include")
 
 add_library(
     qtavisynth SHARED
-    "${avisynth_filtersdk_include}/avisynth.h"
     qtavisynth.cpp
     qtavisynth.qrc
     filters.h filters.cpp
@@ -29,7 +27,7 @@ add_library(
 
 target_include_directories(
     qtavisynth PRIVATE
-    "${avisynth_filtersdk_include}"
+    "${avisynth_filtersdk}/include"
 )
 
 target_link_libraries(
