@@ -1,3 +1,3 @@
 Import("tests.avsi")
 
-Blank.QtAviSynthElements("rgbpatterns", "qtlogosmall")
+Blank.QtAviSynthElements(["rgbpatterns", "qtlogosmall"])

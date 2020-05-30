@@ -31,7 +31,7 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
                      Highlight::CreateHighlight, nullptr);
     env->AddFunction("QtAviSynthElements", "[clip]c[elements]s*",
                      StillImage::CreateElements, nullptr);
-    env->AddFunction("QtAviSynthSvg", "[clip]c[svgfile]s[elements]s*",
+    env->AddFunction("QtAviSynthSvg", "[clip]c[svgfile]s[elements].*",
                      StillImage::CreateSvg, nullptr);
     env->AddFunction("QtAviSynthSubtitle",
                      "[clip]c[title]s[subtitle]s[start]i[end]i",
