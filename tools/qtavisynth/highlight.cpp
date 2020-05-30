@@ -20,7 +20,7 @@ public:
     static const QByteArray rectanglePropertyName;
     static const QByteArray opacityPropertyName;
 
-protected:
+private:
     QRectF m_rectangle;
     qreal m_opacity = 0.0;
 };

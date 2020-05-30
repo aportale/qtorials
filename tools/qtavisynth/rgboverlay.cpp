@@ -1,7 +1,8 @@
-#include "rgboverlay.h"
-#include "paintedrgbclip.h"
 #include "filters.h"
 #include "highlight.h"
+#include "paintedrgbclip.h"
+#include "rgboverlay.h"
+
 #include <QPainter>
 
 RgbOverlay::RgbOverlay(const PClip &backgroundClip,
@@ -27,8 +28,7 @@ RgbOverlay::RgbOverlay(const PClip &backgroundClip,
     } else {
         const PClip showAlpha = env->Invoke("ShowAlpha", foregroundClip).AsClip();
         const AVSValue params[] = { backgroundClip, foregroundClip, 0, 0, showAlpha };
-        const AVSValue paramsValue =
-                AVSValue(params, sizeof params / sizeof params[0]);
+        const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
         m_overlaidClip = env->Invoke("Overlay", paramsValue).AsClip();
     }
 }

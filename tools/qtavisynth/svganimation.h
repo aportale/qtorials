@@ -1,7 +1,9 @@
 #pragma once
 
 #include <windows.h>
+
 #include "avisynth.h"
+
 #include <QParallelAnimationGroup>
 
 class SvgAnimationProperties : public QObject
@@ -9,7 +11,6 @@ class SvgAnimationProperties : public QObject
     Q_OBJECT
     Q_PROPERTY(qreal scale READ scale WRITE setScale);
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity);
-    Q_ENUMS(Blending);
 
 public:
     enum Blending {
@@ -46,8 +47,8 @@ public:
     constexpr static const qreal opacityStart = 0.0;
     constexpr static const qreal opacityEnd = 1.0;
 
-protected:
-    Data m_data;
+private:
+    const Data m_data;
     qreal m_scale = scaleStart;
     qreal m_opacity = opacityStart;
 };
@@ -56,7 +57,7 @@ class SvgAnimation : public IClip
 {
 public:
     SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
-                 const QList<SvgAnimationProperties::Data> &dataSets);
+                 const QVector<SvgAnimationProperties::Data> &dataSets);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data,
                                                IScriptEnvironment* env);
@@ -66,9 +67,9 @@ public:
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count,
                             IScriptEnvironment* env) override;
 
-protected:
+private:
     const QString m_svgFile;
     VideoInfo m_videoInfo;
     QParallelAnimationGroup m_animation;
-    QList<SvgAnimationProperties*> m_properties;
+    QVector<SvgAnimationProperties*> m_properties;
 };

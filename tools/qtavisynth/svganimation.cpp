@@ -1,7 +1,7 @@
-#include "svganimation.h"
 #include "filters.h"
-#include "tools.h"
 #include "rgboverlay.h"
+#include "svganimation.h"
+#include "tools.h"
 
 SvgAnimationProperties::SvgAnimationProperties(const Data &data, QObject *parent)
     : QObject(parent)
@@ -42,8 +42,7 @@ SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
     static const QMetaEnum &blendEnum = staticMetaObject.enumerator(enumIndex);
     const int blending = blendEnum.keysToValue(blendingKey);
     if (blending == -1)
-        env->ThrowError("QtAviSynthSvgAnimation: Invalid blending type '%s'.",
-                        blendingKey);
+        env->ThrowError("QtAviSynthSvgAnimation: Invalid blending type '%s'.", blendingKey);
     return Blending(blending);
 }
 
@@ -51,13 +50,14 @@ const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
 
 SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
-                           const QList<SvgAnimationProperties::Data> &dataSets)
-    : m_videoInfo(videoInfo)
-    , m_svgFile(svgFile)
+                           const QVector<SvgAnimationProperties::Data> &dataSets)
+    : m_svgFile(svgFile)
+    , m_videoInfo(videoInfo)
 {
     m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
 
-    foreach(const SvgAnimationProperties::Data &dataSet, dataSets) {
+    m_properties.reserve(dataSets.size());
+    for (const SvgAnimationProperties::Data &dataSet : dataSets) {
         auto *properties =
                 new SvgAnimationProperties(dataSet, &m_animation);
         m_properties.append(properties);
@@ -150,8 +150,8 @@ PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
     p.scale(1, -1);
     p.translate(0, -image.height());
     m_animation.setCurrentTime(n);
-    foreach (const SvgAnimationProperties *properties, m_properties) {
-        if (properties->opacity() > SvgAnimationProperties::opacityStart)
+    for (const SvgAnimationProperties *properties : qAsConst(m_properties)) {
+        if (properties->opacity() > SvgAnimationProperties::opacityStart) {
             Filters::paintBlendedSvgElement(
                     &p,
                     m_svgFile,
@@ -160,6 +160,7 @@ PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
                     properties->scale(),
                     image.rect()
                     );
+        }
     }
 
     return frame;
@@ -175,11 +176,12 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
             Tools::cleanFileName(QLatin1String(args[1].AsString()));
     const AVSValue &detailValues = args[2];
     static const int valuesPerDetail = 5;
-    if (detailValues.ArraySize() % valuesPerDetail != 0)
+    if (detailValues.ArraySize() % valuesPerDetail != 0) {
         env->ThrowError("QtAviSynthSvgAnimation: Mismatching number of arguments.\n"
                         "They need to be %d per keyframe.", valuesPerDetail);
+    }
 
-    QList<SvgAnimationProperties::Data> details;
+    QVector<SvgAnimationProperties::Data> details(detailValues.ArraySize() / valuesPerDetail);
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
         const SvgAnimationProperties::Data animationDetail = {
             QLatin1String(detailValues[i].AsString()),
@@ -192,8 +194,7 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
         details.append(animationDetail);
     }
 
-    const PClip svgAnimation =
-            new SvgAnimation(background->GetVideoInfo(), svgFileName, details);
+    const PClip svgAnimation = new SvgAnimation(background->GetVideoInfo(), svgFileName, details);
     return new RgbOverlay(background, svgAnimation, env);
 }
 

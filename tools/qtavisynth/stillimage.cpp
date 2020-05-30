@@ -1,7 +1,7 @@
-#include "stillimage.h"
 #include "filters.h"
-#include "tools.h"
 #include "rgboverlay.h"
+#include "stillimage.h"
+#include "tools.h"
 
 StillImage::StillImage(const VideoInfo &backgroundVideoInfo, const QImage &image,
                        IScriptEnvironment* env)
@@ -13,7 +13,8 @@ StillImage::StillImage(const VideoInfo &backgroundVideoInfo, const QImage &image
                     VideoInfo::CS_BGR32 : VideoInfo::CS_BGR24;
     m_frame = env->NewVideoFrame(m_videoInfo);
     unsigned char* frameBits = m_frame->GetWritePtr();
-    env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).bits(), m_frame->GetPitch(), image.bytesPerLine(), image.height());
+    env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).constBits(),
+                m_frame->GetPitch(), image.bytesPerLine(), image.height());
 }
 
 AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)

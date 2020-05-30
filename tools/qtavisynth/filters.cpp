@@ -10,8 +10,9 @@
 
 #include "filters.h"
 #include "qglobal.h"
-#include <QtSvg>
+
 #include <QGuiApplication>
+#include <QtSvg>
 
 inline static int codecBlockSize(int clipHeight)
 {
@@ -34,11 +35,11 @@ public:
     }
 
     QSvgRenderer* svgRenderer(const QString &svgFileName,
-                              Filters::SvgResult &error)
+                              Filters::SvgResult *error)
     {
         const QFileInfo fileInfo(svgFileName);
         if (!fileInfo.exists()) {
-            error = Filters::SvgFileNotValid;
+            *error = Filters::SvgFileNotValid;
             return nullptr;
         }
         const QString saneSvgFileName =
@@ -46,12 +47,12 @@ public:
         if (!m_svgRenderers.contains(saneSvgFileName)) {
             auto *renderer = new QSvgRenderer(svgFileName);
             if (!renderer->isValid()) {
-                error = Filters::SvgFileNotValid;
+                *error = Filters::SvgFileNotValid;
                 return nullptr;
             }
             m_svgRenderers.insert(saneSvgFileName, renderer);
         }
-        error = Filters::SvgOk;
+        *error = Filters::SvgOk;
         return m_svgRenderers.value(saneSvgFileName);
     }
 
@@ -66,7 +67,7 @@ Q_GLOBAL_STATIC(SvgRendererStore, svgRendererStore);
 QSvgRenderer* SvgRendererStore::artworkSvgRenderer()
 {
     Filters::SvgResult error;
-    return svgRendererStore()->svgRenderer(QLatin1String(":/artwork.svg"), error);
+    return svgRendererStore()->svgRenderer(QLatin1String(":/artwork.svg"), &error);
 }
 
 static char *argv[] = {(char*)"."};
@@ -89,7 +90,7 @@ void deleteQGuiApplicationIfNeeded(QGuiApplication* &app)
 Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &element)
 {
     SvgResult result;
-    const QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
+    const QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
     if (result != SvgOk)
         return result;
     if (!renderer->elementExists(element))
@@ -110,7 +111,7 @@ void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleTex
     deleteQGuiApplicationIfNeeded(a);
 }
 
-static const QImage gradientImage()
+static QImage gradientImage()
 {
     QSvgRenderer *renderer = SvgRendererStore::artworkSvgRenderer();
     const QString gradientId("vignettegradient");
@@ -327,7 +328,7 @@ Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
                           const QRectF &viewBox)
 {
     SvgResult result;
-    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
+    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
     if (result != SvgOk)
         return result;
     const QTransform painterTransform = fitRect1InRect2Centered(
@@ -350,7 +351,7 @@ Filters::paintBlendedSvgElement(QPainter *p,
                                 qreal opacity, qreal scale, const QRect &rect, const QRectF &viewBox)
 {
     SvgResult result;
-    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, result);
+    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
     if (result != SvgOk)
         return result;
     if (!renderer->elementExists(svgElement))

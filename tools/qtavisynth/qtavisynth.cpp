@@ -9,15 +9,17 @@
 */
 
 #include "Windows.h"
+
 #include "avisynth.h"
+
+#include "highlight.h"
 #include "stillimage.h"
 #include "subtitle.h"
-#include "highlight.h"
+#include "svganimation.h"
 #include "title.h"
 #include "zoomnpan.h"
-#include "svganimation.h"
 
-const AVS_Linkage* AVS_linkage;
+const AVS_Linkage* AVS_linkage = nullptr;
 
 extern "C" __declspec(dllexport)
 const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Linkage* const vectors)

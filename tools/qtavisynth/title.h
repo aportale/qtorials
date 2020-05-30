@@ -8,7 +8,7 @@ class Title : public IClip
 {
 public:
     Title(const VideoInfo &videoInfo,
-          const QString &text, const QString &fontFace, const QColor color);
+          const QString &text, const QString &fontFace, const QColor &color);
 
     static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data,
                                         IScriptEnvironment* env);
@@ -20,7 +20,7 @@ public:
     void __stdcall GetAudio(void* buf, __int64 start, __int64 count,
                             IScriptEnvironment* env) override;
 
-protected:
+private:
     const QString m_text;
     const QString m_fontFace;
     const QColor m_color;

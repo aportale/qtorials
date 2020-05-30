@@ -1,11 +1,12 @@
-#include "subtitle.h"
 #include "filters.h"
-#include "tools.h"
 #include "rgboverlay.h"
+#include "subtitle.h"
+#include "tools.h"
+
 #include <QImage>
 #include <QPainter>
-#include <QSequentialAnimationGroup>
 #include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
 
 class SubtitleProperties : public QObject
 {
@@ -14,7 +15,8 @@ class SubtitleProperties : public QObject
     Q_PROPERTY(qreal blend READ blend WRITE setBlend)
 
 public:
-    SubtitleProperties(QObject *parent = nullptr);
+    explicit SubtitleProperties(QObject *parent = nullptr);
+
     qreal slip() const;
     void setSlip(qreal slip);
     qreal blend() const;
@@ -23,7 +25,7 @@ public:
     static const QByteArray slipPropertyName;
     static const QByteArray blendPropertyName;
 
-protected:
+private:
     qreal m_slip = 0.0;
     qreal m_blend = 0.0;
 };

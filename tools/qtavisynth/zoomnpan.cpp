@@ -8,12 +8,13 @@ class ZoomNPanProperties : public QObject
     Q_PROPERTY(QRectF rect READ rect WRITE setRect)
 
 public:
-    ZoomNPanProperties(QObject *parent = nullptr);
+    explicit ZoomNPanProperties(QObject *parent = nullptr);
+
     QRectF rect() const;
     void setRect(const QRectF &rect);
     static const QByteArray propertyName;
 
-protected:
+private:
     QRectF m_rect;
 };
 
@@ -34,9 +35,9 @@ void ZoomNPanProperties::setRect(const QRectF &rect)
     m_rect = rect;
 }
 
-ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
+ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
                    int extensionColor, int defaultTransitionLength, const char *resizeFilter,
-                   const QRectF &startDetail, const QList<Detail> &details,
+                   const QRectF &startDetail, const QVector<Detail> &details,
                    IScriptEnvironment* env)
     : m_targetVideoInfo(originClip->GetVideoInfo())
     , m_resizeFilter(resizeFilter)
@@ -46,7 +47,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
     m_targetVideoInfo.width = width;
     m_targetVideoInfo.height = height;
 
-    Detail previousDetail = { 0, 0, QRectF() };
+    Detail previousDetail = { 0, 0, {} };
 
     {
         auto *start =
@@ -59,7 +60,7 @@ ZoomNPan::ZoomNPan(PClip originClip, int width, int height,
         m_animation.addAnimation(start);
     }
 
-    foreach (const Detail &detail, details) {
+    for (const Detail &detail : details) {
         const QRectF detailRect =
                 fixedDetailRect(originClip->GetVideoInfo(), QSize(width, height), detail.detail);
         const int transitionLength =
@@ -122,7 +123,7 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
 
     const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
 
-    QList<Detail> details;
+    QVector<Detail> details(detailValues.ArraySize() / valuesPerDetail);
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
         const int keyFrame = detailValues[i+0].AsInt();
         const int transitionLength = detailValues[i+1].AsInt();
@@ -143,7 +144,7 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
                         env);
 }
 
-const PClip ZoomNPan::extendedClip(const PClip &originClip, int extensionColor, IScriptEnvironment* env)
+PClip ZoomNPan::extendedClip(const PClip &originClip, int extensionColor, IScriptEnvironment* env)
 {
     const AVSValue extensionParams[] =
         { originClip, m_extensionWidth, m_extensionWidth, m_extensionWidth, m_extensionWidth, extensionColor };

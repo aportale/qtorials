@@ -1,11 +1,12 @@
-#include "title.h"
 #include "filters.h"
-#include "tools.h"
 #include "rgboverlay.h"
+#include "title.h"
+#include "tools.h"
+
 #include <QImage>
 
 Title::Title(const VideoInfo &videoInfo,
-             const QString &text, const QString &fontFace, const QColor color)
+             const QString &text, const QString &fontFace, const QColor &color)
     : m_text(text)
     , m_fontFace(fontFace)
     , m_color(color)
@@ -24,14 +25,14 @@ AVSValue __cdecl Title::CreateTitle(AVSValue args, void* user_data, IScriptEnvir
     const QString fontFace =
         QString::fromLatin1(args[2].AsString());
     const QColor color = QRgb(args[3].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
-    const PClip title = new Title(background->GetVideoInfo(), text, fontFace, color);
+    const auto title = new Title(background->GetVideoInfo(), text, fontFace, color);
     return new RgbOverlay(background, title, env);
 }
 
 PVideoFrame __stdcall Title::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(n)
-    PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
+    const PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
     unsigned char* frameBits = frame->GetWritePtr();
     QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
     image.fill(Tools::transparentColor);
