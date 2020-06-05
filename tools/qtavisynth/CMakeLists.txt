@@ -51,6 +51,6 @@ install(
 # Qt Creator run configuration executable:
 #    %{Env:ProgramData}\chocolatey\lib\virtualdub2\tools\VirtualDub64.exe
 # Qt Creator run configuration command line argument:
-#    %{CurrentProject:NativePath}\..\..\screencasts\test\qtavisynth_rgbpattern.avs
+#    %{sourceDir}\..\..\screencasts\test\qtavisynth_rgbpattern.avs
 # Qt Creator run configuration environment, prepend to "Path"
 #    ${QTDIR}\bin;
