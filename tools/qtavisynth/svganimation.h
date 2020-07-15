@@ -18,6 +18,7 @@ public:
         fade,
         fadeandscale
     };
+    Q_ENUM (Blending)
 
     struct Data
     {
