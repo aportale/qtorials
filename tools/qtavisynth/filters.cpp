@@ -202,8 +202,6 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
                 ), dotsImage
             );
 
-    p->fillRect(rect, rgbMarkerImage);
-
     static const QRgb gradientColors[] = {
         0xffff0000, 0xff00ff00, 0xff0000ff,
         0xff00ffff, 0xffff00ff, 0xffffff00,
@@ -214,6 +212,7 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
         int(sizeof gradientColors / sizeof gradientColors[0]);
 
     const int gradientHeight = codecBlockSize(rect.height());
+
     int gradientNumber = 0;
     for (int a = 0; a < gradientColorsCount; a++)
         for (int b = a + 1; b < gradientColorsCount; b++) {
@@ -223,6 +222,8 @@ void paintRgbPatterns(QPainter *p, const QRect &rect)
             p->fillRect(0, gradientNumber * gradientHeight, 256, gradientHeight, gradient);
             gradientNumber++;
         }
+
+    p->fillRect(QRect(256, 0, rect.right(), gradientNumber * gradientHeight), rgbMarkerImage);
 }
 
 void paintQtLogoSmall(QPainter *p, const QRect &rect)
