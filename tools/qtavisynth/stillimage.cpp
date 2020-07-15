@@ -14,7 +14,7 @@ StillImage::StillImage(const VideoInfo &backgroundVideoInfo, const QImage &image
     m_frame = env->NewVideoFrame(m_videoInfo);
     unsigned char* frameBits = m_frame->GetWritePtr();
     env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).constBits(),
-                m_frame->GetPitch(), image.bytesPerLine(), image.height());
+                image.bytesPerLine(), image.bytesPerLine(), image.height());
 }
 
 AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
