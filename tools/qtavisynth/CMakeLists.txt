@@ -41,10 +41,7 @@ target_link_libraries(
     Qt5::Svg
 )
 
-install(
-    TARGETS qtavisynth
-    DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../screencasts/"
-)
+set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../screencasts/")
 
 # Testing:
 #    choco install virtualdub2 -a
