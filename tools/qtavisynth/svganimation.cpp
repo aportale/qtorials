@@ -181,7 +181,8 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
                         "They need to be %d per keyframe.", valuesPerDetail);
     }
 
-    QVector<SvgAnimationProperties::Data> details(detailValues.ArraySize() / valuesPerDetail);
+    QVector<SvgAnimationProperties::Data> details;
+    details.reserve(detailValues.ArraySize() / valuesPerDetail);
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
         const SvgAnimationProperties::Data animationDetail = {
             QLatin1String(detailValues[i].AsString()),

@@ -123,7 +123,8 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
 
     const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
 
-    QVector<Detail> details(detailValues.ArraySize() / valuesPerDetail);
+    QVector<Detail> details;
+    details.reserve(detailValues.ArraySize() / valuesPerDetail);
     for (int i = 0; i < detailValues.ArraySize(); i += valuesPerDetail) {
         const int keyFrame = detailValues[i+0].AsInt();
         const int transitionLength = detailValues[i+1].AsInt();
