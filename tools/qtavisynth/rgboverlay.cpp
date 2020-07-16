@@ -1,6 +1,5 @@
 #include "filters.h"
 #include "highlight.h"
-#include "paintedrgbclip.h"
 #include "rgboverlay.h"
 
 #include <QPainter>
@@ -36,20 +35,6 @@ RgbOverlay::RgbOverlay(const PClip &backgroundClip,
 PVideoFrame __stdcall RgbOverlay::GetFrame(int n, IScriptEnvironment* env)
 {
     PVideoFrame frame = m_overlaidClip->GetFrame(n, env);
-    if (const PaintedRgbClip *currentPaintedRgbClip = paintedRgbClip()) {
-        const VideoInfo &videoInfo = m_overlaidClip->GetVideoInfo();
-        PVideoFrame background = env->NewVideoFrame(videoInfo);
-        unsigned char* backgroundBits = background->GetWritePtr();
-        env->BitBlt(backgroundBits, background->GetPitch(),
-                    frame->GetReadPtr(), frame->GetPitch(),
-                    frame->GetRowSize(), frame->GetHeight());
-        QImage image(backgroundBits, videoInfo.width, videoInfo.height, QImage::Format_ARGB32_Premultiplied);
-        QPainter p(&image);
-        p.scale(1, -1);
-        p.translate(0, -image.height());
-        currentPaintedRgbClip->paintFrame(&p, n, QRect());
-        frame = background;
-    }
     return frame;
 }
 
@@ -71,11 +56,4 @@ int __stdcall RgbOverlay::SetCacheHints(int cachehints, int frame_range)
 void __stdcall RgbOverlay::GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
 {
     m_overlaidClip->GetAudio(buf, start, count, env);
-}
-
-const PaintedRgbClip *RgbOverlay::paintedRgbClip() const
-{
-    return m_overlaidClip->GetVideoInfo().IsRGB32() ?
-            dynamic_cast<const PaintedRgbClip*>((m_foregroundClip.operator->()))
-            : nullptr;
 }

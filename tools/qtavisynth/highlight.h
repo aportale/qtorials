@@ -2,20 +2,17 @@
 
 #include "windows.h"
 #include "avisynth.h"
-#include "paintedrgbclip.h"
 #include <QRect>
 #include <QParallelAnimationGroup>
 
 class HighlightProperties;
 class QPainter;
 
-class Highlight : public IClip, public PaintedRgbClip
+class Highlight : public IClip
 {
 public:
     Highlight(const VideoInfo &backgroundVideoInfo,
               const QRect &rectangle, int startFrame, int endFrame);
-
-    void paintFrame(QPainter *painter, int frameNumber, const QRect &rect) const override;
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateHighlight(AVSValue args, void* user_data,

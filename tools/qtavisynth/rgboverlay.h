@@ -19,8 +19,6 @@ public:
                             IScriptEnvironment* env) override;
 
 protected:
-    const PaintedRgbClip *paintedRgbClip() const;
-
     const PClip m_foregroundClip;
     PClip m_overlaidClip;
 };
