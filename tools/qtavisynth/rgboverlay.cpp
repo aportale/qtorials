@@ -10,26 +10,10 @@ RgbOverlay::RgbOverlay(const PClip &backgroundClip,
     : m_foregroundClip(foregroundClip)
     , m_overlaidClip(backgroundClip)
 {
-    if (backgroundClip->GetVideoInfo().IsRGB()) {
-        if (!paintedRgbClip()) {
-            const bool isRgb24 = backgroundClip->GetVideoInfo().IsRGB24();
-            const PClip backgroundClipRgb32 = isRgb24?
-                    env->Invoke("ConvertToRgb32", backgroundClip).AsClip()
-                    : backgroundClip;
-            const AVSValue params[] = { backgroundClipRgb32, foregroundClip };
-            const AVSValue paramsValue =
-                    AVSValue(params, sizeof params / sizeof params[0]);
-            const PClip overlaidClipRgb32 = env->Invoke("Layer", paramsValue).AsClip();
-            m_overlaidClip = isRgb24?
-                    env->Invoke("ConvertToRgb24", overlaidClipRgb32).AsClip()
-                    : overlaidClipRgb32;
-        }
-    } else {
-        const PClip showAlpha = env->Invoke("ShowAlpha", foregroundClip).AsClip();
-        const AVSValue params[] = { backgroundClip, foregroundClip, 0, 0, showAlpha };
-        const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
-        m_overlaidClip = env->Invoke("Overlay", paramsValue).AsClip();
-    }
+    const PClip showAlpha = env->Invoke("ShowAlpha", foregroundClip).AsClip();
+    const AVSValue params[] = { backgroundClip, foregroundClip, 0, 0, showAlpha };
+    const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
+    m_overlaidClip = env->Invoke("Overlay", paramsValue).AsClip();
 }
 
 PVideoFrame __stdcall RgbOverlay::GetFrame(int n, IScriptEnvironment* env)
