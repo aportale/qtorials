@@ -1,3 +1,5 @@
+SetGraphAnalysis(true)
+
 Import("tests.avsi")
 
 function borderAndCaption(clip c, string title) {
@@ -8,7 +10,10 @@ function borderAndCaption(clip c, string title) {
 
 background = ColorBars(width=400, height=300).trim(0, 200)
 
-elements = background.QtAviSynthElements("rgbpatterns", "qtlogosmall", "vignette")
+elements = background
+\ .QtAviSynthElements("vignette")
+\ .QtAviSynthElements("rgbpatterns")
+\ .QtAviSynthElements("qtlogosmall")
 \ .borderAndCaption("QtAviSynthElements")
 
 highlight = background
@@ -52,3 +57,6 @@ StackVertical(
 \   StackHorizontal(elements, highlight, svganimation)
 \ , StackHorizontal(zoomnpan, title, subtitle)
 \ )
+
+DumpFilterGraph("qtavisynth_all.gv", mode=2)
+# dot -Tpdf qtavisynth_all.gv -o qtavisynth_all.pdf
