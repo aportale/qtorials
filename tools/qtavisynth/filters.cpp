@@ -17,7 +17,8 @@
 inline static int codecBlockSize(int clipHeight)
 {
     // Ideal values for YouTube (experimented)
-    return clipHeight == 720 ? 24 : 8;
+    // return clipHeight == 720 ? 24 : 8; // Legacy ?
+    return 4;
 }
 
 inline static int snappedToBlockSize(int value, int clipHeight)
