@@ -19,7 +19,6 @@ add_library(
     stillimage.h stillimage.cpp
     subtitle.h subtitle.cpp
     svganimation.h svganimation.cpp
-    title.h title.cpp
     tools.h tools.cpp
     zoomnpan.h zoomnpan.cpp
 )

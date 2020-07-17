@@ -60,6 +60,27 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
     return Tools::rgbOverlay(background, svgClip, env);
 }
 
+AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+    const PClip background = args[0].AsClip();
+    const VideoInfo backgroundVI = background->GetVideoInfo();
+    const QString text =
+        QString::fromLatin1(args[1].AsString("Title")).replace(QLatin1String("\\n"),
+                                                               QLatin1String("\n"));
+    const QString fontFace =
+        QString::fromLatin1(args[2].AsString());
+    const QColor color = QRgb(args[3].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
+
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
+    image.fill(Tools::transparentColor);
+    QPainter p(&image);
+    Filters::paintTitle(&p, image.rect(), text, fontFace, color);
+
+    const PClip svgClip = new StillImage(backgroundVI, image, env);
+    return Tools::rgbOverlay(background, svgClip, env);
+}
+
 PVideoFrame __stdcall StillImage::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(n)

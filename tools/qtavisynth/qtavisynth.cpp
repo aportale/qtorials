@@ -16,7 +16,6 @@
 #include "stillimage.h"
 #include "subtitle.h"
 #include "svganimation.h"
-#include "title.h"
 #include "zoomnpan.h"
 
 const AVS_Linkage* AVS_linkage = nullptr;
@@ -26,8 +25,6 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
 {
     AVS_linkage = vectors;
 
-    env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[fontface]s[color]i",
-                     Title::CreateTitle, nullptr);
     env->AddFunction("QtAviSynthHighlight",
                      "[clip]c[left]i[top]i[width]i[height]i[start]i[end]i",
                      Highlight::CreateHighlight, nullptr);
@@ -35,6 +32,8 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
                      StillImage::CreateElements, nullptr);
     env->AddFunction("QtAviSynthSvg", "[clip]c[svgfile]s[elements]s*",
                      StillImage::CreateSvg, nullptr);
+    env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[fontface]s[color]i",
+                     StillImage::CreateTitle, nullptr);
     env->AddFunction("QtAviSynthSubtitle",
                      "[clip]c[title]s[subtitle]s[start]i[end]i",
                      Subtitle::CreateSubtitle, nullptr);

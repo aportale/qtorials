@@ -14,6 +14,8 @@ public:
                                            IScriptEnvironment* env);
     static AVSValue __cdecl CreateSvg(AVSValue args, void* user_data,
                                       IScriptEnvironment* env);
+    static AVSValue __cdecl CreateTitle(AVSValue args, void* user_data,
+                                        IScriptEnvironment* env);
 
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     bool __stdcall GetParity(int n) override;
