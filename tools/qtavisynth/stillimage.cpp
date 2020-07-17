@@ -19,6 +19,7 @@ StillImage::StillImage(const VideoInfo &backgroundVideoInfo, const QImage &image
 AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
+
     const PClip background = args[0].AsClip();
     const VideoInfo backgroundVI = background->GetVideoInfo();
     const AVSValue &elementValues = args[1];
@@ -29,10 +30,12 @@ AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScr
             env->ThrowError("QtAviSynthElements: Invalid element '%s'.", element.latin1());
         elements.append(element);
     }
+
     QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter p(&image);
     Filters::paintElements(&p, elements, image.rect());
+
     const PClip elementsClip = new StillImage(backgroundVI, image, env);
     return Tools::rgbOverlay(background, elementsClip, env);
 }
@@ -52,10 +55,12 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
         Tools::checkSvgAndThrow(svgFileName, element, env);
         elements.append(element);
     }
+
     QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter p(&image);
     Filters::paintSvgElements(&p, svgFileName, elements, image.rect());
+
     const PClip svgClip = new StillImage(backgroundVI, image, env);
     return Tools::rgbOverlay(background, svgClip, env);
 }
@@ -63,6 +68,7 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
 AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScriptEnvironment* env)
 {
     Q_UNUSED(user_data)
+
     const PClip background = args[0].AsClip();
     const VideoInfo backgroundVI = background->GetVideoInfo();
     const QString text =
@@ -77,8 +83,8 @@ AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScript
     QPainter p(&image);
     Filters::paintTitle(&p, image.rect(), text, fontFace, color);
 
-    const PClip svgClip = new StillImage(backgroundVI, image, env);
-    return Tools::rgbOverlay(background, svgClip, env);
+    const PClip titleClip = new StillImage(backgroundVI, image, env);
+    return Tools::rgbOverlay(background, titleClip, env);
 }
 
 PVideoFrame __stdcall StillImage::GetFrame(int n, IScriptEnvironment* env)
