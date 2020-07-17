@@ -1,5 +1,4 @@
 #include "filters.h"
-#include "rgboverlay.h"
 #include "title.h"
 #include "tools.h"
 
@@ -26,7 +25,7 @@ AVSValue __cdecl Title::CreateTitle(AVSValue args, void* user_data, IScriptEnvir
         QString::fromLatin1(args[2].AsString());
     const QColor color = QRgb(args[3].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
     const auto title = new Title(background->GetVideoInfo(), text, fontFace, color);
-    return new RgbOverlay(background, title, env);
+    return Tools::rgbOverlay(background, title, env);
 }
 
 PVideoFrame __stdcall Title::GetFrame(int n, IScriptEnvironment* env)

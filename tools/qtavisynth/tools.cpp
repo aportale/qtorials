@@ -29,3 +29,12 @@ void Tools::checkSvgAndThrow(const QString &svgFileName,
             break;
     }
 }
+
+PClip Tools::rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
+                        IScriptEnvironment* env)
+{
+    const PClip showAlpha = env->Invoke("ShowAlpha", overlayClip).AsClip();
+    const AVSValue params[] = { backgroundClip, overlayClip, 0, 0, showAlpha };
+    const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
+    return env->Invoke("Overlay", paramsValue).AsClip();
+}

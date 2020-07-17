@@ -1,5 +1,4 @@
 #include "filters.h"
-#include "rgboverlay.h"
 #include "stillimage.h"
 #include "tools.h"
 
@@ -35,7 +34,7 @@ AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScr
     QPainter p(&image);
     Filters::paintElements(&p, elements, image.rect());
     const PClip elementsClip = new StillImage(backgroundVI, image, env);
-    return new RgbOverlay(background, elementsClip, env);
+    return Tools::rgbOverlay(background, elementsClip, env);
 }
 
 AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEnvironment* env)
@@ -58,7 +57,7 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
     QPainter p(&image);
     Filters::paintSvgElements(&p, svgFileName, elements, image.rect());
     const PClip svgClip = new StillImage(backgroundVI, image, env);
-    return new RgbOverlay(background, svgClip, env);
+    return Tools::rgbOverlay(background, svgClip, env);
 }
 
 PVideoFrame __stdcall StillImage::GetFrame(int n, IScriptEnvironment* env)

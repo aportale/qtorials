@@ -16,7 +16,6 @@ add_library(
     qtavisynth.qrc
     filters.h filters.cpp
     highlight.h highlight.cpp
-    rgboverlay.h rgboverlay.cpp
     stillimage.h stillimage.cpp
     subtitle.h subtitle.cpp
     svganimation.h svganimation.cpp

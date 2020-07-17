@@ -12,6 +12,8 @@ public:
     static void checkSvgAndThrow(const QString &svgFileName,
                                  const QString &svgElement,
                                  IScriptEnvironment* env);
+    static PClip rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
+                            IScriptEnvironment* env);
 
     static const int defaultClipWidth;
     static const int defaultClipHeight;

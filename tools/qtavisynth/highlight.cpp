@@ -1,6 +1,6 @@
 #include "highlight.h"
 #include "filters.h"
-#include "rgboverlay.h"
+#include "tools.h"
 #include <QPropertyAnimation>
 #include <QEasingCurve>
 
@@ -127,7 +127,7 @@ AVSValue __cdecl Highlight::CreateHighlight(AVSValue args, void* user_data,
     const int end = args[6].AsInt(30);
     const PClip hightlightClip =
             new Highlight(background->GetVideoInfo(), rect, start, end);
-    return new RgbOverlay(background, hightlightClip, env);
+    return Tools::rgbOverlay(background, hightlightClip, env);
 }
 
 bool __stdcall Highlight::GetParity(int n)

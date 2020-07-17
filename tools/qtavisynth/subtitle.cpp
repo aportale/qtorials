@@ -1,5 +1,4 @@
 #include "filters.h"
-#include "rgboverlay.h"
 #include "subtitle.h"
 #include "tools.h"
 
@@ -136,7 +135,7 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
     const int end = args[4].AsInt(30);
     const PClip subtitleClip =
             new Subtitle(background->GetVideoInfo(), title, subtitle, start, end);
-    return new RgbOverlay(background, subtitleClip, env);
+    return Tools::rgbOverlay(background, subtitleClip, env);
 }
 
 bool __stdcall Subtitle::GetParity(int n)

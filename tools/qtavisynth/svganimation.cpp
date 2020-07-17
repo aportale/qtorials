@@ -1,5 +1,4 @@
 #include "filters.h"
-#include "rgboverlay.h"
 #include "svganimation.h"
 #include "tools.h"
 
@@ -196,7 +195,7 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
     }
 
     const PClip svgAnimation = new SvgAnimation(background->GetVideoInfo(), svgFileName, details);
-    return new RgbOverlay(background, svgAnimation, env);
+    return Tools::rgbOverlay(background, svgAnimation, env);
 }
 
 bool __stdcall SvgAnimation::GetParity(int n)
