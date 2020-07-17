@@ -31,7 +31,7 @@ AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScr
         elements.append(element);
     }
 
-    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::transparent);
     QPainter p(&image);
     Filters::paintElements(&p, elements, image.rect());
@@ -56,7 +56,7 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
         elements.append(element);
     }
 
-    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::transparent);
     QPainter p(&image);
     Filters::paintSvgElements(&p, svgFileName, elements, image.rect());
@@ -78,7 +78,7 @@ AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScript
         QString::fromLatin1(args[2].AsString());
     const QColor color = QRgb(args[3].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
 
-    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::transparent);
     QPainter p(&image);
     Filters::paintTitle(&p, image.rect(), text, fontFace, color);
