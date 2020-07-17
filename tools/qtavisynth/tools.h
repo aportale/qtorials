@@ -17,5 +17,4 @@ public:
 
     static const int defaultClipWidth;
     static const int defaultClipHeight;
-    static const QRgb transparentColor;
 };

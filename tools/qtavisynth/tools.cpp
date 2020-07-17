@@ -4,7 +4,6 @@
 
 const int Tools::defaultClipWidth = 640;
 const int Tools::defaultClipHeight = 480;
-const QRgb Tools::transparentColor = qRgba(0x00, 0x00, 0x00, 0x00);
 
 QString Tools::cleanFileName(const QString &file)
 {
