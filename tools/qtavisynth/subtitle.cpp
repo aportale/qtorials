@@ -7,38 +7,11 @@
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
 
-class SubtitleProperties : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(qreal slip READ slip WRITE setSlip)
-    Q_PROPERTY(qreal blend READ blend WRITE setBlend)
-
-public:
-    explicit SubtitleProperties(QObject *parent = nullptr);
-
-    qreal slip() const;
-    void setSlip(qreal slip);
-    qreal blend() const;
-    void setBlend(qreal blend);
-
-    static const QByteArray slipPropertyName;
-    static const QByteArray blendPropertyName;
-
-private:
-    qreal m_slip = 0.0;
-    qreal m_blend = 0.0;
-};
-
 const QByteArray SubtitleProperties::slipPropertyName = "slip";
 const QByteArray SubtitleProperties::blendPropertyName = "blend";
 const int Subtitle::m_slipFrames = 10;
 const int Subtitle::m_blendDelayFrames = 6;
 const int Subtitle::m_blendFrames = 8;
-
-SubtitleProperties::SubtitleProperties(QObject *parent)
-    : QObject(parent)
-{
-}
 
 qreal SubtitleProperties::slip() const
 {
@@ -68,7 +41,6 @@ Subtitle::Subtitle(PClip background, const QString &title, const QString &subtit
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
 
-    m_properties = new SubtitleProperties(&m_titleAnimations);
     auto *slipSequence = new QSequentialAnimationGroup;
     auto *blendSequence = new QSequentialAnimationGroup;
 
@@ -88,8 +60,7 @@ Subtitle::Subtitle(PClip background, const QString &title, const QString &subtit
 
     for (const auto & a : animations) {
         a.sequence->addPause(a.pauseBefore);
-        auto *animation =
-                new QPropertyAnimation(m_properties, a.propertyName);
+        auto *animation = new QPropertyAnimation(&m_properties, a.propertyName);
         animation->setDuration(a.duration);
         animation->setStartValue(a.startValue);
         animation->setEndValue(a.endValue);
@@ -118,7 +89,7 @@ PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)
     m_titleAnimations.setCurrentTime(n);
     Filters::paintAnimatedSubTitle(
             &p, m_title, m_subtitle,
-            m_properties->slip(), m_properties->blend(),
+            m_properties.slip(), m_properties.blend(),
             image.rect());
     return frame;
 }
@@ -135,5 +106,3 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
     const PClip subtitleClip = new Subtitle(background, title, subtitle, start, end);
     return Tools::rgbOverlay(background, subtitleClip, env);
 }
-
-#include "subtitle.moc"
