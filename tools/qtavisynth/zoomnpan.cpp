@@ -2,28 +2,7 @@
 #include "filters.h"
 #include "tools.h"
 
-class ZoomNPanProperties : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QRectF rect READ rect WRITE setRect)
-
-public:
-    explicit ZoomNPanProperties(QObject *parent = nullptr);
-
-    QRectF rect() const;
-    void setRect(const QRectF &rect);
-    static const QByteArray propertyName;
-
-private:
-    QRectF m_rect;
-};
-
 const QByteArray ZoomNPanProperties::propertyName = "rect";
-
-ZoomNPanProperties::ZoomNPanProperties(QObject *parent)
-    : QObject(parent)
-{
-}
 
 QRectF ZoomNPanProperties::rect() const
 {
@@ -41,7 +20,6 @@ ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
     : GenericVideoFilter(originClip)
     , m_resizeFilter(resizeFilter)
 {
-    m_animationProperties = new ZoomNPanProperties(&m_animation);
     vi.width = width;
     vi.height = height;
 
@@ -49,7 +27,7 @@ ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
 
     {
         auto *start =
-                new QPropertyAnimation(m_animationProperties, ZoomNPanProperties::propertyName);
+                new QPropertyAnimation(&m_animationProperties, ZoomNPanProperties::propertyName);
         start->setDuration(0);
         previousDetail.detail =
                 fixedDetailRect(originClip->GetVideoInfo(), QSize(width, height), startDetail);
@@ -67,7 +45,7 @@ ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
         if (pauseLength > 0)
             m_animation.addPause(pauseLength);
         auto *rectAnimation =
-                new QPropertyAnimation(m_animationProperties, ZoomNPanProperties::propertyName);
+                new QPropertyAnimation(&m_animationProperties, ZoomNPanProperties::propertyName);
         rectAnimation->setDuration(transitionLength);
         rectAnimation->setStartValue(previousDetail.detail);
         rectAnimation->setEndValue(detailRect);
@@ -88,7 +66,7 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(env)
     m_animation.setCurrentTime(n);
-    QRectF rect = m_animationProperties->rect();
+    QRectF rect = m_animationProperties.rect();
     if (rect != m_resizedRect) {
         m_resizedRect = rect;
         const int target_width = vi.width;
@@ -160,5 +138,3 @@ QRectF ZoomNPan::fixedDetailRect(const VideoInfo &originVideoInfo,
     }
     return result;
 }
-
-#include "zoomnpan.moc"

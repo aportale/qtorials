@@ -5,7 +5,19 @@
 #include <QSequentialAnimationGroup>
 #include <QRectF>
 
-class ZoomNPanProperties;
+class ZoomNPanProperties : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QRectF rect READ rect WRITE setRect)
+
+public:
+    QRectF rect() const;
+    void setRect(const QRectF &rect);
+    static const QByteArray propertyName;
+
+private:
+    QRectF m_rect;
+};
 
 class ZoomNPan : public GenericVideoFilter
 {
@@ -28,7 +40,7 @@ private:
                                   const QRectF &specifiedDetailRect);
 
     const QByteArray m_resizeFilter;
-    ZoomNPanProperties *m_animationProperties;
+    ZoomNPanProperties m_animationProperties;
     QSequentialAnimationGroup m_animation;
     PClip m_resizedClip;
     QRectF m_resizedRect;
