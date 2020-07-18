@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include "avisynth.h"
+
 #include <QParallelAnimationGroup>
 
 class SubtitleProperties;

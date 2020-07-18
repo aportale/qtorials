@@ -1,9 +1,11 @@
 #pragma once
 
 #include <windows.h>
-#include <QString>
-#include <QColor>
 #include "avisynth.h"
+
+#include <QtGlobal>
+QT_FORWARD_DECLARE_CLASS(QString)
+QT_FORWARD_DECLARE_CLASS(QColor)
 
 class Tools
 {

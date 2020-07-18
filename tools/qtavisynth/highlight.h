@@ -2,6 +2,7 @@
 
 #include "windows.h"
 #include "avisynth.h"
+
 #include <QParallelAnimationGroup>
 
 QT_FORWARD_DECLARE_CLASS(QRect);

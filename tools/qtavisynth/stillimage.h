@@ -2,7 +2,10 @@
 
 #include "windows.h"
 #include "avisynth.h"
-#include <QImage>
+
+#include<QtGlobal>
+
+QT_FORWARD_DECLARE_CLASS(QImage)
 
 class StillImage : public GenericVideoFilter
 {
