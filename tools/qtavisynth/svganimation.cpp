@@ -48,12 +48,12 @@ SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
 const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
 
-SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
+SvgAnimation::SvgAnimation(PClip background, const QString &svgFile,
                            const QVector<SvgAnimationProperties::Data> &dataSets)
-    : m_svgFile(svgFile)
-    , m_videoInfo(videoInfo)
+    : GenericVideoFilter(background)
+    , m_svgFile(svgFile)
 {
-    m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+    vi.pixel_type = VideoInfo::CS_BGR32;
 
     m_properties.reserve(dataSets.size());
     for (const SvgAnimationProperties::Data &dataSet : dataSets) {
@@ -127,8 +127,8 @@ SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
             a.sequence->addAnimation(animation);
         }
 
-        scaleSequence->addPause(m_videoInfo.num_frames - scaleSequence->duration());
-        opacitySequence->addPause(m_videoInfo.num_frames - opacitySequence->duration());
+        scaleSequence->addPause(vi.num_frames - scaleSequence->duration());
+        opacitySequence->addPause(vi.num_frames - opacitySequence->duration());
 
         m_animation.addAnimation(scaleSequence);
         m_animation.addAnimation(opacitySequence);
@@ -141,9 +141,9 @@ SvgAnimation::SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
 PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(env)
-    PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
+    PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
-    QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
+    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
     image.fill(0);
     QPainter p(&image);
     p.scale(1, -1);
@@ -194,33 +194,6 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
         details.append(animationDetail);
     }
 
-    const PClip svgAnimation = new SvgAnimation(background->GetVideoInfo(), svgFileName, details);
+    const PClip svgAnimation = new SvgAnimation(background, svgFileName, details);
     return Tools::rgbOverlay(background, svgAnimation, env);
-}
-
-bool __stdcall SvgAnimation::GetParity(int n)
-{
-    Q_UNUSED(n)
-    return false;
-}
-
-const VideoInfo& __stdcall SvgAnimation::GetVideoInfo()
-{
-    return m_videoInfo;
-}
-
-int __stdcall SvgAnimation::SetCacheHints(int cachehints, int frame_range)
-{
-    Q_UNUSED(cachehints)
-    Q_UNUSED(frame_range)
-    return 0;
-}
-
-void __stdcall SvgAnimation::GetAudio(void* buf, __int64 start, __int64 count,
-                                      IScriptEnvironment* env)
-{
-    Q_UNUSED(buf)
-    Q_UNUSED(start)
-    Q_UNUSED(count)
-    Q_UNUSED(env)
 }

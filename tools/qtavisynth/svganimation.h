@@ -54,23 +54,17 @@ private:
     qreal m_opacity = opacityStart;
 };
 
-class SvgAnimation : public IClip
+class SvgAnimation : public GenericVideoFilter
 {
 public:
-    SvgAnimation(const VideoInfo &videoInfo, const QString &svgFile,
+    SvgAnimation(PClip background, const QString &svgFile,
                  const QVector<SvgAnimationProperties::Data> &dataSets);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data,
                                                IScriptEnvironment* env);
-    bool __stdcall GetParity(int n) override;
-    const VideoInfo& __stdcall GetVideoInfo() override;
-    int __stdcall SetCacheHints(int cachehints, int frame_range) override;
-    void __stdcall GetAudio(void* buf, __int64 start, __int64 count,
-                            IScriptEnvironment* env) override;
 
 private:
     const QString m_svgFile;
-    VideoInfo m_videoInfo;
     QParallelAnimationGroup m_animation;
     QVector<SvgAnimationProperties*> m_properties;
 };
