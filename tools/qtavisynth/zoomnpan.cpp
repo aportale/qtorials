@@ -39,13 +39,13 @@ ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
                    int extensionColor, int defaultTransitionLength, const char *resizeFilter,
                    const QRectF &startDetail, const QVector<Detail> &details,
                    IScriptEnvironment* env)
-    : m_targetVideoInfo(originClip->GetVideoInfo())
+    : GenericVideoFilter(originClip)
     , m_resizeFilter(resizeFilter)
     , m_extendedClip(extendedClip(originClip, extensionColor, env))
 {
     m_animationProperties = new ZoomNPanProperties(&m_animation);
-    m_targetVideoInfo.width = width;
-    m_targetVideoInfo.height = height;
+    vi.width = width;
+    vi.height = height;
 
     Detail previousDetail = { 0, 0, {} };
 
@@ -80,7 +80,7 @@ ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
         previousDetail.detail = detailRect;
     }
 
-    m_animation.addPause(m_targetVideoInfo.num_frames - previousDetail.keyFrame);
+    m_animation.addPause(vi.num_frames - previousDetail.keyFrame);
 
     m_animation.start();
     m_animation.pause();
@@ -93,8 +93,8 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
     QRectF rect = m_animationProperties->rect();
     if (rect != m_resizedRect) {
         m_resizedRect = rect;
-        const int target_width = m_targetVideoInfo.width;
-        const int target_height = m_targetVideoInfo.height;
+        const int target_width = vi.width;
+        const int target_height = vi.height;
         if (rect.size() == QSizeF(target_width, target_height))
             rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
         const qreal src_left = rect.left();
@@ -171,30 +171,6 @@ QRectF ZoomNPan::fixedDetailRect(const VideoInfo &originVideoInfo,
         result.setSize(detailClipSize);
     }
     return result.translated(m_extensionWidth, m_extensionWidth);
-}
-
-bool __stdcall ZoomNPan::GetParity(int n)
-{
-    Q_UNUSED(n)
-    return false;
-}
-
-const VideoInfo& __stdcall ZoomNPan::GetVideoInfo()
-{
-    return m_targetVideoInfo;
-}
-
-int __stdcall ZoomNPan::SetCacheHints(int cachehints, int frame_range)
-{
-    Q_UNUSED(cachehints)
-    Q_UNUSED(frame_range)
-    return 0;
-}
-
-void __stdcall ZoomNPan::GetAudio(void* buf, __int64 start, __int64 count,
-                                  IScriptEnvironment* env)
-{
-    m_extendedClip->GetAudio(buf, start, count, env);
 }
 
 #include "zoomnpan.moc"

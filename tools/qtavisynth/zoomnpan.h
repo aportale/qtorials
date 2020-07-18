@@ -7,7 +7,7 @@
 
 class ZoomNPanProperties;
 
-class ZoomNPan : public IClip
+class ZoomNPan : public GenericVideoFilter
 {
 public:
     struct Detail {
@@ -24,11 +24,6 @@ public:
     static AVSValue __cdecl CreateZoomNPan(AVSValue args, void* user_data,
                                            IScriptEnvironment* env);
 
-    bool __stdcall GetParity(int n) override;
-    const VideoInfo& __stdcall GetVideoInfo() override;
-    int __stdcall SetCacheHints(int cachehints, int frame_range) override;
-    void __stdcall GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env) override;
-
 private:
     static PClip extendedClip(const PClip &originClip, int extensionColor,
                               IScriptEnvironment* env);
@@ -37,7 +32,6 @@ private:
                                   const QRectF &specifiedDetailRect);
 
     static const int m_extensionWidth = 16;
-    VideoInfo m_targetVideoInfo;
     const QByteArray m_resizeFilter;
     const PClip m_extendedClip;
     ZoomNPanProperties *m_animationProperties;
