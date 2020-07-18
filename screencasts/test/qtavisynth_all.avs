@@ -34,7 +34,7 @@ svganimation = background
 
 zoomnpan = background.PointResize(background.width * 2, background.height * 2)
 \ .QtAviSynthZoomNPan(
-\ background.width, background.height, $ff000000, 20, "BlackmanResize"
+\ background.width, background.height, 20, "BlackmanResize"
 \ ,                  -1,   -1,       -1,   -1
 \ ,   40,  -1,      400,    0,       -1,   -1
 \ ,  105,  -1,      200,  300,       -1,   -1
