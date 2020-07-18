@@ -60,14 +60,13 @@ void SubtitleProperties::setBlend(qreal blend)
     m_blend = blend;
 }
 
-Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
-                   const QString &title, const QString &subtitle,
+Subtitle::Subtitle(PClip background, const QString &title, const QString &subtitle,
                    int startFrame, int endFrame)
-    : m_videoInfo(backgroundVideoInfo)
+    : GenericVideoFilter(background)
     , m_title(title)
     , m_subtitle(subtitle)
 {
-    m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+    vi.pixel_type = VideoInfo::CS_BGR32;
 
     m_properties = new SubtitleProperties(&m_titleAnimations);
     auto *slipSequence = new QSequentialAnimationGroup;
@@ -98,8 +97,8 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
         a.sequence->addAnimation(animation);
     }
 
-    slipSequence->addPause(m_videoInfo.num_frames - slipSequence->duration());
-    blendSequence->addPause(m_videoInfo.num_frames - blendSequence->duration());
+    slipSequence->addPause(vi.num_frames - slipSequence->duration());
+    blendSequence->addPause(vi.num_frames - blendSequence->duration());
     m_titleAnimations.addAnimation(slipSequence);
     m_titleAnimations.addAnimation(blendSequence);
 
@@ -109,9 +108,9 @@ Subtitle::Subtitle(const VideoInfo &backgroundVideoInfo,
 
 PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)
 {
-    PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
+    PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
-    QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
+    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
     image.fill(0);
     QPainter p(&image);
     p.scale(1, -1);
@@ -133,36 +132,8 @@ AVSValue __cdecl Subtitle::CreateSubtitle(AVSValue args, void* user_data,
     const QString subtitle = QLatin1String(args[2].AsString());
     const int start = args[3].AsInt(10);
     const int end = args[4].AsInt(30);
-    const PClip subtitleClip =
-            new Subtitle(background->GetVideoInfo(), title, subtitle, start, end);
+    const PClip subtitleClip = new Subtitle(background, title, subtitle, start, end);
     return Tools::rgbOverlay(background, subtitleClip, env);
-}
-
-bool __stdcall Subtitle::GetParity(int n)
-{
-    Q_UNUSED(n)
-    return false;
-}
-
-const VideoInfo& __stdcall Subtitle::GetVideoInfo()
-{
-    return m_videoInfo;
-}
-
-int __stdcall Subtitle::SetCacheHints(int cachehints, int frame_range)
-{
-    Q_UNUSED(cachehints)
-    Q_UNUSED(frame_range)
-    return 0;
-}
-
-void __stdcall Subtitle::GetAudio(void* buf, __int64 start, __int64 count,
-                                  IScriptEnvironment* env)
-{
-    Q_UNUSED(buf)
-    Q_UNUSED(start)
-    Q_UNUSED(count)
-    Q_UNUSED(env)
 }
 
 #include "subtitle.moc"
