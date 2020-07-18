@@ -55,11 +55,10 @@ const QByteArray HighlightProperties::opacityPropertyName = "opacity";
 const int Highlight::m_blendInFrames = 12;
 const int Highlight::m_blendOutFrames = 6;
 
-Highlight::Highlight(const VideoInfo &videoInfo,
-                     const QRect &rectangle, int startFrame, int endFrame)
-    : m_videoInfo(videoInfo)
+Highlight::Highlight(PClip background, const QRect &rectangle, int startFrame, int endFrame)
+    : GenericVideoFilter(background)
 {
-    m_videoInfo.pixel_type = VideoInfo::CS_BGR32;
+    vi.pixel_type = VideoInfo::CS_BGR32;
 
     m_properties = new HighlightProperties(&m_highlightAnimations);
     auto *rectangleAnimation = new QSequentialAnimationGroup;
@@ -93,8 +92,8 @@ Highlight::Highlight(const VideoInfo &videoInfo,
         a.sequence->addAnimation(animation);
     }
 
-    rectangleAnimation->addPause(m_videoInfo.num_frames - rectangleAnimation->duration());
-    opacityAnimation->addPause(m_videoInfo.num_frames - opacityAnimation->duration());
+    rectangleAnimation->addPause(vi.num_frames - rectangleAnimation->duration());
+    opacityAnimation->addPause(vi.num_frames - opacityAnimation->duration());
 
     m_highlightAnimations.addAnimation(rectangleAnimation);
     m_highlightAnimations.addAnimation(opacityAnimation);
@@ -104,9 +103,9 @@ Highlight::Highlight(const VideoInfo &videoInfo,
 
 PVideoFrame __stdcall Highlight::GetFrame(int n, IScriptEnvironment* env)
 {
-    PVideoFrame frame = env->NewVideoFrame(m_videoInfo);
+    PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
-    QImage image(frameBits, m_videoInfo.width, m_videoInfo.height, QImage::Format_ARGB32);
+    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
     image.fill(0);
     QPainter p(&image);
     p.scale(1, -1);
@@ -125,36 +124,8 @@ AVSValue __cdecl Highlight::CreateHighlight(AVSValue args, void* user_data,
                      args[3].AsInt(100), args[4].AsInt(100));
     const int start = args[5].AsInt(10);
     const int end = args[6].AsInt(30);
-    const PClip hightlightClip =
-            new Highlight(background->GetVideoInfo(), rect, start, end);
+    const PClip hightlightClip = new Highlight(background, rect, start, end);
     return Tools::rgbOverlay(background, hightlightClip, env);
-}
-
-bool __stdcall Highlight::GetParity(int n)
-{
-    Q_UNUSED(n)
-    return false;
-}
-
-const VideoInfo& __stdcall Highlight::GetVideoInfo()
-{
-    return m_videoInfo;
-}
-
-int __stdcall Highlight::SetCacheHints(int cachehints, int frame_range)
-{
-    Q_UNUSED(cachehints)
-    Q_UNUSED(frame_range)
-    return 0;
-}
-
-void __stdcall Highlight::GetAudio(void* buf, __int64 start, __int64 count,
-                                   IScriptEnvironment* env)
-{
-    Q_UNUSED(buf)
-    Q_UNUSED(start)
-    Q_UNUSED(count)
-    Q_UNUSED(env)
 }
 
 #include "highlight.moc"
