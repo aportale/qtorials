@@ -2,15 +2,14 @@
 #include "stillimage.h"
 #include "tools.h"
 
-StillImage::StillImage(const VideoInfo &backgroundVideoInfo, const QImage &image,
-                       IScriptEnvironment* env)
-    : m_videoInfo(backgroundVideoInfo)
+StillImage::StillImage(PClip background, const QImage &image, IScriptEnvironment* env)
+    : GenericVideoFilter(background)
 {
-    m_videoInfo.pixel_type =
+    vi.pixel_type =
             (image.format() == QImage::Format_ARGB32
                 || image.format() == QImage::Format_ARGB32_Premultiplied) ?
                     VideoInfo::CS_BGR32 : VideoInfo::CS_BGR24;
-    m_frame = env->NewVideoFrame(m_videoInfo);
+    m_frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = m_frame->GetWritePtr();
     env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).constBits(),
                 image.bytesPerLine(), image.bytesPerLine(), image.height());
@@ -36,7 +35,7 @@ AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScr
     QPainter p(&image);
     Filters::paintElements(&p, elements, image.rect());
 
-    const PClip elementsClip = new StillImage(backgroundVI, image, env);
+    const PClip elementsClip = new StillImage(background, image, env);
     return Tools::rgbOverlay(background, elementsClip, env);
 }
 
@@ -61,7 +60,7 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
     QPainter p(&image);
     Filters::paintSvgElements(&p, svgFileName, elements, image.rect());
 
-    const PClip svgClip = new StillImage(backgroundVI, image, env);
+    const PClip svgClip = new StillImage(background, image, env);
     return Tools::rgbOverlay(background, svgClip, env);
 }
 
@@ -83,7 +82,7 @@ AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScript
     QPainter p(&image);
     Filters::paintTitle(&p, image.rect(), text, fontFace, color);
 
-    const PClip titleClip = new StillImage(backgroundVI, image, env);
+    const PClip titleClip = new StillImage(background, image, env);
     return Tools::rgbOverlay(background, titleClip, env);
 }
 
@@ -92,30 +91,4 @@ PVideoFrame __stdcall StillImage::GetFrame(int n, IScriptEnvironment* env)
     Q_UNUSED(n)
     Q_UNUSED(env)
     return m_frame;
-}
-
-bool __stdcall StillImage::GetParity(int n)
-{
-    Q_UNUSED(n)
-    return false;
-}
-
-const VideoInfo& __stdcall StillImage::GetVideoInfo()
-{
-    return m_videoInfo;
-}
-
-int __stdcall StillImage::SetCacheHints(int cachehints, int frame_range)
-{
-    Q_UNUSED(cachehints)
-    Q_UNUSED(frame_range)
-    return 0;
-}
-
-void __stdcall StillImage::GetAudio(void* buf, __int64 start, __int64 count, IScriptEnvironment* env)
-{
-    Q_UNUSED(buf)
-    Q_UNUSED(start)
-    Q_UNUSED(count)
-    Q_UNUSED(env)
 }
