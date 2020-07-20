@@ -15,10 +15,11 @@ void ZoomNPanProperties::setRect(const QRectF &rect)
 }
 
 ZoomNPan::ZoomNPan(const PClip &originClip, int width, int height,
-                   int defaultTransitionLength, const char *resizeFilter,
+                   int defaultTransitionLength, const char *resizeFilter, double perspectiveStrength,
                    const QRectF &startDetail, const QVector<Detail> &details)
     : GenericVideoFilter(originClip)
     , m_resizeFilter(resizeFilter)
+    , m_perspectiveStrength(perspectiveStrength)
 {
     vi.width = width;
     vi.height = height;
@@ -71,14 +72,36 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
         m_resizedRect = rect;
         const int target_width = vi.width;
         const int target_height = vi.height;
-        if (rect.size() == QSizeF(target_width, target_height))
-            rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
-        const qreal src_left = rect.left();
-        const qreal src_top = rect.top();
-        const qreal src_width = rect.width();
-        const qreal src_height = rect.height();
-        const AVSValue resizedParams[] = { child, target_width, target_height, src_left, src_top, src_width, src_height };
-        m_resizedClip = env->Invoke( m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
+        if (m_perspectiveStrength > 0) {
+            const VideoInfo sourceInfo = child->GetVideoInfo();
+            const double widthNormFactor = 1.0 / sourceInfo.width;
+            const double heightNormFactor = 1.0 / sourceInfo.height;
+            const double perspectiveOffset = m_perspectiveStrength / 2;
+            const AVSValue reformParams[] = {
+                child,
+                // source quad:
+                widthNormFactor * rect.x(),     heightNormFactor * rect.y() + perspectiveOffset,
+                widthNormFactor * rect.right(), heightNormFactor * rect.y(),
+                widthNormFactor * rect.right(), heightNormFactor * rect.bottom(),
+                widthNormFactor * rect.x(),     heightNormFactor * rect.bottom() - perspectiveOffset,
+                // target rect:
+                0,                              0,
+                widthNormFactor * target_width, 0,
+                widthNormFactor * target_width, heightNormFactor * target_height,
+                0,                              heightNormFactor * target_height,
+                // [string]s[strength]f[swap]b[normal]b[relative]b[pto_resize]b[resample]i[quality]
+                   {},      1,         false, true,    false,     false,       1,         8
+            };
+            const PClip reformClip = env->Invoke("quad", AVSValue(reformParams, sizeof reformParams / sizeof reformParams[0])).AsClip();
+            const AVSValue cropParams[] = {reformClip, 0, 0, target_width, target_height};
+            m_resizedClip = env->Invoke("Crop", AVSValue(cropParams, sizeof cropParams / sizeof cropParams[0])).AsClip();
+        } else {
+            if (rect.size() == QSizeF(target_width, target_height))
+                rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
+            const AVSValue resizedParams[] = {child, target_width, target_height,
+                                              rect.left(), rect.top(), rect.width(), rect.height() };
+            m_resizedClip = env->Invoke(m_resizeFilter, AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
+        }
     }
     return m_resizedClip->GetFrame(n, env);
 }
@@ -89,15 +112,22 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
     Q_UNUSED(user_data)
     static const int valuesPerDetail = 6;
 
-    if (!env->FunctionExists(args[4].AsString()))
+    const double perspectiveStrength = args[5].AsFloat(0);
+    if (perspectiveStrength > 0) {
+        if (!env->FunctionExists("quad"))
+            env->ThrowError("QtAviSynthZoomNPan: \"quad\" filter from David Horman's warp not found. "
+                            "Needed for the perspective effect. "
+                            "Get it from http://horman.net/avisynth/ and load the .dll");
+    } else if (!env->FunctionExists(args[4].AsString())) {
         env->ThrowError("QtAviSynthZoomNPan: Invalid resize filter '%s'.", args[4].AsString());
+    }
 
-    const AVSValue &detailValues = args[9];
+    const AVSValue &detailValues = args[10];
     if (detailValues.ArraySize() % valuesPerDetail != 0)
         env->ThrowError("QtAviSynthZoomNPan: Mismatching number of arguments.\n"
                         "They need to be %d per detail.", valuesPerDetail);
 
-    const QRectF start(args[5].AsInt(), args[6].AsInt(), args[7].AsInt(), args[8].AsInt());
+    const QRectF start(args[6].AsInt(), args[7].AsInt(), args[8].AsInt(), args[9].AsInt());
 
     QVector<Detail> details;
     details.reserve(detailValues.ArraySize() / valuesPerDetail);
@@ -115,6 +145,7 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
                         args[2].AsInt(Tools::defaultClipHeight),
                         args[3].AsInt(15),
                         args[4].AsString(),
+                        perspectiveStrength,
                         start,
                         details);
 }

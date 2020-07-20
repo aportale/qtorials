@@ -8,7 +8,7 @@ function borderAndCaption(clip c, string title) {
 \   .AddBorders(0, 0, 0, 4, color_white)
 }
 
-background = ColorBars(width=400, height=300).trim(0, 200)
+global background = ColorBarsHD(width=400, height=300).trim(0, 200)
 
 elements = background
 \ .QtAviSynthElements("vignette")
@@ -32,15 +32,17 @@ svganimation = background
 \ )
 \ .borderAndCaption("QtAviSynthSvgAnimation")
 
-zoomnpan = background.PointResize(background.width * 2, background.height * 2)
+function zoomnpan(float perspectiveStrength) {
+  ColorBarsHD(background.width * 2, background.height * 2).trim(0, background.framecount).QtAviSynthElements("rgbpatterns")
 \ .QtAviSynthZoomNPan(
-\ background.width, background.height, 20, "BlackmanResize"
+\ background.width, background.height, 20, "BlackmanResize", perspectiveStrength
 \ ,                  -1,   -1,       -1,   -1
 \ ,   40,  -1,      400,    0,       -1,   -1
 \ ,  105,  -1,      200,  300,       -1,   -1
 \ ,  170,  -1,       -1,   -1,       -1,   -1
 \ )
-\ .borderAndCaption("QtAviSynthZoomNPan")
+\ .borderAndCaption(String(perspectiveStrength, "QtAviSynthZoomNPan p=%0.2f"))
+}
 
 title = Dissolve(
 \   background.trim(0, 100).QtAviSynthTitle(text="Some text", fontface="Titillium Web")
@@ -55,7 +57,8 @@ subtitle = background
 
 StackVertical(
 \   StackHorizontal(elements, highlight, svganimation)
-\ , StackHorizontal(zoomnpan, title, subtitle)
+\ , StackHorizontal(zoomnpan(0), title, subtitle)
+\ , StackHorizontal(zoomnpan(0.02), zoomnpan(0.04), zoomnpan(0.06))
 \ )
 
 DumpFilterGraph("qtavisynth_all.gv", mode=2)
