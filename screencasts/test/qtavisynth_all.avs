@@ -32,9 +32,9 @@ svganimation = background
 \ )
 \ .borderAndCaption("QtAviSynthSvgAnimation")
 
-zoomnpan = background.PointResize(background.width * 2, background.height * 2)
+zoomnpan = background.PointResize(background.width * 2, background.height * 2).QtAviSynthElements("rgbpatterns")
 \ .QtAviSynthZoomNPan(
-\ background.width, background.height, 20, "BlackmanResize"
+\ background.width, background.height, 20, "BlackmanResize", 0.05
 \ ,                  -1,   -1,       -1,   -1
 \ ,   40,  -1,      400,    0,       -1,   -1
 \ ,  105,  -1,      200,  300,       -1,   -1

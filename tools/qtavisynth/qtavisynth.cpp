@@ -39,7 +39,7 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
                      Subtitle::CreateSubtitle, nullptr);
     env->AddFunction("QtAviSynthZoomNPan",
                      "[clip]c[width]i[height]i"
-                     "[defaulttransitionframes]i[resizefiter]s"
+                     "[defaulttransitionframes]i[resizefiter]s[perspectivestrength]f"
                      "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
                      ZoomNPan::CreateZoomNPan, nullptr);
     env->AddFunction("QtAviSynthSvgAnimation", "[clip]c[svgfile]s.*",
