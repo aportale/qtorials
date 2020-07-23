@@ -387,7 +387,6 @@ const ElementAndPainterHash& elementsAndPaintersHash()
     const static ElementAndPainterHash hash = {
         { QLatin1String("vignette"),            paintVignette },
         { QLatin1String("rgbpatterns"),         paintRgbPatterns },
-        { QLatin1String("blockpattern"),        paintCodecBlockPattern },
         { QLatin1String("qtlogosmall"),         paintQtLogoSmall },
         { QLatin1String("qtlogobig"),           paintQtLogoBig },
         { QLatin1String("codecblockpattern"),   paintCodecBlockPattern },
