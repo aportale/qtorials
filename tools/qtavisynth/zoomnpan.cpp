@@ -73,7 +73,7 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
         const int target_width = vi.width;
         const int target_height = vi.height;
         if (m_perspectiveStrength > 0) {
-            const VideoInfo sourceInfo = child->GetVideoInfo();
+            const VideoInfo &sourceInfo = child->GetVideoInfo();
             const double widthNormFactor = 1.0 / sourceInfo.width;
             const double heightNormFactor = 1.0 / sourceInfo.height;
             const double perspectiveTweakTop = m_perspectiveStrength * ((1 - 0.618) - heightNormFactor * rect.y());
