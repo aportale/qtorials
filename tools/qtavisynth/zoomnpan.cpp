@@ -87,15 +87,15 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
                 widthNormFactor * rect.x(),     heightNormFactor * rect.bottom() - perspectiveTweakBottom,
                 // target rect:
                 0,                              0,
-                widthNormFactor * target_width, 0,
-                widthNormFactor * target_width, heightNormFactor * target_height,
-                0,                              heightNormFactor * target_height,
+                1,                              0,
+                1,                              1,
+                0,                              1,
                 // [string]s[strength]f[swap]b[normal]b[relative]b[pto_resize]b[resample]i[quality]
                    {},      1,         false, true,    false,     false,       1,         8
             };
             const PClip reformClip = env->Invoke("quad", AVSValue(reformParams, sizeof reformParams / sizeof reformParams[0])).AsClip();
-            const AVSValue cropParams[] = {reformClip, 0, 0, target_width, target_height};
-            m_resizedClip = env->Invoke("Crop", AVSValue(cropParams, sizeof cropParams / sizeof cropParams[0])).AsClip();
+            const AVSValue resizedParams[] = {reformClip, target_width, target_height, 0, 0, 0, 0, 1 };
+            m_resizedClip = env->Invoke("BlackmanResize", AVSValue(resizedParams, sizeof resizedParams / sizeof resizedParams[0])).AsClip();
         } else {
             if (rect.size() == QSizeF(target_width, target_height))
                 rect = rect.toRect(); // If native resolution, do not offset at fraction coordinate.
