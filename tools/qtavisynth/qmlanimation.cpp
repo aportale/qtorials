@@ -2,11 +2,21 @@
 #include "qmlanimation.h"
 #include "tools.h"
 
-QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile)
+#include <QApplication>
+
+QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvironment* env)
     : GenericVideoFilter(background)
     , m_qmlFile(qmlFile)
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
+
+    m_qmlComponent = new QQmlComponent(&m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
+
+    QObject *topLevel = m_qmlComponent->create();
+    if (!topLevel && m_qmlComponent->isError())
+        env->ThrowError("QtAviSynthQmlAnimation: %s",
+                    m_qmlComponent->errorString().toLatin1().constData());
+
 }
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
@@ -31,11 +41,16 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
     Q_UNUSED(user_data)
 
     const PClip background = args[0].AsClip();
-    const QString qmlFileName =
-            Tools::cleanFileName(QLatin1String(args[1].AsString()));
+    const QString qmlFile =
+            QDir::fromNativeSeparators(QDir().absoluteFilePath(QLatin1String(args[1].AsString())));
 
-    // initialize Qml scene
+    Tools::createQGuiApplicationIfNeeded();
 
-    const PClip qmlAnimation = new QmlAnimation(background, qmlFileName);
+    if (!QFileInfo::exists(qmlFile))
+        env->ThrowError("Invalid file name: %s",
+                        QDir::toNativeSeparators(qmlFile).toLatin1().constData());
+
+
+    const PClip qmlAnimation = new QmlAnimation(background, qmlFile, env);
     return Tools::rgbOverlay(background, qmlAnimation, env);
 }

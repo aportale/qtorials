@@ -1,5 +1,7 @@
 #include "tools.h"
 #include "filters.h"
+
+#include <QGuiApplication>
 #include <QFileInfo>
 
 const int Tools::defaultClipWidth = 640;
@@ -37,3 +39,21 @@ PClip Tools::rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
     const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
     return env->Invoke("Overlay", paramsValue).AsClip();
 }
+
+static char *argv[] = {(char*)"."};
+static int argc = sizeof(argv) / sizeof(argv[0]);
+
+QGuiApplication* Tools::createQGuiApplicationIfNeeded()
+{
+    return qGuiApp ? nullptr : new QGuiApplication(argc, argv);
+}
+
+void Tools::deleteQGuiApplicationIfNeeded(QGuiApplication *&app)
+{
+    return; // TODO: find out whether deleting the application is needed
+    if (app) {
+        delete app;
+        app = nullptr;
+    }
+}
+
