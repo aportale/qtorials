@@ -13,6 +13,7 @@
 #include "avisynth.h"
 
 #include "highlight.h"
+#include "qmlanimation.h"
 #include "stillimage.h"
 #include "subtitle.h"
 #include "svganimation.h"
@@ -44,5 +45,7 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
                      ZoomNPan::CreateZoomNPan, nullptr);
     env->AddFunction("QtAviSynthSvgAnimation", "[clip]c[svgfile]s.*",
                      SvgAnimation::CreateSvgAnimation, nullptr);
+    env->AddFunction("QtAviSynthQmlAnimation", "[clip]c[qmlfile]",
+                     QmlAnimation::CreateQmlAnimation, nullptr);
     return "`QtAviSynth' QtAviSynth plugin";
 }

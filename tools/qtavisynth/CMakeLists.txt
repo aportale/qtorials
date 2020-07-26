@@ -5,7 +5,7 @@ project(QtAviSynth VERSION "0.9" LANGUAGES C CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5 COMPONENTS Gui Svg REQUIRED)
+find_package(Qt5 COMPONENTS Gui Svg Quick REQUIRED)
 
 file(TO_CMAKE_PATH "$ENV{ProgramFiles\(x86\)}" program_files_x86)
 set(avisynth_filtersdk "${program_files_x86}/AviSynth+/FilterSDK")
@@ -16,6 +16,7 @@ add_library(
     qtavisynth.qrc
     filters.h filters.cpp
     highlight.h highlight.cpp
+    qmlanimation.h qmlanimation.cpp
     stillimage.h stillimage.cpp
     subtitle.h subtitle.cpp
     svganimation.h svganimation.cpp
@@ -37,6 +38,7 @@ target_link_libraries(
     qtavisynth PRIVATE
     Qt5::Gui
     Qt5::Svg
+    Qt5::Quick
 )
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../screencasts/")
