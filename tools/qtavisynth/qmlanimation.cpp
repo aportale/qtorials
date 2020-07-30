@@ -33,26 +33,24 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
         env->ThrowError("QtAviSynthQmlAnimation: %s",
                     m_qmlComponent->errorString().toLatin1().constData());
 
-    m_renderControl = new QQuickRenderControl(m_qmlComponent);
-    QQuickItem *contentItem = qobject_cast<QQuickItem *>(rootObject);
-    if (contentItem) {
-        QQuickView* view = new QQuickView(&m_qmlEngine, nullptr);
-        m_quickWindow = view;
-        view->setContent(qmlFile, m_qmlComponent, contentItem);
-        view->setResizeMode(QQuickView::SizeRootObjectToView);
-        view->setWidth(vi.width);
-        view->setHeight(vi.height);
-    } else {
+    m_renderControl = new QQuickRenderControl(rootObject);
+    QQuickItem *rootItem = qobject_cast<QQuickItem *>(rootObject);
+    if (!rootItem)
         env->ThrowError("QtAviSynthQmlAnimation: Root needs to be an Item.");
-    }
 
     m_openGLContext->makeCurrent(m_offscreenSurface);
-    m_renderControl->initialize(m_openGLContext);
+    m_quickWindow = new QQuickWindow(m_renderControl);
+
+    rootItem->setParentItem(m_quickWindow->contentItem());
+    rootItem->setWidth(vi.width);
+    rootItem->setHeight(vi.height);
+    m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
 
     m_openGLFramebufferObject =
             new QOpenGLFramebufferObject(vi.width, vi.height,
                                          QOpenGLFramebufferObject::CombinedDepthStencil);
     m_quickWindow->setRenderTarget(m_openGLFramebufferObject);
+    m_renderControl->initialize(m_openGLContext);
 }
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
@@ -67,6 +65,13 @@ PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
     p.translate(0, -image.height());
 
     // render frame
+    m_renderControl->polishItems();
+    m_renderControl->sync();
+    m_renderControl->render();
+
+    m_openGLContext->functions()->glFlush();
+    QImage frameImage = m_openGLFramebufferObject->toImage();
+    p.drawImage(0, 0, frameImage);
 
     return frame;
 }
