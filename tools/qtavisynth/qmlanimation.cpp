@@ -14,12 +14,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
 
-    QSurfaceFormat format;
-    format.setDepthBufferSize(16);
-    format.setStencilBufferSize(8);
-
     m_openGLContext = new QOpenGLContext;
-    m_openGLContext->setFormat(format);
     m_openGLContext->create();
 
     m_offscreenSurface = new QOffscreenSurface;
@@ -40,6 +35,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
 
     m_openGLContext->makeCurrent(m_offscreenSurface);
     m_quickWindow = new QQuickWindow(m_renderControl);
+    m_quickWindow->setColor(QColor(Qt::transparent));
 
     rootItem->setParentItem(m_quickWindow->contentItem());
     rootItem->setWidth(vi.width);
