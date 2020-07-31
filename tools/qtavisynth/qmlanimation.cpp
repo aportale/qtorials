@@ -15,7 +15,9 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     vi.pixel_type = VideoInfo::CS_BGR32;
 
     QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
-    m_qmlComponent = new QQmlComponent(&m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
+
+    m_qmlEngine = new QQmlEngine;
+    m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
 
     QObject *rootObject = m_qmlComponent->create();
     if (!rootObject && m_qmlComponent->isError())
@@ -36,8 +38,22 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
 }
 
+QmlAnimation::~QmlAnimation()
+{
+    QCoreApplication::processEvents();
+    delete m_renderControl;
+    delete m_qmlComponent;
+    delete m_quickWindow;
+    delete m_qmlEngine;
+    QCoreApplication::processEvents();
+}
+
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
+    m_renderControl->polishItems();
+    m_renderControl->sync();
+    m_renderControl->render();
+
     QCoreApplication::processEvents();
     const QImage frameImage = m_quickWindow->grabWindow();
 
