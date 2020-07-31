@@ -5,6 +5,7 @@
 
 #include "avisynth.h"
 
+QT_FORWARD_DECLARE_CLASS(QQuickItem)
 QT_FORWARD_DECLARE_CLASS(QQuickWindow)
 QT_FORWARD_DECLARE_CLASS(QQuickRenderControl)
 
@@ -19,6 +20,7 @@ public:
 
 private:
     const QString m_qmlFile;
+    QQuickItem *m_rootItem;
     QQmlEngine *m_qmlEngine;
     QQmlComponent *m_qmlComponent;
     QQuickWindow *m_quickWindow;

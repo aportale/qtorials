@@ -3,17 +3,17 @@ import QtQuick 2.12
 Item {
     width: 640
     height: 480
+
+    property alias progress: animationController.progress
 	
     AnimationController {
         id: animationController
-        animation: SequentialAnimation {
-            PropertyAnimation {
-                target: rectangle;
-                property: "rotation"
-                from: 0
-                to: 360
-            }
-        }
+        animation: PropertyAnimation {
+			target: rectangle
+			property: "rotation"
+			from: 0
+			to: 360
+		}
     }
 
     Rectangle {

@@ -6,6 +6,7 @@
 #include <QQuickWindow>
 #include <QQuickView>
 #include <QQuickItem>
+#include <QQmlProperty>
 #include <QQuickRenderControl>
 
 QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvironment* env)
@@ -20,21 +21,21 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
 
     QObject *rootObject = m_qmlComponent->create();
-    if (!rootObject && m_qmlComponent->isError())
+    if (!rootObject)
         env->ThrowError("QtAviSynthQmlAnimation: %s",
                     m_qmlComponent->errorString().toLatin1().constData());
 
     m_renderControl = new QQuickRenderControl(rootObject);
-    QQuickItem *rootItem = qobject_cast<QQuickItem *>(rootObject);
-    if (!rootItem)
+    m_rootItem = qobject_cast<QQuickItem *>(rootObject);
+    if (!m_rootItem)
         env->ThrowError("QtAviSynthQmlAnimation: Root needs to be an Item.");
 
     m_quickWindow = new QQuickWindow(m_renderControl);
     m_quickWindow->setColor(QColor(Qt::transparent));
 
-    rootItem->setParentItem(m_quickWindow->contentItem());
-    rootItem->setWidth(vi.width);
-    rootItem->setHeight(vi.height);
+    m_rootItem->setParentItem(m_quickWindow->contentItem());
+    m_rootItem->setWidth(vi.width);
+    m_rootItem->setHeight(vi.height);
     m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
 }
 
@@ -45,16 +46,18 @@ QmlAnimation::~QmlAnimation()
     delete m_qmlComponent;
     delete m_quickWindow;
     delete m_qmlEngine;
+    delete m_rootItem;
     QCoreApplication::processEvents();
 }
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
+    m_rootItem->setProperty("progress", (1.0 / vi.num_frames) * n);
     m_renderControl->polishItems();
     m_renderControl->sync();
     m_renderControl->render();
-
     QCoreApplication::processEvents();
+
     const QImage frameImage = m_quickWindow->grabWindow();
 
     PVideoFrame frame = env->NewVideoFrame(vi);
