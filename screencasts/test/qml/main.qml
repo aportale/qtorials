@@ -4,6 +4,18 @@ Item {
     width: 640
     height: 480
 	
+    AnimationController {
+        id: animationController
+        animation: SequentialAnimation {
+            PropertyAnimation {
+                target: rectangle;
+                property: "rotation"
+                from: 0
+                to: 360
+            }
+        }
+    }
+
     Rectangle {
         id: rectangle
         x: 40
@@ -12,12 +24,6 @@ Item {
         height: 128
         color: "#df2424"
         transformOrigin: Item.Center
-        NumberAnimation on rotation {
-            from: 0
-            to: 360
-            duration: 2500
-            loops: Animation.Infinite
-        }
     }
 
     Rectangle {
@@ -47,12 +53,6 @@ Item {
         height: 128
         color: "#e17373"
         transformOrigin: Item.Center
-        NumberAnimation on rotation {
-            from: 0
-            to: 360
-            duration: 5000
-            loops: Animation.Infinite
-        }
     }
 
     Rectangle {
@@ -75,8 +75,4 @@ Item {
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:0.5}
-}
-##^##*/
+
