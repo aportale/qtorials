@@ -11,6 +11,13 @@ Item {
         width: 128
         height: 128
         color: "#df2424"
+        transformOrigin: Item.Center
+        NumberAnimation on rotation {
+            from: 0
+            to: 360
+            duration: 2500
+            loops: Animation.Infinite
+        }
     }
 
     Rectangle {
@@ -39,6 +46,13 @@ Item {
         width: 128
         height: 128
         color: "#e17373"
+        transformOrigin: Item.Center
+        NumberAnimation on rotation {
+            from: 0
+            to: 360
+            duration: 5000
+            loops: Animation.Infinite
+        }
     }
 
     Rectangle {
@@ -57,10 +71,6 @@ Item {
                 position: 1
                 color: "#00000000"
             }
-
-
-
-
         }
     }
 }
