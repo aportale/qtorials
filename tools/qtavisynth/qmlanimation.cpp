@@ -14,13 +14,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
 
-    m_openGLContext = new QOpenGLContext;
-    m_openGLContext->create();
-
-    m_offscreenSurface = new QOffscreenSurface;
-    m_offscreenSurface->setFormat(m_openGLContext->format());
-    m_offscreenSurface->create();
-
+    QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
     m_qmlComponent = new QQmlComponent(&m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
 
     QObject *rootObject = m_qmlComponent->create();
@@ -33,7 +27,6 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     if (!rootItem)
         env->ThrowError("QtAviSynthQmlAnimation: Root needs to be an Item.");
 
-    m_openGLContext->makeCurrent(m_offscreenSurface);
     m_quickWindow = new QQuickWindow(m_renderControl);
     m_quickWindow->setColor(QColor(Qt::transparent));
 
@@ -41,21 +34,12 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     rootItem->setWidth(vi.width);
     rootItem->setHeight(vi.height);
     m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
-
-    m_openGLFramebufferObject =
-            new QOpenGLFramebufferObject(vi.width, vi.height,
-                                         QOpenGLFramebufferObject::CombinedDepthStencil);
-    m_quickWindow->setRenderTarget(m_openGLFramebufferObject);
-    m_renderControl->initialize(m_openGLContext);
 }
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
-    m_renderControl->polishItems();
-    m_renderControl->sync();
-    m_renderControl->render();
-    m_openGLContext->functions()->glFlush();
-    const QImage frameImage = m_openGLFramebufferObject->toImage(true);
+    QCoreApplication::processEvents();
+    const QImage frameImage = m_quickWindow->grabWindow();
 
     PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
