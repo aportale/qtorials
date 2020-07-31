@@ -51,23 +51,17 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
-    Q_UNUSED(env)
-    PVideoFrame frame = env->NewVideoFrame(vi);
-    unsigned char* frameBits = frame->GetWritePtr();
-    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
-    image.fill(0);
-    QPainter p(&image);
-    p.scale(1, -1);
-    p.translate(0, -image.height());
-
-    // render frame
     m_renderControl->polishItems();
     m_renderControl->sync();
     m_renderControl->render();
-
     m_openGLContext->functions()->glFlush();
-    QImage frameImage = m_openGLFramebufferObject->toImage();
-    p.drawImage(0, 0, frameImage);
+    const QImage frameImage = m_openGLFramebufferObject->toImage(true);
+
+    PVideoFrame frame = env->NewVideoFrame(vi);
+    unsigned char* frameBits = frame->GetWritePtr();
+    env->BitBlt(frameBits, frame->GetPitch(),
+                frameImage.convertToFormat(QImage::Format_ARGB32).mirrored(false, true).constBits(),
+                frameImage.bytesPerLine(), frameImage.bytesPerLine(), frameImage.height());
 
     return frame;
 }
