@@ -21,9 +21,11 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
 
     QObject *rootObject = m_qmlComponent->create();
-    if (!rootObject)
+    if (!rootObject) {
+        QCoreApplication::processEvents();
         env->ThrowError("QtAviSynthQmlAnimation: %s",
                     m_qmlComponent->errorString().toLatin1().constData());
+    }
 
     m_renderControl = new QQuickRenderControl(rootObject);
     m_rootItem = qobject_cast<QQuickItem *>(rootObject);
