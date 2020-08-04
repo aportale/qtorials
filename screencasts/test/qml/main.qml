@@ -1,20 +1,9 @@
-import QtQuick 2.12
+import QtQuick 2.14
+import QtQuick.Timeline 1.0
 
 Item {
     width: 640
     height: 480
-
-    property alias progress: animationController.progress
-	
-    AnimationController {
-        id: animationController
-        animation: PropertyAnimation {
-			target: rectangle
-			property: "rotation"
-			from: 0
-			to: 360
-		}
-    }
 
     Rectangle {
         id: rectangle
@@ -23,7 +12,10 @@ Item {
         width: 128
         height: 128
         color: "#df2424"
+        rotation: 360
         transformOrigin: Item.Center
+        smooth: true
+        antialiasing: true
     }
 
     Rectangle {
@@ -53,6 +45,8 @@ Item {
         height: 128
         color: "#e17373"
         transformOrigin: Item.Center
+        smooth: true
+        antialiasing: true
     }
 
     Rectangle {
@@ -73,6 +67,39 @@ Item {
             }
         }
     }
+
+    Timeline {
+        id: timeline
+        endFrame: 1000
+        enabled: true
+        startFrame: 0
+
+        KeyframeGroup {
+            target: rectangle
+            property: "rotation"
+            Keyframe {
+                frame: 0
+                value: 0
+            }
+
+            Keyframe {
+                frame: 1000
+                value: 360
+            }
+        }
+
+        KeyframeGroup {
+            target: rectangle2
+            property: "scale"
+            Keyframe {
+                frame: 0
+                value: 0.8
+            }
+
+            Keyframe {
+                frame: 1000
+                value: 1.2
+            }
+        }
+    }
 }
-
-

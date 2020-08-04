@@ -20,9 +20,10 @@ public:
 
 private:
     const QString m_qmlFile;
-    QQuickItem *m_rootItem;
-    QQmlEngine *m_qmlEngine;
-    QQmlComponent *m_qmlComponent;
-    QQuickWindow *m_quickWindow;
-    QQuickRenderControl *m_renderControl;
+    QQuickItem *m_rootItem = nullptr;
+    QObject *m_timeLineItem = nullptr;
+    QQmlEngine *m_qmlEngine = nullptr;
+    QQmlComponent *m_qmlComponent = nullptr;
+    QQuickWindow *m_quickWindow = nullptr;
+    QQuickRenderControl *m_renderControl = nullptr;
 };

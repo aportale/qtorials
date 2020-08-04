@@ -19,10 +19,10 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
 
     m_qmlEngine = new QQmlEngine;
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
+    QCoreApplication::processEvents();
 
     QObject *rootObject = m_qmlComponent->create();
     if (!rootObject) {
-        QCoreApplication::processEvents();
         env->ThrowError("QtAviSynthQmlAnimation: %s",
                     m_qmlComponent->errorString().toLatin1().constData());
     }
@@ -31,6 +31,15 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     m_rootItem = qobject_cast<QQuickItem *>(rootObject);
     if (!m_rootItem)
         env->ThrowError("QtAviSynthQmlAnimation: Root needs to be an Item.");
+
+    for (auto child : m_rootItem->children()) {
+        if (strcmp(child->metaObject()->className(), "QQuickTimeline") == 0) {
+            m_timeLineItem = child;
+            break;
+        }
+    }
+    if (!m_timeLineItem)
+        env->ThrowError("QtAviSynthQmlAnimation: Qml scene is maissing a QtQuick.Timeline element.");
 
     m_quickWindow = new QQuickWindow(m_renderControl);
     m_quickWindow->setColor(QColor(Qt::transparent));
@@ -54,7 +63,6 @@ QmlAnimation::~QmlAnimation()
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
-    m_rootItem->setProperty("progress", (1.0 / vi.num_frames) * n);
     m_renderControl->polishItems();
     m_renderControl->sync();
     m_renderControl->render();
