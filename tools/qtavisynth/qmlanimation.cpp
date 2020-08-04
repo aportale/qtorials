@@ -63,6 +63,11 @@ QmlAnimation::~QmlAnimation()
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
+    const int timeStartFrame = m_timeLineItem->property("startFrame").toInt();
+    const int timeLineEndFrame = m_timeLineItem->property("endFrame").toInt();
+    const int qmlFrame = qBound(timeStartFrame, n, timeLineEndFrame);
+    m_timeLineItem->setProperty("currentFrame", qmlFrame);
+
     m_renderControl->polishItems();
     m_renderControl->sync();
     m_renderControl->render();
