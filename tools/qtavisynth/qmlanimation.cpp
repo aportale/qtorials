@@ -15,7 +15,16 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
 
-    QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
+    if (m_openGl) {
+        m_openGLContext = new QOpenGLContext;
+        m_openGLContext->create();
+        m_offscreenSurface = new QOffscreenSurface;
+        m_offscreenSurface->setFormat(m_openGLContext->format());
+        m_offscreenSurface->create();
+    } else {
+        QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
+    }
+
 
     m_qmlEngine = new QQmlEngine;
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
@@ -41,6 +50,8 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     if (!m_timeLineItem)
         env->ThrowError("QtAviSynthQmlAnimation: Qml scene is maissing a QtQuick.Timeline element.");
 
+    if (m_openGl)
+        m_openGLContext->makeCurrent(m_offscreenSurface);
     m_quickWindow = new QQuickWindow(m_renderControl);
     m_quickWindow->setColor(QColor(Qt::transparent));
 
@@ -48,6 +59,14 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     m_rootItem->setWidth(vi.width);
     m_rootItem->setHeight(vi.height);
     m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
+
+    if (m_openGl) {
+        m_openGLFramebufferObject =
+                new QOpenGLFramebufferObject(vi.width, vi.height,
+                                             QOpenGLFramebufferObject::CombinedDepthStencil);
+        m_quickWindow->setRenderTarget(m_openGLFramebufferObject);
+        m_renderControl->initialize(m_openGLContext);
+    }
 }
 
 QmlAnimation::~QmlAnimation()
@@ -72,6 +91,8 @@ PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
     m_renderControl->sync();
     m_renderControl->render();
     QCoreApplication::processEvents();
+    if (m_openGl)
+        m_openGLContext->functions()->glFlush();
 
     const QImage frameImage = m_quickWindow->grabWindow();
 
