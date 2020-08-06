@@ -47,6 +47,7 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../screencasts/")
 #    choco install virtualdub2 -a
 # Qt Creator run configuration executable:
 #    %{Env:ProgramData}\chocolatey\lib\virtualdub2\tools\VirtualDub64.exe
+#    %{Env:ProgramData}\chocolatey\lib\mpv.install\tools\mpv.exe
 # Qt Creator run configuration command line argument:
 #    %{sourceDir}\..\..\screencasts\test\qtavisynth_all.avs
 # Qt Creator run configuration environment, prepend to "Path"
