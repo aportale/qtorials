@@ -71,13 +71,16 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, bool useOpe
 
 QmlAnimation::~QmlAnimation()
 {
-    QCoreApplication::processEvents();
-    delete m_renderControl;
-    delete m_qmlComponent;
-    delete m_quickWindow;
-    delete m_qmlEngine;
-    delete m_rootItem;
-    QCoreApplication::processEvents();
+    m_renderControl->deleteLater();
+    m_qmlComponent->deleteLater();
+    m_quickWindow->deleteLater();
+    m_qmlEngine->deleteLater();
+
+    if (m_useOpenGL) {
+        m_openGLContext->doneCurrent();
+        m_offscreenSurface->deleteLater();
+        m_openGLContext->deleteLater();
+    }
 }
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
