@@ -1,4 +1,4 @@
 Import("tests.avsi")
 
 ScreenCast
-\ .QtAviSynthQmlAnimation("qml\main.qml")
+\ .QtAviSynthQmlAnimation("qml\main.qml", false).ConvertToYV24

@@ -9,13 +9,14 @@
 #include <QQmlProperty>
 #include <QQuickRenderControl>
 
-QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvironment* env)
+QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, bool useOpenGL, IScriptEnvironment* env)
     : GenericVideoFilter(background)
     , m_qmlFile(qmlFile)
+    , m_useOpenGL(useOpenGL)
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
 
-    if (m_openGl) {
+    if (m_useOpenGL) {
         m_openGLContext = new QOpenGLContext;
         m_openGLContext->create();
         m_offscreenSurface = new QOffscreenSurface;
@@ -24,7 +25,6 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     } else {
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
     }
-
 
     m_qmlEngine = new QQmlEngine;
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
@@ -50,7 +50,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     if (!m_timeLineItem)
         env->ThrowError("QtAviSynthQmlAnimation: Qml scene is maissing a QtQuick.Timeline element.");
 
-    if (m_openGl)
+    if (m_useOpenGL)
         m_openGLContext->makeCurrent(m_offscreenSurface);
     m_quickWindow = new QQuickWindow(m_renderControl);
     m_quickWindow->setColor(QColor(Qt::transparent));
@@ -60,7 +60,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, IScriptEnvi
     m_rootItem->setHeight(vi.height);
     m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
 
-    if (m_openGl) {
+    if (m_useOpenGL) {
         m_openGLFramebufferObject =
                 new QOpenGLFramebufferObject(vi.width, vi.height,
                                              QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -91,7 +91,7 @@ PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
     m_renderControl->sync();
     m_renderControl->render();
     QCoreApplication::processEvents();
-    if (m_openGl)
+    if (m_useOpenGL)
         m_openGLContext->functions()->glFlush();
 
     const QImage frameImage = m_quickWindow->grabWindow();
@@ -113,6 +113,7 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
     const PClip background = args[0].AsClip();
     const QString qmlFile =
             QDir::fromNativeSeparators(QDir().absoluteFilePath(QLatin1String(args[1].AsString())));
+    const bool useOpenGL = args[2].AsBool(true);
 
     Tools::createQGuiApplicationIfNeeded();
 
@@ -121,6 +122,6 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
                         QDir::toNativeSeparators(qmlFile).toLatin1().constData());
 
 
-    const PClip qmlAnimation = new QmlAnimation(background, qmlFile, env);
+    const PClip qmlAnimation = new QmlAnimation(background, qmlFile, useOpenGL, env);
     return Tools::rgbOverlay(background, qmlAnimation, env);
 }
