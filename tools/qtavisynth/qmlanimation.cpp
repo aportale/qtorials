@@ -9,6 +9,28 @@
 #include <QQmlProperty>
 #include <QQuickRenderControl>
 
+static QVariantMap initialPropertiesMap(const QString &initialProperties, IScriptEnvironment* env)
+{
+    QJsonParseError jsonError;
+    const QJsonDocument jsonDocument =
+            QJsonDocument::fromJson(initialProperties.toUtf8(), &jsonError);
+    if (jsonDocument.isNull()) {
+        env->ThrowError("QtAviSynthQmlAnimation:\n%s\n%s",
+                        initialProperties.toLatin1().constData(),
+                        jsonError.errorString().toLatin1().constData());
+    }
+    return jsonDocument.toVariant().toMap();
+}
+
+static QObject *timeLineItem(QObject *rootItem, IScriptEnvironment* env)
+{
+    for (auto child : rootItem->children())
+        if (strcmp(child->metaObject()->className(), "QQuickTimeline") == 0)
+            return child;
+    env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
+    return {};
+}
+
 QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
                            bool useOpenGL, IScriptEnvironment* env)
     : GenericVideoFilter(background)
@@ -31,17 +53,8 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
     QCoreApplication::processEvents();
 
-    QJsonParseError jsonError;
-    const QJsonDocument jsonDocument =
-            QJsonDocument::fromJson(initialProperties.toUtf8(), &jsonError);
-    if (jsonDocument.isNull()) {
-        env->ThrowError("QtAviSynthQmlAnimation:\n%s\n%s",
-                        initialProperties.toLatin1().constData(),
-                        jsonError.errorString().toLatin1().constData());
-    }
-    const QVariantMap initialPropertiesMap = jsonDocument.toVariant().toMap();
-
-    QObject *rootObject = m_qmlComponent->createWithInitialProperties(initialPropertiesMap);
+    QObject *rootObject = m_qmlComponent->createWithInitialProperties(initialPropertiesMap(
+                                                                          initialProperties, env));
     if (!rootObject) {
         env->ThrowError("QtAviSynthQmlAnimation: %s",
                     m_qmlComponent->errorString().toLatin1().constData());
@@ -52,14 +65,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
     if (!m_rootItem)
         env->ThrowError("QtAviSynthQmlAnimation: Root needs to be an Item.");
 
-    for (auto child : m_rootItem->children()) {
-        if (strcmp(child->metaObject()->className(), "QQuickTimeline") == 0) {
-            m_timeLineItem = child;
-            break;
-        }
-    }
-    if (!m_timeLineItem)
-        env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
+    m_timeLineItem = timeLineItem(m_rootItem, env);
 
     if (m_useOpenGL)
         m_openGLContext->makeCurrent(m_offscreenSurface);
