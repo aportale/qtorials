@@ -9,7 +9,8 @@
 #include <QQmlProperty>
 #include <QQuickRenderControl>
 
-QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, bool useOpenGL, IScriptEnvironment* env)
+QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
+                           bool useOpenGL, IScriptEnvironment* env)
     : GenericVideoFilter(background)
     , m_qmlFile(qmlFile)
     , m_useOpenGL(useOpenGL)
@@ -30,7 +31,17 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, bool useOpe
     m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
     QCoreApplication::processEvents();
 
-    QObject *rootObject = m_qmlComponent->create();
+    QJsonParseError jsonError;
+    const QJsonDocument jsonDocument =
+            QJsonDocument::fromJson(initialProperties.toUtf8(), &jsonError);
+    if (jsonDocument.isNull()) {
+        env->ThrowError("QtAviSynthQmlAnimation:\n%s\n%s",
+                        initialProperties.toLatin1().constData(),
+                        jsonError.errorString().toLatin1().constData());
+    }
+    const QVariantMap initialPropertiesMap = jsonDocument.toVariant().toMap();
+
+    QObject *rootObject = m_qmlComponent->createWithInitialProperties(initialPropertiesMap);
     if (!rootObject) {
         env->ThrowError("QtAviSynthQmlAnimation: %s",
                     m_qmlComponent->errorString().toLatin1().constData());
@@ -119,7 +130,8 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
     const PClip background = args[0].AsClip();
     const QString qmlFile =
             QDir::fromNativeSeparators(QDir().absoluteFilePath(QLatin1String(args[1].AsString())));
-    const bool useOpenGL = args[2].AsBool(true);
+    const QString initialProperties = args[2].AsString("{}");
+    const bool useOpenGL = args[3].AsBool(true);
 
     Tools::createQGuiApplicationIfNeeded();
 
@@ -127,6 +139,7 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
         env->ThrowError("Invalid file name: %s",
                         QDir::toNativeSeparators(qmlFile).toLatin1().constData());
 
-    const PClip qmlAnimation = new QmlAnimation(background, qmlFile, useOpenGL, env);
+    const PClip qmlAnimation =
+            new QmlAnimation(background, qmlFile, initialProperties, useOpenGL, env);
     return Tools::rgbOverlay(background, qmlAnimation, env);
 }

@@ -15,7 +15,8 @@ QT_FORWARD_DECLARE_CLASS(QQuickRenderControl)
 class QmlAnimation : public GenericVideoFilter
 {
 public:
-    QmlAnimation(PClip background, const QString &qmlFile, bool useOpenGL, IScriptEnvironment *env);
+    QmlAnimation(PClip background, const QString &qmlFile, const QString &parameters,
+                 bool useOpenGL, IScriptEnvironment *env);
     ~QmlAnimation() override;
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateQmlAnimation(AVSValue args, void* user_data,

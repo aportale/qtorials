@@ -4,6 +4,8 @@ import QtQuick.Timeline 1.0
 Item {
     width: 640
     height: 480
+    property alias text1Text: text1.text
+    property alias text2FontpixelSize: text2.font.pixelSize
 
     Rectangle {
         id: rectangle
@@ -101,5 +103,59 @@ Item {
                 value: 1.2
             }
         }
+
+        KeyframeGroup {
+            target: text1
+            property: "scale"
+            Keyframe {
+                frame: 0
+                value: 1
+            }
+
+            Keyframe {
+                frame: 1000
+                value: 3
+            }
+        }
+
+        KeyframeGroup {
+            target: text2
+            property: "rotation"
+            Keyframe {
+                frame: 0
+                value: 0
+            }
+
+            Keyframe {
+                frame: 1000
+                value: 360
+            }
+        }
+    }
+
+    Text {
+        id: text1
+        x: 87
+        y: 371
+        color: "#ffaa00"
+        text: qsTr("text1.text")
+        style: Text.Outline
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+        transformOrigin: Item.Center
+        font.pixelSize: 20
+    }
+
+    Text {
+        id: text2
+        x: 255
+        y: 371
+        text: qsTr("text2.text")
+        style: Text.Outline
+        styleColor: "#ffffff"
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+        transformOrigin: Item.Center
+        font.pixelSize: 20
     }
 }
