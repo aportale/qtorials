@@ -48,7 +48,7 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, bool useOpe
         }
     }
     if (!m_timeLineItem)
-        env->ThrowError("QtAviSynthQmlAnimation: Qml scene is maissing a QtQuick.Timeline element.");
+        env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
 
     if (m_useOpenGL)
         m_openGLContext->makeCurrent(m_offscreenSurface);
@@ -90,6 +90,9 @@ PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
     const int qmlFrame = qBound(timeStartFrame, n, timeLineEndFrame);
     m_timeLineItem->setProperty("currentFrame", qmlFrame);
 
+    if (m_useOpenGL)
+        m_openGLContext->makeCurrent(m_offscreenSurface);
+
     m_renderControl->polishItems();
     m_renderControl->sync();
     m_renderControl->render();
@@ -123,7 +126,6 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
     if (!QFileInfo::exists(qmlFile))
         env->ThrowError("Invalid file name: %s",
                         QDir::toNativeSeparators(qmlFile).toLatin1().constData());
-
 
     const PClip qmlAnimation = new QmlAnimation(background, qmlFile, useOpenGL, env);
     return Tools::rgbOverlay(background, qmlAnimation, env);
