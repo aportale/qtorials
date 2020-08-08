@@ -6,6 +6,7 @@
 #include <QQuickWindow>
 #include <QQuickView>
 #include <QQuickItem>
+#include <QQmlListReference>
 #include <QQmlProperty>
 #include <QQuickRenderControl>
 
@@ -122,6 +123,8 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
         QCoreApplication::processEvents(); // don't crash
         env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
     }
+    if (QQmlListReference(m_timeLineItem, "animations", m_qmlEngine).count() > 0)
+        env->ThrowError("QtAviSynthQmlAnimation: QtQuick.Timeline element must not have animations.");
 
     if (m_useOpenGL)
         m_openGLContext->makeCurrent(m_offscreenSurface);
