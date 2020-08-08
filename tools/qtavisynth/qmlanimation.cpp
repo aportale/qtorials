@@ -123,8 +123,9 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
         QCoreApplication::processEvents(); // don't crash
         env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
     }
-    if (QQmlListReference(m_timeLineItem, "animations", m_qmlEngine).count() > 0)
-        env->ThrowError("QtAviSynthQmlAnimation: QtQuick.Timeline element must not have animations.");
+    const QQmlListReference timeLineAnimations(m_timeLineItem, "animations", m_qmlEngine);
+    for (int i = 0; i < timeLineAnimations.count(); ++i)
+        timeLineAnimations.at(i)->setProperty("running", false); // We control the animation
 
     if (m_useOpenGL)
         m_openGLContext->makeCurrent(m_offscreenSurface);
