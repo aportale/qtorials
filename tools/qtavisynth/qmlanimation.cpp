@@ -22,12 +22,15 @@ static QVariantMap initialPropertiesMap(const QString &initialProperties, IScrip
     return jsonDocument.toVariant().toMap();
 }
 
-static QObject *timeLineItem(QObject *rootItem, IScriptEnvironment* env)
+static QObject *timeLineItem(const QObject *parentItem)
 {
-    for (auto child : rootItem->children())
+    for (auto child : parentItem->children()) {
         if (strcmp(child->metaObject()->className(), "QQuickTimeline") == 0)
             return child;
-    env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
+        auto found = timeLineItem(child);
+        if (found)
+            return found;
+    }
     return {};
 }
 
@@ -114,7 +117,11 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
     if (!m_rootItem)
         env->ThrowError("QtAviSynthQmlAnimation: Root needs to be an Item.");
 
-    m_timeLineItem = timeLineItem(m_rootItem, env);
+    m_timeLineItem = timeLineItem(m_rootItem);
+    if (!m_timeLineItem) {
+        QCoreApplication::processEvents(); // don't crash
+        env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
+    }
 
     if (m_useOpenGL)
         m_openGLContext->makeCurrent(m_offscreenSurface);
