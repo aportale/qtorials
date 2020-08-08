@@ -23,6 +23,9 @@ public:
                                                IScriptEnvironment* env);
 
 private:
+    double m_timelineAnimationDuration = -1;
+    double m_timeLineStartFrame = -1;
+    double m_timeLineEndFrame = -1;
     QQuickItem *m_rootItem = nullptr;
     QObject *m_timeLineItem = nullptr;
     QQmlEngine *m_qmlEngine = nullptr;
