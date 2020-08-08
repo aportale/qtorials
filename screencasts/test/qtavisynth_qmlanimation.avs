@@ -8,4 +8,4 @@ initialParameters = """
 """
 
 ScreenCast
-\ .QtAviSynthQmlAnimation("qml\main.qml", initialParameters, true).ConvertToRgb24.killaudio
+\ .QtAviSynthQmlAnimation("qml\test.qmlproject", initialParameters).ConvertToRgb24.killaudio

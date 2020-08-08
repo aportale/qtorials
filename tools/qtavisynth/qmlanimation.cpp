@@ -31,10 +31,52 @@ static QObject *timeLineItem(QObject *rootItem, IScriptEnvironment* env)
     return {};
 }
 
+static void parseQmlprojectFile(const QString &fileName, QString *mainFile, QStringList *importPaths)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly))
+        return;
+    const QString text = QString::fromUtf8(file.readAll());
+    const QRegularExpression mainFileRegExp("mainFile:\\s*\"(.*)\"");
+    const QRegularExpressionMatch mainFileMatch = mainFileRegExp.match(text);
+    if (mainFileMatch.hasMatch()) {
+        const QString basePath = QFileInfo(fileName).path() + "/";
+        *mainFile = basePath + mainFileMatch.captured(1);
+
+        const QRegularExpression importPathsRegExp("importPaths:\\s*\\[\\s*(.*)\\s*\\]");
+        const QRegularExpressionMatch importPathsMatch = importPathsRegExp.match(text);
+        if (importPathsMatch.hasMatch()) {
+            for (const QString &path : importPathsMatch.captured(1).split(",")) {
+                QString cleanedPath = path.trimmed();
+                cleanedPath = basePath + cleanedPath.mid(1, cleanedPath.length() - 2);
+                if (QFileInfo::exists(cleanedPath))
+                    *importPaths << cleanedPath;
+            }
+        }
+    } else {
+        return;
+    }
+}
+
+static void handleQmlFile(const QString &qmlFile, QString *mainQmlFile, QStringList *importPaths,
+                          IScriptEnvironment* env)
+{
+    if (qmlFile.endsWith(".qmlproject")) {
+        parseQmlprojectFile(qmlFile, mainQmlFile, importPaths);
+        if (mainQmlFile->isEmpty())
+            env->ThrowError("QtAviSynthQmlAnimation: Could not find \"mainFile\" in %s",
+                        QDir::toNativeSeparators(qmlFile).toLatin1().constData());
+    } else {
+        *mainQmlFile = qmlFile;
+    }
+    if (!QFileInfo::exists(*mainQmlFile))
+        env->ThrowError("QtAviSynthQmlAnimation: Main .qml file %s not found",
+                    QDir::toNativeSeparators(*mainQmlFile).toLatin1().constData());
+}
+
 QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
                            bool useOpenGL, IScriptEnvironment* env)
     : GenericVideoFilter(background)
-    , m_qmlFile(qmlFile)
     , m_useOpenGL(useOpenGL)
 {
     vi.pixel_type = VideoInfo::CS_BGR32;
@@ -50,7 +92,14 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
     }
 
     m_qmlEngine = new QQmlEngine;
-    m_qmlComponent = new QQmlComponent(m_qmlEngine, qmlFile, QQmlComponent::PreferSynchronous);
+
+    QString mainQmlFile;
+    QStringList importPaths;
+    handleQmlFile(qmlFile, &mainQmlFile, &importPaths, env);
+    for (const QString &importPath : importPaths)
+        m_qmlEngine->addImportPath(importPath);
+
+    m_qmlComponent = new QQmlComponent(m_qmlEngine, mainQmlFile, QQmlComponent::PreferSynchronous);
     QCoreApplication::processEvents();
 
     QObject *rootObject = m_qmlComponent->createWithInitialProperties(initialPropertiesMap(

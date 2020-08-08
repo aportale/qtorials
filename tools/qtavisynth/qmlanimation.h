@@ -23,7 +23,6 @@ public:
                                                IScriptEnvironment* env);
 
 private:
-    const QString m_qmlFile;
     QQuickItem *m_rootItem = nullptr;
     QObject *m_timeLineItem = nullptr;
     QQmlEngine *m_qmlEngine = nullptr;
