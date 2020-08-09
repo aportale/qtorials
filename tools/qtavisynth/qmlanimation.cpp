@@ -78,13 +78,11 @@ static void handleQmlFile(const QString &qmlFile, QString *mainQmlFile, QStringL
                     QDir::toNativeSeparators(*mainQmlFile).toLatin1().constData());
 }
 
-QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
-                           bool useOpenGL, IScriptEnvironment* env)
-    : GenericVideoFilter(background)
+QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString &initialProperties,
+                                           const QSize &size, bool useOpenGL, IScriptEnvironment *env)
+    : m_size(size)
     , m_useOpenGL(useOpenGL)
 {
-    vi.pixel_type = VideoInfo::CS_BGR32;
-
     if (m_useOpenGL) {
         m_openGLContext = new QOpenGLContext;
         m_openGLContext->create();
@@ -144,20 +142,20 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
     m_quickWindow->setColor(QColor(Qt::transparent));
 
     m_rootItem->setParentItem(m_quickWindow->contentItem());
-    m_rootItem->setWidth(vi.width);
-    m_rootItem->setHeight(vi.height);
-    m_quickWindow->setGeometry(0, 0, vi.width, vi.height);
+    m_rootItem->setWidth(size.width());
+    m_rootItem->setHeight(size.height());
+    m_quickWindow->setGeometry(0, 0, size.width(), size.height());
 
     if (m_useOpenGL) {
         m_openGLFramebufferObject =
-                new QOpenGLFramebufferObject(vi.width, vi.height,
+                new QOpenGLFramebufferObject(size.width(), size.height(),
                                              QOpenGLFramebufferObject::CombinedDepthStencil);
         m_quickWindow->setRenderTarget(m_openGLFramebufferObject);
         m_renderControl->initialize(m_openGLContext);
     }
 }
 
-QmlAnimation::~QmlAnimation()
+QmlAnimationRenderer::~QmlAnimationRenderer()
 {
     m_renderControl->deleteLater();
     m_qmlComponent->deleteLater();
@@ -171,13 +169,10 @@ QmlAnimation::~QmlAnimation()
     }
 }
 
-PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
+void QmlAnimationRenderer::renderFrame()
 {
-    const double targetFps = double(vi.fps_numerator) / vi.fps_denominator;
-    const double progressInMs = n / targetFps * 1000;
-    const double qmlFrame = qBound(m_timeLineStartFrame,
-                                   progressInMs / m_timelineAnimationDuration * 1000,
-                                   m_timeLineEndFrame);
+    qDebug() << QThread::currentThread() << QThread::currentThreadId() << m_frameN;
+    const double qmlFrame = qBound(m_timeLineStartFrame, double(m_frameN), m_timeLineEndFrame);
     m_timeLineItem->setProperty("currentFrame", qmlFrame);
 
     if (m_useOpenGL)
@@ -190,13 +185,32 @@ PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
     if (m_useOpenGL)
         m_openGLContext->functions()->glFlush();
 
-    const QImage frameImage = m_quickWindow->grabWindow();
+    m_frame = m_quickWindow->grabWindow().convertToFormat(QImage::Format_ARGB32).mirrored(false, true);
+}
+
+QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
+                           bool useOpenGL, IScriptEnvironment* env)
+    : GenericVideoFilter(background)
+    , m_renderer(qmlFile, initialProperties, {vi.width, vi.height}, useOpenGL, env)
+{
+    vi.pixel_type = VideoInfo::CS_BGR32;
+}
+
+PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
+{
+    const double targetFps = double(vi.fps_numerator) / vi.fps_denominator;
+    const double progressInMs = n / targetFps * 1000;
+    const int qmlFrame = progressInMs / m_renderer.m_timelineAnimationDuration * 1000;
+
+    m_renderer.m_frameN = qmlFrame;
+    QTimer::singleShot(0, qApp, [this]() { m_renderer.renderFrame(); });
+    QCoreApplication::processEvents();
 
     PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
     env->BitBlt(frameBits, frame->GetPitch(),
-                frameImage.convertToFormat(QImage::Format_ARGB32).mirrored(false, true).constBits(),
-                frameImage.bytesPerLine(), frameImage.bytesPerLine(), frameImage.height());
+                m_renderer.m_frame.constBits(),
+                m_renderer.m_frame.bytesPerLine(), m_renderer.m_frame.bytesPerLine(), m_renderer.m_frame.height());
 
     return frame;
 }
