@@ -3,12 +3,13 @@
 #include "tools.h"
 
 #include <QApplication>
-#include <QQuickWindow>
-#include <QQuickView>
-#include <QQuickItem>
+#include <QQmlEngine>
 #include <QQmlListReference>
 #include <QQmlProperty>
+#include <QQuickItem>
 #include <QQuickRenderControl>
+#include <QQuickView>
+#include <QQuickWindow>
 
 static QVariantMap initialPropertiesMap(const QString &initialProperties, IScriptEnvironment* env)
 {

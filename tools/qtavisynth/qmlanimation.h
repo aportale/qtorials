@@ -1,18 +1,18 @@
 #pragma once
 
-#include <QQmlComponent>
-#include <QQmlEngine>
 #include <QImage>
 #include <QSize>
 
 #include "avisynth.h"
 
-QT_FORWARD_DECLARE_CLASS(QQuickItem)
+QT_FORWARD_DECLARE_CLASS(QOffscreenSurface)
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
 QT_FORWARD_DECLARE_CLASS(QOpenGLFramebufferObject)
-QT_FORWARD_DECLARE_CLASS(QOffscreenSurface)
-QT_FORWARD_DECLARE_CLASS(QQuickWindow)
+QT_FORWARD_DECLARE_CLASS(QQmlComponent)
+QT_FORWARD_DECLARE_CLASS(QQmlEngine)
+QT_FORWARD_DECLARE_CLASS(QQuickItem)
 QT_FORWARD_DECLARE_CLASS(QQuickRenderControl)
+QT_FORWARD_DECLARE_CLASS(QQuickWindow)
 
 class QmlAnimationRenderer : public QObject
 {
