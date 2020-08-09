@@ -242,3 +242,18 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
             new QmlAnimation(background, qmlFile, initialProperties, useOpenGL, env);
     return Tools::rgbOverlay(background, qmlAnimation, env);
 }
+
+int QmlAnimation::SetCacheHints(int cachehints, int frame_range)
+{
+    Q_UNUSED(frame_range)
+    int hints = 0;
+
+    if (cachehints == CACHE_GETCHILD_THREAD_MODE)
+        hints = CACHE_THREAD_UNSAFE;
+    else if (cachehints == CACHE_GET_MTMODE)
+        hints = MT_SERIALIZED;
+    else if (cachehints == CACHE_GET_DEV_TYPE)
+        hints = DEV_TYPE_ANY;
+
+    return hints;
+}

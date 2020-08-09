@@ -52,6 +52,7 @@ public:
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateQmlAnimation(AVSValue args, void* user_data,
                                                IScriptEnvironment* env);
+    int __stdcall SetCacheHints(int cachehints, int frame_range) override;
 
 private:
     QmlAnimationRenderer m_renderer;
