@@ -213,7 +213,7 @@ PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
     const int qmlFrame = progressInMs / m_renderer.m_timelineAnimationDuration * 1000;
 
     m_renderer.m_frameN = qmlFrame;
-    QTimer::singleShot(0, qApp, [this]() { m_renderer.renderFrame(); });
+    QMetaObject::invokeMethod(qApp, [this]{ m_renderer.renderFrame(); });
     QCoreApplication::processEvents();
 
     PVideoFrame frame = env->NewVideoFrame(vi);
