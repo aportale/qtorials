@@ -173,7 +173,11 @@ QmlAnimation::~QmlAnimation()
 
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
-    const int qmlFrame = qBound(m_timeLineStartFrame, progressInFrames, m_timeLineEndFrame);
+    const double targetFps = double(vi.fps_numerator) / vi.fps_denominator;
+    const double progressInMs = n / targetFps * 1000;
+    const double qmlFrame = qBound(m_timeLineStartFrame,
+                                   progressInMs / m_timelineAnimationDuration * 1000,
+                                   m_timeLineEndFrame);
     m_timeLineItem->setProperty("currentFrame", qmlFrame);
 
     if (m_useOpenGL)
