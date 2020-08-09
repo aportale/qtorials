@@ -157,16 +157,19 @@ QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString
 
 QmlAnimationRenderer::~QmlAnimationRenderer()
 {
-    m_renderControl->deleteLater();
-    m_qmlComponent->deleteLater();
-    m_quickWindow->deleteLater();
-    m_qmlEngine->deleteLater();
+    QTimer::singleShot(0, qApp, [this]() {
+        delete m_renderControl;
+        delete m_qmlComponent;
+        delete m_quickWindow;
+        delete m_qmlEngine;
 
-    if (m_useOpenGL) {
-        m_openGLContext->doneCurrent();
-        m_offscreenSurface->deleteLater();
-        m_openGLContext->deleteLater();
-    }
+        if (m_useOpenGL) {
+            delete m_openGLContext;
+            delete m_offscreenSurface;
+            delete m_openGLContext;
+        }
+    });
+    QCoreApplication::processEvents();
 }
 
 void QmlAnimationRenderer::renderFrame()
