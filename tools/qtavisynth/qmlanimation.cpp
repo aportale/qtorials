@@ -85,7 +85,11 @@ QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString
     , m_useOpenGL(useOpenGL)
 {
     if (m_useOpenGL) {
+        QSurfaceFormat format;
+        format.setDepthBufferSize(16);
+        format.setStencilBufferSize(8);
         m_openGLContext = new QOpenGLContext;
+        m_openGLContext->setFormat(format);
         m_openGLContext->create();
         m_offscreenSurface = new QOffscreenSurface;
         m_offscreenSurface->setFormat(m_openGLContext->format());
