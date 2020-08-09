@@ -159,13 +159,16 @@ QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString
 QmlAnimationRenderer::~QmlAnimationRenderer()
 {
     QTimer::singleShot(0, qApp, [this]() {
+        if (m_useOpenGL)
+            m_openGLContext->makeCurrent(m_offscreenSurface);
+
         delete m_renderControl;
         delete m_qmlComponent;
         delete m_quickWindow;
         delete m_qmlEngine;
 
         if (m_useOpenGL) {
-            delete m_openGLContext;
+            m_openGLContext->doneCurrent();
             delete m_offscreenSurface;
             delete m_openGLContext;
         }
@@ -175,7 +178,6 @@ QmlAnimationRenderer::~QmlAnimationRenderer()
 
 void QmlAnimationRenderer::renderFrame()
 {
-    qDebug() << QThread::currentThread() << QThread::currentThreadId() << m_frameN;
     const double qmlFrame = qBound(m_timeLineStartFrame, double(m_frameN), m_timeLineEndFrame);
     m_timeLineItem->setProperty("currentFrame", qmlFrame);
 
