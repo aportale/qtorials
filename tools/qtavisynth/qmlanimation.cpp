@@ -206,15 +206,21 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
     vi.pixel_type = VideoInfo::CS_BGR32;
 }
 
+QMutex mutex;
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
     const double targetFps = double(vi.fps_numerator) / vi.fps_denominator;
     const double progressInMs = n / targetFps * 1000;
     const int qmlFrame = progressInMs / m_renderer.m_timelineAnimationDuration * 1000;
 
-    m_renderer.m_frameN = qmlFrame;
-    QMetaObject::invokeMethod(qApp, [this]{ m_renderer.renderFrame(); });
-    QCoreApplication::processEvents();
+    if (mutex.tryLock()) {
+        m_renderer.m_frameN = qmlFrame;
+        QMetaObject::invokeMethod(qApp, [this]{ m_renderer.renderFrame(); });
+        QCoreApplication::processEvents();
+        mutex.unlock();
+    } else {
+        return child->GetFrame(n, env);
+    }
 
     PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
