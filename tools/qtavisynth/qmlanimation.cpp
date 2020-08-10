@@ -190,7 +190,6 @@ void QmlAnimationRenderer::renderFrame()
     m_renderControl->polishItems();
     m_renderControl->sync();
     m_renderControl->render();
-    QCoreApplication::processEvents();
     if (m_useOpenGL)
         m_openGLContext->functions()->glFlush();
 
@@ -208,24 +207,19 @@ QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QStri
 QMutex mutex;
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
+    QMutexLocker lock(&mutex);
     const double targetFps = double(vi.fps_numerator) / vi.fps_denominator;
     const double progressInMs = n / targetFps * 1000;
     const int qmlFrame = progressInMs / m_renderer.m_timelineAnimationDuration * 1000;
 
-    if (mutex.tryLock()) {
-        m_renderer.m_frameN = qmlFrame;
-        QMetaObject::invokeMethod(qApp, [this]{ m_renderer.renderFrame(); });
-        QCoreApplication::processEvents();
-        mutex.unlock();
-    } else {
-        return child->GetFrame(n, env);
-    }
+    m_renderer.m_frameN = qmlFrame;
+    QMetaObject::invokeMethod(qApp, [this]{ m_renderer.renderFrame(); });
 
     PVideoFrame frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = frame->GetWritePtr();
-    env->BitBlt(frameBits, frame->GetPitch(),
-                m_renderer.m_frame.constBits(),
-                m_renderer.m_frame.bytesPerLine(), m_renderer.m_frame.bytesPerLine(), m_renderer.m_frame.height());
+    env->BitBlt(frameBits, frame->GetPitch(), m_renderer.m_frame.constBits(),
+                m_renderer.m_frame.bytesPerLine(), m_renderer.m_frame.bytesPerLine(),
+                m_renderer.m_frame.height());
 
     return frame;
 }
