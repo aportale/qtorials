@@ -162,7 +162,7 @@ QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString
 
 QmlAnimationRenderer::~QmlAnimationRenderer()
 {
-    QTimer::singleShot(0, qApp, [this]() {
+    QMetaObject::invokeMethod(qApp, [this]{
         if (m_useOpenGL)
             m_openGLContext->makeCurrent(m_offscreenSurface);
 
@@ -177,7 +177,6 @@ QmlAnimationRenderer::~QmlAnimationRenderer()
             delete m_openGLContext;
         }
     });
-    QCoreApplication::processEvents();
 }
 
 void QmlAnimationRenderer::renderFrame()
