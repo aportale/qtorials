@@ -43,9 +43,10 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
                      "[defaulttransitionframes]i[resizefiter]s[perspectivestrength]f"
                      "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
                      ZoomNPan::CreateZoomNPan, nullptr);
-    env->AddFunction("QtAviSynthSvgAnimation", "[clip]c[svgfile]s.*",
+    env->AddFunction("QtAviSynthSvgAnimation", "[]c*[svgfile]s[fps]f.*",
                      SvgAnimation::CreateSvgAnimation, nullptr);
-    env->AddFunction("QtAviSynthQmlAnimation", "[clip]c[qmlfile]s[initialproperties]s[useopengl]b",
+    env->AddFunction("QtAviSynthQmlAnimation",
+                     "[]c*[qmlfile]s[fps]f[initialproperties]s[useopengl]b",
                      QmlAnimation::CreateQmlAnimation, nullptr);
     return "`QtAviSynth' QtAviSynth plugin";
 }

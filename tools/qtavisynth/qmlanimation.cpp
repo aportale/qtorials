@@ -79,10 +79,8 @@ static void handleQmlFile(const QString &qmlFile, QString *mainQmlFile, QStringL
                     QDir::toNativeSeparators(*mainQmlFile).toLatin1().constData());
 }
 
-QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString &initialProperties,
-                                           const QSize &size, bool useOpenGL, IScriptEnvironment *env)
-    : m_size(size)
-    , m_useOpenGL(useOpenGL)
+QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString &initialProperties, bool useOpenGL, IScriptEnvironment *env)
+    : m_useOpenGL(useOpenGL)
 {
     if (m_useOpenGL) {
         QSurfaceFormat format;
@@ -147,13 +145,12 @@ QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString
     m_quickWindow->setColor(QColor(Qt::transparent));
 
     m_rootItem->setParentItem(m_quickWindow->contentItem());
-    m_rootItem->setWidth(size.width());
-    m_rootItem->setHeight(size.height());
-    m_quickWindow->setGeometry(0, 0, size.width(), size.height());
+    m_size = m_rootItem->size().toSize();
+    m_quickWindow->setGeometry(0, 0, m_size.width(), m_size.height());
 
     if (m_useOpenGL) {
         m_openGLFramebufferObject =
-                new QOpenGLFramebufferObject(size.width(), size.height(),
+                new QOpenGLFramebufferObject(m_size.width(), m_size.height(),
                                              QOpenGLFramebufferObject::CombinedDepthStencil);
         m_quickWindow->setRenderTarget(m_openGLFramebufferObject);
         m_renderControl->initialize(m_openGLContext);
@@ -196,26 +193,28 @@ void QmlAnimationRenderer::renderFrame()
     m_frame = m_quickWindow->grabWindow().convertToFormat(QImage::Format_ARGB32).mirrored(false, true);
 }
 
-QmlAnimation::QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
-                           bool useOpenGL, IScriptEnvironment* env)
-    : GenericVideoFilter(background)
-    , m_renderer(qmlFile, initialProperties, {vi.width, vi.height}, useOpenGL, env)
+QmlAnimation::QmlAnimation(const QString &qmlFile, double fps,
+                           const QString &initialProperties, bool useOpenGL, IScriptEnvironment* env)
+    : m_renderer(qmlFile, initialProperties, useOpenGL, env)
 {
-    vi.pixel_type = VideoInfo::CS_BGR32;
+    setFps(fps, env);
+    m_vi.width = m_renderer.m_size.width();
+    m_vi.height = m_renderer.m_size.height();
+    m_vi.num_frames = qCeil(m_renderer.m_timelineAnimationDuration / 1000) * fps + 1;
 }
 
 QMutex mutex;
 PVideoFrame __stdcall QmlAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
     QMutexLocker lock(&mutex);
-    const double targetFps = double(vi.fps_numerator) / vi.fps_denominator;
+    const double targetFps = double(m_vi.fps_numerator) / m_vi.fps_denominator;
     const double progressInMs = n / targetFps * 1000;
     const int qmlFrame = progressInMs / m_renderer.m_timelineAnimationDuration * 1000;
 
     m_renderer.m_frameN = qmlFrame;
     QMetaObject::invokeMethod(qApp, [this]{ m_renderer.renderFrame(); });
 
-    PVideoFrame frame = env->NewVideoFrame(vi);
+    PVideoFrame frame = env->NewVideoFrame(m_vi);
     unsigned char* frameBits = frame->GetWritePtr();
     env->BitBlt(frameBits, frame->GetPitch(), m_renderer.m_frame.constBits(),
                 m_renderer.m_frame.bytesPerLine(), m_renderer.m_frame.bytesPerLine(),
@@ -229,11 +228,15 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
 {
     Q_UNUSED(user_data)
 
-    const PClip background = args[0].AsClip();
+    const PClip background = args[0].ArraySize() == 1 ? args[0][0].AsClip() : PClip();
+    const VideoInfo backGroundVi = background ? background->GetVideoInfo() : defaultVi();
     const QString qmlFile =
             QDir::fromNativeSeparators(QDir().absoluteFilePath(QLatin1String(args[1].AsString())));
-    const QString initialProperties = args[2].AsString("{}");
-    const bool useOpenGL = args[3].AsBool(true);
+    const double fps = background
+            ? double(backGroundVi.fps_numerator) / backGroundVi.fps_denominator
+            : args[2].AsFloat(30);
+    const QString initialProperties = args[3].AsString("{}");
+    const bool useOpenGL = args[4].AsBool(true);
 
     Tools::createQGuiApplicationIfNeeded();
 
@@ -241,7 +244,6 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
         env->ThrowError("Invalid file name: %s",
                         QDir::toNativeSeparators(qmlFile).toLatin1().constData());
 
-    const PClip qmlAnimation =
-            new QmlAnimation(background, qmlFile, initialProperties, useOpenGL, env);
+    const PClip qmlAnimation = new QmlAnimation(qmlFile, fps, initialProperties, useOpenGL, env);
     return Tools::rgbOverlay(background, qmlAnimation, env);
 }

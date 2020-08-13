@@ -1,6 +1,7 @@
 #pragma once
 
 #include "avisynth.h"
+#include "tools.h"
 
 #include <QParallelAnimationGroup>
 
@@ -52,11 +53,12 @@ private:
     qreal m_opacity = opacityStart;
 };
 
-class SvgAnimation : public GenericVideoFilter
+class SvgAnimation : public SourceFilter
 {
 public:
-    SvgAnimation(PClip background, const QString &svgFile,
-                 const QVector<SvgAnimationProperties::Data> &dataSets);
+    SvgAnimation(const QString &svgFile,
+                 const QVector<SvgAnimationProperties::Data> &dataSets, double fps,
+                 const QSize &size, IScriptEnvironment *env);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateSvgAnimation(AVSValue args, void* user_data,
                                                IScriptEnvironment* env);

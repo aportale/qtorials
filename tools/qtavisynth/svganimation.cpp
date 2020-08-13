@@ -48,14 +48,15 @@ SvgAnimationProperties::Blending SvgAnimationProperties::findBlendingOrThrow(
 const QByteArray SvgAnimationProperties::scalePropertyName = "scale";
 const QByteArray SvgAnimationProperties::opacityPropertyName = "opacity";
 
-SvgAnimation::SvgAnimation(PClip background, const QString &svgFile,
-                           const QVector<SvgAnimationProperties::Data> &dataSets)
-    : GenericVideoFilter(background)
-    , m_svgFile(svgFile)
+SvgAnimation::SvgAnimation(const QString &svgFile,
+                           const QVector<SvgAnimationProperties::Data> &dataSets, double fps,
+                           const QSize &size, IScriptEnvironment* env)
+    : m_svgFile(svgFile)
 {
-    vi.pixel_type = VideoInfo::CS_BGR32;
-
     m_properties.reserve(dataSets.size());
+    int longestAnimationDuration = 0;
+    const int maxTransformDuration =
+            qMax(SvgAnimationProperties::scaleDuration, SvgAnimationProperties::opacityDuration);
     for (const SvgAnimationProperties::Data &dataSet : dataSets) {
         auto *properties =
                 new SvgAnimationProperties(dataSet, &m_animation);
@@ -126,9 +127,11 @@ SvgAnimation::SvgAnimation(PClip background, const QString &svgFile,
             animation->setEndValue(a.endValue);
             a.sequence->addAnimation(animation);
         }
+        longestAnimationDuration =
+                qMax(longestAnimationDuration, dataSet.endFrame + maxTransformDuration);
 
-        scaleSequence->addPause(vi.num_frames - scaleSequence->duration());
-        opacitySequence->addPause(vi.num_frames - opacitySequence->duration());
+        scaleSequence->addPause(m_vi.num_frames - scaleSequence->duration());
+        opacitySequence->addPause(m_vi.num_frames - opacitySequence->duration());
 
         m_animation.addAnimation(scaleSequence);
         m_animation.addAnimation(opacitySequence);
@@ -136,14 +139,18 @@ SvgAnimation::SvgAnimation(PClip background, const QString &svgFile,
 
     m_animation.start();
     m_animation.pause();
+
+    setFps(fps, env);
+    setSize(size.isValid() ? size : Filters::svgViewBoxSize(m_svgFile).toSize());
+    m_vi.num_frames = longestAnimationDuration;
 }
 
 PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
 {
     Q_UNUSED(env)
-    PVideoFrame frame = env->NewVideoFrame(vi);
+    PVideoFrame frame = env->NewVideoFrame(m_vi);
     unsigned char* frameBits = frame->GetWritePtr();
-    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
+    QImage image(frameBits, m_vi.width, m_vi.height, QImage::Format_ARGB32);
     image.fill(0);
     QPainter p(&image);
     p.scale(1, -1);
@@ -170,10 +177,17 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
 {
     Q_UNUSED(user_data)
 
-    const PClip background = args[0].AsClip();
+    const PClip background = args[0].ArraySize() == 1 ? args[0][0].AsClip() : PClip();
+    const VideoInfo backGroundVi = background ? background->GetVideoInfo() : defaultVi();
     const QString svgFileName =
             Tools::cleanFileName(QLatin1String(args[1].AsString()));
-    const AVSValue &detailValues = args[2];
+    const double fps = background
+            ? double(backGroundVi.fps_numerator) / backGroundVi.fps_denominator
+            : args[2].AsFloat(30);
+    const QSize size = background
+            ? QSize(backGroundVi.width, backGroundVi.height)
+            : QSize();
+    const AVSValue &detailValues = args[3];
     static const int valuesPerDetail = 5;
     if (detailValues.ArraySize() % valuesPerDetail != 0) {
         env->ThrowError("QtAviSynthSvgAnimation: Mismatching number of arguments.\n"
@@ -194,6 +208,6 @@ AVSValue __cdecl SvgAnimation::CreateSvgAnimation(AVSValue args, void* user_data
         details.append(animationDetail);
     }
 
-    const PClip svgAnimation = new SvgAnimation(background, svgFileName, details);
+    const PClip svgAnimation = new SvgAnimation(svgFileName, details, fps, size, env);
     return Tools::rgbOverlay(background, svgAnimation, env);
 }

@@ -28,6 +28,7 @@ public:
     static SvgResult paintSvgElements(QPainter *p, const QString &svgFileName,
                                       const QStringList &svgElements, const QRect &rect,
                                       const QRectF &viewBox = QRectF());
+    static QSizeF svgViewBoxSize(const QString &svgFileName);
     static SvgResult paintBlendedSvgElement(QPainter *p,
                                             const QString &svgFileName, const QString &svgElement,
                                             qreal opacity, qreal scale,
