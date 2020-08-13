@@ -4,6 +4,7 @@
 #include <QSize>
 
 #include "avisynth.h"
+#include "tools.h"
 
 QT_FORWARD_DECLARE_CLASS(QOffscreenSurface)
 QT_FORWARD_DECLARE_CLASS(QOpenGLContext)
@@ -19,13 +20,13 @@ class QmlAnimationRenderer : public QObject
     Q_OBJECT
 
 public:
-    QmlAnimationRenderer(const QString &qmlFile, const QString &initialProperties, const QSize &size,
+    QmlAnimationRenderer(const QString &qmlFile, const QString &initialProperties,
                          bool useOpenGL, IScriptEnvironment *env);
     ~QmlAnimationRenderer() override;
 
     void renderFrame();
 
-    const QSize m_size;
+    QSize m_size;
     bool m_useOpenGL = true;
     double m_timelineAnimationDuration = -1;
     double m_timeLineStartFrame = -1;
@@ -44,10 +45,10 @@ public:
     int m_frameN = -1;
 };
 
-class QmlAnimation : public GenericVideoFilter
+class QmlAnimation : public SourceFilter
 {
 public:
-    QmlAnimation(PClip background, const QString &qmlFile, const QString &initialProperties,
+    QmlAnimation(const QString &qmlFile, double fps, const QString &initialProperties,
                  bool useOpenGL, IScriptEnvironment *env);
     PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) override;
     static AVSValue __cdecl CreateQmlAnimation(AVSValue args, void* user_data,

@@ -331,6 +331,13 @@ Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
     return SvgOk;
 }
 
+QSizeF Filters::svgViewBoxSize(const QString &svgFileName)
+{
+    SvgResult result;
+    QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
+    return result == SvgOk ? renderer->viewBoxF().size() : QSizeF();
+}
+
 Filters::SvgResult
 Filters::paintBlendedSvgElement(QPainter *p,
                                 const QString &svgFileName, const QString &svgElement,

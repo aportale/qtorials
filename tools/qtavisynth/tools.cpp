@@ -34,6 +34,9 @@ void Tools::checkSvgAndThrow(const QString &svgFileName,
 PClip Tools::rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
                         IScriptEnvironment* env)
 {
+    if (!backgroundClip)
+        return overlayClip;
+
     const PClip showAlpha = env->Invoke("ShowAlpha", overlayClip).AsClip();
     const AVSValue params[] = { backgroundClip, overlayClip, 0, 0, showAlpha };
     const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
@@ -56,3 +59,56 @@ void Tools::deleteQGuiApplicationIfNeeded(QGuiApplication *&app)
         app = nullptr;
     }
 }
+
+SourceFilter::SourceFilter()
+    : m_vi(defaultVi())
+{
+}
+
+void __stdcall SourceFilter::GetAudio(void*, int64_t, int64_t, IScriptEnvironment*)
+{
+}
+
+const VideoInfo& __stdcall SourceFilter::GetVideoInfo()
+{
+    return m_vi;
+}
+
+bool __stdcall SourceFilter::GetParity(int n)
+{
+    Q_UNUSED(n);
+    return true;
+}
+
+int __stdcall SourceFilter::SetCacheHints(int cachehints, int frame_range)
+{
+    Q_UNUSED(cachehints);
+    Q_UNUSED(frame_range);
+    return 0;
+}
+
+void SourceFilter::setFps(double fps, IScriptEnvironment* env)
+{
+    m_vi.fps_numerator = env->Invoke("ContinuedNumerator", fps).AsInt();
+    m_vi.fps_denominator = env->Invoke("ContinuedDenominator", fps).AsInt();
+}
+
+void SourceFilter::setSize(const QSize &size)
+{
+    m_vi.width = size.width();
+    m_vi.height = size.height();
+};
+
+VideoInfo SourceFilter::defaultVi() {
+    VideoInfo info;
+    memset(&info, 0, sizeof(VideoInfo));
+    info.pixel_type = VideoInfo::CS_BGR32;
+    info.width = 640;
+    info.height = 480;
+    info.num_frames = 1000;
+    info.fps_denominator = 1;
+    info.fps_numerator = 24;
+    info.SetFieldBased(false);
+    return info;
+}
+
