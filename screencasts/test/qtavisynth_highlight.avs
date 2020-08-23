@@ -1,5 +1,7 @@
 Import("tests.avsi")
 
 ScreenCast
-\ .QtAviSynthHighlight(581, 248, 173, 23, 100, 150)   [* Pop up title *]
-\ .QtAviSynthHighlight(136, 106, 326, 29, 415, 500)   [* Qt docs bookmark *]
+\ .QtAviSynthHighlight(100, 248, 173, 23, 50, 150)
+\ .QtAviSynthHighlight(136, 106, 326, 29, 200, 250)
+
+killaudio
