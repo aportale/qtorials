@@ -464,6 +464,7 @@ void Filters::paintHighlight(QPainter *p, const QRectF &highlightRect,
 
     p->save();
     p->setOpacity(opacity * 0.55);
+    p->setRenderHint(QPainter::Antialiasing);
     p->fillPath(path, Qt::black);
     p->restore();
 }
