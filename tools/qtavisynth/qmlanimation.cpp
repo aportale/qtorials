@@ -125,17 +125,12 @@ QmlAnimationRenderer::QmlAnimationRenderer(const QString &qmlFile, const QString
         env->ThrowError("QtAviSynthQmlAnimation: Qml scene is missing a QtQuick.Timeline element.");
     }
     const QQmlListReference timeLineAnimations(m_timeLineItem, "animations", m_qmlEngine);
-    const char *timelineAnimationRunningProperty = "running";
     for (int i = 0; i < timeLineAnimations.count(); ++i) {
         QObject *timelineAnimation = timeLineAnimations.at(i);
-        if (timelineAnimation->property(timelineAnimationRunningProperty).toBool()) {
-            if (m_timelineAnimationDuration < 0) // First running animation determins animation duration
-                m_timelineAnimationDuration = timelineAnimation->property("duration").toDouble();
-            timelineAnimation->setProperty(timelineAnimationRunningProperty, false); // We control the animation
-        }
+        const char *timelineAnimationRunningProperty = "running";
+        timelineAnimation->setProperty(timelineAnimationRunningProperty, false); // We control the animation
     }
-    if (m_timelineAnimationDuration < 0) // No running animation? Deduce duration from timeline "frame count"
-        m_timelineAnimationDuration = m_timeLineItem->property("endFrame").toDouble();
+    m_timelineAnimationDuration = m_timeLineItem->property("endFrame").toDouble();
     m_timeLineStartFrame = m_timeLineItem->property("startFrame").toDouble();
     m_timeLineEndFrame = m_timeLineItem->property("endFrame").toDouble();
 
@@ -200,7 +195,7 @@ QmlAnimation::QmlAnimation(const QString &qmlFile, double fps,
     setFps(fps, env);
     m_vi.width = m_renderer.m_size.width();
     m_vi.height = m_renderer.m_size.height();
-    m_vi.num_frames = qCeil(m_renderer.m_timelineAnimationDuration / 1000) * fps + 1;
+    m_vi.num_frames = qCeil(m_renderer.m_timelineAnimationDuration / 1000 * fps) + 1;
 }
 
 QMutex mutex;
