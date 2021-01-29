@@ -8,6 +8,7 @@ QT_FORWARD_DECLARE_CLASS(QColor)
 QT_FORWARD_DECLARE_CLASS(QGuiApplication)
 QT_FORWARD_DECLARE_CLASS(QSize)
 QT_FORWARD_DECLARE_CLASS(QString)
+class AnimationPainter;
 
 class Tools
 {
@@ -18,6 +19,8 @@ public:
                                  IScriptEnvironment* env);
     static PClip rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
                             IScriptEnvironment* env);
+    static PVideoFrame GetAnimationPainterFrame(int n, IScriptEnvironment* env, const VideoInfo &vi,
+                                                AnimationPainter &animationpainter);
 
     static QGuiApplication *createQGuiApplicationIfNeeded();
     static void deleteQGuiApplicationIfNeeded(QGuiApplication *&app);

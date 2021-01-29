@@ -10,6 +10,8 @@ find_package(Qt5 COMPONENTS Gui Svg Quick REQUIRED)
 file(TO_CMAKE_PATH "$ENV{ProgramFiles\(x86\)}" program_files_x86)
 set(avisynth_filtersdk "${program_files_x86}/AviSynth+/FilterSDK")
 
+set(intropainter_dir "../../../stuff/qtavisynthqml/intro2")
+
 add_library(
     qtavisynth SHARED
     qtavisynth.cpp
@@ -22,11 +24,17 @@ add_library(
     svganimation.h svganimation.cpp
     tools.h tools.cpp
     zoomnpan.h zoomnpan.cpp
+
+    qtintro.h qtintro.cpp
+    ${intropainter_dir}/animationpainter.h ${intropainter_dir}/animationpainter.cpp
+    ${intropainter_dir}/intropainter.h ${intropainter_dir}/intropainter.cpp ${intropainter_dir}/intropainter.qrc
+    ${intropainter_dir}/qttitleanimationpainter.h ${intropainter_dir}/qttitleanimationpainter.cpp
 )
 
 target_include_directories(
     qtavisynth PRIVATE
     "${avisynth_filtersdk}/include"
+    ${intropainter_dir}
 )
 
 target_link_libraries(
@@ -39,6 +47,7 @@ target_link_libraries(
     Qt5::Gui
     Qt5::Svg
     Qt5::Quick
+    Qt5::WidgetsPrivate
 )
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../screencasts/")

@@ -1,3 +1,4 @@
+#include <animationpainter.h>
 #include "tools.h"
 #include "filters.h"
 
@@ -41,6 +42,31 @@ PClip Tools::rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
     const AVSValue params[] = { backgroundClip, overlayClip, 0, 0, showAlpha };
     const AVSValue paramsValue = AVSValue(params, sizeof params / sizeof params[0]);
     return env->Invoke("Overlay", paramsValue).AsClip();
+}
+
+PVideoFrame Tools::GetAnimationPainterFrame(int n, IScriptEnvironment *env, const VideoInfo &vi,
+                                            AnimationPainter &animationpainter)
+{
+    PVideoFrame frame = env->NewVideoFrame(vi);
+    unsigned char* frameBits = frame->GetWritePtr();
+    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+
+    const qreal framesPerSecond = qreal(vi.fps_numerator) / vi.fps_denominator;
+    const qreal msecsPerFrame = 1000 / framesPerSecond;
+    const int msec = n * msecsPerFrame;
+    if (msec > animationpainter.duration())
+        return frame;
+
+    Tools::createQGuiApplicationIfNeeded();
+    QPainter p(&image);
+    p.scale(1, -1);
+    p.translate(0, -image.height());
+
+    animationpainter.setCurrentTime(msec);
+    animationpainter.paint(&p);
+
+    return frame;
 }
 
 static char *argv[] = {(char*)"."};
