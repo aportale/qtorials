@@ -23,7 +23,6 @@ public:
                                                 AnimationPainter &animationpainter);
 
     static QGuiApplication *createQGuiApplicationIfNeeded();
-    static void deleteQGuiApplicationIfNeeded(QGuiApplication *&app);
 
     static const int defaultClipWidth;
     static const int defaultClipHeight;

@@ -52,5 +52,11 @@ const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Lin
     env->AddFunction("QtAviSynthQtIntro",
                      "[clip]c[title]s[subtitle]s",
                      QtIntro::CreateQtIntro, nullptr);
+    env->AddFunction("QtAviSynthQtLowerThird",
+                     "[clip]c[title]s",
+                     QtLowerThird::CreateQtLowerThird, nullptr);
+
+    Tools::createQGuiApplicationIfNeeded();
+
     return "`QtAviSynth' QtAviSynth plugin";
 }

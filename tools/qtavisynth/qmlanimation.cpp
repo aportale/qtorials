@@ -233,8 +233,6 @@ AVSValue __cdecl QmlAnimation::CreateQmlAnimation(AVSValue args, void* user_data
     const QString initialProperties = args[3].AsString("{}");
     const bool useOpenGL = args[4].AsBool(true);
 
-    Tools::createQGuiApplicationIfNeeded();
-
     if (!QFileInfo::exists(qmlFile))
         env->ThrowError("Invalid file name: %s",
                         QDir::toNativeSeparators(qmlFile).toLatin1().constData());

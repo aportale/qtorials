@@ -9,7 +9,6 @@
 */
 
 #include "filters.h"
-#include "tools.h"
 
 #include <qglobal.h>
 #include <QGuiApplication>
@@ -86,14 +85,12 @@ Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &
 void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                          const QString &fontFace, const QColor &textColor)
 {
-    QGuiApplication *a = Tools::createQGuiApplicationIfNeeded();
     QFont font(fontFace);
     font.setPixelSize(qMax(24, rect.height() / 14));
     font.setHintingPreference(QFont::PreferFullHinting);
     p->setFont(font);
     p->setPen(textColor);
     p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
-    Tools::deleteQGuiApplicationIfNeeded(a);
 }
 
 static QImage gradientImage()
@@ -428,7 +425,6 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("subtitlebackground"), background);
 
-    QGuiApplication *a = Tools::createQGuiApplicationIfNeeded();
     p->save();
     p->setPen(QColor(245, 235, 170));
     p->setCompositionMode(QPainter::CompositionMode_Lighten);
@@ -449,7 +445,6 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
                     subTitle);
     }
     p->restore();
-    Tools::deleteQGuiApplicationIfNeeded(a);
 }
 
 void Filters::paintHighlight(QPainter *p, const QRectF &highlightRect,
