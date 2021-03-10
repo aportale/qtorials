@@ -53,3 +53,29 @@ AVSValue __cdecl QtLowerThird::CreateQtLowerThird(AVSValue args, void* user_data
     const PClip qtIntroClip = new QtLowerThird(background, title);
     return Tools::rgbOverlay(background, qtIntroClip, env);
 }
+
+
+QtOutro::QtOutro(PClip background, const QString &title, const QString &subtitle)
+    : GenericVideoFilter(background)
+{
+    vi.pixel_type = VideoInfo::CS_BGR32;
+    m_outroPainter.setSize({vi.width, vi.height});
+    m_outroPainter.setTitle(title);
+    m_outroPainter.setSubtitle(subtitle);
+}
+
+PVideoFrame __stdcall QtOutro::GetFrame(int n, IScriptEnvironment* env)
+{
+    return Tools::GetAnimationPainterFrame(n, env, vi, m_outroPainter);
+}
+
+AVSValue __cdecl QtOutro::CreateQtOutro(AVSValue args, void* user_data,
+                                        IScriptEnvironment* env)
+{
+    Q_UNUSED(user_data)
+    const PClip background = args[0].AsClip();
+    const QString title = QLatin1String(args[1].AsString("Title"));
+    const QString subtitle = QLatin1String(args[2].AsString());
+    const PClip qtOutroClip = new QtOutro(background, title, subtitle);
+    return Tools::rgbOverlay(background, qtOutroClip, env);
+}

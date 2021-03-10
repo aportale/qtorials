@@ -29,6 +29,7 @@ add_library(
     ${intropainter_dir}/animationpainter.h ${intropainter_dir}/animationpainter.cpp
     ${intropainter_dir}/intropainter.h ${intropainter_dir}/intropainter.cpp ${intropainter_dir}/intropainter.qrc
     ${intropainter_dir}/lowerthirdpainter.h ${intropainter_dir}/lowerthirdpainter.cpp
+    ${intropainter_dir}/outropainter.h ${intropainter_dir}/outropainter.cpp
     ${intropainter_dir}/qttitleanimationpainter.h ${intropainter_dir}/qttitleanimationpainter.cpp
 )
 
