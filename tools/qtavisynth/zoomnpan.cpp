@@ -76,8 +76,9 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
             const VideoInfo &sourceInfo = child->GetVideoInfo();
             const double widthNormFactor = 1.0 / sourceInfo.width;
             const double heightNormFactor = 1.0 / sourceInfo.height;
-            const double perspectiveTweakTop = m_perspectiveStrength * ((1 - 0.618) - heightNormFactor * rect.y());
-            const double perspectiveTweakBottom = m_perspectiveStrength * (0.618 - heightNormFactor * (sourceInfo.height - rect.bottom()));
+            const double perspectiveBias = 0.5; // 0.0: Vanishing point towards bottom; 1.0: top
+            const double perspectiveTweakTop = m_perspectiveStrength * ((1 - perspectiveBias) - heightNormFactor * rect.y());
+            const double perspectiveTweakBottom = m_perspectiveStrength * (perspectiveBias - heightNormFactor * (sourceInfo.height - rect.bottom()));
             const AVSValue reformParams[] = {
                 child,
                 // source quad:
