@@ -10,7 +10,8 @@ find_package(Qt5 COMPONENTS Gui Svg Quick REQUIRED)
 file(TO_CMAKE_PATH "$ENV{ProgramFiles\(x86\)}" program_files_x86)
 set(avisynth_filtersdk "${program_files_x86}/AviSynth+/FilterSDK")
 
-set(intropainter_dir "../../../stuff/qtavisynthqml/intro2")
+# Clone from https://git.qt.io/aportale/qt-video-title-maker
+set(intropainter_dir "../../../qt-video-title-maker/src/")
 
 add_library(
     qtavisynth SHARED
