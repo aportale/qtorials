@@ -1,4 +1,4 @@
-#include "filters.h"
+#include "painting.h"
 #include "subtitle.h"
 #include "tools.h"
 
@@ -51,11 +51,12 @@ Subtitle::Subtitle(PClip background, const QString &title, const QString &subtit
         int duration;
         qreal startValue;
         qreal endValue;
+        QEasingCurve::Type easing;
     } animations[] = {
-        { slipSequence, SubtitleProperties::slipPropertyName, startFrame, m_slipFrames, 0.0, 1.0 },
-        { slipSequence, SubtitleProperties::slipPropertyName, endFrame - startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0 },
-        { blendSequence, SubtitleProperties::blendPropertyName, startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0 },
-        { blendSequence, SubtitleProperties::blendPropertyName, endFrame - startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0 },
+        { slipSequence, SubtitleProperties::slipPropertyName, startFrame, m_slipFrames, 0.0, 1.0, QEasingCurve::OutBack },
+        { slipSequence, SubtitleProperties::slipPropertyName, endFrame - startFrame - 2*m_slipFrames, m_slipFrames, 1.0, 0.0, QEasingCurve::InCubic },
+        { blendSequence, SubtitleProperties::blendPropertyName, startFrame + m_blendDelayFrames, m_blendFrames, 0.0, 1.0, QEasingCurve::OutCubic },
+        { blendSequence, SubtitleProperties::blendPropertyName, endFrame - startFrame - 2*m_blendDelayFrames - 2*m_blendFrames, m_blendFrames, 1.0, 0.0, QEasingCurve::InQuad },
     };
 
     for (const auto & a : animations) {
@@ -64,7 +65,7 @@ Subtitle::Subtitle(PClip background, const QString &title, const QString &subtit
         animation->setDuration(a.duration);
         animation->setStartValue(a.startValue);
         animation->setEndValue(a.endValue);
-        animation->setEasingCurve(QEasingCurve::InOutQuad);
+        animation->setEasingCurve(a.easing);
         a.sequence->addAnimation(animation);
     }
 
@@ -87,7 +88,7 @@ PVideoFrame __stdcall Subtitle::GetFrame(int n, IScriptEnvironment* env)
     p.scale(1, -1);
     p.translate(0, -image.height());
     m_titleAnimations.setCurrentTime(n);
-    Filters::paintAnimatedSubTitle(
+    Painting::paintAnimatedSubTitle(
             &p, m_title, m_subtitle,
             m_properties.slip(), m_properties.blend(),
             image.rect());

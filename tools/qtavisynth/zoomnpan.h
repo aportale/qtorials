@@ -1,7 +1,7 @@
 #pragma once
 
-#include <windows.h>
 #include "avisynth.h"
+
 #include <QSequentialAnimationGroup>
 #include <QRectF>
 

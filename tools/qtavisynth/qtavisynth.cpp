@@ -8,58 +8,54 @@
     California, 94105, USA.
 */
 
-#include "Windows.h"
-
 #include "avisynth.h"
 
 #include "highlight.h"
 #include "qmlanimation.h"
-#include "qtintro.h"
 #include "stillimage.h"
 #include "subtitle.h"
 #include "svganimation.h"
+#include "tools.h"
 #include "zoomnpan.h"
 
 const AVS_Linkage* AVS_linkage = nullptr;
 
-extern "C" __declspec(dllexport)
+// AviSynth+ loads every plugin in its autoload directories, also for scripts that use none of
+// the QtAviSynth functions. So the application object is created by the filter factories,
+// which run when the script is evaluated, before any frame is rendered.
+template <AVSValue (__cdecl *createFilter)(AVSValue, void*, IScriptEnvironment*)>
+static AVSValue __cdecl withApplication(AVSValue args, void* user_data, IScriptEnvironment* env)
+{
+    Tools::createQGuiApplicationIfNeeded();
+    return createFilter(args, user_data, env);
+}
+
+extern "C" Q_DECL_EXPORT
 const char* __stdcall AvisynthPluginInit3(IScriptEnvironment* env, const AVS_Linkage* const vectors)
 {
     AVS_linkage = vectors;
 
     env->AddFunction("QtAviSynthHighlight",
                      "[clip]c[left]i[top]i[width]i[height]i[start]i[end]i",
-                     Highlight::CreateHighlight, nullptr);
+                     withApplication<Highlight::CreateHighlight>, nullptr);
     env->AddFunction("QtAviSynthElements", "[clip]c[elements]s*",
-                     StillImage::CreateElements, nullptr);
+                     withApplication<StillImage::CreateElements>, nullptr);
     env->AddFunction("QtAviSynthSvg", "[clip]c[svgfile]s[elements]s*",
-                     StillImage::CreateSvg, nullptr);
+                     withApplication<StillImage::CreateSvg>, nullptr);
     env->AddFunction("QtAviSynthTitle", "[clip]c[text]s[fontface]s[color]i",
-                     StillImage::CreateTitle, nullptr);
+                     withApplication<StillImage::CreateTitle>, nullptr);
     env->AddFunction("QtAviSynthSubtitle",
                      "[clip]c[title]s[subtitle]s[start]i[end]i",
-                     Subtitle::CreateSubtitle, nullptr);
+                     withApplication<Subtitle::CreateSubtitle>, nullptr);
     env->AddFunction("QtAviSynthZoomNPan",
                      "[clip]c[width]i[height]i"
                      "[defaulttransitionframes]i[resizefiter]s[perspectivestrength]f"
                      "[startleft]i[starttop]i[startwidth]i[startheight]i[details]i*",
-                     ZoomNPan::CreateZoomNPan, nullptr);
+                     withApplication<ZoomNPan::CreateZoomNPan>, nullptr);
     env->AddFunction("QtAviSynthSvgAnimation", "[]c*[svgfile]s[fps]f.*",
-                     SvgAnimation::CreateSvgAnimation, nullptr);
+                     withApplication<SvgAnimation::CreateSvgAnimation>, nullptr);
     env->AddFunction("QtAviSynthQmlAnimation",
-                     "[]c*[qmlfile]s[fps]f[initialproperties]s[useopengl]b",
-                     QmlAnimation::CreateQmlAnimation, nullptr);
-    env->AddFunction("QtAviSynthQtIntro",
-                     "[clip]c[title]s[subtitle]s",
-                     QtIntro::CreateQtIntro, nullptr);
-    env->AddFunction("QtAviSynthQtLowerThird",
-                     "[clip]c[title]s",
-                     QtLowerThird::CreateQtLowerThird, nullptr);
-    env->AddFunction("QtAviSynthQtOutro",
-                     "[clip]c[title]s[subtitle]s",
-                     QtIntro::CreateQtIntro, nullptr);
-
-    Tools::createQGuiApplicationIfNeeded();
-
+                     "[]c*[qmlfile]s[fps]f[initialproperties]s[usegpu]b",
+                     withApplication<QmlAnimation::CreateQmlAnimation>, nullptr);
     return "`QtAviSynth' QtAviSynth plugin";
 }

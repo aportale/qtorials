@@ -1,6 +1,10 @@
-#include "filters.h"
+#include "painting.h"
 #include "stillimage.h"
 #include "tools.h"
+
+#include <QColor>
+#include <QImage>
+#include <QPainter>
 
 StillImage::StillImage(PClip background, const QImage &image, IScriptEnvironment* env)
     : GenericVideoFilter(background)
@@ -11,7 +15,7 @@ StillImage::StillImage(PClip background, const QImage &image, IScriptEnvironment
                     VideoInfo::CS_BGR32 : VideoInfo::CS_BGR24;
     m_frame = env->NewVideoFrame(vi);
     unsigned char* frameBits = m_frame->GetWritePtr();
-    env->BitBlt(frameBits, m_frame->GetPitch(), image.mirrored(false, true).constBits(),
+    env->BitBlt(frameBits, m_frame->GetPitch(), image.flipped(Qt::Vertical).constBits(),
                 image.bytesPerLine(), image.bytesPerLine(), image.height());
 }
 
@@ -25,15 +29,15 @@ AVSValue __cdecl StillImage::CreateElements(AVSValue args, void* user_data, IScr
     QStringList elements;
     for (int i = 0; i < elementValues.ArraySize(); ++i) {
         const QLatin1String element(elementValues[i].AsString());
-        if (Filters::elementAvailable(element))
+        if (!Painting::elementAvailable(element))
             env->ThrowError("QtAviSynthElements: Invalid element '%s'.", element.latin1());
         elements.append(element);
     }
 
-    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32_Premultiplied);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter p(&image);
-    Filters::paintElements(&p, elements, image.rect());
+    Painting::paintElements(&p, elements, image.rect());
 
     const PClip elementsClip = new StillImage(background, image, env);
     return Tools::rgbOverlay(background, elementsClip, env);
@@ -55,10 +59,10 @@ AVSValue __cdecl StillImage::CreateSvg(AVSValue args, void* user_data, IScriptEn
         elements.append(element);
     }
 
-    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32_Premultiplied);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter p(&image);
-    Filters::paintSvgElements(&p, svgFileName, elements, image.rect());
+    Painting::paintSvgElements(&p, svgFileName, elements, image.rect());
 
     const PClip svgClip = new StillImage(background, image, env);
     return Tools::rgbOverlay(background, svgClip, env);
@@ -77,10 +81,10 @@ AVSValue __cdecl StillImage::CreateTitle(AVSValue args, void* user_data, IScript
         QString::fromLatin1(args[2].AsString());
     const QColor color = QRgb(args[3].AsInt(int(qRgba(0x0, 0x0, 0x0, 0xff))));
 
-    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32_Premultiplied);
+    QImage image(backgroundVI.width, backgroundVI.height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter p(&image);
-    Filters::paintTitle(&p, image.rect(), text, fontFace, color);
+    Painting::paintTitle(&p, image.rect(), text, fontFace, color);
 
     const PClip titleClip = new StillImage(background, image, env);
     return Tools::rgbOverlay(background, titleClip, env);

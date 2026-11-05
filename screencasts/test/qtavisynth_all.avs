@@ -3,9 +3,9 @@ SetGraphAnalysis(true)
 Import("tests.avsi")
 
 function borderAndCaption(clip c, string title) {
-	c.AddBorders(4, 4, 4, 24, color_white)
+	c.AddBorders(4, 4, 4, 24, $FFFFFF)
 \	.Subtitle(title, align=2)
-\   .AddBorders(0, 0, 0, 4, color_white)
+\   .AddBorders(0, 0, 0, 4, $FFFFFF)
 }
 
 global background = ColorBarsHD(width=400, height=300).trim(0, 200)
@@ -23,7 +23,7 @@ highlight = background
 \ .borderAndCaption("QtAviSynthHighlight")
 
 svganimation = background
-\ .QtAviSynthSvgAnimation("zoo.svg"
+\ .QtAviSynthSvgAnimation("zoo.svg", background.FrameRate
 \ , "horse"   ,  30,  150, "fadeandscale", "fade"
 \ , "giraffe" ,  50,  110, "fadeandscale", "fade"
 \ , "pig"     ,  70,   90, "fadeandscale", "fade"
@@ -46,7 +46,7 @@ function zoomnpan(float perspectiveStrength) {
 
 title = Dissolve(
 \   background.trim(0, 100).QtAviSynthTitle(text="Some text", fontface="Titillium Web")
-\ , background.trim(0, 100).QtAviSynthTitle(text="Some\nother\nText", fontface="Titillium Web", color=color_red)
+\ , background.trim(0, 100).QtAviSynthTitle(text="Some\nother\nText", fontface="Titillium Web", color=$FF0000)
 \ , 20)
 \ .borderAndCaption("QtAviSynthTitle")
 
@@ -58,7 +58,6 @@ subtitle = background
 StackVertical(
 \   StackHorizontal(elements, highlight, svganimation)
 \ , StackHorizontal(zoomnpan(0), title, subtitle)
-\ , StackHorizontal(zoomnpan(0.02), zoomnpan(0.04), zoomnpan(0.06))
 \ )
 
 DumpFilterGraph("qtavisynth_all.gv", mode=2)

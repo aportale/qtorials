@@ -1,7 +1,7 @@
 #pragma once
 
 #include "avisynth.h"
-#include "tools.h"
+#include "sourcefilter.h"
 
 #include <QParallelAnimationGroup>
 

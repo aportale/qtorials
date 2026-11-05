@@ -8,10 +8,10 @@
     California, 94105, USA.
 */
 
-#include "filters.h"
+#include "painting.h"
+#include "tools.h"
 
 #include <qglobal.h>
-#include <QGuiApplication>
 #include <QtSvg>
 
 inline static int codecBlockSize(int clipHeight)
@@ -36,11 +36,11 @@ public:
     }
 
     QSvgRenderer* svgRenderer(const QString &svgFileName,
-                              Filters::SvgResult *error)
+                              Painting::SvgResult *error)
     {
         const QFileInfo fileInfo(svgFileName);
         if (!fileInfo.exists()) {
-            *error = Filters::SvgFileNotValid;
+            *error = Painting::SvgFileNotValid;
             return nullptr;
         }
         const QString saneSvgFileName =
@@ -48,12 +48,13 @@ public:
         if (!m_svgRenderers.contains(saneSvgFileName)) {
             auto *renderer = new QSvgRenderer(svgFileName);
             if (!renderer->isValid()) {
-                *error = Filters::SvgFileNotValid;
+                delete renderer;
+                *error = Painting::SvgFileNotValid;
                 return nullptr;
             }
             m_svgRenderers.insert(saneSvgFileName, renderer);
         }
-        *error = Filters::SvgOk;
+        *error = Painting::SvgOk;
         return m_svgRenderers.value(saneSvgFileName);
     }
 
@@ -63,15 +64,22 @@ private:
     QHash<QString, QSvgRenderer*> m_svgRenderers;
 };
 
-Q_GLOBAL_STATIC(SvgRendererStore, svgRendererStore);
+// QSvgRenderer is reentrant, not thread-safe, so a renderer must not be used by several threads
+// at once. With AviSynth+ Prefetch(), filters render frames in several threads in parallel, so
+// each thread gets its own renderers.
+static SvgRendererStore *svgRendererStore()
+{
+    thread_local SvgRendererStore store;
+    return &store;
+}
 
 QSvgRenderer* SvgRendererStore::artworkSvgRenderer()
 {
-    Filters::SvgResult error;
+    Painting::SvgResult error;
     return svgRendererStore()->svgRenderer(QLatin1String(":/artwork.svg"), &error);
 }
 
-Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &element)
+Painting::SvgResult Painting::checkSvg(const QString &svgFileName, const QString &element)
 {
     SvgResult result;
     const QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
@@ -82,15 +90,36 @@ Filters::SvgResult Filters::checkSvg(const QString &svgFileName, const QString &
     return SvgOk;
 }
 
-void Filters::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
+void Painting::paintTitle(QPainter *p, const QRect &rect, const QString &titleText,
                          const QString &fontFace, const QColor &textColor)
 {
     QFont font(fontFace);
     font.setPixelSize(qMax(24, rect.height() / 14));
     font.setHintingPreference(QFont::PreferFullHinting);
-    p->setFont(font);
-    p->setPen(textColor);
-    p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
+    if (Qt::mightBeRichText(titleText)) {
+        // QPainter::drawText() only renders plain text
+        QTextDocument document;
+        document.setDocumentMargin(0);
+        document.setDefaultFont(font);
+        QTextOption textOption(Qt::AlignCenter);
+        textOption.setWrapMode(QTextOption::WordWrap);
+        document.setDefaultTextOption(textOption);
+        document.setHtml(titleText);
+        document.setTextWidth(rect.width());
+
+        const qreal yOffset = (rect.height() - document.size().height()) / 2;
+        QAbstractTextDocumentLayout::PaintContext context;
+        context.palette.setColor(QPalette::Text, textColor);
+        context.clip = QRectF(0, -yOffset, rect.width(), rect.height());
+        p->save();
+        p->translate(rect.left(), rect.top() + yOffset);
+        document.documentLayout()->draw(p, context);
+        p->restore();
+    } else {
+        p->setFont(font);
+        p->setPen(textColor);
+        p->drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, titleText);
+    }
 }
 
 static QImage gradientImage()
@@ -305,8 +334,8 @@ QTransform fitRect1InRect2Centered(const QRectF &rect1, const QRectF &rect2)
                        (rect2.height() / sizeFactor - rect1.height()) / 2);
 }
 
-Filters::SvgResult
-Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
+Painting::SvgResult
+Painting::paintSvgElements(QPainter *p, const QString &svgFileName,
                           const QStringList &svgElements, const QRect &rect,
                           const QRectF &viewBox)
 {
@@ -314,13 +343,14 @@ Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
     QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
     if (result != SvgOk)
         return result;
+    foreach (const QString &element, svgElements)
+        if (!renderer->elementExists(element))
+            return SvgElementNotFound;
     const QTransform painterTransform = fitRect1InRect2Centered(
             (viewBox.isValid() ? viewBox : renderer->viewBoxF()), rect);
     p->save();
     p->setTransform(p->transform() * painterTransform);
     foreach (const QString &element, svgElements) {
-        if (!renderer->elementExists(element))
-            return SvgElementNotFound;
         const QRectF elementBounds = renderer->boundsOnElement(element);
         renderer->render(p, element, elementBounds);
     }
@@ -328,15 +358,15 @@ Filters::paintSvgElements(QPainter *p, const QString &svgFileName,
     return SvgOk;
 }
 
-QSizeF Filters::svgViewBoxSize(const QString &svgFileName)
+QSizeF Painting::svgViewBoxSize(const QString &svgFileName)
 {
     SvgResult result;
     QSvgRenderer *renderer = svgRendererStore()->svgRenderer(svgFileName, &result);
     return result == SvgOk ? renderer->viewBoxF().size() : QSizeF();
 }
 
-Filters::SvgResult
-Filters::paintBlendedSvgElement(QPainter *p,
+Painting::SvgResult
+Painting::paintBlendedSvgElement(QPainter *p,
                                 const QString &svgFileName, const QString &svgElement,
                                 qreal opacity, qreal scale, const QRect &rect, const QRectF &viewBox)
 {
@@ -385,12 +415,12 @@ const ElementAndPainterHash& elementsAndPaintersHash()
     return hash;
 }
 
-bool Filters::elementAvailable(const QString &element)
+bool Painting::elementAvailable(const QString &element)
 {
-    return !elementsAndPaintersHash().contains(element);
+    return elementsAndPaintersHash().contains(element);
 }
 
-void Filters::paintElements(QPainter *p, const QStringList &elements, const QRect &rect)
+void Painting::paintElements(QPainter *p, const QStringList &elements, const QRect &rect)
 {
     foreach (const QString &element, elements)
         if (elementsAndPaintersHash().contains(element))
@@ -398,7 +428,7 @@ void Filters::paintElements(QPainter *p, const QStringList &elements, const QRec
     p->end();
 }
 
-void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
+void Painting::paintAnimatedSubTitle(QPainter *p, const QString &title, const QString &subTitle,
                            qreal slipIn, qreal blendIn, const QRect &rect)
 {
     if (slipIn <= 0)
@@ -425,6 +455,15 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
     const QRect background(0, backgroundTop, rect.width(), backgroundHeight);
     SvgRendererStore::artworkSvgRenderer()->render(p, QLatin1String("subtitlebackground"), background);
 
+    // Accent stripe along the top edge of the banner
+    p->save();
+    p->setOpacity(qBound(0.0, blendIn, 1.0));
+    p->fillRect(QRect(background.left(), background.top(),
+                      int(background.width() * qBound(0.0, blendIn, 1.0)),
+                      qMax(2, rect.height() / 240)),
+                QColor(245, 235, 170));
+    p->restore();
+
     p->save();
     p->setPen(QColor(245, 235, 170));
     p->setCompositionMode(QPainter::CompositionMode_Lighten);
@@ -447,7 +486,7 @@ void Filters::paintAnimatedSubTitle(QPainter *p, const QString &title, const QSt
     p->restore();
 }
 
-void Filters::paintHighlight(QPainter *p, const QRectF &highlightRect,
+void Painting::paintHighlight(QPainter *p, const QRectF &highlightRect,
                              qreal opacity)
 {
     if (opacity <= 0)

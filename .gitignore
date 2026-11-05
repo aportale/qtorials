@@ -1,0 +1,14 @@
+# qtavisynth: build directory and per-user Qt Creator settings
+/tools/qtavisynth/build/
+/tools/qtavisynth/.qtcreator/
+*.user
+
+# qtavisynth: plugin build outputs (LIBRARY_OUTPUT_PATH points to screencasts/)
+/screencasts/qtavisynth.dll
+/screencasts/qtavisynth.exp
+/screencasts/qtavisynth.ilk
+/screencasts/qtavisynth.lib
+/screencasts/qtavisynth.pdb
+
+# qtavisynth: filter graph written by DumpFilterGraph() in qtavisynth_all.avs
+/screencasts/test/qtavisynth_all.gv

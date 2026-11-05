@@ -1,9 +1,17 @@
-#include <animationpainter.h>
 #include "tools.h"
-#include "filters.h"
+#include "painting.h"
 
 #include <QGuiApplication>
 #include <QFileInfo>
+#include <QThread>
+
+#include <future>
+#include <mutex>
+#include <thread>
+
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
 
 const int Tools::defaultClipWidth = 640;
 const int Tools::defaultClipHeight = 480;
@@ -18,16 +26,16 @@ void Tools::checkSvgAndThrow(const QString &svgFileName,
                              const QString &svgElement,
                              IScriptEnvironment* env)
 {
-    const Filters::SvgResult result =
-            Filters::checkSvg(svgFileName, svgElement);
+    const Painting::SvgResult result =
+            Painting::checkSvg(svgFileName, svgElement);
     switch (result) {
-        case Filters::SvgFileNotValid:
+        case Painting::SvgFileNotValid:
                 env->ThrowError("Svg: File '%s' was not found or is invalid SVG.",
                                 svgFileName.toLatin1().data());
-        case Filters::SvgElementNotFound:
+        case Painting::SvgElementNotFound:
                 env->ThrowError("Svg: Svg element '%s' was not found.",
                                 svgElement.toLatin1().data());
-        case Filters::SvgOk:
+        case Painting::SvgOk:
             break;
     }
 }
@@ -44,87 +52,55 @@ PClip Tools::rgbOverlay(const PClip &backgroundClip, const PClip &overlayClip,
     return env->Invoke("Overlay", paramsValue).AsClip();
 }
 
-PVideoFrame Tools::GetAnimationPainterFrame(int n, IScriptEnvironment *env, const VideoInfo &vi,
-                                            AnimationPainter &animationpainter)
-{
-    PVideoFrame frame = env->NewVideoFrame(vi);
-    unsigned char* frameBits = frame->GetWritePtr();
-    QImage image(frameBits, vi.width, vi.height, QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
-
-    const qreal framesPerSecond = qreal(vi.fps_numerator) / vi.fps_denominator;
-    const qreal msecsPerFrame = 1000 / framesPerSecond;
-    const int msec = n * msecsPerFrame;
-    if (msec > animationpainter.duration())
-        return frame;
-
-    QPainter p(&image);
-    p.scale(1, -1);
-    p.translate(0, -image.height());
-
-    animationpainter.setCurrentTime(msec);
-    animationpainter.paint(&p);
-
-    return frame;
-}
-
 static char *argv[] = {(char*)"."};
 static int argc = sizeof(argv) / sizeof(argv[0]);
 
-QGuiApplication* Tools::createQGuiApplicationIfNeeded()
+// The thread in which the application object created by the plugin lives
+static std::thread *applicationThread = nullptr;
+
+// Qt needs an application object for fonts, text rendering and QML. The host application
+// (VirtualDub, mpv, ...) is usually no Qt application, so the plugin creates one when the
+// first QtAviSynth filter is created. AviSynth+ calls filters from the thread that evaluates
+// the script, and with Prefetch() from its worker threads, none of which runs a Qt event
+// loop. So the application gets a thread of its own that runs one, and the QML rendering
+// happens there (see runInApplicationThread()).
+// The application is never deleted: AviSynth+ runs IScriptEnvironment::AtExit callbacks before
+// it destroys the clips held in script variables, and filters may render frames until then.
+void Tools::createQGuiApplicationIfNeeded()
 {
-    return qGuiApp ? nullptr : new QGuiApplication(argc, argv);
+    static std::once_flag once;
+    std::call_once(once, [] {
+        if (QCoreApplication::instance())
+            return; // Belongs to the host application
+
+        std::promise<void> created;
+        std::future<void> isCreated = created.get_future();
+        applicationThread = new std::thread([created = std::move(created)]() mutable {
+            auto application = new QGuiApplication(argc, argv);
+            application->setQuitOnLastWindowClosed(false);
+            created.set_value();
+            application->exec();
+        });
+        isCreated.wait();
+    });
 }
 
-SourceFilter::SourceFilter()
-    : m_vi(defaultVi())
+// Runs function in the thread of the application object and waits for it to finish
+void Tools::runInApplicationThread(const std::function<void()> &function)
 {
+    QCoreApplication *application = QCoreApplication::instance();
+    if (application->thread()->isCurrentThread()) {
+        function();
+        return;
+    }
+
+#ifdef Q_OS_WIN
+    // At process exit, Windows terminates all other threads before it unloads the DLLs. A
+    // filter that is destroyed during the unloading would then wait forever.
+    if (applicationThread
+            && WaitForSingleObject(applicationThread->native_handle(), 0) == WAIT_OBJECT_0)
+        return;
+#endif
+
+    QMetaObject::invokeMethod(application, function, Qt::BlockingQueuedConnection);
 }
-
-void __stdcall SourceFilter::GetAudio(void*, int64_t, int64_t, IScriptEnvironment*)
-{
-}
-
-const VideoInfo& __stdcall SourceFilter::GetVideoInfo()
-{
-    return m_vi;
-}
-
-bool __stdcall SourceFilter::GetParity(int n)
-{
-    Q_UNUSED(n);
-    return true;
-}
-
-int __stdcall SourceFilter::SetCacheHints(int cachehints, int frame_range)
-{
-    Q_UNUSED(cachehints);
-    Q_UNUSED(frame_range);
-    return 0;
-}
-
-void SourceFilter::setFps(double fps, IScriptEnvironment* env)
-{
-    m_vi.fps_numerator = env->Invoke("ContinuedNumerator", fps).AsInt();
-    m_vi.fps_denominator = env->Invoke("ContinuedDenominator", fps).AsInt();
-}
-
-void SourceFilter::setSize(const QSize &size)
-{
-    m_vi.width = size.width();
-    m_vi.height = size.height();
-};
-
-VideoInfo SourceFilter::defaultVi() {
-    VideoInfo info;
-    memset(&info, 0, sizeof(VideoInfo));
-    info.pixel_type = VideoInfo::CS_BGR32;
-    info.width = 640;
-    info.height = 480;
-    info.num_frames = 1000;
-    info.fps_denominator = 1;
-    info.fps_numerator = 24;
-    info.SetFieldBased(false);
-    return info;
-}
-

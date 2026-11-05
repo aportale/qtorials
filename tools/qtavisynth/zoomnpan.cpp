@@ -1,6 +1,11 @@
 #include "zoomnpan.h"
-#include "filters.h"
+#include "painting.h"
 #include "tools.h"
+
+#include <QEasingCurve>
+#include <QPropertyAnimation>
+
+#include <numbers>
 
 const QByteArray ZoomNPanProperties::propertyName = "rect";
 
@@ -76,16 +81,16 @@ PVideoFrame __stdcall ZoomNPan::GetFrame(int n, IScriptEnvironment* env)
             const VideoInfo &sourceInfo = child->GetVideoInfo();
             const double widthNormFactor = 1.0 / sourceInfo.width;
             const double heightNormFactor = 1.0 / sourceInfo.height;
-            const double perspectiveBias = 0.618; // 0.0: Vanishing point towards bottom; 1.0: top
-            const double perspectiveTweakTop = m_perspectiveStrength * (1 - perspectiveBias) * rect.height();
-            const double perspectiveTweakBottom = m_perspectiveStrength * perspectiveBias * rect.height();
+            constexpr double goldenRatioConjugate = 1 / std::numbers::phi;
+            const double perspectiveTweakTop = m_perspectiveStrength * ((1 - goldenRatioConjugate) - heightNormFactor * rect.y());
+            const double perspectiveTweakBottom = m_perspectiveStrength * (goldenRatioConjugate - heightNormFactor * (sourceInfo.height - rect.bottom()));
             const AVSValue reformParams[] = {
                 child,
                 // source quad:
-                widthNormFactor * rect.x(),     heightNormFactor * (rect.y() + perspectiveTweakTop),
+                widthNormFactor * rect.x(),     heightNormFactor * rect.y() + perspectiveTweakTop,
                 widthNormFactor * rect.right(), heightNormFactor * rect.y(),
                 widthNormFactor * rect.right(), heightNormFactor * rect.bottom(),
-                widthNormFactor * rect.x(),     heightNormFactor * (rect.bottom() - perspectiveTweakBottom),
+                widthNormFactor * rect.x(),     heightNormFactor * rect.bottom() - perspectiveTweakBottom,
                 // target rect:
                 0,                              0,
                 1,                              0,
@@ -117,9 +122,10 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
     const double perspectiveStrength = args[5].AsFloat(0);
     if (perspectiveStrength > 0) {
         if (!env->FunctionExists("quad"))
-            env->ThrowError("QtAviSynthZoomNPan: \"quad\" filter from David Horman's warp not found. "
-                            "Needed for the perspective effect. "
-                            "Get it from http://horman.net/avisynth/ and load the .dll");
+            env->ThrowError("QtAviSynthZoomNPan: \"quad\" filter from David Horman's warp plugin not found. "
+                            "It is needed for a perspectivestrength above 0. "
+                            "Get http://horman.net/avisynth/download/warp.zip and load its x64\\warp.dll "
+                            "(the separate quad.zip does not work).");
     } else if (!env->FunctionExists(args[4].AsString())) {
         env->ThrowError("QtAviSynthZoomNPan: Invalid resize filter '%s'.", args[4].AsString());
     }
@@ -142,14 +148,16 @@ AVSValue __cdecl ZoomNPan::CreateZoomNPan(AVSValue args, void* user_data,
         details.append(detail);
     }
 
-    return new ZoomNPan(args[0].AsClip(),
-                        args[1].AsInt(Tools::defaultClipWidth),
-                        args[2].AsInt(Tools::defaultClipHeight),
-                        args[3].AsInt(15),
-                        args[4].AsString(),
-                        perspectiveStrength,
-                        start,
-                        details);
+    const PClip originClip = args[0].AsClip();
+    const int width = args[1].AsInt(Tools::defaultClipWidth);
+    const int height = args[2].AsInt(Tools::defaultClipHeight);
+    const int defaultTransitionLength = args[3].AsInt(15);
+    const char *resizeFilter = args[4].AsString();
+
+    // Arguments are evaluated first, so nothing can throw before PClip owns the new filter
+    const PClip zoomNPanClip = new ZoomNPan(originClip, width, height, defaultTransitionLength,
+                                            resizeFilter, perspectiveStrength, start, details);
+    return zoomNPanClip;
 }
 
 QRectF ZoomNPan::fixedDetailRect(const VideoInfo &originVideoInfo,

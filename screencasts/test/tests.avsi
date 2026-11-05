@@ -1,4 +1,8 @@
-LoadPlugin("..\qtavisynth.dll")
+try {
+  LoadPlugin("..\qtavisynth.dll")
+} catch (err) {
+  LoadPlugin("../libqtavisynth.so")
+}
 
 function Blank()
 {

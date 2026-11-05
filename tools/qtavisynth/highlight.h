@@ -1,11 +1,11 @@
 #pragma once
 
-#include "windows.h"
 #include "avisynth.h"
 
 #include <QParallelAnimationGroup>
 
-QT_FORWARD_DECLARE_CLASS(QRect);
+QT_FORWARD_DECLARE_CLASS(QRect)
+
 class HighlightProperties;
 
 class Highlight : public GenericVideoFilter

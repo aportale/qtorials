@@ -1,6 +1,13 @@
-#include "filters.h"
+#include "painting.h"
 #include "svganimation.h"
 #include "tools.h"
+
+#include <QEasingCurve>
+#include <QImage>
+#include <QMetaEnum>
+#include <QPainter>
+#include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
 
 SvgAnimationProperties::SvgAnimationProperties(const Data &data, QObject *parent)
     : QObject(parent)
@@ -141,7 +148,7 @@ SvgAnimation::SvgAnimation(const QString &svgFile,
     m_animation.pause();
 
     setFps(fps, env);
-    setSize(size.isValid() ? size : Filters::svgViewBoxSize(m_svgFile).toSize());
+    setSize(size.isValid() ? size : Painting::svgViewBoxSize(m_svgFile).toSize());
     m_vi.num_frames = longestAnimationDuration;
 }
 
@@ -156,9 +163,9 @@ PVideoFrame __stdcall SvgAnimation::GetFrame(int n, IScriptEnvironment* env)
     p.scale(1, -1);
     p.translate(0, -image.height());
     m_animation.setCurrentTime(n);
-    for (const SvgAnimationProperties *properties : qAsConst(m_properties)) {
+    for (const SvgAnimationProperties *properties : std::as_const(m_properties)) {
         if (properties->opacity() > SvgAnimationProperties::opacityStart) {
-            Filters::paintBlendedSvgElement(
+            Painting::paintBlendedSvgElement(
                     &p,
                     m_svgFile,
                     properties->svgElement(),

@@ -7,5 +7,6 @@ initialParameters = """
 }
 """
 
-ScreenCast
-\ .QtAviSynthQmlAnimation("qml\test.qmlproject", 60, initialParameters).ConvertToRgb24.killaudio
+background = ScreenCast
+background
+\ .QtAviSynthQmlAnimation("qml/test.qmlproject", background.FrameRate, initialParameters).ConvertToRgb24.killaudio

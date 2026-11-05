@@ -1,8 +1,11 @@
 #include "highlight.h"
-#include "filters.h"
+#include "painting.h"
 #include "tools.h"
-#include <QPropertyAnimation>
 #include <QEasingCurve>
+#include <QImage>
+#include <QPainter>
+#include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
 
 class HighlightProperties : public QObject
 {
@@ -111,7 +114,7 @@ PVideoFrame __stdcall Highlight::GetFrame(int n, IScriptEnvironment* env)
     p.scale(1, -1);
     p.translate(0, -image.height());
     m_highlightAnimations.setCurrentTime(n);
-    Filters::paintHighlight(&p, m_properties->rectangle(), m_properties->opacity());
+    Painting::paintHighlight(&p, m_properties->rectangle(), m_properties->opacity());
     return frame;
 }
 
